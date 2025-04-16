@@ -34,6 +34,9 @@
 - Push the generated code to the `master` branch of this repository.
 - <b>NOTE:</b> Make sure to set `analyticsId` from your Google Analytics account inside the Google Analytics script tag, if you want to use your own Google Analytics account.
 
+### Serve Locally
+python -m http.server
+
 ## Sections 📚
 ✔️ About me\
 ✔️ Experience\

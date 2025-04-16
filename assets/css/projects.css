@@ -1,0 +1,89 @@
+body {
+    background: url(/assets/img/bg.png) repeat;
+    color: #333;
+    font-size: 18px;
+    margin: 0;
+    padding-left: 190px;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  .container {
+    width: 85%;
+    margin: 60px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 77, 0.1);
+  }
+  
+  h1 {
+    font-size: 32px;
+    color: #001a80;
+    border-bottom: 3px solid #00004d;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+  }
+  
+  h2 {
+    font-size: 26px;
+    margin-top: 40px;
+    color: #00004d;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+  }
+  
+  p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  
+  a {
+    color: #001f4d;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    border-bottom: 2px solid #00004d;
+  }
+  
+  .bibliography {
+    list-style-type: decimal;
+    padding-left: 20px;
+    margin-top: 20px;
+  }
+  
+  .bibliography li {
+    margin-bottom: 10px;
+  }
+  
+  .bibliography .author {
+    font-weight: bold;
+  }
+  
+  .bibliography .title {
+    font-style: italic;
+  }
+  
+  .bibliography .journal, .bibliography .conference {
+    font-style: italic;
+  }
+  
+  .bibliography .year {
+    font-weight: bold;
+  }
+  
+  .btn-back {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 24px;
+    background-color: #000680;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .btn-back:hover {
+    background-color: #001a80;
+  }
+  

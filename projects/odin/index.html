@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ODIN - Project Details</title>
+  <link rel="stylesheet" href="/assets/css/projects.css" />
+  <style>
+    /* Basic styling to resemble IEEE */
+    .bibliography {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+    .bibliography li {
+      margin-bottom: 10px;
+    }
+    .bibliography .author {
+      font-weight: bold;
+    }
+    .bibliography .title {
+      font-style: italic;
+    }
+    .bibliography .journal, .bibliography .conference {
+      font-style: italic;
+    }
+    .bibliography .year {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Operationally Directed Instructional Network (ODIN)</h1>
+    <p><strong>Role:</strong> Principal Investigator</p>
+    <p><strong>Years:</strong> 2020 - Present</p>
+    <p>
+      ODIN is a web-based application that provides a platform for the maritime industry to manage and analyze training data, supporting adaptive assessment and instructional systems.
+    </p>
+
+    <h2>Tools & Technologies</h2>
+    <p>React, Node.js, Express.js, MongoDB</p>
+
+    <h2>Publications</h2>
+    <div id="pub-bib"></div>
+
+    <h2>Presentations</h2>
+    <div id="pres-bib"></div>
+
+    <p><a href="/index.html">← Back to Home</a></p>
+  </div>
+
+  <script src="/assets/scripts/bibFormatter.js"></script>
+  <script>
+    // Load and format the publications bibliography
+    loadAndFormatBib('/assets/bib/odin/publications.bib', 'pub-bib');
+
+    // Load and format the presentations bibliography
+    loadAndFormatBib('/assets/bib/odin/presentations.bib', 'pres-bib');
+  </script>
+</body>
+</html>
