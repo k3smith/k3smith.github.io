@@ -3,7 +3,6 @@ body {
     color: #333;
     font-size: 18px;
     margin: 0;
-    padding-left: 190px;
     font-family: 'Open Sans', sans-serif;
   }
   
@@ -71,6 +70,27 @@ body {
   .bibliography .year {
     font-weight: bold;
   }
+
+  /* Basic styling to resemble IEEE */
+    .bibliography {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+    .bibliography li {
+      margin-bottom: 10px;
+    }
+    .bibliography .author {
+      font-weight: bold;
+    }
+    .bibliography .title {
+      font-style: italic;
+    }
+    .bibliography .journal, .bibliography .conference {
+      font-style: italic;
+    }
+    .bibliography .year {
+      font-weight: bold;
+    }
   
   .btn-back {
     display: inline-block;
@@ -85,5 +105,131 @@ body {
   
   .btn-back:hover {
     background-color: #001a80;
+  }
+  
+  .tools-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    text-align: center;
+  }
+  
+  .tool img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+  
+  .tool span {
+    font-size: 0.9em;
+    color: #333;
+  }
+  
+
+  .partners-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .partner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    text-align: center;
+  }
+  
+  .partner img {
+    width: 120px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+  
+  .partner span {
+    font-size: 0.9em;
+    color: #333;
+  }
+  
+  .funders {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .funder {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .funder img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  
+  .funder-details {
+    flex: 1;
+  }
+  
+  .funder-details strong {
+    font-size: 1em;
+    color: #333;
+  }
+  
+  .funder-details p {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  body {
+    display: flex;
+    margin: 0;
+    font-family: sans-serif;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    min-height: 100vh;
+  }
+  
+  .sidebar a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .sidebar a:hover {
+    background-color: #ddd;
+  }
+
+  .sidebar div {
+    padding: 10px;
+  }
+  
+  .container {
+    flex: 1;
+    padding: 30px;
   }
   

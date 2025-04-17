@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CIMA - Project Details</title>
+  <link rel="stylesheet" href="/assets/css/projects.css" />
+</head>
+<body>
+    <script src="/assets/scripts/sidebar.js"></script>
+    <script>
+      renderSidebar("CIMA");
+    </script>
+  <div class="container">
+    <h1>CIMA Recovery</h1>
+    <p><strong>Years:</strong> 2021 - Present</p>
+    <p>
+        When disaster strikes, recovery can be slow and unequal. CIMA is a powerful platform to change that. Built in partnership with community leaders, CIMA connects vital resources – volunteers and materials – with families needing urgent home repairs. We're building smart scheduling algorithms and user-friendly interfaces to ensure aid is fast, efficient, and prioritizes those most vulnerable. CIMA is our commitment to using technology to speed up recovery, reduce hardship, and build stronger, more resilient communities. 
+    </p>
+
+    <h2>Tools & Technologies</h2>
+    <div class="tools-logos">
+        <div class="tool">
+          <a href="https://react.dev/" target="_blank">
+            <img src="/assets/logos/react.png" alt="React" /></a>
+          <span>React</span>
+        </div>
+        <div class="tool">
+            <a href="https://nextjs.org/" target="_blank">
+              <img src="/assets/logos/next.svg" alt="NextJS" /></a>
+            <span>NextJS</span>
+          </div>
+          <div class="tool">
+            <a href="https://www.python.org/" target="_blank">
+              <img src="/assets/logos/Python.png" alt="Python" /></a>
+            <span>Python</span>
+          </div>
+          <div class="tool">
+            <a href="https://www.djangoproject.com/" target="_blank">
+              <img src="/assets/logos/django.png" alt="Django" /></a>
+            <span>Django</span>
+          </div>
+          <div class="tool">
+            <a href="https://www.postgresql.org/" target="_blank">
+              <img src="/assets/logos/elephant.png" alt="PostgreSQL" /></a>
+            <span>PostgreSQL</span>
+          </div>
+    </div>
+
+    <h2>Funders</h2>
+<div class="funders">
+  <div class="funder">
+    <img src="/assets/logos/nsf.jpg" alt="National Science Foundation" />
+    <div class="funder-details">
+      <strong>National Science Foundation (NSF)</strong>
+      <p>Funding for the CIMA platform is provided by the National Science Foundation's Smart & Connected Communities (S&CC) program under Award No. 2133336</p>
+    </div>
+  </div>
+</div>
+
+
+    <!-- <h2>Publications</h2>
+    <div id="pub-bib"></div>
+
+    <h2>Presentations</h2>
+    <div id="pres-bib"></div> -->
+
+    <p><a href="/index.html">← Back to Home</a></p>
+  </div>
+
+  <script src="/assets/scripts/bibFormatter.js"></script>
+  <script>
+    // Load and format the publications bibliography
+    loadAndFormatBib('./bib/publications.bib', 'pub-bib');
+
+    // Load and format the presentations bibliography
+    loadAndFormatBib('./bib/presentations.bib', 'pres-bib');
+  </script>
+</body>
+</html>

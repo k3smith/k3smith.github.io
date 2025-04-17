@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Ports - Project Details</title>
+  <link rel="stylesheet" href="/assets/css/projects.css" />
+</head>
+<body>
+    <script src="/assets/scripts/sidebar.js"></script>
+  <script>
+    renderSidebar("Port Cyber-Physical System");
+  </script>
+
+  <div class="container">
+    <h1>Securing the Cyber-Physical Ecosystem of Smart Ports: Resilience in Intermodal Operations and Autonomous Vehicle Integration</h1>
+    <p><strong>Years:</strong> 2021 - Present</p>
+    <p>
+        This research addresses the escalating cybersecurity challenges arising from the modernization of port operations, the increased reliance on intermodal transportation, and the integration of autonomous vehicles (AVs). By focusing on the Port of Virginia as a critical case study, this line of inquiry will develop a novel simulation-based framework to provide a systemic understanding of the vulnerabilities and threats within the complex cyber-physical systems (CPS) ecosystem. This framework will specifically investigate the cybersecurity of operational technology (OT) systems, including vehicle communication networks, and analyze the safety implications of integrating AVs alongside human-driven vehicles. The ultimate goal is to equip port stakeholders with the knowledge and tools necessary to build resilient cybersecurity strategies, ensure the safety and efficiency of port operations, and mitigate the risk of supply chain disruptions in the face of evolving cyber threats.
+    </p>
+
+    <h2>Tools & Technologies</h2>
+    <div class="tools-logos">
+        <div class="tool">
+          <a href="https://www.python.org/" target="_blank">
+            <img src="/assets/logos/Python.png" alt="Python" /></a>
+          <span>Python</span>
+        </div>
+        <div class="tool">
+            <a href="https://www.ros.org/" target="_blank">
+              <img src="/assets/logos/ros-logo.jpg" alt="ROS" /></a>
+            <span>Robot Operating System</span>
+          </div>
+          <div class="tool">
+            <a href="https://eclipse.dev/sumo/" target="_blank">
+              <img src="/assets/logos/sumo.png" alt="SUMO" /></a>
+            <span>Simulation of Urban Mobility (SUMO)</span>
+          </div>
+          <div class="tool">
+            <a href="https://unity.com/" target="_blank">
+              <img src="/assets/logos/Unity.svg" alt="Unity" /></a>
+            <span>Unity</span>
+          </div>
+    </div>
+
+    <h2>Funders</h2>
+    <div class="funders">
+        <div class="funder">
+            <img src="/assets/logos/cci.png" alt="CCI" />
+            <div class="funder-details">
+              <strong>CCI</strong>
+              <p>Funding for this work has been supported by the Commonwealth Cyber Initiative under award number HC-3Q24-050.</p>
+            </div>
+          </div>
+      <div class="funder">
+        <img src="/assets/logos/cova-cci.png" alt="CoVA CCI" />
+        <div class="funder-details">
+          <strong>CoVA CCI</strong>
+          <p>Funding for this work has been supported by the Commonwealth Cyber Initiative of Coastal Virginia under award number 2021ODU-06.005.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Publications</h2>
+    <div id="pub-bib"></div>
+
+    <!-- <h2>Presentations</h2>
+    <div id="pres-bib"></div> -->
+  </div>
+
+  <script src="/assets/scripts/bibFormatter.js"></script>
+  <script>
+    // Load and format the publications bibliography
+    loadAndFormatBib('./bib/publications.bib', 'pub-bib');
+
+    // Load and format the presentations bibliography
+    loadAndFormatBib('./bib/presentations.bib', 'pres-bib');
+  </script>
+</body>
+</html>

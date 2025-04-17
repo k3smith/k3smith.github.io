@@ -4,46 +4,74 @@
   <meta charset="UTF-8" />
   <title>ODIN - Project Details</title>
   <link rel="stylesheet" href="/assets/css/projects.css" />
-  <style>
-    /* Basic styling to resemble IEEE */
-    .bibliography {
-      list-style-type: decimal;
-      padding-left: 20px;
-    }
-    .bibliography li {
-      margin-bottom: 10px;
-    }
-    .bibliography .author {
-      font-weight: bold;
-    }
-    .bibliography .title {
-      font-style: italic;
-    }
-    .bibliography .journal, .bibliography .conference {
-      font-style: italic;
-    }
-    .bibliography .year {
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
+  <script src="/assets/scripts/sidebar.js"></script>
+  <script>
+    renderSidebar("ODIN");
+  </script>
   <div class="container">
     <h1>Operationally Directed Instructional Network (ODIN)</h1>
     <p><strong>Role:</strong> Principal Investigator</p>
     <p><strong>Years:</strong> 2020 - Present</p>
     <p>
-      ODIN is a web-based application that provides a platform for the maritime industry to manage and analyze training data, supporting adaptive assessment and instructional systems.
+      ODIN is the data management system for the Navy's Afloat Maintenance Training Strategy (NAMTS). It provides the Commander Navy Regional Maintenance Center (CNRMC) and over 230 users with secure, real-time access to training and maintenance data for more than 2,600 Sailors worldwide, both ashore and afloat. Through comprehensive reporting, live dashboards, and API integration, ODIN-EL delivers the actionable intelligence needed to effectively manage personnel and enhance naval operational readiness.
     </p>
 
+    <h2>Partners</h2>
+    <div class="partners-logos">
+      <div class="partner">
+        <a href="https://www.valkyrie.com/" target="_blank">
+        <img src="/assets/logos/Valkyrie.jpg" alt="Valkyrie Enterprises" />
+        <span>Valkyrie Enterprises</span>
+        </a>
+      </div>
+    </div>
+
     <h2>Tools & Technologies</h2>
-    <p>React, Node.js, Express.js, MongoDB</p>
+<div class="tools-logos">
+  <div class="tool">
+    <a href="https://react.dev/" target="_blank">
+      <img src="/assets/logos/react.png" alt="React" /></a>
+    <span>React</span>
+  
+  </div>
+  <div class="tool">
+    <a href="https://nodejs.org/" target="_blank">
+      <img src="/assets/logos/node.svg" alt="Node.js" /></a>
+    <span>Node.js</span>
+  
+  </div>
+  <div class="tool">
+    <a href="https://expressjs.com/" target="_blank">
+    <img src="/assets/logos/express.svg" alt="Express.js" /></a>
+    <span>Express.js</span>
+    
+  </div>
+  <div class="tool">
+    <a href="https://www.mongodb.com/" target="_blank">
+      <img src="/assets/logos/mongodb.svg" alt="MongoDB" /></a>
+    <span>MongoDB</span>
+  
+  </div>
+</div>
+
+<h2>Funders</h2>
+<div class="funders">
+  <div class="funder">
+    <img src="/assets/logos/Valkyrie.jpg" alt="Valkyrie Enterprises" />
+    <div class="funder-details">
+      <strong>Valkyrie Enterprises</strong>
+      <p>Funding for the ODIN platform is provided by the Commander Navy Regional Maintenance Center (CNRMC) through Valkyrie Enterprises.</p>
+    </div>
+  </div>
+</div>
 
     <h2>Publications</h2>
     <div id="pub-bib"></div>
 
-    <h2>Presentations</h2>
-    <div id="pres-bib"></div>
+    <!-- <h2>Presentations</h2>
+    <div id="pres-bib"></div> -->
 
     <p><a href="/index.html">← Back to Home</a></p>
   </div>
@@ -51,10 +79,10 @@
   <script src="/assets/scripts/bibFormatter.js"></script>
   <script>
     // Load and format the publications bibliography
-    loadAndFormatBib('/assets/bib/odin/publications.bib', 'pub-bib');
+    loadAndFormatBib('./bib/publications.bib', 'pub-bib');
 
     // Load and format the presentations bibliography
-    loadAndFormatBib('/assets/bib/odin/presentations.bib', 'pres-bib');
+    loadAndFormatBib('./bib/presentations.bib', 'pres-bib');
   </script>
 </body>
 </html>
