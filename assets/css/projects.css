@@ -233,3 +233,67 @@ body {
     padding: 30px;
   }
   
+  .gif-gallery img {
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+  }
+
+  .team {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 20px;
+  }
+  
+  .team-member {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    max-width: 640px;
+    margin: 0px 20px 0px 0px;
+  }
+  
+  .team-member a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .team-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #001a80;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .team-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .team-info {
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .team-info strong {
+    font-size: 16px;
+  }
+  
+  .team-role {
+    color: #666;
+    font-style: italic;
+    font-size: 14px;
+  }

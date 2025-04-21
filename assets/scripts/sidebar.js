@@ -3,6 +3,7 @@
 const projects = [
     { name: 'ODIN', link: '/projects/odin/index.html' },
     { name: 'CIMA', link: '/projects/cima/index.html' },
+    { name: 'CyberShield H₂O', link: '/projects/cybershield-h2o/index.html' },
     { name: 'Port Cyber-Physical System', link: '/projects/port-cps/index.html' },
   ];
   
