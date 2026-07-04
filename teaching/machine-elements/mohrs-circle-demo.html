@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Mohr's Circle — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6;
+  padding: 16px;
+  color: #333;
+  min-height: 100vh;
+}
+.card {
+  max-width: 940px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14);
+  overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white;
+  padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block;
+  width: 100%;
+  height: 380px;
+  background: #f7f9fc;
+  border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input[type=range].angle::-webkit-slider-thumb { background: #b05a10; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.hl td:last-child { color: #b05a10; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.btn-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; padding: 5px 4px; font-size: 0.72em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🎯 Interactive Mohr's Circle — Plane Stress Transformation</h1>
+    <p>MET 320 · Module 2 &nbsp;|&nbsp; Set the stress state, then rotate the element and watch the point travel around the circle</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="380" aria-label="Stress element and Mohr's circle"></canvas>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> Every plane stress state maps to ONE circle. Rotating the physical element by angle φ moves you <em>2φ</em> around the circle. The circle's intersections with the σ-axis are the principal stresses; the top of the circle is τ<sub>max</sub>.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Stress State Inputs</div>
+
+      <div class="slider-row">
+        <label>Normal Stress σ<sub>x</sub> <span class="val" id="vSx">80 MPa</span></label>
+        <input type="range" id="sSx" min="-150" max="150" step="5" value="80">
+      </div>
+      <div class="slider-row">
+        <label>Normal Stress σ<sub>y</sub> <span class="val" id="vSy">-20 MPa</span></label>
+        <input type="range" id="sSy" min="-150" max="150" step="5" value="-20">
+      </div>
+      <div class="slider-row">
+        <label>Shear Stress τ<sub>xy</sub> <span class="val" id="vTxy">40 MPa</span></label>
+        <input type="range" id="sTxy" min="-100" max="100" step="5" value="40">
+      </div>
+      <div class="slider-row">
+        <label>Element Rotation φ <span class="val" id="vPhi">0°</span></label>
+        <input type="range" id="sPhi" class="angle" min="0" max="180" step="1" value="0">
+      </div>
+
+      <div class="btn-row">
+        <button id="bPrincipal">Snap to Principal Planes</button>
+        <button id="bShear">Snap to Max Shear</button>
+        <button id="bReset">Reset φ = 0</button>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Results</div>
+      <table class="result-table">
+        <tr><td>Principal Stress σ₁</td><td id="rS1">—</td></tr>
+        <tr><td>Principal Stress σ₂</td><td id="rS2">—</td></tr>
+        <tr><td>Max Shear Stress τ<sub>max</sub></td><td id="rTmax">—</td></tr>
+        <tr><td>Average Stress σ<sub>avg</sub> (center)</td><td id="rSavg">—</td></tr>
+        <tr><td>Principal Angle φ<sub>p</sub></td><td id="rPhiP">—</td></tr>
+        <tr class="hl"><td>σ<sub>x'</sub> at current φ</td><td id="rSxp">—</td></tr>
+        <tr class="hl"><td>σ<sub>y'</sub> at current φ</td><td id="rSyp">—</td></tr>
+        <tr class="hl"><td>τ<sub>x'y'</sub> at current φ</td><td id="rTxyp">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Why this matters:</strong> Failure theories (Module 2) compare σ₁, σ₂, and τ<sub>max</sub> — not σ<sub>x</sub> and σ<sub>y</sub> — against material strength.
+    Notice: τ<sub>max</sub> planes are always <strong>45° from the principal planes</strong> (90° on the circle), and on principal planes the shear stress is exactly <strong>zero</strong>.
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let sx  = 80, sy = -20, txy = 40;
+let phiDeg = 0;   // element rotation, degrees
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Mechanics ─────────────────────────────────────────────────────────────
+function calc() {
+  const avg = (sx + sy) / 2;
+  const R   = Math.sqrt(Math.pow((sx - sy) / 2, 2) + txy * txy);
+  const s1  = avg + R;
+  const s2  = avg - R;
+  // φp measured CCW from x-axis to σ1 direction
+  const phiP = 0.5 * Math.atan2(2 * txy, sx - sy) * 180 / Math.PI;
+  // Transformed stresses at current φ
+  const th = phiDeg * Math.PI / 180;
+  const c2 = Math.cos(2 * th), s2t = Math.sin(2 * th);
+  const sxp  = avg + (sx - sy) / 2 * c2 + txy * s2t;
+  const syp  = avg - (sx - sy) / 2 * c2 - txy * s2t;
+  const txyp = -(sx - sy) / 2 * s2t + txy * c2;
+  return { avg, R, s1, s2, phiP, sxp, syp, txyp };
+}
+
+function updateOutputs() {
+  const r = calc();
+  const f = (v) => v.toFixed(1) + ' MPa';
+  document.getElementById('rS1').textContent   = f(r.s1);
+  document.getElementById('rS2').textContent   = f(r.s2);
+  document.getElementById('rTmax').textContent = f(r.R);
+  document.getElementById('rSavg').textContent = f(r.avg);
+  document.getElementById('rPhiP').textContent = r.phiP.toFixed(1) + '°';
+  document.getElementById('rSxp').textContent  = f(r.sxp);
+  document.getElementById('rSyp').textContent  = f(r.syp);
+  document.getElementById('rTxyp').textContent = f(r.txyp);
+}
+
+// ── Drawing helpers ───────────────────────────────────────────────────────
+function arrow(x1, y1, x2, y2, color, w) {
+  const hd = 7;
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w || 2;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - hd * Math.cos(ang - 0.42), y2 - hd * Math.sin(ang - 0.42));
+  ctx.lineTo(x2 - hd * Math.cos(ang + 0.42), y2 - hd * Math.sin(ang + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+// ── Stress element (left half) ────────────────────────────────────────────
+function drawElement(cx, cy, half, r) {
+  const th = phiDeg * Math.PI / 180;
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  // faint unrotated reference square
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(-half, -half, 2 * half, 2 * half);
+
+  ctx.rotate(-th);  // screen y is down; positive φ = CCW physically
+
+  // element body
+  const grd = ctx.createLinearGradient(-half, -half, half, half);
+  grd.addColorStop(0, '#dce9f5'); grd.addColorStop(1, '#b8d0e8');
+  ctx.fillStyle = grd;
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 2;
+  ctx.fillRect(-half, -half, 2 * half, 2 * half);
+  ctx.strokeRect(-half, -half, 2 * half, 2 * half);
+
+  const g = 14;         // gap between face and arrow start
+  const L = 30;         // arrow length scale
+  const sN = (v) => Math.sign(v) * Math.min(Math.abs(v) / 150, 1) * L + Math.sign(v) * 8;
+
+  // σx' arrows (right & left faces), along rotated x
+  if (Math.abs(r.sxp) > 1) {
+    const a = sN(r.sxp);
+    if (r.sxp > 0) {
+      arrow(half + g, 0, half + g + a, 0, '#b03030');
+      arrow(-half - g, 0, -half - g - a, 0, '#b03030');
+    } else {
+      arrow(half + g - a, 0, half + g, 0, '#b03030');
+      arrow(-half - g + a, 0, -half - g, 0, '#b03030');
+    }
+  }
+  // σy' arrows (top & bottom faces)
+  if (Math.abs(r.syp) > 1) {
+    const a = sN(r.syp);
+    if (r.syp > 0) {
+      arrow(0, -half - g, 0, -half - g - a, '#2a7a3a');
+      arrow(0, half + g, 0, half + g + a, '#2a7a3a');
+    } else {
+      arrow(0, -half - g + a, 0, -half - g, '#2a7a3a');
+      arrow(0, half + g - a, 0, half + g, '#2a7a3a');
+    }
+  }
+  // τ arrows on faces (positive τ: up on +x face)
+  if (Math.abs(r.txyp) > 1) {
+    const t = Math.sign(r.txyp) * Math.min(Math.abs(r.txyp) / 100, 1) * 24 + Math.sign(r.txyp) * 6;
+    arrow(half + 6, t / 2, half + 6, -t / 2, '#b05a10');        // +x face
+    arrow(-half - 6, -t / 2, -half - 6, t / 2, '#b05a10');      // -x face
+    arrow(-t / 2, -half - 6, t / 2, -half - 6, '#b05a10');      // +y face (screen top)
+    arrow(t / 2, half + 6, -t / 2, half + 6, '#b05a10');        // -y face
+  }
+  ctx.restore();
+
+  // labels
+  ctx.fillStyle = '#444';
+  ctx.font = '11px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Stress element  (rotated ' + phiDeg + '°)', cx, cy + half + 58);
+  ctx.font = '10px Segoe UI, Arial';
+  ctx.fillStyle = '#b03030'; ctx.fillText("σx' = " + r.sxp.toFixed(0) + ' MPa', cx - 60, cy - half - 44);
+  ctx.fillStyle = '#2a7a3a'; ctx.fillText("σy' = " + r.syp.toFixed(0) + ' MPa', cx + 60, cy - half - 44);
+  ctx.fillStyle = '#b05a10'; ctx.fillText("τx'y' = " + r.txyp.toFixed(0) + ' MPa', cx, cy - half - 58);
+}
+
+// ── Mohr's circle (right half) ────────────────────────────────────────────
+function drawCircle(cx, cy, r) {
+  const maxAbs = Math.max(Math.abs(r.s1), Math.abs(r.s2), r.R, 40) * 1.35;
+  const scale = 130 / maxAbs;
+  const X = (sig) => cx + sig * scale;
+  const Y = (tau) => cy - tau * scale;   // τ CCW plotted downward → use Mott CW-up? Keep τ up = CW convention note below
+
+  // axes
+  ctx.strokeStyle = '#9aa7b5'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - 160, cy); ctx.lineTo(cx + 170, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - 150); ctx.lineTo(cx, cy + 150); ctx.stroke();
+  ctx.fillStyle = '#667';
+  ctx.font = '10px Segoe UI, Arial'; ctx.textAlign = 'left';
+  ctx.fillText('σ (MPa)', cx + 172, cy + 3);
+  ctx.textAlign = 'center';
+  ctx.fillText('τ (CW +)', cx, cy - 156);
+
+  if (r.R < 0.5) {  // hydrostatic point
+    ctx.beginPath(); ctx.arc(X(r.avg), cy, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#2c5f8a'; ctx.fill();
+    return;
+  }
+
+  // circle
+  ctx.beginPath();
+  ctx.arc(X(r.avg), cy, r.R * scale, 0, Math.PI * 2);
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 2.5;
+  ctx.fillStyle = 'rgba(44,95,138,0.06)';
+  ctx.fill(); ctx.stroke();
+
+  // center
+  ctx.beginPath(); ctx.arc(X(r.avg), cy, 3, 0, Math.PI * 2);
+  ctx.fillStyle = '#2c5f8a'; ctx.fill();
+
+  // Reference point X (φ=0) plotted at (σx, τxy), τ-axis labeled CW-positive (Mott convention).
+  // Internal convention keeps angles correct: 2φ CCW on the circle = φ CCW on the element.
+
+  // current point at angle 2φ from X, rotating CCW for CCW element rotation
+  const ang0 = Math.atan2(txy, sx - r.avg);           // angle of X point from center
+  const angC = ang0 - 2 * phiDeg * Math.PI / 180;     // current point
+  const cxp = X(r.avg) + r.R * scale * Math.cos(angC);
+  const cyp = cy - r.R * scale * Math.sin(angC);
+  const oxp = X(r.avg) - r.R * scale * Math.cos(angC);
+  const oyp = cy + r.R * scale * Math.sin(angC);
+
+  const x0 = X(r.avg) + r.R * scale * Math.cos(ang0);
+  const y0 = cy - r.R * scale * Math.sin(ang0);
+
+  // diameter through current point
+  ctx.strokeStyle = '#b05a10'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(oxp, oyp); ctx.lineTo(cxp, cyp); ctx.stroke();
+
+  // faint diameter through X (reference)
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(2 * X(r.avg) - x0, 2 * cy - y0);
+  ctx.lineTo(x0, y0);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 2φ arc
+  if (phiDeg > 1) {
+    ctx.strokeStyle = '#b05a10'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(X(r.avg), cy, r.R * scale * 0.4, -ang0, -angC, false);
+    ctx.stroke();
+    const mid = (-ang0 + -angC) / 2;
+    ctx.fillStyle = '#b05a10';
+    ctx.font = 'bold 11px Segoe UI, Arial';
+    ctx.fillText('2φ = ' + (2 * phiDeg) + '°',
+      X(r.avg) + r.R * scale * 0.58 * Math.cos(mid),
+      cy + r.R * scale * 0.58 * Math.sin(mid) + 4);
+  }
+
+  // markers
+  function dot(x, y, color, label, dx, dy) {
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.font = 'bold 10.5px Segoe UI, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x + dx, y + dy);
+  }
+  dot(x0, y0, '#556', 'X (φ=0)', 26, -6);
+  dot(cxp, cyp, '#b05a10', "x'", 14, -8);
+  dot(X(r.s1), cy, '#b03030', 'σ₁', 0, 20);
+  dot(X(r.s2), cy, '#2a7a3a', 'σ₂', 0, 20);
+  dot(X(r.avg), cy - r.R * scale, '#7a4aa0', 'τmax', 0, -10);
+
+  ctx.fillStyle = '#444';
+  ctx.font = '11px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText("Mohr's Circle  (2φ on circle = φ on element)", cx, cy + 168);
+}
+
+// ── Main draw ─────────────────────────────────────────────────────────────
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  const r = calc();
+  drawElement(W * 0.25, H * 0.47, 55, r);
+  drawCircle(W * 0.71, H * 0.48, r);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+function upd() { updateOutputs(); draw(); }
+document.getElementById('sSx').addEventListener('input', function () {
+  sx = +this.value; document.getElementById('vSx').textContent = sx + ' MPa'; upd();
+});
+document.getElementById('sSy').addEventListener('input', function () {
+  sy = +this.value; document.getElementById('vSy').textContent = sy + ' MPa'; upd();
+});
+document.getElementById('sTxy').addEventListener('input', function () {
+  txy = +this.value; document.getElementById('vTxy').textContent = txy + ' MPa'; upd();
+});
+document.getElementById('sPhi').addEventListener('input', function () {
+  phiDeg = +this.value; document.getElementById('vPhi').textContent = phiDeg + '°'; upd();
+});
+function setPhi(deg) {
+  phiDeg = Math.round(((deg % 180) + 180) % 180);
+  document.getElementById('sPhi').value = phiDeg;
+  document.getElementById('vPhi').textContent = phiDeg + '°';
+  upd();
+}
+document.getElementById('bPrincipal').addEventListener('click', () => setPhi(calc().phiP));
+document.getElementById('bShear').addEventListener('click', () => setPhi(calc().phiP + 45));
+document.getElementById('bReset').addEventListener('click', () => setPhi(0));
+
+upd();
+</script>
+</body>
+</html>
