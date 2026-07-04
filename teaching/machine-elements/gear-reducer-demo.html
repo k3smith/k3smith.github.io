@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Elements: Gear Reducer Drive System — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6;
+  padding: 16px;
+  color: #333;
+  min-height: 100vh;
+}
+.card {
+  max-width: 940px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14);
+  overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white;
+  padding: 18px 26px 14px;
+}
+.card-header h1 {
+  font-size: 1.15em;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.card-header p {
+  font-size: 0.8em;
+  opacity: 0.82;
+}
+#simCanvas {
+  display: block;
+  width: 100%;
+  height: 300px;
+  background: #f7f9fc;
+  border-bottom: 1px solid #dde4ec;
+  cursor: default;
+}
+.bottom-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.controls {
+  padding: 18px 22px;
+  border-right: 1px solid #e8ecf1;
+}
+.outputs {
+  padding: 18px 22px;
+}
+.panel-title {
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #2c5f8a;
+  margin-bottom: 13px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.82em;
+  color: #555;
+  margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: #c8d8e8;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #2c5f8a;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.mat-row { margin-top: 4px; }
+.mat-row label {
+  display: block;
+  font-size: 0.8em;
+  color: #555;
+  margin-bottom: 4px;
+}
+select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #c0cad4;
+  border-radius: 5px;
+  font-size: 0.8em;
+  color: #333;
+  background: #fff;
+  cursor: pointer;
+}
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td {
+  padding: 7px 3px;
+  font-size: 0.82em;
+  vertical-align: middle;
+}
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right;
+  font-weight: 700;
+  color: #2c5f8a;
+  font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.cascade-bar {
+  background: #eef4fa;
+  padding: 11px 22px;
+  border-top: 1px solid #dde8f2;
+  font-size: 0.78em;
+  color: #4a5a6a;
+  line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec;
+  border-left: 3px solid #e67300;
+  padding: 9px 14px;
+  font-size: 0.78em;
+  color: #5a4a2a;
+  margin: 12px 22px 0;
+  border-radius: 0 5px 5px 0;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>⚙️ How Machine Elements Work Together — Conveyor Belt Drive System</h1>
+    <p>MET 320 · Module 1 &nbsp;|&nbsp; Adjust the sliders and watch how changing one input forces recalculation downstream</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="300" aria-label="Animated gear reducer driving a conveyor belt"></canvas>
+
+  <div class="scenario-note">
+    <strong>Design scenario:</strong> A package sorting conveyor must move boxes at 0.5 m/s. The available motor spins at 1750 rpm. A gear reducer is needed — but what gear ratio? And once you pick the ratio, what size shaft do you need?
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Design Inputs</div>
+
+      <div class="slider-row">
+        <label>Motor Power <span class="val" id="vPower">750 W</span></label>
+        <input type="range" id="sPower" min="100" max="3000" step="50" value="750">
+      </div>
+      <div class="slider-row">
+        <label>Motor Speed <span class="val" id="vRPM">1750 rpm</span></label>
+        <input type="range" id="sRPM" min="500" max="3600" step="50" value="1750">
+      </div>
+      <div class="slider-row">
+        <label>Gear Ratio <span class="val" id="vRatio">4 : 1</span></label>
+        <input type="range" id="sRatio" min="2" max="8" step="0.5" value="4">
+      </div>
+
+      <div class="mat-row">
+        <label>Shaft Material</label>
+        <select id="sMat">
+          <option value="250">AISI 1020 HR — Sy = 250 MPa</option>
+          <option value="370" selected>AISI 1020 CD — Sy = 370 MPa</option>
+          <option value="490">AISI 1040 HR — Sy = 490 MPa</option>
+          <option value="600">AISI 1040 OQT 1200°F — Sy = 600 MPa</option>
+          <option value="655">AISI 4140 OQT 1200°F — Sy = 655 MPa</option>
+          <option value="860">AISI 4140 OQT 900°F — Sy = 860 MPa</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Results</div>
+      <table class="result-table">
+        <tr><td>Output Shaft Speed</td><td id="rRPM">—</td></tr>
+        <tr><td>Output Torque</td><td id="rTorque">—</td></tr>
+        <tr><td>Belt Velocity</td><td id="rBelt">—</td></tr>
+        <tr><td>Min. Shaft Diameter</td><td id="rDmin">—</td></tr>
+        <tr id="rStdRow"><td>Standard Size to Specify</td><td id="rStd">—</td></tr>
+        <tr><td>Approx. Bearing Radial Load</td><td id="rBearing">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>The design cascade:</strong> Motor power &amp; speed → Gear ratio → Output torque → Min. shaft diameter → Standard shaft size → Bearing selection → Housing size.
+    Try doubling the gear ratio — output torque doubles, required shaft diameter grows, and heavier bearings are needed. <em>Every downstream element must be re-evaluated.</em>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let motorPower = 750;
+let motorRPM   = 1750;
+let gearRatio  = 4.0;
+let shaftSyMPa = 370;
+
+let inputAngle = 0;
+let beltPhase  = 0;
+let lastTs     = null;
+
+// ── Canvas ────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('simCanvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr  = window.devicePixelRatio || 1;
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Calculations ──────────────────────────────────────────────────────────
+function calc() {
+  const P  = motorPower;
+  const N1 = motorRPM;
+  const VR = gearRatio;
+  const Sy = shaftSyMPa * 1e6;
+
+  const N2     = N1 / VR;
+  const omega2 = N2 * 2 * Math.PI / 60;
+  const T2     = P / omega2;
+
+  // Belt speed: drive sprocket radius = 16 mm
+  // (sized so the 0.5 m/s design target falls within the 2:1-8:1 ratio slider range,
+  //  achievable near a ratio of ~5.9:1)
+  const sprocketR = 0.016;
+  const vBelt  = omega2 * sprocketR;
+
+  // Min shaft diameter: torsion + ASME safety factor 2.0
+  const Sf = 2.0;
+  const d3 = (16 * T2 * Sf) / (Math.PI * 0.577 * Sy);
+  const dMin = Math.pow(Math.max(d3, 0), 1/3) * 1000; // mm
+
+  const stdSizes = [15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80];
+  const dStd = stdSizes.find(s => s >= dMin) || null;
+
+  const Frad = T2 / sprocketR;
+
+  return { N2, T2, vBelt, dMin, dStd, Frad };
+}
+
+// ── DOM update ────────────────────────────────────────────────────────────
+function updateOutputs() {
+  const r = calc();
+  document.getElementById('rRPM').textContent     = r.N2.toFixed(0)   + ' rpm';
+  document.getElementById('rTorque').textContent  = r.T2.toFixed(1)   + ' N·m';
+  document.getElementById('rBelt').textContent    = r.vBelt.toFixed(2)+ ' m/s';
+  document.getElementById('rDmin').textContent    = r.dMin.toFixed(1) + ' mm';
+  document.getElementById('rBearing').textContent = r.Frad.toFixed(0) + ' N';
+
+  const stdRow = document.getElementById('rStdRow');
+  const stdEl  = document.getElementById('rStd');
+  if (r.dStd) {
+    stdEl.textContent = r.dStd + ' mm ✓';
+    stdRow.className = 'ok';
+  } else {
+    stdEl.textContent = '> 80 mm — redesign!';
+    stdRow.className = 'warn';
+  }
+}
+
+// ── Drawing helpers ───────────────────────────────────────────────────────
+function rndRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function lightenHex(hex, t) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.round(r+(255-r)*t)},${Math.round(g+(255-g)*t)},${Math.round(b+(255-b)*t)})`;
+}
+
+function drawGear(cx, cy, pitchR, nTeeth, angle, color) {
+  const tH  = Math.max(4, pitchR * 0.17);
+  const aR  = pitchR + tH;
+  const dR  = pitchR - tH * 0.75;
+  const tw  = (2*Math.PI/nTeeth) * 0.38;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  // Teeth + body
+  ctx.beginPath();
+  for (let i = 0; i < nTeeth; i++) {
+    const a  = (2*Math.PI*i)/nTeeth;
+    const a1 = a - tw*1.25;
+    const a2 = a - tw*0.62;
+    const a3 = a + tw*0.62;
+    const a4 = a + tw*1.25;
+    if (i===0) ctx.moveTo(dR*Math.cos(a1), dR*Math.sin(a1));
+    else       ctx.lineTo(dR*Math.cos(a1), dR*Math.sin(a1));
+    ctx.lineTo(aR*Math.cos(a2), aR*Math.sin(a2));
+    ctx.lineTo(aR*Math.cos(a3), aR*Math.sin(a3));
+    ctx.lineTo(dR*Math.cos(a4), dR*Math.sin(a4));
+  }
+  ctx.closePath();
+
+  // Fill with subtle radial gradient
+  const grd = ctx.createRadialGradient(0, 0, dR*0.1, 0, 0, aR);
+  grd.addColorStop(0, lightenHex(color, 0.35));
+  grd.addColorStop(1, color);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Web (inner lighter disc)
+  ctx.beginPath();
+  ctx.arc(0, 0, dR*0.82, 0, Math.PI*2);
+  ctx.fillStyle = lightenHex(color, 0.22);
+  ctx.fill();
+
+  // 3 spokes
+  const spokeW = Math.max(2, pitchR * 0.07);
+  for (let s = 0; s < 3; s++) {
+    const sa = (Math.PI*2*s)/3;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(dR*0.80*Math.cos(sa), dR*0.80*Math.sin(sa));
+    ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+    ctx.lineWidth = spokeW;
+    ctx.stroke();
+  }
+
+  // Hub
+  const hubR = Math.max(5, pitchR*0.2);
+  ctx.beginPath();
+  ctx.arc(0, 0, hubR, 0, Math.PI*2);
+  ctx.fillStyle = '#dde4ee';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Rotation marker line
+  ctx.beginPath();
+  ctx.moveTo(hubR, 0);
+  ctx.lineTo(dR*0.78, 0);
+  ctx.strokeStyle = 'rgba(0,0,0,0.22)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawShaft(x1, x2, cy, thick) {
+  const t = thick || 10;
+  const grad = ctx.createLinearGradient(0, cy-t/2, 0, cy+t/2);
+  grad.addColorStop(0, '#d0d4dc');
+  grad.addColorStop(0.4, '#f0f2f5');
+  grad.addColorStop(1, '#a8adb8');
+  ctx.fillStyle = grad;
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.rect(x1, cy-t/2, x2-x1, t);
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawBearing(cx, cy, r, rotAngle) {
+  r = r || 15;
+  // Outer race
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fillStyle = '#c8cdd8';
+  ctx.fill();
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Balls
+  const ballR   = r * 0.19;
+  const ballDia = r * 0.67;
+  const nBalls  = 7;
+  for (let i = 0; i < nBalls; i++) {
+    const ba = (Math.PI*2*i/nBalls) + (rotAngle||0) * 0.35;
+    ctx.beginPath();
+    ctx.arc(cx + ballDia*Math.cos(ba), cy + ballDia*Math.sin(ba), ballR, 0, Math.PI*2);
+    ctx.fillStyle = '#eaeef4';
+    ctx.fill();
+    ctx.strokeStyle = '#bbb';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Inner race
+  ctx.beginPath();
+  ctx.arc(cx, cy, r*0.44, 0, Math.PI*2);
+  ctx.fillStyle = '#dde4ee';
+  ctx.fill();
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+function drawMotor(x, y, w, h) {
+  ctx.shadowColor = 'rgba(0,0,0,0.15)';
+  ctx.shadowBlur  = 8;
+  ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+
+  const grad = ctx.createLinearGradient(x, y, x+w, y+h);
+  grad.addColorStop(0, '#4a6fa5');
+  grad.addColorStop(1, '#2c4f7a');
+  ctx.fillStyle = grad;
+  rndRect(x, y, w, h, 8);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.shadowColor = 'transparent';
+
+  // Cooling fins
+  for (let i = 1; i <= 4; i++) {
+    const fy = y + h * i/5;
+    ctx.beginPath();
+    ctx.moveTo(x+6, fy); ctx.lineTo(x+w-6, fy);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold 15px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('M', x+w/2, y+h/2-6);
+  ctx.font = '9px Segoe UI, Arial';
+  ctx.fillText('MOTOR', x+w/2, y+h/2+8);
+}
+
+function drawConveyor(x, y, w, h) {
+  const rR = h * 0.6;
+
+  // Belt body
+  ctx.fillStyle = '#3a3a3a';
+  ctx.fillRect(x, y, w, h);
+
+  // Moving stripe pattern
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  const spacing = 30;
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 2;
+  for (let bx = (beltPhase % spacing) - spacing; bx < w + spacing; bx += spacing) {
+    ctx.beginPath();
+    ctx.moveTo(x+bx, y); ctx.lineTo(x+bx, y+h);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Frame rails
+  ctx.fillStyle = '#8a8a8a';
+  ctx.fillRect(x, y-7, w, 7);
+  ctx.fillRect(x, y+h, w, 7);
+
+  // Drive roller (left)
+  function roller(rx) {
+    const grad = ctx.createRadialGradient(rx-rR*0.2, y+h/2-rR*0.2, 1, rx, y+h/2, rR);
+    grad.addColorStop(0, '#c8c8c8');
+    grad.addColorStop(1, '#888');
+    ctx.beginPath();
+    ctx.arc(rx, y+h/2, rR, 0, Math.PI*2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(rx, y+h/2, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#aaa'; ctx.fill();
+  }
+  roller(x);
+  roller(x+w);
+
+  ctx.fillStyle = '#555';
+  ctx.font = '10px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Conveyor Belt', x+w/2, y+h+22);
+}
+
+function floatTag(x, y, text, color, align) {
+  ctx.font = '10px Segoe UI, Arial';
+  const tw = ctx.measureText(text).width;
+  const pw = tw + 10, ph = 17;
+  const ax = align === 'right' ? x - pw : align === 'center' ? x - pw/2 : x;
+
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  rndRect(ax, y - ph/2, pw, ph, 3);
+  ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, ax+5, y+4);
+}
+
+// ── Main draw ─────────────────────────────────────────────────────────────
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#f7f9fc';
+  ctx.fillRect(0, 0, W, H);
+
+  // Light grid
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)';
+  ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+  const CY = H * 0.44;
+  const r  = calc();
+
+  // ── Gear geometry: fixed centers, ratio changes sizes ─────────────────
+  const ctc   = 130;
+  const g1X   = W * 0.32;
+  const g2X   = g1X + ctc;
+  const gR1   = ctc / (1 + gearRatio);
+  const gR2   = ctc - gR1;
+  const nT1   = Math.max(8, Math.round(gR1 * 0.52));
+  const nT2   = Math.round(nT1 * gearRatio);
+
+  // ── Motor ─────────────────────────────────────────────────────────────
+  const mW = 68, mH = 96;
+  const mX = W*0.04, mY = CY - mH/2;
+  drawMotor(mX, mY, mW, mH);
+
+  // ── Input shaft ───────────────────────────────────────────────────────
+  const s1L = mX + mW;
+  const s1R = g1X - gR1 - 3;
+  if (s1R > s1L + 10) {
+    drawShaft(s1L, s1R, CY, 10);
+    drawBearing(s1L + (s1R-s1L)*0.35, CY, 13, inputAngle);
+    drawBearing(s1L + (s1R-s1L)*0.72, CY, 13, inputAngle);
+  }
+
+  // ── Output shaft ──────────────────────────────────────────────────────
+  const convX = g2X + gR2 + 22;
+  const s2L   = g2X + gR2 + 4;
+  const s2R   = convX + 12;
+  drawShaft(s2L, s2R, CY, 13);
+  drawBearing(s2L + 16, CY, 16, inputAngle / gearRatio);
+
+  // ── Conveyor ──────────────────────────────────────────────────────────
+  const convW = W - convX - 18;
+  const convH = 38;
+  drawConveyor(convX, CY - convH/2, convW, convH);
+
+  // ── Gears ─────────────────────────────────────────────────────────────
+  const outAngle = -inputAngle / gearRatio + Math.PI;
+  drawGear(g1X, CY, gR1, nT1, inputAngle, '#2c5f8a');
+  drawGear(g2X, CY, gR2, nT2, outAngle,   '#4a90c4');
+
+  // Gear labels
+  ctx.fillStyle = '#444';
+  ctx.font = '10px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  const labelBase = CY + Math.max(gR2, gR1) + gR1*0.18 + 24;
+  ctx.fillText('Input Gear',  g1X, labelBase);
+  ctx.fillText('Output Gear', g2X, labelBase);
+
+  // Ratio label between gears
+  ctx.fillStyle = '#2c5f8a';
+  ctx.font = 'bold 13px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  const ratioY = CY - Math.max(gR1, gR2) - 20;
+  ctx.fillText(gearRatio + ' : 1', (g1X + g2X)/2, ratioY);
+
+  // ── Float labels ──────────────────────────────────────────────────────
+  const lY1 = mY - 12;
+  floatTag(mX + mW/2, lY1,    motorPower + ' W',   '#3a5a8a', 'center');
+  floatTag(mX + mW/2, lY1-18, motorRPM   + ' rpm', '#5a5a8a', 'center');
+
+  const outTagX = convX + convW/2;
+  floatTag(outTagX, CY - convH/2 - 28, r.N2.toFixed(0)  + ' rpm', '#3070a0', 'center');
+  floatTag(outTagX, CY - convH/2 - 46, r.T2.toFixed(1)  + ' N·m', '#c06000', 'center');
+  floatTag(outTagX, CY - convH/2 - 64, r.vBelt.toFixed(2) + ' m/s', '#2a7a3a', 'center');
+
+  // ── Cascade strip at bottom ───────────────────────────────────────────
+  const baseY = H - 30;
+  const nodes = [
+    { x: mX + mW/2,      label: 'Motor Power',  sub: motorPower + ' W' },
+    { x: (g1X+g2X)/2,    label: 'Gear Ratio',   sub: gearRatio + ':1'  },
+    { x: s2L + 16,        label: 'Output Torque',sub: r.T2.toFixed(0) + ' N·m' },
+    { x: outTagX,         label: 'Shaft Ø',      sub: r.dMin.toFixed(0) + ' mm' },
+  ];
+
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+
+    ctx.beginPath();
+    ctx.arc(n.x, baseY, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#2c5f8a';
+    ctx.fill();
+
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 8.5px Segoe UI, Arial';
+    ctx.fillStyle = '#2c5f8a';
+    ctx.fillText(n.label, n.x, baseY + 13);
+    ctx.font = '8.5px Segoe UI, Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText(n.sub, n.x, baseY + 23);
+
+    if (i < nodes.length - 1) {
+      const nx = nodes[i+1].x;
+      ctx.strokeStyle = '#4a80aa';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(n.x+7, baseY);
+      ctx.lineTo(nx-7,  baseY);
+      ctx.stroke();
+      ctx.fillStyle = '#4a80aa';
+      ctx.beginPath();
+      ctx.moveTo(nx-7, baseY-3);
+      ctx.lineTo(nx-1, baseY);
+      ctx.lineTo(nx-7, baseY+3);
+      ctx.fill();
+    }
+  }
+}
+
+// ── Animation loop ────────────────────────────────────────────────────────
+function frame(ts) {
+  if (lastTs !== null) {
+    const dt = Math.min(ts - lastTs, 50) / 1000; // seconds, capped
+    const visualSpeed = (motorRPM / 1750) * 0.08; // rad/frame at 60fps
+    inputAngle += visualSpeed * dt * 60;
+    beltPhase  += calc().vBelt * 80 * dt;
+  }
+  lastTs = ts;
+  draw();
+  requestAnimationFrame(frame);
+}
+
+// ── Slider events ─────────────────────────────────────────────────────────
+document.getElementById('sPower').addEventListener('input', function() {
+  motorPower = +this.value;
+  document.getElementById('vPower').textContent = motorPower + ' W';
+  updateOutputs();
+});
+document.getElementById('sRPM').addEventListener('input', function() {
+  motorRPM = +this.value;
+  document.getElementById('vRPM').textContent = motorRPM + ' rpm';
+  updateOutputs();
+});
+document.getElementById('sRatio').addEventListener('input', function() {
+  gearRatio = +this.value;
+  document.getElementById('vRatio').textContent = gearRatio + ' : 1';
+  updateOutputs();
+});
+document.getElementById('sMat').addEventListener('change', function() {
+  shaftSyMPa = +this.value;
+  updateOutputs();
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+updateOutputs();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
