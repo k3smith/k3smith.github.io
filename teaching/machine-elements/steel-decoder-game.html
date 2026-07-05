@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steel Decoder Challenge — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 720px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #7a4a10 0%, #b05a10 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.85; }
+.hud { display: flex; gap: 0; border-bottom: 1px solid #e8ecf1; }
+.hud div { flex: 1; text-align: center; padding: 9px 6px; border-right: 1px solid #f0f3f7; }
+.hud div:last-child { border-right: none; }
+.hud .v { font-size: 1.2em; font-weight: 800; color: #b05a10; }
+.hud .l { font-size: 0.65em; color: #889; text-transform: uppercase; letter-spacing: 0.05em; }
+.arena { padding: 22px; min-height: 330px; }
+.qtag { display: inline-block; font-size: 0.7em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  background: #eef4fa; color: #2c5f8a; border-radius: 10px; padding: 3px 12px; margin-bottom: 12px; }
+.qtag.boss { background: #fdf0f0; color: #b03030; }
+.prompt { font-size: 1.0em; line-height: 1.6; margin-bottom: 16px; }
+.bigcode { font-family: Consolas, monospace; font-size: 3.2em; font-weight: 800; text-align: center;
+  letter-spacing: 0.12em; margin: 10px 0 18px; color: #334; }
+.bigcode .fam { color: #2c5f8a; }
+.bigcode .carb { color: #b05a10; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choices button { padding: 13px 14px; font-size: 0.9em; border: 1.5px solid #c0cad4; border-radius: 8px;
+  background: #f7f9fc; cursor: pointer; text-align: left; line-height: 1.4; transition: all 0.12s; }
+.choices button:hover { border-color: #b05a10; background: #fff8ec; }
+.choices button.right { background: #edf6ee; border-color: #2a7a3a; }
+.choices button.wrong { background: #fdf0f0; border-color: #b03030; }
+.numRow { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 4px; }
+.numRow input { width: 140px; padding: 11px 12px; font-size: 1.15em; border: 1.5px solid #c0cad4;
+  border-radius: 8px; text-align: center; font-family: Consolas, monospace; }
+.numRow button { padding: 11px 20px; border: none; border-radius: 8px; background: #b05a10; color: #fff;
+  font-size: 0.9em; cursor: pointer; }
+.feedback { margin-top: 16px; padding: 13px 16px; border-radius: 8px; font-size: 0.88em; line-height: 1.65; display: none; }
+.feedback.good { background: #edf6ee; border-left: 4px solid #2a7a3a; }
+.feedback.bad { background: #fdf0f0; border-left: 4px solid #b03030; }
+.feedback .decode { font-family: Consolas, monospace; font-weight: 700; font-size: 1.05em; margin: 4px 0; }
+.nextRow { text-align: right; margin-top: 12px; }
+.nextRow button { padding: 9px 22px; border: none; border-radius: 8px; background: #2c5f8a; color: #fff;
+  font-size: 0.9em; cursor: pointer; display: none; }
+.endscreen { text-align: center; padding: 10px 0 6px; display: none; }
+.endscreen .rank { font-size: 1.5em; font-weight: 800; color: #b05a10; margin: 8px 0 2px; }
+.endscreen .stats { color: #556; font-size: 0.9em; margin-bottom: 14px; }
+.codeRow { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+.codeRow input { width: 110px; padding: 7px 8px; font-size: 0.85em; border: 1px solid #c0cad4; border-radius: 6px; }
+.codeRow .code { font-family: Consolas, monospace; font-size: 0.9em; padding: 7px 12px; background: #f4f7fb;
+  border: 1px dashed #99a; border-radius: 6px; color: #2c5f8a; min-width: 190px; }
+.codeRow button { padding: 7px 14px; border: 1px solid #b05a10; border-radius: 6px; background: #b05a10; color: #fff; cursor: pointer; }
+.endscreen .again { margin-top: 14px; padding: 9px 24px; border: 1.5px solid #2c5f8a; border-radius: 8px;
+  background: #fff; color: #2c5f8a; font-size: 0.9em; cursor: pointer; }
+details.ref { margin: 0 22px 18px; border: 1px dashed #c0cad4; border-radius: 8px; font-size: 0.82em; }
+details.ref summary { cursor: pointer; padding: 10px 14px; font-weight: 600; color: #2c5f8a; }
+details.ref table { width: 100%; border-collapse: collapse; margin: 0 0 6px; }
+details.ref td, details.ref th { border-top: 1px solid #f0f3f7; padding: 5px 14px; font-size: 0.95em; text-align: left; }
+details.ref th { color: #556; }
+.cascade-bar { background: #f7f0e6; padding: 11px 22px; border-top: 1px solid #ecdcc4; font-size: 0.78em;
+  color: #5a4a3a; line-height: 1.6; }
+.cascade-bar strong { color: #b05a10; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🔩 Steel Decoder Challenge</h1>
+    <p>MET 320 · Module 1, Page 1.3 &nbsp;|&nbsp; 10 rounds. Crack the AISI code. Streaks pay bonus points — misses reset them.</p>
+  </div>
+
+  <div class="hud">
+    <div><div class="v" id="hRound">1/10</div><div class="l">Round</div></div>
+    <div><div class="v" id="hScore">0</div><div class="l">Score</div></div>
+    <div><div class="v" id="hStreak">0</div><div class="l">Streak 🔥</div></div>
+    <div><div class="v" id="hAcc">—</div><div class="l">Accuracy</div></div>
+  </div>
+
+  <div class="arena" id="arena"></div>
+
+  <details class="ref">
+    <summary>📖 Decoder reference (peeking is legal — this is how real engineers do it)</summary>
+    <table>
+      <tr><th>First two digits</th><th>Family</th><th>You'll meet it in…</th></tr>
+      <tr><td>10xx</td><td>Plain carbon</td><td>1020 brackets, 1045 shafts</td></tr>
+      <tr><td>11xx</td><td>Free-machining carbon (resulfurized)</td><td>1117 screw-machine parts</td></tr>
+      <tr><td>13xx</td><td>Manganese</td><td>1340 axles</td></tr>
+      <tr><td>41xx</td><td>Chromium-molybdenum</td><td>4140 shafts &amp; gears, 4130 "chromoly" tube</td></tr>
+      <tr><td>43xx</td><td>Nickel-chromium-molybdenum</td><td>4340 high-strength shafts</td></tr>
+      <tr><td>46xx</td><td>Nickel-molybdenum</td><td>4620 carburized gears</td></tr>
+      <tr><td>51xx</td><td>Chromium</td><td>5160 leaf springs</td></tr>
+      <tr><td>61xx</td><td>Chromium-vanadium</td><td>6150 springs, hand tools</td></tr>
+      <tr><td>86xx</td><td>Nickel-chromium-molybdenum (low alloy)</td><td>8620 carburized gears</td></tr>
+      <tr><td>92xx</td><td>Silicon-manganese</td><td>9260 springs</td></tr>
+      <tr><td colspan="3"><strong>Last two digits = carbon content in hundredths of a percent</strong> (xx40 → 0.40% C).
+      Five-digit codes mean ≥1.00% C: 52100 = chromium steel, 1.00% C (bearing steel).</td></tr>
+    </table>
+  </details>
+
+  <div class="cascade-bar">
+    <strong>Why it matters:</strong> in this course you'll read designations like "AISI 4140 OQT 1100" dozens of
+    times. The code tells you chemistry (family + carbon); the condition tells you heat treatment. Decode both
+    and you can predict properties before you ever open the appendix.
+  </div>
+</div>
+
+<script>
+'use strict';
+const FAM = {
+  '10': 'Plain carbon steel',
+  '11': 'Free-machining (resulfurized) carbon steel',
+  '13': 'Manganese steel',
+  '41': 'Chromium-molybdenum steel',
+  '43': 'Nickel-chromium-molybdenum steel',
+  '46': 'Nickel-molybdenum steel',
+  '51': 'Chromium steel',
+  '61': 'Chromium-vanadium steel',
+  '86': 'Nickel-chromium-molybdenum (low alloy) steel',
+  '92': 'Silicon-manganese steel'
+};
+const USES = {
+  '1018': 'general-purpose parts, often carburized', '1020': 'classic mild steel — brackets, frames',
+  '1040': 'medium-carbon shafts', '1045': 'shafts and machine parts, flame/induction hardened',
+  '1080': 'high-carbon — springs and rail steel', '1095': 'knives and springs',
+  '1117': 'screw-machine parts (sulfur improves chip-breaking)', '1340': 'axles and bolts',
+  '4130': '"chromoly" aircraft and bicycle tubing', '4140': 'THE workhorse shaft & gear steel',
+  '4340': 'high-strength shafts and aircraft parts', '4620': 'carburized gears',
+  '5160': 'vehicle leaf springs', '6150': 'springs and hand tools',
+  '8620': 'the classic carburized gear steel', '9260': 'coil springs'
+};
+const CODES = Object.keys(USES);
+
+// ── question builders ─────────────────────────────────────────────────────
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pick(arr, n) { return shuffle(arr.slice()).slice(0, n); }
+function famOf(code) { return code.slice(0, 2); }
+function carbonOf(code) { return code.length === 5 ? (+code.slice(2)) / 100 : (+code.slice(2)) / 100; }
+
+function qFamily(code) {
+  const correct = FAM[famOf(code)];
+  const wrong = pick(Object.values(FAM).filter(v => v !== correct), 3);
+  return { type: 'mc', tag: 'Decode the family', code,
+    prompt: `The first two digits are the alloy family. What is <b>AISI ${code}</b>?`,
+    choices: shuffle([correct, ...wrong]), answer: correct,
+    explain: `<span class="decode"><span style="color:#2c5f8a">${famOf(code)}</span>${code.slice(2)}</span>
+      ${famOf(code)}xx = ${correct}. (${code}: ${USES[code] || ''})` };
+}
+function qCarbon(code) {
+  const c = carbonOf(code);
+  return { type: 'num', tag: 'Decode the carbon', code,
+    prompt: `The last ${code.length - 2} digits give carbon content in hundredths of a percent. How much carbon is in <b>AISI ${code}</b>? (answer in %, e.g. 0.20)`,
+    answer: c, tol: 0.005, unit: '% C',
+    explain: `<span class="decode">${code.slice(0, 2)}<span style="color:#b05a10">${code.slice(2)}</span></span>
+      ${code.slice(2)} hundredths → <b>${c.toFixed(2)}% carbon</b>. ${FAM[famOf(code)]}; used for ${USES[code] || 'many machine parts'}.` };
+}
+function qEncode(code) {
+  return { type: 'text', tag: 'Write the code', code: null,
+    prompt: `Write the 4-digit AISI code: <b>${FAM[famOf(code)]}</b> (${famOf(code)}xx series) with <b>${carbonOf(code).toFixed(2)}% carbon</b>.`,
+    answer: code,
+    explain: `<span class="decode"><span style="color:#2c5f8a">${famOf(code)}</span><span style="color:#b05a10">${code.slice(2)}</span></span>
+      = ${FAM[famOf(code)]}, ${carbonOf(code).toFixed(2)}% C — ${USES[code] || ''}.` };
+}
+function qApply(code, distractors) {
+  return { type: 'mc', tag: 'Spec the steel', code: null,
+    prompt: `A drawing note calls for: <b>${FAM[famOf(code)]}, ${carbonOf(code).toFixed(2)}% carbon</b> — ${USES[code]}. Which designation do you write?`,
+    choices: shuffle([code, ...distractors]), answer: code,
+    explain: `<span class="decode"><span style="color:#2c5f8a">${famOf(code)}</span><span style="color:#b05a10">${code.slice(2)}</span></span>
+      Family digits ${famOf(code)} + carbon digits ${code.slice(2)}.` };
+}
+function qBoss() {
+  return { type: 'num', tag: 'BOSS ROUND', boss: true, code: '52100',
+    prompt: `Bearing races are made from <b>AISI 52100</b> — a five-digit code. How much carbon does it contain? (answer in %)`,
+    answer: 1.00, tol: 0.005, unit: '% C',
+    explain: `<span class="decode"><span style="color:#2c5f8a">5</span>2<span style="color:#b05a10">100</span></span>
+      Five digits means carbon ≥ 1.00%: 52100 is chromium steel with <b>1.00% C</b> — hard enough (when through-hardened)
+      to survive millions of Hertz-contact cycles in a rolling bearing. You'll meet it again in Module 6.` };
+}
+
+function buildRounds() {
+  const famPool = pick(CODES, 3);
+  const carbPool = pick(CODES.filter(c => !famPool.includes(c)), 3);
+  const encPool = pick(CODES.filter(c => !famPool.includes(c) && !carbPool.includes(c)), 2);
+  const appPool = pick(['4140', '8620', '5160', '1045'], 1);
+  const rounds = [
+    ...famPool.map(qFamily),
+    ...carbPool.map(qCarbon),
+    ...encPool.map(qEncode),
+    ...appPool.map(c => qApply(c, pick(CODES.filter(x => x !== c), 3))),
+    qBoss()
+  ];
+  return rounds;
+}
+
+// ── game state ────────────────────────────────────────────────────────────
+let rounds, ri, score, streak, correct, answered;
+const arena = document.getElementById('arena');
+
+function start() {
+  rounds = buildRounds(); ri = 0; score = 0; streak = 0; correct = 0; answered = 0;
+  render();
+}
+function hud() {
+  document.getElementById('hRound').textContent = Math.min(ri + 1, 10) + '/10';
+  document.getElementById('hScore').textContent = score;
+  document.getElementById('hStreak').textContent = streak;
+  document.getElementById('hAcc').textContent = answered ? Math.round(100 * correct / answered) + '%' : '—';
+}
+
+function render() {
+  hud();
+  const q = rounds[ri];
+  let html = `<span class="qtag${q.boss ? ' boss' : ''}">${q.boss ? '👑 ' : ''}Round ${ri + 1} — ${q.tag}</span>
+    <div class="prompt">${q.prompt}</div>`;
+  if (q.code) {
+    // family digits blue, carbon digits orange (works for 4- and 5-digit codes)
+    html += `<div class="bigcode"><span class="fam">${q.code.slice(0, 2)}</span><span class="carb">${q.code.slice(2)}</span></div>`;
+  }
+  if (q.type === 'mc') {
+    html += '<div class="choices">' + q.choices.map(c =>
+      `<button data-c="${c.replace(/"/g, '&quot;')}">${c}</button>`).join('') + '</div>';
+  } else {
+    html += `<div class="numRow"><input id="ansIn" type="text" inputmode="decimal" placeholder="${q.type === 'num' ? 'e.g. 0.40' : 'e.g. 4140'}" autocomplete="off">
+      <button id="ansGo">Submit</button></div>`;
+  }
+  html += `<div class="feedback" id="fb"></div>
+    <div class="nextRow"><button id="btnNext">${ri === 9 ? 'See results →' : 'Next round →'}</button></div>`;
+  arena.innerHTML = html;
+
+  if (q.type === 'mc') {
+    arena.querySelectorAll('.choices button').forEach(b =>
+      b.addEventListener('click', () => grade(b.dataset.c === q.answer, b)));
+  } else {
+    const go = () => {
+      const raw = document.getElementById('ansIn').value.trim();
+      let ok;
+      if (q.type === 'num') { const v = parseFloat(raw); ok = isFinite(v) && Math.abs(v - q.answer) <= q.tol; }
+      else ok = raw.replace(/\s/g, '') === q.answer;
+      grade(ok, null);
+    };
+    document.getElementById('ansGo').addEventListener('click', go);
+    document.getElementById('ansIn').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+    document.getElementById('ansIn').focus();
+  }
+  document.getElementById('btnNext').addEventListener('click', () => {
+    ri++;
+    if (ri >= 10) finish(); else render();
+  });
+}
+
+function grade(ok, btn) {
+  const q = rounds[ri];
+  if (arena.dataset.done) return;
+  arena.dataset.done = '1';
+  answered++;
+  const fb = document.getElementById('fb');
+  if (ok) {
+    correct++; streak++;
+    const bonus = Math.min(10, 2 * (streak - 1));
+    score += 10 + (q.boss ? 10 : 0) + bonus;
+    fb.className = 'feedback good';
+    fb.innerHTML = `<b>✔ Correct${q.boss ? ' — boss down! +20' : ' +10'}${bonus ? ` (+${bonus} streak bonus)` : ''}.</b><br>` + q.explain;
+    if (btn) btn.classList.add('right');
+  } else {
+    streak = 0;
+    fb.className = 'feedback bad';
+    fb.innerHTML = `<b>✘ Not quite.</b> The answer: <b>${q.type === 'num' ? q.answer.toFixed(2) + ' ' + q.unit : q.answer}</b>.<br>` + q.explain;
+    if (btn) {
+      btn.classList.add('wrong');
+      arena.querySelectorAll('.choices button').forEach(b => { if (b.dataset.c === q.answer) b.classList.add('right'); });
+    }
+  }
+  arena.querySelectorAll('.choices button, #ansGo').forEach(b => b.disabled = true);
+  fb.style.display = 'block';
+  document.getElementById('btnNext').style.display = 'inline-block';
+  delete arena.dataset.done;
+  hud();
+}
+
+function finish() {
+  hud();
+  const acc = Math.round(100 * correct / answered);
+  const rank = score >= 140 ? '🏆 Steel Sommelier' : score >= 100 ? '⚙️ Journeyman Metallurgist' :
+               score >= 70 ? '🔧 Apprentice Decoder' : '📖 Keep the reference card handy';
+  arena.innerHTML = `<div class="endscreen" style="display:block">
+    <div style="font-size:2.6em">${score >= 100 ? '🎉' : '🔥'}</div>
+    <div class="rank">${rank}</div>
+    <div class="stats">Score <b>${score}</b> · ${correct}/10 correct · accuracy ${acc}%<br>
+      (max possible with a perfect streak: 180)</div>
+    <div class="codeRow">
+      <input id="initials" maxlength="6" placeholder="initials">
+      <div class="code" id="codeOut">score code appears here</div>
+      <button id="btnCode">Get code</button>
+    </div>
+    <div style="font-size:0.72em;color:#889;margin-top:6px">Post your code in the Canvas thread if your section is competing.</div>
+    <button class="again" id="btnAgain">↻ Play again (new codes)</button>
+  </div>`;
+  document.getElementById('btnCode').addEventListener('click', () => {
+    const ini = (document.getElementById('initials').value || 'ANON').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6) || 'ANON';
+    let h = 7; const s = ini + '|' + score + '|MET320M1';
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 1679615;
+    document.getElementById('codeOut').textContent = 'M1-' + ini + '-' + score + '-' + h.toString(36).toUpperCase().padStart(4, '0');
+  });
+  document.getElementById('btnAgain').addEventListener('click', start);
+}
+
+start();
+</script>
+</body>
+</html>
