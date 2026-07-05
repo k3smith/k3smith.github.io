@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Tensile Test Lab — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.82; }
+.stage { display: grid; grid-template-columns: 300px 1fr; border-bottom: 1px solid #dde4ec; }
+#machineCv { width: 100%; height: 400px; background: #f2f4f8; border-right: 1px solid #e3e8ef; display: block; }
+#chartCv { width: 100%; height: 400px; background: #fdfdfb; display: block; }
+.controls { display: flex; gap: 14px; align-items: center; padding: 12px 22px; flex-wrap: wrap; background: #f7f9fc; border-bottom: 1px solid #e8ecf1; }
+.controls select { padding: 7px 10px; border: 1px solid #c0cad4; border-radius: 6px; font-size: 0.85em; background: #fff; cursor: pointer; }
+.controls button { padding: 7px 16px; border: 1px solid #2c5f8a; border-radius: 6px; background: #2c5f8a;
+  color: #fff; font-size: 0.85em; cursor: pointer; min-width: 84px; }
+.controls button:hover { background: #24507a; }
+.controls .sliderWrap { flex: 1; min-width: 240px; display: flex; align-items: center; gap: 10px; }
+.controls .sliderWrap label { font-size: 0.78em; color: #556; white-space: nowrap; }
+input[type=range] { -webkit-appearance: none; flex: 1; height: 7px; border-radius: 4px;
+  background: linear-gradient(90deg, #c8d8e8, #e8c8c8); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px;
+  border-radius: 50%; background: #b05a10; cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.3); border: 2px solid #fff; }
+.readouts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 1px solid #e8ecf1; }
+.ro { padding: 10px 14px; text-align: center; border-right: 1px solid #f0f3f7; }
+.ro:last-child { border-right: none; }
+.ro .v { font-size: 1.25em; font-weight: 800; color: #2c5f8a; }
+.ro .l { font-size: 0.68em; color: #889; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+.caption { margin: 12px 22px; padding: 12px 16px; border-radius: 7px; background: #fff8ec;
+  border-left: 4px solid #e67300; font-size: 0.86em; line-height: 1.6; min-height: 66px; }
+.caption strong { color: #b05a10; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🧪 Virtual Tensile Test Lab — Watch the Curve Being Born</h1>
+    <p>MET 320 · Module 1, Page 1.2 &nbsp;|&nbsp; Drag the slider (or press Run) to pull the specimen. Scrub backward anytime — park exactly on the yield point.</p>
+  </div>
+
+  <div class="stage">
+    <canvas id="machineCv"></canvas>
+    <canvas id="chartCv"></canvas>
+  </div>
+
+  <div class="controls">
+    <select id="matSel">
+      <option value="steel" selected>AISI 1020 hot-rolled steel (ductile)</option>
+      <option value="alum">6061-T6 aluminum (no sharp yield)</option>
+      <option value="ci">Gray cast iron (brittle)</option>
+      <option value="rubber">Elastomer / rubber (hyperelastic)</option>
+    </select>
+    <button id="btnRun">▶ Run test</button>
+    <div class="sliderWrap">
+      <label>Test progress</label>
+      <input type="range" id="tSlider" min="0" max="1000" step="1" value="0">
+    </div>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><div class="v" id="roF">0.0 kN</div><div class="l">Load F</div></div>
+    <div class="ro"><div class="v" id="roDL">0.000 mm</div><div class="l">Extension ΔL (L₀ = 50 mm)</div></div>
+    <div class="ro"><div class="v" id="roSig">0 MPa</div><div class="l">Stress σ = F/A₀</div></div>
+    <div class="ro"><div class="v" id="roEps">0.0000</div><div class="l">Strain ε = ΔL/L₀</div></div>
+  </div>
+
+  <div class="caption" id="caption"></div>
+
+  <div class="cascade-bar">
+    <strong>What to notice:</strong> the machine only ever measures two things — force and extension. Everything
+    on the right is those two numbers divided by constants (A₀ and L₀). Compare materials: steel announces yielding
+    with a plateau; aluminum never does (that's why the 0.2% offset exists); cast iron gives no warning at all;
+    rubber isn't even trying to be linear. <em>Specimen deformation is exaggerated for visibility — the note under
+    the specimen shows the scale factor.</em>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ═══════════════ Material models: σ(ε) piecewise, MPa / dimensionless ═══════════════
+function buildCurve(segFn, epsF, N) {
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const e = epsF * i / N;
+    pts.push([e, Math.max(0, segFn(e))]);
+  }
+  return pts;
+}
+const N = 480;
+
+const MATS = {
+  steel: {
+    label: 'AISI 1020 HR steel', E: 207000, epsF: 0.25, sigMax: 500, epsAxis: 0.28,
+    exag: 2.2, ductile: true, color: '#2c5f8a',
+    fn: e => {
+      const ey = 331 / 207000;
+      if (e <= ey) return 207000 * e;
+      if (e <= 0.015) return 331 - 4 * Math.sin((e - ey) * 900);            // Lüders wiggle
+      if (e <= 0.17) return 448 - 117 * Math.pow((0.17 - e) / 0.155, 1.7);  // hardening to UTS
+      return 448 - 68 * Math.pow((e - 0.17) / 0.08, 1.3);                   // necking (falling)
+    },
+    events: [
+      { eps: 0.00136, key: 'PL', name: 'Proportional limit', dy: -14,
+        text: '<strong>Elastic region.</strong> Stress is proportional to strain (slope = E). Atomic bonds are stretching like springs — release the load and the specimen returns to its exact original length.' },
+      { eps: 331 / 207000, key: 'Sy', name: 'Yield, Sy = 331 MPa', dy: -14,
+        text: '<strong>Yield point.</strong> Dislocations begin to move — permanent (plastic) deformation starts. Note the flat plateau: classic low-carbon steel behavior. Design goal for ductile parts: stay below this line.' },
+      { eps: 0.06, key: 'SH', name: 'strain hardening', dy: -14,
+        text: '<strong>Strain hardening.</strong> The metal deforms plastically everywhere along the gauge length, getting stronger as dislocations tangle. The curve climbs toward the ultimate strength.' },
+      { eps: 0.17, key: 'Su', name: 'Ultimate, Su = 448 MPa', dy: -14,
+        text: '<strong>Ultimate tensile strength.</strong> The peak of the engineering curve. From here on, deformation localizes — watch the specimen begin to <em>neck</em> in one spot.' },
+      { eps: 0.21, key: 'NK', name: 'necking', dy: 16,
+        text: '<strong>Necking.</strong> All further stretching happens at the thinning neck. Engineering stress FALLS because we still divide by the original area A₀ — the true stress at the neck is actually still rising.' },
+      { eps: 0.25, key: 'X', name: 'fracture', dy: 16,
+        text: '<strong>Fracture — cup-and-cone.</strong> The neck can no longer carry the load. Total elongation ≈ 25%: very ductile, lots of visible warning before failure.' },
+    ],
+  },
+  alum: {
+    label: '6061-T6 aluminum', E: 69000, epsF: 0.12, sigMax: 360, epsAxis: 0.135,
+    exag: 4.0, ductile: true, color: '#2a7a3a',
+    fn: e => {
+      const ep = 207 / 69000;   // proportional limit ~207 MPa
+      if (e <= ep) return 69000 * e;
+      if (e <= 0.08) return 310 - 103 * Math.pow((0.08 - e) / (0.08 - ep), 2);
+      return 310 - 20 * Math.pow((e - 0.08) / 0.04, 1.2);
+    },
+    events: [
+      { eps: 0.0025, key: 'PL', name: 'Proportional limit', dy: -14,
+        text: '<strong>Elastic region</strong> — but look at the slope: E = 69 GPa, one-third of steel. Same load, three times the stretch. Stiffness and strength are different properties.' },
+      { eps: 0.006, key: 'Sy', name: '0.2% offset yield ≈ 276 MPa', dy: -14,
+        text: '<strong>No sharp yield point!</strong> Aluminum transitions smoothly from elastic to plastic. That is why S<sub>y</sub> is defined by the <em>0.2% offset method</em>: draw a line parallel to the elastic slope starting at ε = 0.002 and use the intersection.' },
+      { eps: 0.08, key: 'Su', name: 'Ultimate, Su = 310 MPa', dy: -14,
+        text: '<strong>Ultimate strength.</strong> Nearly as strong as the 1020 steel — at one-third the density. This is why aluminum wins when weight matters (recall Figure 1.2b).' },
+      { eps: 0.12, key: 'X', name: 'fracture', dy: 16,
+        text: '<strong>Fracture</strong> at ≈12% elongation — ductile, but with less total stretch than low-carbon steel.' },
+    ],
+  },
+  ci: {
+    label: 'Gray cast iron', E: 100000, epsF: 0.006, sigMax: 260, epsAxis: 0.0068,
+    exag: 60, ductile: false, color: '#7a4aa0',
+    fn: e => 214 * Math.pow(e / 0.006, 0.72),
+    events: [
+      { eps: 0.001, key: 'NL', name: 'nonlinear from the start', dy: -14,
+        text: '<strong>No true elastic line.</strong> The graphite flakes inside gray iron act like internal cracks, so the curve bends from the very beginning. E is quoted as a secant value.' },
+      { eps: 0.0045, key: 'W', name: '(no yield, no warning)', dy: -14,
+        text: '<strong>No yield point, no plateau, no necking.</strong> The specimen looks completely unchanged... right up until it doesn\'t. This is why brittle materials are designed against S<sub>u</sub> with larger safety factors.' },
+      { eps: 0.006, key: 'X', name: 'sudden fracture, Su = 214 MPa', dy: 16,
+        text: '<strong>BANG — sudden flat fracture</strong> at only 0.6% strain, with zero visible warning. Compare the fracture surface: flat and granular, not cup-and-cone. Total strain is 40× less than the steel.' },
+    ],
+  },
+  rubber: {
+    label: 'Elastomer (rubber)', E: 20, epsF: 3.0, sigMax: 18, epsAxis: 3.4,
+    exag: 0.35, ductile: false, color: '#b05a10',
+    fn: e => { const x = e / 3.0; return 15 * (0.45 * Math.pow(x, 0.7) + 0.55 * Math.pow(x, 3.2)); },
+    events: [
+      { eps: 0.4, key: 'HE', name: 'hyperelastic — recoverable', dy: -14,
+        text: '<strong>Not linear, yet still elastic.</strong> Long polymer chains uncoil. Release the load anywhere along here and the specimen snaps back. "Elastic" does not have to mean "linear."' },
+      { eps: 2.2, key: 'ST', name: 'chain stiffening', dy: -14,
+        text: '<strong>Stiffening.</strong> The chains are nearly fully uncoiled; now the covalent backbone itself is being stretched, so the curve turns sharply upward.' },
+      { eps: 3.0, key: 'X', name: 'fracture at ε = 300%', dy: 16,
+        text: '<strong>Fracture at 300% strain</strong> — the specimen stretched to 4× its length. Note the stress axis: 15 MPa, twenty times lower than the metals. Completely different material physics, same two measurements: F and ΔL.' },
+    ],
+  },
+};
+for (const k in MATS) { MATS[k].pts = buildCurve(MATS[k].fn, MATS[k].epsF, N); }
+
+// ═══════════════ State ═══════════════
+let mat = MATS.steel;
+let t = 0;                 // 0..1
+let playing = false, lastTs = null;
+const A0 = Math.PI * 12.5 * 12.5 / 4;   // mm², Ø12.5 specimen
+const L0 = 50;                           // mm gauge
+
+// ═══════════════ Canvas setup ═══════════════
+function fit(cv) {
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  cv.width = r.width * d; cv.height = r.height * d;
+  const c = cv.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0);
+  return [c, r.width, r.height];
+}
+const mCv = document.getElementById('machineCv');
+const cCv = document.getElementById('chartCv');
+window.addEventListener('resize', draw);
+
+function cur() {                       // current point
+  const i = Math.min(N, Math.round(t * N));
+  const [e, s] = mat.pts[i];
+  return { i, e, s };
+}
+
+// ═══════════════ Machine drawing ═══════════════
+function drawMachine() {
+  const [c, W, H] = fit(mCv);
+  c.clearRect(0, 0, W, H);
+  const { e, s } = cur();
+  const broken = t >= 0.999;
+
+  // visual elongation (capped)
+  const gaugePx = 120;
+  const dV = Math.min(78, e * mat.exag * gaugePx);
+  const cx = W / 2;
+  const baseY = H - 58;                       // bottom grip top edge
+  const topY = baseY - gaugePx - 44 - dV;     // moving crosshead underside
+
+  // load frame
+  c.fillStyle = '#c8cdd8'; c.strokeStyle = '#99a'; c.lineWidth = 1.5;
+  [-1, 1].forEach(sg => { c.fillRect(cx + sg * 92 - 11, 26, 22, H - 66); c.strokeRect(cx + sg * 92 - 11, 26, 22, H - 66); });
+  c.fillRect(cx - 110, H - 42, 220, 20); c.strokeRect(cx - 110, H - 42, 220, 20);   // base
+  // moving crosshead
+  c.fillStyle = '#8a97a5';
+  c.fillRect(cx - 103, topY - 26, 206, 26); c.strokeRect(cx - 103, topY - 26, 206, 26);
+  c.fillStyle = '#fff'; c.font = 'bold 9px Segoe UI'; c.textAlign = 'center';
+  c.fillText('CROSSHEAD ▲', cx, topY - 9);
+
+  // grips
+  c.fillStyle = '#667';
+  c.fillRect(cx - 17, topY, 34, 22);
+  c.fillRect(cx - 17, baseY, 34, 22);
+
+  // specimen (dogbone) between grips: shoulders + gauge section
+  const gTop = topY + 22, gBot = baseY;
+  const gaugeTop = gTop + 22, gaugeBot = gBot - 22;
+  const w0 = 13;
+  const wUnif = w0 * (1 - 0.18 * Math.min(1, e / mat.epsF));       // uniform thinning
+  // necking profile (ductile, past UTS event)
+  const utsEps = mat.ductile ? mat.events.find(ev => ev.key === 'Su').eps : Infinity;
+  const neck = mat.ductile ? Math.max(0, Math.min(1, (e - utsEps) / (mat.epsF - utsEps))) : 0;
+
+  function halfWidth(yFrac) {   // yFrac 0..1 along gauge
+    const local = Math.exp(-Math.pow((yFrac - 0.5) / 0.10, 2));
+    return (wUnif / 2) * (1 - 0.45 * neck * local);
+  }
+  c.fillStyle = mat.color; c.globalAlpha = 0.85;
+  const midY = (gaugeTop + gaugeBot) / 2;
+  const gapHalf = broken ? 7 : 0;
+
+  function specimenPath(fromFrac, toFrac) {
+    c.beginPath();
+    const steps = 40;
+    for (let i = 0; i <= steps; i++) {
+      const f = fromFrac + (toFrac - fromFrac) * i / steps;
+      const y = gaugeTop + f * (gaugeBot - gaugeTop);
+      const x = cx - halfWidth(f);
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    }
+    for (let i = steps; i >= 0; i--) {
+      const f = fromFrac + (toFrac - fromFrac) * i / steps;
+      const y = gaugeTop + f * (gaugeBot - gaugeTop);
+      c.lineTo(cx + halfWidth(f), y);
+    }
+    c.closePath(); c.fill();
+  }
+  // shoulders
+  c.fillRect(cx - 15, gTop, 30, 22);
+  c.fillRect(cx - 15, gBot - 22, 30, 22);
+  c.fillRect(cx - 15, gTop + 18, 30, 8);
+  c.fillRect(cx - 15, gBot - 26, 30, 8);
+
+  if (!broken) {
+    specimenPath(0, 1);
+  } else {
+    // two halves with a gap; ductile = angled cup-cone hint, brittle = flat
+    c.save();
+    c.beginPath(); c.rect(0, 0, W, midY - gapHalf); c.clip();
+    specimenPath(0, 1); c.restore();
+    c.save();
+    c.beginPath(); c.rect(0, midY + gapHalf, W, H); c.clip();
+    c.translate(0, 2 * gapHalf); specimenPath(0, 1); c.restore();
+    // fracture faces
+    c.strokeStyle = '#40222a'; c.lineWidth = 2; c.globalAlpha = 1;
+    const hw = halfWidth(0.5) + 1;
+    c.beginPath();
+    if (mat.ductile) {
+      c.moveTo(cx - hw, midY - gapHalf); c.lineTo(cx, midY - gapHalf + 4); c.lineTo(cx + hw, midY - gapHalf);
+      c.moveTo(cx - hw, midY + gapHalf + 4); c.lineTo(cx, midY + gapHalf); c.lineTo(cx + hw, midY + gapHalf + 4);
+    } else {
+      c.moveTo(cx - hw, midY - gapHalf); c.lineTo(cx + hw, midY - gapHalf);
+      c.moveTo(cx - hw, midY + gapHalf + 3); c.lineTo(cx + hw, midY + gapHalf + 3);
+    }
+    c.stroke();
+  }
+  c.globalAlpha = 1;
+
+  // gauge marks
+  c.strokeStyle = '#b03030'; c.lineWidth = 1.6;
+  [gaugeTop + 4, gaugeBot - 4].forEach(y => {
+    c.beginPath(); c.moveTo(cx - 22, y); c.lineTo(cx + 22, y); c.stroke();
+  });
+  c.fillStyle = '#b03030'; c.font = '9px Segoe UI'; c.textAlign = 'left';
+  c.fillText('gauge marks', cx + 26, midY);
+
+  // force arrow
+  if (s > 1 && !broken) {
+    c.strokeStyle = '#e67300'; c.fillStyle = '#e67300'; c.lineWidth = 4;
+    const aLen = 16 + 30 * Math.min(1, s / mat.sigMax);
+    c.beginPath(); c.moveTo(cx, topY - 30); c.lineTo(cx, topY - 30 - aLen); c.stroke();
+    c.beginPath(); c.moveTo(cx, topY - 34 - aLen); c.lineTo(cx - 7, topY - 24 - aLen); c.lineTo(cx + 7, topY - 24 - aLen); c.closePath(); c.fill();
+    c.font = 'bold 11px Segoe UI'; c.textAlign = 'center';
+    c.fillText('F', cx + 14, topY - 32 - aLen / 2);
+  }
+
+  c.fillStyle = '#889'; c.font = '9.5px Segoe UI'; c.textAlign = 'center';
+  c.fillText('deformation exaggerated ×' + mat.exag + ' for visibility', cx, H - 8);
+}
+
+// ═══════════════ Chart drawing ═══════════════
+function drawChart() {
+  const [c, W, H] = fit(cCv);
+  c.clearRect(0, 0, W, H);
+  const mL = 62, mB = 46, mT = 30, mR = 20;
+  const pw = W - mL - mR, ph = H - mT - mB;
+  const X = e => mL + e / mat.epsAxis * pw;
+  const Y = s => mT + ph - s / mat.sigMax * ph;
+
+  // grid + axes
+  c.strokeStyle = '#eee'; c.lineWidth = 1;
+  c.fillStyle = '#889'; c.font = '9.5px Segoe UI';
+  const exStep = mat.epsAxis > 1 ? 0.5 : mat.epsAxis > 0.05 ? 0.05 : 0.001;
+  for (let v = 0; v <= mat.epsAxis + 1e-9; v += exStep) {
+    c.beginPath(); c.moveTo(X(v), mT); c.lineTo(X(v), mT + ph); c.stroke();
+    c.textAlign = 'center';
+    c.fillText(exStep >= 0.5 ? v.toFixed(1) : exStep >= 0.05 ? v.toFixed(2) : v.toFixed(3), X(v), mT + ph + 14);
+  }
+  const syStep = mat.sigMax > 100 ? 100 : 5;
+  for (let v = 0; v <= mat.sigMax + 1e-9; v += syStep) {
+    c.beginPath(); c.moveTo(mL, Y(v)); c.lineTo(mL + pw, Y(v)); c.stroke();
+    c.textAlign = 'right'; c.fillText(v, mL - 6, Y(v) + 3);
+  }
+  c.strokeStyle = '#556'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(mL, mT); c.lineTo(mL, mT + ph); c.lineTo(mL + pw, mT + ph); c.stroke();
+  c.fillStyle = '#445'; c.font = '11px Segoe UI'; c.textAlign = 'center';
+  c.fillText('Engineering strain ε = ΔL/L₀', mL + pw / 2, H - 8);
+  c.save(); c.translate(14, mT + ph / 2); c.rotate(-Math.PI / 2);
+  c.fillText('Engineering stress σ = F/A₀ (MPa)', 0, 0); c.restore();
+  c.fillStyle = mat.color; c.font = 'bold 12px Segoe UI'; c.textAlign = 'left';
+  c.fillText(mat.label, mL + 10, mT + 4);
+
+  const { i, e, s } = cur();
+
+  // ghost of the full curve (faint) so students see what's coming is NOT shown — curve reveals itself
+  // curve drawn up to current time
+  c.strokeStyle = mat.color; c.lineWidth = 2.6; c.lineJoin = 'round';
+  c.beginPath();
+  for (let k = 0; k <= i; k++) {
+    const [pe, ps] = mat.pts[k];
+    k ? c.lineTo(X(pe), Y(ps)) : c.moveTo(X(pe), Y(ps));
+  }
+  c.stroke();
+
+  // 0.2% offset construction for aluminum, shown once past its yield event
+  if (mat === MATS.alum && e >= 0.004) {
+    c.strokeStyle = 'rgba(42,122,58,0.55)'; c.lineWidth = 1.2; c.setLineDash([5, 4]);
+    c.beginPath();
+    c.moveTo(X(0.002), Y(0));
+    c.lineTo(X(0.002 + 290 / 69000), Y(290));
+    c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#2a7a3a'; c.font = 'italic 9.5px Segoe UI'; c.textAlign = 'left';
+    c.fillText('0.2% offset line', X(0.0045), Y(120));
+  }
+
+  // event markers reached so far
+  mat.events.forEach(ev => {
+    if (e + 1e-9 >= ev.eps) {
+      const px = X(ev.eps), py = Y(mat.fn(Math.min(ev.eps, mat.epsF)));
+      if (ev.key === 'X') {
+        c.strokeStyle = '#b03030'; c.lineWidth = 2.5;
+        c.beginPath(); c.moveTo(px - 6, py - 6); c.lineTo(px + 6, py + 6);
+        c.moveTo(px + 6, py - 6); c.lineTo(px - 6, py + 6); c.stroke();
+      } else {
+        c.beginPath(); c.arc(px, py, 4, 0, Math.PI * 2);
+        c.fillStyle = '#fff'; c.fill();
+        c.strokeStyle = mat.color; c.lineWidth = 2; c.stroke();
+      }
+      c.fillStyle = ev.key === 'X' ? '#b03030' : '#334';
+      c.font = 'bold 10px Segoe UI';
+      c.textAlign = ev.eps > mat.epsAxis * 0.72 ? 'right' : 'left';
+      const dx = ev.eps > mat.epsAxis * 0.72 ? -8 : 8;
+      c.fillText(ev.name, px + dx, py + ev.dy);
+    }
+  });
+
+  // moving pen dot
+  if (t < 0.999) {
+    c.beginPath(); c.arc(X(e), Y(s), 6, 0, Math.PI * 2);
+    c.fillStyle = '#b05a10'; c.fill();
+    c.strokeStyle = '#fff'; c.lineWidth = 2; c.stroke();
+  }
+}
+
+// ═══════════════ Readouts + caption ═══════════════
+function updateText() {
+  const { e, s } = cur();
+  const F = s * A0 / 1000;
+  document.getElementById('roF').textContent = F.toFixed(1) + ' kN';
+  document.getElementById('roDL').textContent = (e * L0).toFixed(3) + ' mm';
+  document.getElementById('roSig').textContent = s.toFixed(0) + ' MPa';
+  document.getElementById('roEps').textContent = e.toFixed(4);
+
+  let text = '<strong>Ready.</strong> Press Run, or drag the slider. The crosshead pulls the specimen at constant speed while the machine records force F and extension ΔL — the only two things any tensile test ever measures.';
+  for (const ev of mat.events) if (e + 1e-9 >= ev.eps) text = ev.text;
+  document.getElementById('caption').innerHTML = text;
+}
+
+function draw() { drawMachine(); drawChart(); updateText(); }
+
+// ═══════════════ Events ═══════════════
+const slider = document.getElementById('tSlider');
+slider.addEventListener('input', function () { t = +this.value / 1000; playing = false; btn.textContent = '▶ Run test'; draw(); });
+
+const btn = document.getElementById('btnRun');
+btn.addEventListener('click', () => {
+  if (t >= 0.999) t = 0;
+  playing = !playing;
+  btn.textContent = playing ? '❚❚ Pause' : '▶ Run test';
+  if (playing) requestAnimationFrame(step);
+});
+function step(ts) {
+  if (!playing) { lastTs = null; return; }
+  if (lastTs !== null) {
+    t = Math.min(1, t + (ts - lastTs) / 16000);   // full test ≈ 16 s
+    slider.value = Math.round(t * 1000);
+    if (t >= 1) { playing = false; btn.textContent = '▶ Run test'; }
+  }
+  lastTs = ts;
+  draw();
+  if (playing) requestAnimationFrame(step);
+  else lastTs = null;
+}
+
+document.getElementById('matSel').addEventListener('change', function () {
+  mat = MATS[this.value];
+  t = 0; slider.value = 0; playing = false; btn.textContent = '▶ Run test';
+  draw();
+});
+
+draw();
+</script>
+</body>
+</html>
