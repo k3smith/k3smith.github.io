@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade This Solution: Fatigue Analysis — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 880px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.82; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px;
+  font-size: 0.8em; color: #5a4a2a; margin: 14px 22px 8px; border-radius: 0 5px 5px 0; line-height: 1.55; }
+.statusbar { display: flex; gap: 18px; align-items: center; margin: 10px 22px; font-size: 0.85em; }
+.statusbar .found { font-weight: 700; color: #2a7a3a; }
+.statusbar .miss { font-weight: 700; color: #b05a10; }
+.statusbar button { margin-left: auto; padding: 6px 14px; font-size: 0.85em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.paper { margin: 6px 22px; border: 1px solid #d8ceb8; border-radius: 6px; background: #fffdf5;
+  padding: 18px 22px 14px; box-shadow: inset 0 0 30px rgba(180,160,110,0.08); }
+.paper h2 { font-size: 0.9em; color: #6a5a3a; font-weight: 600; margin-bottom: 4px; }
+.paper .prob { font-size: 0.82em; color: #555; border-bottom: 1px dashed #cbb; padding-bottom: 10px;
+  margin-bottom: 10px; line-height: 1.6; }
+.sline { padding: 8px 12px; margin: 3px 0; border-radius: 5px; cursor: pointer;
+  font-family: 'Cambria Math', Georgia, serif; font-size: 0.98em; line-height: 1.55;
+  border: 1px solid transparent; }
+.sline:hover { background: #f2ecdc; border-color: #d8ceb8; }
+.sline .tag { font-family: 'Segoe UI', Arial, sans-serif; font-size: 0.72em; color: #998; margin-right: 10px; }
+.sline.err { background: #fdf0f0; border-color: #b03030; }
+.sline.err .verdict { color: #b03030; }
+.sline.fine { background: #f0f8f1; border-color: #9cc5a3; }
+.sline.fine .verdict { color: #2a7a3a; }
+.verdict { display: none; font-family: 'Segoe UI', Arial, sans-serif; font-size: 0.82em;
+  margin-top: 6px; line-height: 1.55; }
+.sline.err .verdict, .sline.fine .verdict { display: block; }
+.done-banner { margin: 12px 22px; padding: 12px 16px; border-radius: 7px; background: #edf6ee;
+  border: 1.5px solid #2a7a3a; color: #205a2a; font-size: 0.88em; display: none; line-height: 1.65; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; margin-top: 14px;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🖍️ Grade This Solution — Fatigue Analysis with 4 Hidden Errors</h1>
+    <p>MET 320 · Module 3 &nbsp;|&nbsp; A classmate's submitted solution is below. Click each line you believe contains an error.</p>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Instructions:</strong> There are exactly <strong>4 erroneous lines</strong>. Click a line to
+    mark it — you'll get immediate feedback either way, but flagging correct work counts as a misclick.
+    When all 4 are found, the fully corrected solution appears. (This is exactly the review you should run
+    on your own PS3 before submitting.)
+  </div>
+
+  <div class="statusbar">
+    <span>Errors found: <span class="found" id="nFound">0</span> / 4</span>
+    <span>Misclicks: <span class="miss" id="nMiss">0</span></span>
+    <button id="btnReveal">Reveal remaining</button>
+  </div>
+
+  <div class="paper">
+    <h2>Problem 3-14 — submitted by A. Student</h2>
+    <div class="prob">
+      A machined AISI 1040 HR link (S<sub>u</sub> = 620 MPa, S<sub>y</sub> = 410 MPa, ~40 mm section,
+      99% reliability) has a well-rounded fillet with K<sub>t</sub> = 1.3 and cycles between
+      σ<sub>max</sub> = 170 MPa and σ<sub>min</sub> = −70 MPa. Find the Goodman safety factor.
+    </div>
+
+    <div class="sline" data-k="ok" data-why="Correct. σm = (σmax + σmin)/2 = (170 − 70)/2 = 50 MPa.">
+      <span class="tag">L1</span> σ<sub>m</sub> = (170 + (−70))/2 = 50 MPa
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="ok" data-why="Correct. σa = (σmax − σmin)/2 = (170 + 70)/2 = 120 MPa.">
+      <span class="tag">L2</span> σ<sub>a</sub> = (170 − (−70))/2 = 120 MPa
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="ok" data-why="Correct. Basic endurance strength for wrought steel ≈ 0.50 Su.">
+      <span class="tag">L3</span> S<sub>n</sub> = 0.5 × S<sub>u</sub> = 0.5 × 620 = 310 MPa
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="err" data-n="1"
+      data-why="ERROR — the size factor is missing. A ~40 mm section needs Cs ≈ 0.85. Correct: S′n = 310 × 0.85 × 0.81 = 213 MPa. Omitting a Marin-type factor silently inflates fatigue strength by 18% here.">
+      <span class="tag">L4</span> S′<sub>n</sub> = S<sub>n</sub> × C<sub>R</sub> = 310 × 0.81 = 251 MPa
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="err" data-n="2"
+      data-why="ERROR — Kt belongs on the ALTERNATING stress, not the mean. Cracks grow from the stress range; ductile materials locally yield away mean-stress concentration. Correct: σa,eff = 1.3 × 120 = 156 MPa, and σm stays 50 MPa.">
+      <span class="tag">L5</span> Apply stress concentration to mean stress:&nbsp; σ<sub>m,eff</sub> = K<sub>t</sub>·σ<sub>m</sub> = 1.3 × 50 = 65 MPa
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="err" data-n="3"
+      data-why="ERROR — the denominators are swapped. Goodman pairs the ALTERNATING stress with the fatigue strength S′n and the MEAN stress with Su: 1/N = σa,eff/S′n + σm/Su. As written, the equation compares cyclic stress against static strength — nonsense dimensions of safety.">
+      <span class="tag">L6</span> Goodman:&nbsp; 1/N = σ<sub>a</sub>/S<sub>u</sub> + σ<sub>m,eff</sub>/S′<sub>n</sub> = 120/620 + 65/251 = 0.453
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="err" data-n="4"
+      data-why="ERROR — forgot the reciprocal. 1/N = 0.453 means N = 1/0.453 = 2.21 (with these numbers). Reading 1/N as N reverses the conclusion. Always sanity-check: bigger margin should mean bigger N.">
+      <span class="tag">L7</span> N = 0.45 &lt; 1&nbsp; →&nbsp; the part FAILS in fatigue
+      <div class="verdict"></div>
+    </div>
+    <div class="sline" data-k="ok"
+      data-why="This recommendation follows logically from L7 — the reasoning here isn't independently wrong, the inputs to it were. In review, distinguish root-cause errors from downstream consequences.">
+      <span class="tag">L8</span> Recommendation: increase the section size or select a stronger alloy.
+      <div class="verdict"></div>
+    </div>
+  </div>
+
+  <div class="done-banner" id="doneBanner">
+    <strong>All 4 errors found.</strong> Corrected solution:
+    S′<sub>n</sub> = 310 × 0.85 × 0.81 = <strong>213 MPa</strong>;
+    σ<sub>a,eff</sub> = 1.3 × 120 = <strong>156 MPa</strong>;
+    1/N = 156/213 + 50/620 = 0.813 → <strong>N = 1.23</strong>.
+    The part actually <em>passes</em> — marginally. Note how three of the four errors each individually
+    flipped or distorted the verdict: fatigue analysis is a chain, and every link matters.
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Review habits worth stealing:</strong> (1) check every Marin-type factor is present before
+    trusting S′<sub>n</sub>; (2) K<sub>t</sub> (as K<sub>f</sub>) multiplies the alternating component;
+    (3) Goodman pairs σ<sub>a</sub>↔S′<sub>n</sub> and σ<sub>m</sub>↔S<sub>u</sub>;
+    (4) 1/N is not N. Two minutes of this checklist would have saved this submission.
+  </div>
+</div>
+
+<script>
+let found = 0, miss = 0, total = 4;
+const lines = document.querySelectorAll('.sline');
+function refresh() {
+  document.getElementById('nFound').textContent = found;
+  document.getElementById('nMiss').textContent = miss;
+  if (found === total) document.getElementById('doneBanner').style.display = 'block';
+}
+lines.forEach(el => {
+  el.addEventListener('click', () => {
+    if (el.classList.contains('err') || el.classList.contains('fine')) return;
+    const v = el.querySelector('.verdict');
+    if (el.dataset.k === 'err') {
+      el.classList.add('err');
+      v.innerHTML = '<strong>✗ Error ' + el.dataset.n + ' of 4.</strong> ' + el.dataset.why;
+      found++;
+    } else {
+      el.classList.add('fine');
+      v.innerHTML = '<strong>✓ This line is fine.</strong> ' + el.dataset.why;
+      miss++;
+    }
+    refresh();
+  });
+});
+document.getElementById('btnReveal').addEventListener('click', () => {
+  lines.forEach(el => {
+    if (el.dataset.k === 'err' && !el.classList.contains('err')) {
+      el.classList.add('err');
+      el.querySelector('.verdict').innerHTML = '<strong>✗ (revealed) Error ' + el.dataset.n + ' of 4.</strong> ' + el.dataset.why;
+      found++;
+    }
+  });
+  refresh();
+});
+</script>
+</body>
+</html>
