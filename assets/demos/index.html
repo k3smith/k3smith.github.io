@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Educational Demos | Katherine Smith</title>
+  <link rel="stylesheet" href="/assets/css/demos.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGPQ4HEBNW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EGPQ4HEBNW');
+  </script>
+</head>
+<body>
+  <script src="/assets/scripts/demos-data.js"></script>
+  <script src="/assets/scripts/demos-sidebar.js"></script>
+  <script>renderDemosSidebar();</script>
+
+  <div class="container">
+    <h1>Educational Demos</h1>
+    <p class="subtitle">
+      Interactive simulations and practice tools for engineering courses.
+      These pages are designed to be embedded in Canvas via <code>&lt;iframe&gt;</code>
+      or opened directly for exploration.
+    </p>
+
+    <div id="course-list"></div>
+
+    <p style="margin-top: 40px;"><a href="/index.html">← Back to Home</a></p>
+  </div>
+
+  <script>
+    const list = document.getElementById('course-list');
+    DEMO_COURSES.forEach((course) => {
+      const demoCount = course.modules.reduce((n, m) => n + m.demos.length, 0);
+      const card = document.createElement('div');
+      card.className = 'course-card';
+      card.innerHTML = `
+        <h2>${course.name}</h2>
+        <p class="demo-count">${course.term} · ${demoCount} interactive demo${demoCount === 1 ? '' : 's'}</p>
+        <a class="btn-primary" href="${course.index}">Browse ${course.id.toUpperCase()} demos →</a>
+      `;
+      list.appendChild(card);
+    });
+  </script>
+</body>
+</html>
