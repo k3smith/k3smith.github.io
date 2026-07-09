@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compression Spring Designer — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block; width: 100%; height: 340px;
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input[type=range].force::-webkit-slider-thumb { background: #b03030; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🌀 Compression Spring Designer — Rate, Stress &amp; Buckling</h1>
+    <p>MET 320 · Module 8 &nbsp;|&nbsp; Push on the spring with the force slider; watch deflection, shear stress, and every design check respond</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="340" aria-label="Animated compression spring under load"></canvas>
+
+  <div class="scenario-note">
+    <strong>Design scenario:</strong> Music wire (ASTM A228) compression spring with squared &amp; ground ends. The wire fights the load in <em>torsion</em> — the Wahl factor corrects for coil curvature. Watch for three failure modes: over-stress, coil bind (solid), and buckling.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Design Inputs</div>
+
+      <div class="slider-row">
+        <label>Wire Diameter d <span class="val" id="vD">3 mm</span></label>
+        <input type="range" id="sD" min="1" max="8" step="0.25" value="3">
+      </div>
+      <div class="slider-row">
+        <label>Mean Coil Diameter D<sub>m</sub> <span class="val" id="vDm">24 mm</span></label>
+        <input type="range" id="sDm" min="8" max="80" step="1" value="24">
+      </div>
+      <div class="slider-row">
+        <label>Active Coils N<sub>a</sub> <span class="val" id="vNa">8</span></label>
+        <input type="range" id="sNa" min="3" max="20" step="0.5" value="8">
+      </div>
+      <div class="slider-row">
+        <label>Free Length L<sub>f</sub> <span class="val" id="vLf">80 mm</span></label>
+        <input type="range" id="sLf" min="30" max="250" step="5" value="80">
+      </div>
+      <div class="slider-row">
+        <label>Applied Force F <span class="val" id="vF">60 N</span></label>
+        <input type="range" id="sF" class="force" min="0" max="600" step="5" value="60">
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Results</div>
+      <table class="result-table">
+        <tr id="rowC"><td>Spring Index C = D<sub>m</sub>/d (want 5–12)</td><td id="rC">—</td></tr>
+        <tr><td>Spring Rate k</td><td id="rK">—</td></tr>
+        <tr><td>Deflection at F</td><td id="rDef">—</td></tr>
+        <tr><td>Wahl Factor K</td><td id="rW">—</td></tr>
+        <tr id="rowTau"><td>Shear Stress τ vs allowable</td><td id="rTau">—</td></tr>
+        <tr id="rowSolid"><td>Solid Length L<sub>s</sub> (bind check)</td><td id="rLs">—</td></tr>
+        <tr id="rowBuck"><td>Buckling Check (L<sub>f</sub>/D<sub>m</sub> &lt; 5.2)</td><td id="rBuck">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Explore the coupling:</strong> Halve the wire diameter and the rate drops by 16× (k ∝ d⁴) while stress soars (τ ∝ 1/d³). Add coils to soften the spring — but the solid length grows and you lose working stroke.
+    Stretch L<sub>f</sub> past 5.2·D<sub>m</sub> and the buckling flag trips, just like a slender column. <em>Every spring design is a negotiation among rate, stress, stroke, and stability.</em>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let d = 3, Dm = 24, Na = 8, Lf = 80, F = 60;
+let dispDef = 0;          // animated (eased) deflection
+const G = 79300;          // MPa, music wire
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Mechanics ─────────────────────────────────────────────────────────────
+function calc() {
+  const C = Dm / d;
+  const k = G * Math.pow(d, 4) / (8 * Math.pow(Dm, 3) * Na);   // N/mm
+  const defl = F / k;                                          // mm
+  const Ls = d * (Na + 2);                                     // squared & ground
+  const maxDef = Math.max(0, Lf - Ls);
+  const deflClamped = Math.min(defl, maxDef);
+  const solid = defl >= maxDef - 1e-9;
+  const Kw = (4 * C - 1) / (4 * C - 4) + 0.615 / C;
+  const Feff = solid ? maxDef * k : F;
+  const tau = Kw * 8 * Feff * Dm / (Math.PI * Math.pow(d, 3)); // MPa
+  const Sut = 2211 / Math.pow(d, 0.145);                       // MPa, A228
+  const tauAll = 0.45 * Sut;
+  const buckRatio = Lf / Dm;
+  const buckOK = buckRatio < 5.2;
+  return { C, k, defl, deflClamped, Ls, maxDef, solid, Kw, tau, tauAll, buckRatio, buckOK };
+}
+
+function updateOutputs() {
+  const r = calc();
+  const cRow = document.getElementById('rowC');
+  document.getElementById('rC').textContent = r.C.toFixed(1) + ((r.C >= 5 && r.C <= 12) ? ' ✓' : ' ⚠');
+  cRow.className = (r.C >= 5 && r.C <= 12) ? 'ok' : 'warn';
+
+  document.getElementById('rK').textContent = r.k.toFixed(2) + ' N/mm';
+  document.getElementById('rDef').textContent = r.deflClamped.toFixed(1) + ' mm' + (r.solid ? ' (SOLID!)' : '');
+  document.getElementById('rW').textContent = r.Kw.toFixed(3);
+
+  const tRow = document.getElementById('rowTau');
+  document.getElementById('rTau').textContent = r.tau.toFixed(0) + ' / ' + r.tauAll.toFixed(0) + ' MPa';
+  tRow.className = r.tau <= r.tauAll ? 'ok' : 'warn';
+
+  const sRow = document.getElementById('rowSolid');
+  document.getElementById('rLs').textContent = r.Ls.toFixed(1) + ' mm' + (r.solid ? ' — COIL BIND!' : ' ✓');
+  sRow.className = r.solid ? 'warn' : 'ok';
+
+  const bRow = document.getElementById('rowBuck');
+  document.getElementById('rBuck').textContent = 'Lf/Dm = ' + r.buckRatio.toFixed(1) + (r.buckOK ? ' ✓' : ' — BUCKLING RISK');
+  bRow.className = r.buckOK ? 'ok' : 'warn';
+}
+
+// ── Draw ──────────────────────────────────────────────────────────────────
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  const r = calc();
+  const cx = W * 0.38;
+  const baseY = H - 46;
+
+  // scale: free length → px
+  const pxPerMM = Math.min(2.2, (H - 130) / Lf);
+  const curLen = (Lf - dispDef) * pxPerMM;
+  const coilRpx = Dm / 2 * pxPerMM * 1.6;
+  const wirePx = Math.max(2.5, d * pxPerMM * 1.4);
+
+  // ground
+  ctx.fillStyle = '#c8cdd8';
+  ctx.fillRect(cx - 120, baseY, 240, 10);
+  ctx.strokeStyle = '#889'; ctx.strokeRect(cx - 120, baseY, 240, 10);
+
+  // buckling bow (visual only)
+  const bow = r.buckOK ? 0 : Math.min(30, (r.buckRatio - 5.2) * 10) * (dispDef / Math.max(r.maxDef, 1));
+
+  // spring as sinusoid coil path
+  const nPts = 400;
+  const totalCoils = Na + 2;
+  ctx.beginPath();
+  for (let i = 0; i <= nPts; i++) {
+    const t = i / nPts;
+    const y = baseY - t * curLen;
+    const phase = t * totalCoils * Math.PI * 2;
+    const bowX = Math.sin(t * Math.PI) * bow;
+    const x = cx + Math.sin(phase) * coilRpx + bowX;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  const stressT = Math.min(1, r.tau / r.tauAll);
+  const cr = Math.round(44 + stressT * 132), cg = Math.round(95 - stressT * 47), cb = Math.round(138 - stressT * 90);
+  ctx.strokeStyle = 'rgb(' + cr + ',' + cg + ',' + cb + ')';
+  ctx.lineWidth = wirePx;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // top plate
+  const topY = baseY - curLen;
+  ctx.fillStyle = '#8a97a5';
+  ctx.fillRect(cx - 70, topY - 12, 140, 12);
+  ctx.strokeStyle = '#667'; ctx.strokeRect(cx - 70, topY - 12, 140, 12);
+
+  // force arrow
+  if (F > 0) {
+    const aLen = 30 + Math.min(60, F / 8);
+    ctx.strokeStyle = '#b03030'; ctx.fillStyle = '#b03030'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(cx, topY - 18 - aLen); ctx.lineTo(cx, topY - 20); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, topY - 14);
+    ctx.lineTo(cx - 8, topY - 26);
+    ctx.lineTo(cx + 8, topY - 26);
+    ctx.closePath(); ctx.fill();
+    ctx.font = 'bold 12px Segoe UI, Arial'; ctx.textAlign = 'left';
+    ctx.fillText('F = ' + F + ' N', cx + 14, topY - 24 - aLen / 2);
+  }
+
+  // status flags
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 12px Segoe UI, Arial';
+  if (r.solid) {
+    ctx.fillStyle = '#b03030';
+    ctx.fillText('⚠ COIL BIND — spring is solid at ' + r.Ls.toFixed(0) + ' mm', cx + coilRpx + 40, baseY - curLen / 2 - 20);
+  }
+  if (!r.buckOK) {
+    ctx.fillStyle = '#b05a10';
+    ctx.fillText('⚠ Slender spring — buckling risk (use a guide rod)', cx + coilRpx + 40, baseY - curLen / 2 + 2);
+  }
+
+  // dimensions
+  ctx.strokeStyle = '#8a97a5'; ctx.lineWidth = 1;
+  const dimX = cx - coilRpx - 46;
+  ctx.beginPath(); ctx.moveTo(dimX, baseY); ctx.lineTo(dimX, topY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(dimX - 5, baseY); ctx.lineTo(dimX + 5, baseY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(dimX - 5, topY); ctx.lineTo(dimX + 5, topY); ctx.stroke();
+  ctx.fillStyle = '#66727f'; ctx.font = '10px Segoe UI, Arial'; ctx.textAlign = 'right';
+  ctx.fillText((Lf - dispDef).toFixed(1) + ' mm', dimX - 8, (baseY + topY) / 2);
+
+  // stress gauge (right side)
+  const gx2 = W * 0.74, gy2 = 60, gw = 26, gh = H - 130;
+  ctx.fillStyle = '#e8ecf1'; ctx.fillRect(gx2, gy2, gw, gh);
+  ctx.strokeStyle = '#c0cad4'; ctx.strokeRect(gx2, gy2, gw, gh);
+  const fillH = Math.min(1, r.tau / (r.tauAll * 1.3)) * gh;
+  const gcol = r.tau <= r.tauAll ? '#2a7a3a' : '#b03030';
+  ctx.fillStyle = gcol;
+  ctx.fillRect(gx2, gy2 + gh - fillH, gw, fillH);
+  // allowable line
+  const allY = gy2 + gh - (r.tauAll / (r.tauAll * 1.3)) * gh;
+  ctx.strokeStyle = '#b03030'; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(gx2 - 6, allY); ctx.lineTo(gx2 + gw + 6, allY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#556'; ctx.font = '9.5px Segoe UI, Arial'; ctx.textAlign = 'left';
+  ctx.fillText('τ allow = ' + r.tauAll.toFixed(0) + ' MPa', gx2 + gw + 10, allY + 3);
+  ctx.fillStyle = gcol; ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.fillText('τ = ' + r.tau.toFixed(0) + ' MPa', gx2 + gw + 10, gy2 + gh - fillH + 4);
+  ctx.fillStyle = '#556'; ctx.font = '10px Segoe UI, Arial';
+  ctx.fillText('Wire shear stress', gx2 - 4, gy2 - 10);
+  ctx.fillText('(Wahl-corrected)', gx2 - 4, gy2 + gh + 16);
+}
+
+// ── Animation (ease deflection toward target) ─────────────────────────────
+let lastTs = null;
+function frame(ts) {
+  if (lastTs !== null) {
+    const r = calc();
+    const target = r.deflClamped;
+    dispDef += (target - dispDef) * 0.12;
+  }
+  lastTs = ts;
+  draw();
+  requestAnimationFrame(frame);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+function bind(id, valId, fmt, setter) {
+  document.getElementById(id).addEventListener('input', function () {
+    setter(+this.value);
+    document.getElementById(valId).textContent = fmt(+this.value);
+    updateOutputs();
+  });
+}
+bind('sD', 'vD', v => v + ' mm', v => d = v);
+bind('sDm', 'vDm', v => v + ' mm', v => Dm = v);
+bind('sNa', 'vNa', v => v, v => Na = v);
+bind('sLf', 'vLf', v => v + ' mm', v => Lf = v);
+bind('sF', 'vF', v => v + ' N', v => F = v);
+
+updateOutputs();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

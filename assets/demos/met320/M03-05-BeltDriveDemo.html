@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V-Belt Drive Kinematics — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block; width: 100%; height: 320px;
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🔄 V-Belt Drive Kinematics — Ratio, Belt Speed &amp; Wrap Angle</h1>
+    <p>MET 320 · Module 3 &nbsp;|&nbsp; Change sheave sizes and center distance; watch belt speed, wrap angle, and belt length respond</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="320" aria-label="Animated V-belt drive"></canvas>
+
+  <div class="scenario-note">
+    <strong>Design scenario:</strong> A 1750-rpm motor drives a fan that should run near 700 rpm. Pick sheave diameters to set the ratio — but keep belt speed in the ideal 20–25 m/s range for V-belts, and keep the small-sheave wrap angle ≥ 120° so the belt doesn't slip.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Design Inputs</div>
+
+      <div class="slider-row">
+        <label>Motor (Driving) Speed <span class="val" id="vRPM">1750 rpm</span></label>
+        <input type="range" id="sRPM" min="600" max="3600" step="25" value="1750">
+      </div>
+      <div class="slider-row">
+        <label>Driving Sheave Pitch Ø D₁ <span class="val" id="vD1">150 mm</span></label>
+        <input type="range" id="sD1" min="60" max="300" step="5" value="150">
+      </div>
+      <div class="slider-row">
+        <label>Driven Sheave Pitch Ø D₂ <span class="val" id="vD2">375 mm</span></label>
+        <input type="range" id="sD2" min="60" max="600" step="5" value="375">
+      </div>
+      <div class="slider-row">
+        <label>Center Distance C <span class="val" id="vC">500 mm</span></label>
+        <input type="range" id="sC" min="250" max="900" step="10" value="500">
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Results</div>
+      <table class="result-table">
+        <tr><td>Velocity Ratio VR = D₂/D₁</td><td id="rVR">—</td></tr>
+        <tr><td>Driven Sheave Speed</td><td id="rN2">—</td></tr>
+        <tr id="rowVb"><td>Belt Speed v<sub>b</sub> (ideal 20–25 m/s)</td><td id="rVb">—</td></tr>
+        <tr id="rowWrap"><td>Wrap Angle θ₁ (small sheave, min 120°)</td><td id="rWrap">—</td></tr>
+        <tr><td>Wrap Angle θ₂ (large sheave)</td><td id="rWrap2">—</td></tr>
+        <tr><td>Belt Pitch Length L</td><td id="rL">—</td></tr>
+        <tr id="rowCC"><td>C in range
+D₂ &lt; C &lt; 3(D₂+D₁)?</td><td id="rCC">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Watch for the trade-off:</strong> Shrinking the small sheave raises the ratio without a big sheave — but it also cuts the wrap angle and belt speed, and belt life drops sharply below ~75 mm.
+    Increasing C improves wrap but adds belt length and vibration. In Module 3 you'll formalize this: <strong>L = 2C + 1.57(D₂+D₁) + (D₂−D₁)²/4C</strong>, then pick a standard belt and recompute C.
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let rpm1 = 1750, D1 = 150, D2 = 375, C = 500;
+let angle = 0, lastTs = null;
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Mechanics ─────────────────────────────────────────────────────────────
+function calc() {
+  const VR = D2 / D1;
+  const N2 = rpm1 / VR;
+  const vb = (rpm1 * Math.PI / 30) * (D1 / 2000);         // m/s
+  const asinArg = Math.min(1, (D2 - D1) / (2 * C));
+  const th1 = 180 - 2 * Math.asin(asinArg) * 180 / Math.PI;  // small sheave wrap
+  const th2 = 180 + 2 * Math.asin(asinArg) * 180 / Math.PI;
+  const L = 2 * C + 1.57 * (D2 + D1) + Math.pow(D2 - D1, 2) / (4 * C);
+  const cOK = C > D2 && C < 3 * (D2 + D1);
+  return { VR, N2, vb, th1, th2, L, cOK };
+}
+
+function updateOutputs() {
+  const r = calc();
+  document.getElementById('rVR').textContent = r.VR.toFixed(2) + ' : 1';
+  document.getElementById('rN2').textContent = r.N2.toFixed(0) + ' rpm';
+
+  const vbEl = document.getElementById('rVb');
+  vbEl.textContent = r.vb.toFixed(1) + ' m/s';
+  document.getElementById('rowVb').className = (r.vb >= 10 && r.vb <= 30) ? 'ok' : 'warn';
+
+  const wEl = document.getElementById('rWrap');
+  wEl.textContent = r.th1.toFixed(1) + '°' + (r.th1 < 120 ? ' — slip risk!' : ' ✓');
+  document.getElementById('rowWrap').className = r.th1 >= 120 ? 'ok' : 'warn';
+
+  document.getElementById('rWrap2').textContent = r.th2.toFixed(1) + '°';
+  document.getElementById('rL').textContent = r.L.toFixed(0) + ' mm';
+
+  document.getElementById('rCC').textContent = r.cOK ? 'Yes ✓' : 'No — adjust C!';
+  document.getElementById('rowCC').className = r.cOK ? 'ok' : 'warn';
+}
+
+// ── Drawing ───────────────────────────────────────────────────────────────
+function drawSheave(cx, cy, R, ang, color, grooves) {
+  const grd = ctx.createRadialGradient(cx - R * 0.25, cy - R * 0.25, R * 0.1, cx, cy, R);
+  grd.addColorStop(0, '#e8eef6'); grd.addColorStop(1, color);
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.fillStyle = grd; ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // groove rings
+  for (let i = 1; i <= (grooves || 2); i++) {
+    ctx.beginPath(); ctx.arc(cx, cy, R - i * 5, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,0,0,0.10)'; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  // spokes
+  ctx.save();
+  ctx.translate(cx, cy); ctx.rotate(ang);
+  for (let s = 0; s < 4; s++) {
+    ctx.rotate(Math.PI / 2);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R * 0.75, 0);
+    ctx.strokeStyle = 'rgba(0,0,0,0.13)'; ctx.lineWidth = Math.max(3, R * 0.09);
+    ctx.stroke();
+  }
+  // hub + marker
+  ctx.beginPath(); ctx.arc(0, 0, Math.max(6, R * 0.14), 0, Math.PI * 2);
+  ctx.fillStyle = '#dde4ee'; ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(Math.max(6, R * 0.14), 0); ctx.lineTo(R * 0.7, 0);
+  ctx.strokeStyle = 'rgba(176,48,48,0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+  ctx.restore();
+}
+
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  const r = calc();
+  const cy = H * 0.52;
+
+  // scale mm → px so everything fits
+  const totalMM = C + D1 / 2 + D2 / 2;
+  const scale = Math.min((W - 160) / totalMM, (H - 110) / Math.max(D1, D2));
+  const R1 = D1 / 2 * scale, R2 = D2 / 2 * scale;
+  const cPix = C * scale;
+  const x1 = (W - cPix) / 2 - (R1 - R2) / 2;
+  const x2 = x1 + cPix;
+
+  // Belt: external tangent lines between the two pitch circles.
+  // For external tangents of unequal circles the tangent-point angle (from +x toward the OTHER circle)
+  // measured at both centers is the same: cos φ = (R2−R1)/C, tangent points on the far side.
+  const phiT = Math.acos(Math.min(1, (R2 - R1) / cPix));
+  const Q1t = { x: x1 + R1 * Math.cos(phiT + Math.PI) , y: cy - R1 * Math.sin(phiT) };
+  const Q2t = { x: x2 + R2 * Math.cos(phiT + Math.PI), y: cy - R2 * Math.sin(phiT) };
+  const Q1b = { x: Q1t.x, y: 2 * cy - Q1t.y };
+  const Q2b = { x: Q2t.x, y: 2 * cy - Q2t.y };
+
+  // belt path
+  ctx.strokeStyle = '#3a3a3a';
+  ctx.lineWidth = 7;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  // top run
+  ctx.moveTo(Q1t.x, Q1t.y);
+  ctx.lineTo(Q2t.x, Q2t.y);
+  // around big sheave (right), from top tangent to bottom tangent, going CW through right side
+  ctx.arc(x2, cy, R2, Math.PI - phiT, Math.PI + phiT, true);
+  // bottom run back
+  ctx.lineTo(Q1b.x, Q1b.y);
+  // around small sheave
+  ctx.arc(x1, cy, R1, Math.PI + phiT, Math.PI - phiT, true);
+  ctx.closePath();
+  ctx.stroke();
+
+  // belt dash overlay to show motion
+  ctx.strokeStyle = '#e8b23a';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([10, 14]);
+  ctx.lineDashOffset = -angle * R1;   // scroll with rotation
+  ctx.beginPath();
+  ctx.moveTo(Q1t.x, Q1t.y);
+  ctx.lineTo(Q2t.x, Q2t.y);
+  ctx.arc(x2, cy, R2, Math.PI - phiT, Math.PI + phiT, true);
+  ctx.lineTo(Q1b.x, Q1b.y);
+  ctx.arc(x1, cy, R1, Math.PI + phiT, Math.PI - phiT, true);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // sheaves on top of belt
+  drawSheave(x1, cy, R1 - 3, angle, '#2c5f8a', 2);
+  drawSheave(x2, cy, R2 - 3, -angle * (D1 / D2), '#4a90c4', 3);
+
+  // wrap angle indicator on small sheave
+  ctx.strokeStyle = r.th1 >= 120 ? '#2a7a3a' : '#b03030';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(x1, cy, R1 + 9, Math.PI - phiT, Math.PI + phiT, true);
+  ctx.stroke();
+  ctx.fillStyle = r.th1 >= 120 ? '#2a7a3a' : '#b03030';
+  ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('θ₁ = ' + r.th1.toFixed(0) + '°', x1, cy - R1 - 16);
+
+  // labels
+  ctx.fillStyle = '#444'; ctx.font = '10.5px Segoe UI, Arial';
+  ctx.fillText('Driving  Ø' + D1 + ' mm · ' + rpm1 + ' rpm', x1, cy + R1 + 24);
+  ctx.fillText('Driven  Ø' + D2 + ' mm · ' + r.N2.toFixed(0) + ' rpm', x2, cy + R2 + 24);
+
+  // center distance dimension
+  const dimY = H - 22;
+  ctx.strokeStyle = '#8a97a5'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x1, dimY); ctx.lineTo(x2, dimY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1, dimY - 5); ctx.lineTo(x1, dimY + 5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2, dimY - 5); ctx.lineTo(x2, dimY + 5); ctx.stroke();
+  ctx.fillStyle = '#66727f'; ctx.font = '10px Segoe UI, Arial';
+  ctx.fillText('C = ' + C + ' mm', (x1 + x2) / 2, dimY - 6);
+
+  // belt speed tag
+  ctx.fillStyle = (r.vb >= 10 && r.vb <= 30) ? '#2a7a3a' : '#b03030';
+  ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.fillText('belt speed vb = ' + r.vb.toFixed(1) + ' m/s', (Q1t.x + Q2t.x) / 2, Math.min(Q1t.y, Q2t.y) - 12);
+}
+
+// ── Animation ─────────────────────────────────────────────────────────────
+function frame(ts) {
+  if (lastTs !== null) {
+    const dt = Math.min(ts - lastTs, 50) / 1000;
+    angle += (rpm1 / 1750) * 3.0 * dt;
+  }
+  lastTs = ts;
+  draw();
+  requestAnimationFrame(frame);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+document.getElementById('sRPM').addEventListener('input', function () {
+  rpm1 = +this.value; document.getElementById('vRPM').textContent = rpm1 + ' rpm'; updateOutputs();
+});
+document.getElementById('sD1').addEventListener('input', function () {
+  D1 = +this.value; document.getElementById('vD1').textContent = D1 + ' mm'; updateOutputs();
+});
+document.getElementById('sD2').addEventListener('input', function () {
+  D2 = +this.value; document.getElementById('vD2').textContent = D2 + ' mm'; updateOutputs();
+});
+document.getElementById('sC').addEventListener('input', function () {
+  C = +this.value; document.getElementById('vC').textContent = C + ' mm'; updateOutputs();
+});
+
+updateOutputs();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

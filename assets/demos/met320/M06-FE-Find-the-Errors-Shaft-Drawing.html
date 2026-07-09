@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Review: Find the Errors — Shaft Drawing — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.82; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px;
+  font-size: 0.8em; color: #5a4a2a; margin: 14px 22px 6px; border-radius: 0 5px 5px 0; line-height: 1.55; }
+.statusbar { display: flex; gap: 18px; align-items: center; margin: 10px 22px; font-size: 0.85em; }
+.statusbar .found { font-weight: 700; color: #2a7a3a; }
+.statusbar .miss  { font-weight: 700; color: #b05a10; }
+.statusbar button { margin-left: auto; padding: 6px 14px; font-size: 0.85em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.statusbar button:hover { background: #e2ecf6; }
+#drawWrap { margin: 4px 22px; border: 1px solid #dde4ec; border-radius: 8px; background: #fdfdfb; overflow: hidden; }
+svg { display: block; width: 100%; height: auto; }
+.hotspot { cursor: pointer; fill: transparent; }
+.hotspot:hover { fill: rgba(44,95,138,0.10); }
+.hotspot.err-found { fill: rgba(176,48,48,0.18); stroke: #b03030; stroke-width: 2; stroke-dasharray: 5 3; }
+.hotspot.ok-clicked { fill: rgba(42,122,58,0.10); }
+.feedback { margin: 12px 22px 20px; }
+.fb-item { border-left: 4px solid #b03030; background: #fdf1f1; padding: 10px 14px; margin-bottom: 8px;
+  border-radius: 0 6px 6px 0; font-size: 0.84em; line-height: 1.6; }
+.fb-item.ok { border-left-color: #2a7a3a; background: #f0f8f1; }
+.fb-item strong { color: #b03030; }
+.fb-item.ok strong { color: #2a7a3a; }
+.done-banner { margin: 12px 22px; padding: 12px 16px; border-radius: 7px; background: #edf6ee;
+  border: 1.5px solid #2a7a3a; color: #205a2a; font-size: 0.9em; display: none; line-height: 1.6; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🔍 Design Review — Find the 5 Errors in This Shaft Drawing</h1>
+    <p>MET 320 · Module 6 &nbsp;|&nbsp; A junior engineer submitted this intermediate-shaft drawing for review. Click every feature or callout you believe is a mistake.</p>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Your role:</strong> You are the reviewing engineer. The shaft carries a gear (center section)
+    between two ball bearings; power exits through the coupling end at right. There are
+    <strong>5 genuine errors</strong>. Correct features are clickable too — but flagging good engineering
+    costs you credibility (tracked as misclicks). Review checklist: fillets, keyseats, fits, grooves, finish.
+  </div>
+
+  <div class="statusbar">
+    <span>Errors found: <span class="found" id="nFound">0</span> / 5</span>
+    <span>Misclicks: <span class="miss" id="nMiss">0</span></span>
+    <button id="btnReveal">Give up — reveal remaining</button>
+  </div>
+
+  <div id="drawWrap">
+  <svg viewBox="0 0 940 430" xmlns="http://www.w3.org/2000/svg" id="dwg">
+    <!-- title block -->
+    <rect x="1" y="1" width="938" height="428" fill="none" stroke="#99a" stroke-width="2"/>
+    <rect x="640" y="384" width="299" height="45" fill="#f7f9fc" stroke="#99a"/>
+    <text x="652" y="402" font-size="11" fill="#556">MET 320 DRIVE PROJECT — INTERMEDIATE SHAFT</text>
+    <text x="652" y="420" font-size="10" fill="#889">DWG 320-S2 · SCALE 1:1 · MATL: AISI 1040 CD</text>
+
+    <!-- centerline -->
+    <line x1="40" y1="200" x2="900" y2="200" stroke="#a9b4c0" stroke-width="1" stroke-dasharray="14 4 3 4"/>
+
+    <!-- shaft profile (upper+lower symmetric), sections:
+         A: x60-190  r38 (left bearing seat Ø35 -> drawn r=35)
+         collar x190-225 r58
+         B: x225-465 gear seat r45
+         collar x465-500 r58
+         C: x500-640 right bearing seat r35
+         D: x640-780 coupling end r28  -->
+    <g fill="#dde3ec" stroke="#4a5568" stroke-width="2">
+      <rect x="60"  y="165" width="130" height="70"/>
+      <rect x="190" y="142" width="35"  height="116"/>
+      <rect x="225" y="155" width="240" height="90"/>
+      <rect x="465" y="142" width="35"  height="116"/>
+      <rect x="500" y="165" width="140" height="70"/>
+      <rect x="640" y="172" width="140" height="56"/>
+    </g>
+
+    <!-- E2: keyseat runs full gear seat AND into left collar zone -->
+    <rect x="196" y="155" width="262" height="14" fill="#fff" stroke="#4a5568" stroke-width="1.5"/>
+
+    <!-- E4: retaining ring groove immediately left of gear (max-moment section) -->
+    <rect x="232" y="155" width="7" height="90" fill="#fff" stroke="#4a5568" stroke-width="1.3"/>
+
+    <!-- chamfers on coupling end (correct) -->
+    <line x1="780" y1="172" x2="766" y2="172" stroke="#4a5568" stroke-width="2"/>
+    <line x1="780" y1="228" x2="766" y2="228" stroke="#4a5568" stroke-width="2"/>
+    <line x1="766" y1="172" x2="780" y2="186" stroke="#4a5568" stroke-width="2"/>
+    <line x1="766" y1="228" x2="780" y2="214" stroke="#4a5568" stroke-width="2"/>
+
+    <!-- ══ callouts ══ -->
+    <!-- E1: sharp corner left shoulder -->
+    <line x1="192" y1="163" x2="150" y2="96" stroke="#556" stroke-width="1"/>
+    <text x="70" y="90" font-size="12.5" fill="#334">R0 (sharp corner)</text>
+
+    <!-- decoy: right shoulder proper fillet -->
+    <line x1="498" y1="163" x2="540" y2="96" stroke="#556" stroke-width="1"/>
+    <text x="532" y="90" font-size="12.5" fill="#334">R2.0 full fillet</text>
+
+    <!-- E3: left bearing seat clearance fit -->
+    <line x1="125" y1="237" x2="112" y2="290" stroke="#556" stroke-width="1"/>
+    <text x="58" y="306" font-size="12.5" fill="#334">Ø35 g6 (bearing seat)</text>
+
+    <!-- decoy: gear seat fit -->
+    <line x1="345" y1="247" x2="345" y2="292" stroke="#556" stroke-width="1"/>
+    <text x="290" y="308" font-size="12.5" fill="#334">Ø45 k6 (gear seat)</text>
+
+    <!-- decoy: right bearing seat surface finish OK... make E5 here: -->
+    <line x1="570" y1="237" x2="585" y2="290" stroke="#556" stroke-width="1"/>
+    <text x="540" y="306" font-size="12.5" fill="#334">Ø35 k6, Ra 12.5</text>
+
+    <!-- decoy: coupling chamfer note -->
+    <line x1="772" y1="180" x2="800" y2="120" stroke="#556" stroke-width="1"/>
+    <text x="760" y="112" font-size="12.5" fill="#334">2 × 45° chamfer</text>
+
+    <!-- E2 callout -->
+    <line x1="330" y1="157" x2="330" y2="70" stroke="#556" stroke-width="1"/>
+    <text x="212" y="62" font-size="12.5" fill="#334">Keyseat 14 P9 — run to shoulder</text>
+
+    <!-- E4 callout -->
+    <line x1="236" y1="243" x2="222" y2="340" stroke="#556" stroke-width="1"/>
+    <text x="140" y="356" font-size="12.5" fill="#334">Groove for retaining ring</text>
+
+    <!-- decoy: overall dim -->
+    <line x1="60" y1="386" x2="640" y2="386" stroke="#889" stroke-width="1"/>
+    <line x1="60" y1="380" x2="60" y2="392" stroke="#889" stroke-width="1"/>
+    <line x1="640" y1="380" x2="640" y2="392" stroke="#889" stroke-width="1"/>
+    <text x="320" y="380" font-size="11.5" fill="#556">580 (bearing span)</text>
+
+    <!-- ══ hotspots (drawn last = on top) ══ -->
+    <circle class="hotspot" data-id="e1" cx="176" cy="140" r="34"/>
+    <rect   class="hotspot" data-id="e2" x="200" y="40" width="270" height="132" rx="8"/>
+    <circle class="hotspot" data-id="e3" cx="118" cy="285" r="42"/>
+    <rect   class="hotspot" data-id="e4" x="190" y="322" width="180" height="46" rx="8"/>
+    <rect   class="hotspot" data-id="e4b" x="222" y="148" width="28" height="104" rx="6"/>
+    <rect   class="hotspot" data-id="e5" x="528" y="282" width="180" height="36" rx="8"/>
+    <!-- decoys -->
+    <circle class="hotspot" data-id="d1" cx="520" cy="130" r="36"/>
+    <rect   class="hotspot" data-id="d2" x="284" y="286" width="150" height="32" rx="8"/>
+    <rect   class="hotspot" data-id="d3" x="742" y="96" width="150" height="34" rx="8"/>
+    <rect   class="hotspot" data-id="d4" x="140" y="368" width="440" height="30" rx="8"/>
+    <rect   class="hotspot" data-id="d5" x="640" y="166" width="145" height="68" rx="8"/>
+  </svg>
+  </div>
+
+  <div class="done-banner" id="doneBanner"></div>
+  <div class="feedback" id="feedback"></div>
+
+  <div class="cascade-bar">
+    <strong>Why this matters:</strong> Every one of these five mistakes has caused real field failures —
+    shafts crack at sharp shoulders and misplaced grooves, bearings spin on g6 seats, and keyseats cut into
+    maximum-moment sections. Use the same checklist on your own Milestone 3 drawing:
+    <em>fillets · keyseat extent · fits · groove placement · surface finish.</em>
+  </div>
+</div>
+
+<script>
+const ERRORS = {
+  e1: { n: 1, t: "Sharp corner (R0) at the left bearing shoulder",
+        x: "A shoulder with no fillet has Kt → 3+ exactly where bending moment is high. Specify the largest fillet that still clears the bearing's corner radius (e.g., R0.5–1.0 per the bearing catalog). Compare: the right shoulder correctly calls out R2.0 against the gear bore chamfer." },
+  e2: { n: 2, t: "Keyseat runs all the way to the shoulder",
+        x: "The keyseat should be only slightly longer than the gear hub, centered on it. Extending it to the shoulder puts an end-milled keyseat (Kt ≈ 2.0+) into the highest-moment region AND removes the shoulder's locating face integrity. Stop the keyseat inside the gear seat." },
+  e3: { n: 3, t: "Ø35 g6 on a bearing seat",
+        x: "g6 is a sliding CLEARANCE fit. A rotating-shaft inner ring mounted with clearance will creep and spin on the seat, wearing it and overheating. Rotating inner-ring load requires an interference fit: k6 (light) to n6 (heavier loads). The right bearing seat's k6 is correct." },
+  e4: { n: 4, t: "Retaining ring groove at the maximum-moment section",
+        x: "The groove sits immediately beside the gear — the peak of the bending moment diagram. Ring grooves have Kt ≈ 2–3 (sharp internal corners). Retain the gear against the shoulder and locate rings near the bearings where moment approaches zero." },
+  e4b:{ alias: 'e4' },
+  e5: { n: 5, t: "Ra 12.5 surface finish on a bearing seat",
+        x: "Ra 12.5 µm is a rough-machined surface. Bearing seats need Ra ≈ 0.8 µm (ground) for accurate seating, fretting resistance, and to preserve the fit tolerance. (The k6 fit callout on this seat is fine — only the finish is wrong.)" }
+};
+const DECOYS = {
+  d1: "R2.0 full fillet at the right shoulder — correctly sized generous fillet. This is good practice.",
+  d2: "Ø45 k6 on the gear seat — light interference plus a key is the standard combination for gears. Fine.",
+  d3: "2 × 45° chamfer on the coupling end — proper assembly lead-in. Fine.",
+  d4: "580 mm bearing span dimension — a normal, necessary dimension. Fine.",
+  d5: "Coupling end geometry — smaller diameter at low-moment shaft end is efficient design. Fine."
+};
+
+let found = new Set(), miss = 0, over = false;
+const fb = document.getElementById('feedback');
+
+function addFB(html, ok) {
+  const d = document.createElement('div');
+  d.className = 'fb-item' + (ok ? ' ok' : '');
+  d.innerHTML = html;
+  fb.prepend(d);
+}
+function refresh() {
+  document.getElementById('nFound').textContent = found.size;
+  document.getElementById('nMiss').textContent = miss;
+  if (found.size === 5 && !over) {
+    over = true;
+    const b = document.getElementById('doneBanner');
+    const grade = miss === 0 ? 'Flawless review — hire this engineer!' :
+                  miss <= 2 ? 'Solid review. A little trigger-happy, but every error caught.' :
+                  'All errors found, but flagging good features erodes trust. Review the decoy feedback.';
+    b.innerHTML = '<strong>Review complete: 5/5 errors, ' + miss + ' misclick' + (miss === 1 ? '' : 's') + '.</strong> ' + grade;
+    b.style.display = 'block';
+  }
+}
+document.querySelectorAll('.hotspot').forEach(h => {
+  h.addEventListener('click', () => {
+    if (over && found.size === 5) return;
+    let id = h.dataset.id;
+    if (ERRORS[id] && ERRORS[id].alias) id = ERRORS[id].alias;
+    if (ERRORS[id]) {
+      if (found.has(id)) return;
+      found.add(id);
+      document.querySelectorAll('.hotspot').forEach(s => {
+        let sid = s.dataset.id;
+        if (ERRORS[sid] && ERRORS[sid].alias) sid = ERRORS[sid].alias;
+        if (sid === id) s.classList.add('err-found');
+      });
+      addFB('<strong>ERROR ' + ERRORS[id].n + ' FOUND — ' + ERRORS[id].t + '.</strong> ' + ERRORS[id].x, false);
+    } else {
+      if (h.classList.contains('ok-clicked')) return;
+      h.classList.add('ok-clicked');
+      miss++;
+      addFB('<strong>Not an error.</strong> ' + DECOYS[id], true);
+    }
+    refresh();
+  });
+});
+document.getElementById('btnReveal').addEventListener('click', () => {
+  Object.keys(ERRORS).forEach(id => {
+    if (ERRORS[id].alias || found.has(id)) return;
+    found.add(id);
+    document.querySelectorAll('.hotspot').forEach(s => {
+      let sid = s.dataset.id;
+      if (ERRORS[sid] && ERRORS[sid].alias) sid = ERRORS[sid].alias;
+      if (sid === id) s.classList.add('err-found');
+    });
+    addFB('<strong>REVEALED — ERROR ' + ERRORS[id].n + ': ' + ERRORS[id].t + '.</strong> ' + ERRORS[id].x, false);
+  });
+  refresh();
+});
+</script>
+</body>
+</html>

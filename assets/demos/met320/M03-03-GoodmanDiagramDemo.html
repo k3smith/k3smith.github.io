@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Goodman Diagram — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block; width: 100%; height: 380px;
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input[type=range].load::-webkit-slider-thumb { background: #b05a10; }
+.mat-row { margin-top: 4px; margin-bottom: 10px; }
+.mat-row label { display: block; font-size: 0.8em; color: #555; margin-bottom: 4px; }
+select {
+  width: 100%; padding: 6px 8px; border: 1px solid #c0cad4; border-radius: 5px;
+  font-size: 0.8em; color: #333; background: #fff; cursor: pointer;
+}
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>📈 Fatigue Failure Criteria — Interactive Goodman Diagram</h1>
+    <p>MET 320 · Module 3 &nbsp;|&nbsp; Move the operating point (σₘ, σₐ) and watch the safety factor change against each criterion</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="380" aria-label="Goodman diagram with operating point"></canvas>
+
+  <div class="scenario-note">
+    <strong>Design scenario:</strong> A rotating shaft sees a steady (mean) stress from a static load plus an alternating stress from rotation. Will it survive 10⁶+ cycles? Static yield strength alone can't answer that — the combination of σₘ and σₐ must fall inside the failure envelope.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Inputs</div>
+
+      <div class="mat-row">
+        <label>Material</label>
+        <select id="sMat">
+          <option value="470,390,188">AISI 1020 CD — Su 470, Sy 390 MPa</option>
+          <option value="620,410,248" selected>AISI 1040 HR — Su 620, Sy 410 MPa</option>
+          <option value="800,660,320">AISI 1144 OQT 1000°F — Su 800, Sy 660 MPa</option>
+          <option value="1020,890,408">AISI 4140 OQT 1100°F — Su 1020, Sy 890 MPa</option>
+          <option value="1250,1100,500">AISI 4340 OQT 900°F — Su 1250, Sy 1100 MPa</option>
+        </select>
+      </div>
+
+      <div class="slider-row">
+        <label>Endurance Limit S<sub>n</sub>′ (adjusted) <span class="val" id="vSe">248 MPa</span></label>
+        <input type="range" id="sSe" min="50" max="600" step="2" value="248">
+      </div>
+      <div class="slider-row">
+        <label>Mean Stress σ<sub>m</sub> <span class="val" id="vSm">150 MPa</span></label>
+        <input type="range" id="sSm" class="load" min="0" max="900" step="5" value="150">
+      </div>
+      <div class="slider-row">
+        <label>Alternating Stress σ<sub>a</sub> <span class="val" id="vSa">100 MPa</span></label>
+        <input type="range" id="sSa" class="load" min="0" max="500" step="5" value="100">
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Safety Factors (proportional load line)</div>
+      <table class="result-table">
+        <tr id="rowGood"><td>Goodman (design standard)</td><td id="rGood">—</td></tr>
+        <tr id="rowSod"><td>Soderberg (conservative)</td><td id="rSod">—</td></tr>
+        <tr id="rowYield"><td>First-cycle Yield (σ<sub>m</sub>+σ<sub>a</sub> vs S<sub>y</sub>)</td><td id="rYield">—</td></tr>
+        <tr><td>Stress Ratio R = σ<sub>min</sub>/σ<sub>max</sub></td><td id="rR">—</td></tr>
+        <tr><td>σ<sub>max</sub> / σ<sub>min</sub></td><td id="rMinMax">—</td></tr>
+        <tr id="rowVerdict"><td><strong>Verdict (Goodman, N ≥ 2 target)</strong></td><td id="rVerdict">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Reading the diagram:</strong> The <strong>Goodman line</strong> connects S<sub>n</sub>′ (fully reversed) to S<sub>u</sub> (static). Points below the line survive indefinitely; the ratio of the line intercept to the operating point along the load line is the safety factor N.
+    <strong>Soderberg</strong> replaces S<sub>u</sub> with S<sub>y</sub> — safer, but often overly conservative. The <strong>yield line</strong> guards against first-cycle yielding at high mean stress.
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let Su = 620, Sy = 410, Se = 248;
+let sm = 150, sa = 100;
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Mechanics ─────────────────────────────────────────────────────────────
+function calc() {
+  // Proportional loading: point scales along the ray from origin.
+  // Goodman:   sa/Se + sm/Su = 1/N  → N = 1 / (sa/Se + sm/Su)
+  const nGood  = (sa / Se + sm / Su) > 0 ? 1 / (sa / Se + sm / Su) : Infinity;
+  const nSod   = (sa / Se + sm / Sy) > 0 ? 1 / (sa / Se + sm / Sy) : Infinity;
+  const nYield = (sm + sa) > 0 ? Sy / (sm + sa) : Infinity;
+  const smax = sm + sa, smin = sm - sa;
+  const R = smax !== 0 ? smin / smax : 0;
+  return { nGood, nSod, nYield, smax, smin, R };
+}
+
+function updateOutputs() {
+  const r = calc();
+  const fN = (v) => isFinite(v) ? v.toFixed(2) : '∞';
+  const set = (rowId, cellId, v) => {
+    document.getElementById(cellId).textContent = fN(v);
+    document.getElementById(rowId).className = v >= 1 ? 'ok' : 'warn';
+  };
+  set('rowGood', 'rGood', r.nGood);
+  set('rowSod', 'rSod', r.nSod);
+  set('rowYield', 'rYield', r.nYield);
+  document.getElementById('rR').textContent = r.R.toFixed(2);
+  document.getElementById('rMinMax').textContent = r.smax.toFixed(0) + ' / ' + r.smin.toFixed(0) + ' MPa';
+  const govern = Math.min(r.nGood, r.nYield);
+  const vEl = document.getElementById('rVerdict');
+  const vRow = document.getElementById('rowVerdict');
+  if (govern >= 2)      { vEl.textContent = 'SAFE — N = ' + fN(govern);   vRow.className = 'ok'; }
+  else if (govern >= 1) { vEl.textContent = 'MARGINAL — N = ' + fN(govern); vRow.className = 'warn'; }
+  else                  { vEl.textContent = 'FAILURE PREDICTED — N = ' + fN(govern); vRow.className = 'warn'; }
+}
+
+// ── Draw ──────────────────────────────────────────────────────────────────
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+
+  const mL = 70, mB = 46, mT = 30, mR = 40;
+  const pw = W - mL - mR, ph = H - mT - mB;
+  const xMax = Math.max(Su * 1.12, sm * 1.15, 200);
+  const yMax = Math.max(Se * 1.6, sa * 1.3, Sy * 0.7, 150);
+  const X = (v) => mL + v / xMax * pw;
+  const Y = (v) => mT + ph - v / yMax * ph;
+
+  // grid
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)'; ctx.lineWidth = 1;
+  ctx.fillStyle = '#889'; ctx.font = '9.5px Segoe UI, Arial';
+  const xstep = xMax > 900 ? 200 : 100;
+  for (let v = 0; v <= xMax; v += xstep) {
+    ctx.beginPath(); ctx.moveTo(X(v), mT); ctx.lineTo(X(v), mT + ph); ctx.stroke();
+    ctx.textAlign = 'center'; ctx.fillText(v, X(v), mT + ph + 14);
+  }
+  const ystep = yMax > 450 ? 100 : 50;
+  for (let v = 0; v <= yMax; v += ystep) {
+    ctx.beginPath(); ctx.moveTo(mL, Y(v)); ctx.lineTo(mL + pw, Y(v)); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(v, mL - 6, Y(v) + 3);
+  }
+
+  // axes
+  ctx.strokeStyle = '#556'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(mL, mT); ctx.lineTo(mL, mT + ph); ctx.lineTo(mL + pw, mT + ph); ctx.stroke();
+  ctx.fillStyle = '#445'; ctx.font = '11px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Mean stress σm (MPa)', mL + pw / 2, H - 8);
+  ctx.save();
+  ctx.translate(16, mT + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Alternating stress σa (MPa)', 0, 0);
+  ctx.restore();
+
+  // Safe region shading under Goodman ∩ yield
+  ctx.beginPath();
+  ctx.moveTo(X(0), Y(0));
+  ctx.lineTo(X(0), Y(Math.min(Se, Sy)));
+  const steps = 60;
+  for (let i = 1; i <= steps; i++) {
+    const m = (i / steps) * Math.min(Su, xMax);
+    const aGood = Se * (1 - m / Su);
+    const aYield = Sy - m;
+    const a = Math.max(0, Math.min(aGood, aYield));
+    ctx.lineTo(X(m), Y(a));
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(42,122,58,0.10)';
+  ctx.fill();
+
+  // Goodman line
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(X(0), Y(Se)); ctx.lineTo(X(Su), Y(0)); ctx.stroke();
+  // Soderberg line
+  ctx.strokeStyle = '#7a4aa0'; ctx.lineWidth = 1.8; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(X(0), Y(Se)); ctx.lineTo(X(Sy), Y(0)); ctx.stroke();
+  // Yield line
+  ctx.strokeStyle = '#b03030'; ctx.lineWidth = 1.8; ctx.setLineDash([2, 3]);
+  ctx.beginPath(); ctx.moveTo(X(0), Y(Math.min(Sy, yMax))); ctx.lineTo(X(Sy), Y(0)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // line labels
+  ctx.font = 'bold 10px Segoe UI, Arial'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#2c5f8a';
+  ctx.fillText('Goodman', X(Su * 0.55) + 4, Y(Se * (1 - 0.55)) - 6);
+  ctx.fillStyle = '#7a4aa0';
+  ctx.fillText('Soderberg', X(Sy * 0.35) + 4, Y(Se * (1 - Sy * 0.35 / Sy)) + 14);
+  ctx.fillStyle = '#b03030';
+  ctx.fillText('Yield', X(Sy * 0.82), Y(Sy - Sy * 0.82) - 5);
+
+  // key intercepts
+  ctx.fillStyle = '#334'; ctx.font = '9.5px Segoe UI, Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText("Sn′ = " + Se, X(0) + 5, Y(Se) - 5);
+  ctx.textAlign = 'center';
+  ctx.fillText('Su = ' + Su, X(Su), Y(0) + 26);
+  ctx.fillText('Sy = ' + Sy, X(Sy), Y(0) + 26);
+
+  // Load line from origin through operating point, to Goodman intercept
+  const r = calc();
+  const scaleN = r.nGood;
+  if (sm + sa > 0 && isFinite(scaleN)) {
+    const gm = sm * scaleN, ga = sa * scaleN;   // Goodman-line intersection
+    ctx.strokeStyle = '#b05a10'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(Math.min(gm, xMax)), Y(Math.min(ga, yMax))); ctx.stroke();
+    ctx.setLineDash([]);
+    // intersection marker
+    if (gm <= xMax && ga <= yMax) {
+      ctx.beginPath(); ctx.arc(X(gm), Y(ga), 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.strokeStyle = '#b05a10'; ctx.lineWidth = 2; ctx.stroke();
+    }
+  }
+
+  // operating point
+  const px = X(sm), py = Y(sa);
+  const safe = Math.min(r.nGood, r.nYield) >= 1;
+  ctx.beginPath(); ctx.arc(px, py, 7, 0, Math.PI * 2);
+  ctx.fillStyle = safe ? '#2a7a3a' : '#b03030';
+  ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = safe ? '#2a7a3a' : '#b03030';
+  ctx.font = 'bold 10.5px Segoe UI, Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('(' + sm + ', ' + sa + ')', px + 11, py - 8);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+function upd() { updateOutputs(); draw(); }
+document.getElementById('sMat').addEventListener('change', function () {
+  const p = this.value.split(',').map(Number);
+  Su = p[0]; Sy = p[1]; Se = p[2];
+  document.getElementById('sSe').value = Se;
+  document.getElementById('vSe').textContent = Se + ' MPa';
+  upd();
+});
+document.getElementById('sSe').addEventListener('input', function () {
+  Se = +this.value; document.getElementById('vSe').textContent = Se + ' MPa'; upd();
+});
+document.getElementById('sSm').addEventListener('input', function () {
+  sm = +this.value; document.getElementById('vSm').textContent = sm + ' MPa'; upd();
+});
+document.getElementById('sSa').addEventListener('input', function () {
+  sa = +this.value; document.getElementById('vSa').textContent = sa + ' MPa'; upd();
+});
+
+upd();
+</script>
+</body>
+</html>

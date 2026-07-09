@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Challenge: Lightest Spring — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #7a4a10 0%, #b05a10 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.85; }
+.spec { background: #fff8ec; border: 1.5px solid #e67300; margin: 16px 22px 8px; padding: 12px 16px;
+  border-radius: 7px; font-size: 0.84em; line-height: 1.7; }
+.spec strong { color: #b05a10; }
+.layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; }
+.controls { padding: 16px 20px; border-right: 1px solid #e8ecf1; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: #b05a10; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #f2dfc8; }
+.slider-row { margin-bottom: 11px; }
+.slider-row label { display: flex; justify-content: space-between; font-size: 0.8em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #b05a10; }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #e8d4bc; outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: #b05a10; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.right { padding: 16px 20px; }
+.checks { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+.checks td { padding: 6px 4px; font-size: 0.8em; border-bottom: 1px solid #f0f3f7; }
+.checks td:last-child { text-align: right; font-weight: 700; }
+.checks tr.pass td:last-child { color: #2a7a3a; }
+.checks tr.fail td:last-child { color: #b03030; }
+.scorebox { border-radius: 8px; padding: 14px 16px; text-align: center; margin-bottom: 10px;
+  border: 2px solid #c0cad4; background: #f7f9fc; }
+.scorebox.feasible { border-color: #2a7a3a; background: #edf6ee; }
+.scorebox .mass { font-size: 1.7em; font-weight: 800; color: #2c5f8a; }
+.scorebox .stars { font-size: 1.4em; letter-spacing: 4px; }
+.scorebox .msg { font-size: 0.78em; color: #667; margin-top: 4px; line-height: 1.5; }
+.codeRow { display: flex; gap: 8px; margin-top: 8px; }
+.codeRow input[type=text] { flex: 0 0 110px; padding: 6px 8px; font-size: 0.8em; border: 1px solid #c0cad4; border-radius: 5px; }
+.codeRow button { padding: 6px 12px; font-size: 0.8em; border: 1px solid #b05a10; border-radius: 5px;
+  background: #b05a10; color: #fff; cursor: pointer; }
+.codeRow .code { flex: 1; font-family: Consolas, monospace; font-size: 0.85em; padding: 6px 8px;
+  background: #f4f7fb; border: 1px dashed #99a; border-radius: 5px; color: #2c5f8a; }
+.cascade-bar { background: #f7f0e6; padding: 11px 22px; border-top: 1px solid #ecdcc4;
+  font-size: 0.78em; color: #5a4a3a; line-height: 1.65; }
+.cascade-bar strong { color: #b05a10; }
+#springCv { width: 100%; height: 190px; background: #fdfcf9; border: 1px solid #eee4d4; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🏆 Design Challenge — The Lightest Legal Spring</h1>
+    <p>MET 320 · Module 8 &nbsp;|&nbsp; Meet every constraint, then shave grams. Engineering is optimization under constraints.</p>
+  </div>
+
+  <div class="spec">
+    <strong>SPEC SHEET (music wire ASTM A228, squared &amp; ground ends):</strong>
+    Rate k = 5.0 ± 0.2 N/mm · working load 150 N with stress safety N ≥ 1.5 (τ ≤ 0.45 S<sub>u</sub>) ·
+    fits over a Ø20 rod (ID ≥ 21 mm) and inside a Ø38 bore (OD ≤ 37 mm) ·
+    ≥ 10% clash margin between working deflection and solid ·
+    L<sub>f</sub> ≤ 90 mm · no buckling (L<sub>f</sub>/D<sub>m</sub> &lt; 5.2) ·
+    spring index 5 ≤ C ≤ 12. &nbsp;<strong>Objective: minimize wire mass.</strong>
+  </div>
+
+  <div class="layout">
+    <div class="controls">
+      <div class="panel-title">Your Design</div>
+      <div class="slider-row"><label>Wire dia d <span class="val" id="vD">3 mm</span></label>
+        <input type="range" id="sD" min="1.5" max="6" step="0.25" value="3"></div>
+      <div class="slider-row"><label>Mean coil dia D<sub>m</sub> <span class="val" id="vDm">27 mm</span></label>
+        <input type="range" id="sDm" min="16" max="40" step="0.5" value="27"></div>
+      <div class="slider-row"><label>Active coils N<sub>a</sub> <span class="val" id="vNa">8</span></label>
+        <input type="range" id="sNa" min="3" max="20" step="0.5" value="8"></div>
+      <div class="slider-row"><label>Free length L<sub>f</sub> <span class="val" id="vLf">65 mm</span></label>
+        <input type="range" id="sLf" min="30" max="90" step="1" value="65"></div>
+      <canvas id="springCv"></canvas>
+    </div>
+
+    <div class="right">
+      <div class="panel-title">Constraint Checks</div>
+      <table class="checks">
+        <tr id="cK"><td>Rate k = 5.0 ± 0.2 N/mm</td><td id="tK">—</td></tr>
+        <tr id="cID"><td>ID ≥ 21 mm (rod clearance)</td><td id="tID">—</td></tr>
+        <tr id="cOD"><td>OD ≤ 37 mm (bore clearance)</td><td id="tOD">—</td></tr>
+        <tr id="cC"><td>Index 5 ≤ C ≤ 12</td><td id="tC">—</td></tr>
+        <tr id="cN"><td>Stress N ≥ 1.5 at 150 N</td><td id="tN">—</td></tr>
+        <tr id="cS"><td>Clash margin ≥ 10%</td><td id="tS">—</td></tr>
+        <tr id="cLf"><td>L<sub>f</sub> ≤ 90 mm</td><td id="tLf">—</td></tr>
+        <tr id="cB"><td>Buckling L<sub>f</sub>/D<sub>m</sub> &lt; 5.2</td><td id="tB">—</td></tr>
+      </table>
+
+      <div class="scorebox" id="scorebox">
+        <div class="mass" id="massOut">— g</div>
+        <div class="stars" id="starsOut"></div>
+        <div class="msg" id="msgOut">Adjust your design to satisfy all constraints.</div>
+        <div class="codeRow">
+          <input type="text" id="initials" maxlength="6" placeholder="initials">
+          <div class="code" id="codeOut">score code appears here</div>
+          <button id="btnCode">Get code</button>
+        </div>
+      </div>
+      <div style="font-size:0.72em;color:#889;line-height:1.5">Post your mass + score code in the Canvas
+      discussion thread. Codes are checksummed to your initials — leave the bragging honest. 🙂</div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Strategy hints (earn them by trying first):</strong> mass ∝ d²·D<sub>m</sub>·N<sub>a</sub>, but
+    the rate constraint ties the three together (k ∝ d⁴/D<sub>m</sub>³N<sub>a</sub>) and stress rises as d
+    shrinks (τ ∝ 1/d³). The optimum lives right against the N = 1.5 boundary — like every real
+    weight-critical design. Under 34 g is expert territory.
+  </div>
+</div>
+
+<script>
+const G = 79300, RHO = 7.85e-3; // MPa, g/mm3
+let d = 3, Dm = 27, Na = 8, Lf = 65;
+const F = 150;
+
+function calc() {
+  const C = Dm / d;
+  const k = G * Math.pow(d, 4) / (8 * Math.pow(Dm, 3) * Na);
+  const defl = F / k;
+  const Ls = d * (Na + 2);
+  const solidDef = Lf - Ls;
+  const clash = defl > 0 ? solidDef / defl : 99;
+  const Kw = (4 * C - 1) / (4 * C - 4) + 0.615 / C;
+  const tau = Kw * 8 * F * Dm / (Math.PI * Math.pow(d, 3));
+  const Sut = 2211 / Math.pow(d, 0.145);
+  const Ns = 0.45 * Sut / tau;
+  const wireLen = Math.PI * Dm * (Na + 2);
+  const mass = RHO * Math.PI * d * d / 4 * wireLen;
+  return { C, k, defl, Ls, clash, Ns, mass,
+    ok: {
+      K: Math.abs(k - 5.0) <= 0.2,
+      ID: (Dm - d) >= 21,
+      OD: (Dm + d) <= 37,
+      C: C >= 5 && C <= 12,
+      N: Ns >= 1.5,
+      S: clash >= 1.10 && solidDef > 0,
+      Lf: Lf <= 90,
+      B: Lf / Dm < 5.2
+    }};
+}
+
+function fmt(v, n) { return v.toFixed(n === undefined ? 2 : n); }
+
+function refresh() {
+  const r = calc();
+  const set = (row, cell, txt, pass) => {
+    document.getElementById(cell).textContent = txt;
+    document.getElementById(row).className = pass ? 'pass' : 'fail';
+  };
+  set('cK', 'tK', fmt(r.k) + ' N/mm ' + (r.ok.K ? '✓' : '✗'), r.ok.K);
+  set('cID', 'tID', fmt(Dm - d, 1) + ' mm ' + (r.ok.ID ? '✓' : '✗'), r.ok.ID);
+  set('cOD', 'tOD', fmt(Dm + d, 1) + ' mm ' + (r.ok.OD ? '✓' : '✗'), r.ok.OD);
+  set('cC', 'tC', fmt(r.C, 1) + ' ' + (r.ok.C ? '✓' : '✗'), r.ok.C);
+  set('cN', 'tN', fmt(r.Ns) + ' ' + (r.ok.N ? '✓' : '✗'), r.ok.N);
+  set('cS', 'tS', (r.clash >= 90 ? '∞' : fmt((r.clash - 1) * 100, 0) + '%') + ' ' + (r.ok.S ? '✓' : '✗'), r.ok.S);
+  set('cLf', 'tLf', Lf + ' mm ' + (r.ok.Lf ? '✓' : '✗'), r.ok.Lf);
+  set('cB', 'tB', fmt(Lf / Dm, 2) + ' ' + (r.ok.B ? '✓' : '✗'), r.ok.B);
+
+  const feasible = Object.values(r.ok).every(Boolean);
+  const box = document.getElementById('scorebox');
+  const mOut = document.getElementById('massOut');
+  const sOut = document.getElementById('starsOut');
+  const msg = document.getElementById('msgOut');
+  mOut.textContent = fmt(r.mass, 1) + ' g';
+  if (feasible) {
+    box.className = 'scorebox feasible';
+    const stars = r.mass <= 34 ? '★★★' : r.mass <= 48 ? '★★☆' : '★☆☆';
+    sOut.textContent = stars;
+    msg.textContent = r.mass <= 34 ? 'Expert-level design. Can you trim more without tripping a constraint?' :
+                      r.mass <= 48 ? 'Legal and lean. The stress check has margin left — spend it.' :
+                      'All constraints met! Now start cutting mass.';
+  } else {
+    box.className = 'scorebox';
+    sOut.textContent = '—';
+    msg.textContent = 'Design not yet legal — fix the red rows first. Mass only counts when everything passes.';
+  }
+  drawSpring(r, feasible);
+  window._feasible = feasible;
+  window._mass = r.mass;
+}
+
+// score code: mass(g x10) + checksum over initials & mass
+function makeCode() {
+  if (!window._feasible) { document.getElementById('codeOut').textContent = 'design must pass all checks first'; return; }
+  const ini = (document.getElementById('initials').value || 'ANON').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6) || 'ANON';
+  const m10 = Math.round(window._mass * 10);
+  let h = 7;
+  const s = ini + '|' + m10 + '|MET320M8';
+  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) % 1679615; }
+  document.getElementById('codeOut').textContent =
+    'M8-' + ini + '-' + m10 + '-' + h.toString(36).toUpperCase().padStart(4, '0');
+}
+document.getElementById('btnCode').addEventListener('click', makeCode);
+
+// simple spring sketch
+const cv = document.getElementById('springCv');
+const cx2 = cv.getContext('2d');
+function drawSpring(r, feasible) {
+  const rect = cv.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = rect.width * dpr; cv.height = rect.height * dpr;
+  cx2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const W = rect.width, H = rect.height;
+  cx2.clearRect(0, 0, W, H);
+  const midX = W / 2, base = H - 18;
+  const scl = Math.min(1.6, (H - 50) / Lf);
+  const len = Lf * scl, coilR = Dm / 2 * scl * 1.25, wpx = Math.max(2, d * scl * 1.2);
+  // bore + rod guides
+  cx2.fillStyle = '#eee4d4';
+  cx2.fillRect(midX - 37 / 2 * scl * 1.25 - 4, 8, 4, H - 16);
+  cx2.fillRect(midX + 37 / 2 * scl * 1.25, 8, 4, H - 16);
+  cx2.fillStyle = '#d8ceb8';
+  cx2.fillRect(midX - 10 * scl * 1.25, base - len - 6, 20 * scl * 1.25, len + 12);
+  // coil
+  cx2.beginPath();
+  const n = 300, tot = Na + 2;
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    const x = midX + Math.sin(t * tot * 2 * Math.PI) * coilR;
+    const y = base - t * len;
+    i ? cx2.lineTo(x, y) : cx2.moveTo(x, y);
+  }
+  cx2.strokeStyle = feasible ? '#2a7a3a' : '#b05a10';
+  cx2.lineWidth = wpx; cx2.lineCap = 'round';
+  cx2.stroke();
+  cx2.fillStyle = '#889'; cx2.font = '10px Segoe UI';
+  cx2.textAlign = 'center';
+  cx2.fillText('rod Ø20 · bore Ø38 (to scale-ish)', midX, H - 4);
+}
+
+function bind(id, vid, fmt2, set) {
+  document.getElementById(id).addEventListener('input', function () {
+    set(+this.value);
+    document.getElementById(vid).textContent = fmt2(+this.value);
+    refresh();
+  });
+}
+bind('sD', 'vD', v => v + ' mm', v => d = v);
+bind('sDm', 'vDm', v => v + ' mm', v => Dm = v);
+bind('sNa', 'vNa', v => v, v => Na = v);
+bind('sLf', 'vLf', v => v + ' mm', v => Lf = v);
+refresh();
+</script>
+</body>
+</html>

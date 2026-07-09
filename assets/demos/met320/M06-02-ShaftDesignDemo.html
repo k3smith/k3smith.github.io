@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaft Loading &amp; Design — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block; width: 100%; height: 420px;
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.mat-row { margin-top: 4px; }
+.mat-row label { display: block; font-size: 0.8em; color: #555; margin-bottom: 4px; }
+select {
+  width: 100%; padding: 6px 8px; border: 1px solid #c0cad4; border-radius: 5px;
+  font-size: 0.8em; color: #333; background: #fff; cursor: pointer;
+}
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🔩 Shaft Loading — Shear &amp; Moment Diagrams to Minimum Diameter</h1>
+    <p>MET 320 · Module 6 &nbsp;|&nbsp; Slide the gear along the shaft and watch reactions, V &amp; M diagrams, and required diameter update live</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="420" aria-label="Shaft with shear and moment diagrams"></canvas>
+
+  <div class="scenario-note">
+    <strong>Design scenario:</strong> A gear is mounted on a shaft simply supported by two ball bearings. The gear's transmitted force bends the shaft while the transmitted torque twists it between the gear and the coupling at the right end. Find the smallest safe diameter at the gear — that's where bending moment peaks.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Design Inputs</div>
+
+      <div class="slider-row">
+        <label>Bearing Span L <span class="val" id="vL">400 mm</span></label>
+        <input type="range" id="sL" min="200" max="800" step="10" value="400">
+      </div>
+      <div class="slider-row">
+        <label>Gear Position a (from left bearing) <span class="val" id="vA">150 mm</span></label>
+        <input type="range" id="sA" min="20" max="380" step="5" value="150">
+      </div>
+      <div class="slider-row">
+        <label>Radial Gear Force P <span class="val" id="vP">2000 N</span></label>
+        <input type="range" id="sP" min="200" max="8000" step="100" value="2000">
+      </div>
+      <div class="slider-row">
+        <label>Transmitted Torque T <span class="val" id="vT">120 N·m</span></label>
+        <input type="range" id="sT" min="0" max="500" step="10" value="120">
+      </div>
+      <div class="mat-row">
+        <label>Shaft Material (S<sub>n</sub>′ = adjusted endurance, S<sub>y</sub> = yield)</label>
+        <select id="sMat">
+          <option value="124,370">AISI 1020 CD — Sn′ 124, Sy 370 MPa</option>
+          <option value="164,410" selected>AISI 1040 HR — Sn′ 164, Sy 410 MPa</option>
+          <option value="220,660">AISI 1144 OQT — Sn′ 220, Sy 660 MPa</option>
+          <option value="272,890">AISI 4140 OQT 1100 — Sn′ 272, Sy 890 MPa</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Results</div>
+      <table class="result-table">
+        <tr><td>Reaction R<sub>A</sub> (left bearing)</td><td id="rRA">—</td></tr>
+        <tr><td>Reaction R<sub>B</sub> (right bearing)</td><td id="rRB">—</td></tr>
+        <tr><td>Max Bending Moment (at gear)</td><td id="rM">—</td></tr>
+        <tr><td>Min Diameter at Gear (ASME, N=2, K<sub>t</sub>=2)</td><td id="rD">—</td></tr>
+        <tr id="rStdRow"><td>Standard Size to Specify</td><td id="rStd">—</td></tr>
+        <tr><td>Governing Bearing Load (for L₁₀ life)</td><td id="rBrg">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>The design chain:</strong> Gear force → bearing reactions → M diagram → d<sub>min</sub> at the critical section → standard size → bearing bore must match!
+    Slide the gear toward a bearing: the moment falls (shorter lever arm) but that bearing's reaction climbs — smaller shaft, bigger bearing. <em>Shaft design and bearing selection are one coupled problem, which is why Milestone 3 treats them together.</em>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let L = 400, a = 150, P = 2000, T = 120;
+let Sn = 164, Sy = 410;
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── Mechanics ─────────────────────────────────────────────────────────────
+function calc() {
+  const aEff = Math.min(a, L - 10);
+  const b = L - aEff;
+  const RA = P * b / L;
+  const RB = P * aEff / L;
+  const Mmax = RA * aEff / 1000;             // N·m
+  // ASME elliptic (Mott eq.): d = [32 N / π · sqrt( (Kt·M/Sn')² + 3/4·(T/Sy)² )]^(1/3)
+  const N = 2, Kt = 2;
+  const SnPa = Sn * 1e6, SyPa = Sy * 1e6;
+  const term = Math.sqrt(Math.pow(Kt * Mmax / SnPa, 2) + 0.75 * Math.pow(T / SyPa, 2));
+  const d = Math.pow(32 * N / Math.PI * term, 1 / 3) * 1000;   // mm
+  const stdSizes = [10, 12, 15, 17, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80];
+  const dStd = stdSizes.find(s => s >= d) || null;
+  return { aEff, b, RA, RB, Mmax, d, dStd };
+}
+
+function updateOutputs() {
+  const r = calc();
+  document.getElementById('rRA').textContent = r.RA.toFixed(0) + ' N';
+  document.getElementById('rRB').textContent = r.RB.toFixed(0) + ' N';
+  document.getElementById('rM').textContent = r.Mmax.toFixed(1) + ' N·m';
+  document.getElementById('rD').textContent = r.d.toFixed(1) + ' mm';
+  const stdRow = document.getElementById('rStdRow');
+  if (r.dStd) {
+    document.getElementById('rStd').textContent = r.dStd + ' mm ✓';
+    stdRow.className = 'ok';
+  } else {
+    document.getElementById('rStd').textContent = '> 80 mm — redesign!';
+    stdRow.className = 'warn';
+  }
+  document.getElementById('rBrg').textContent = Math.max(r.RA, r.RB).toFixed(0) + ' N ('
+    + (r.RA >= r.RB ? 'left' : 'right') + ')';
+}
+
+// ── Drawing ───────────────────────────────────────────────────────────────
+function arrow(x1, y1, x2, y2, color, w) {
+  const hd = 8;
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w || 2.2;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - hd * Math.cos(ang - 0.42), y2 - hd * Math.sin(ang - 0.42));
+  ctx.lineTo(x2 - hd * Math.cos(ang + 0.42), y2 - hd * Math.sin(ang + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  const r = calc();
+  const mX = 90, mR = 60;
+  const pw = W - mX - mR;
+  const X = (mm) => mX + mm / L * pw;
+
+  // ── Shaft schematic ─────────────────────────────────────────────────
+  const sy0 = 78;
+  // shaft body
+  const grad = ctx.createLinearGradient(0, sy0 - 9, 0, sy0 + 9);
+  grad.addColorStop(0, '#d0d4dc'); grad.addColorStop(0.4, '#f0f2f5'); grad.addColorStop(1, '#a8adb8');
+  ctx.fillStyle = grad;
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1;
+  ctx.fillRect(X(0) - 24, sy0 - 9, X(L) - X(0) + 48, 18);
+  ctx.strokeRect(X(0) - 24, sy0 - 9, X(L) - X(0) + 48, 18);
+
+  // bearings (triangles)
+  function bearing(x, label) {
+    ctx.fillStyle = '#c8cdd8'; ctx.strokeStyle = '#889';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x, sy0 + 9);
+    ctx.lineTo(x - 14, sy0 + 34);
+    ctx.lineTo(x + 14, sy0 + 34);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#556'; ctx.font = 'bold 10.5px Segoe UI, Arial'; ctx.textAlign = 'center';
+    ctx.fillText(label, x, sy0 + 47);
+  }
+  bearing(X(0), 'A');
+  bearing(X(L), 'B');
+
+  // gear (rectangle) at position a
+  const gx = X(r.aEff);
+  ctx.fillStyle = '#4a90c4';
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+  ctx.fillRect(gx - 11, sy0 - 30, 22, 60);
+  ctx.strokeRect(gx - 11, sy0 - 30, 22, 60);
+  ctx.fillStyle = '#2c5f8a'; ctx.font = 'bold 10px Segoe UI, Arial'; ctx.textAlign = 'center';
+  ctx.fillText('GEAR', gx, sy0 - 38);
+
+  // applied force arrow (down onto gear)
+  arrow(gx, sy0 - 92, gx, sy0 - 36, '#b03030', 3);
+  ctx.fillStyle = '#b03030'; ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.fillText('P = ' + P + ' N', gx, sy0 - 98);
+
+  // reaction arrows (up)
+  arrow(X(0), sy0 + 76, X(0), sy0 + 40, '#2a7a3a', 2.5);
+  arrow(X(L), sy0 + 76, X(L), sy0 + 40, '#2a7a3a', 2.5);
+  ctx.fillStyle = '#2a7a3a'; ctx.font = '10px Segoe UI, Arial';
+  ctx.fillText('RA = ' + r.RA.toFixed(0) + ' N', X(0), sy0 + 90);
+  ctx.fillText('RB = ' + r.RB.toFixed(0) + ' N', X(L), sy0 + 90);
+
+  // torque region shading (gear → right end)
+  ctx.fillStyle = 'rgba(176,90,16,0.12)';
+  ctx.fillRect(gx, sy0 - 9, X(L) - gx + 24, 18);
+  ctx.fillStyle = '#b05a10'; ctx.font = '9.5px Segoe UI, Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('T = ' + T + ' N·m carried here →', gx + 6, sy0 + 2 - 12);
+
+  // ── Shear diagram ───────────────────────────────────────────────────
+  const vY = 215, vH = 55;
+  const vScale = vH / Math.max(r.RA, r.RB, 1);
+  ctx.strokeStyle = '#9aa7b5'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(X(0) - 30, vY); ctx.lineTo(X(L) + 30, vY); ctx.stroke();
+  ctx.fillStyle = '#2c5f8a';
+  ctx.font = 'bold 10px Segoe UI, Arial'; ctx.textAlign = 'left';
+  ctx.fillText('V (N)', X(0) - 62, vY - 30);
+
+  ctx.beginPath();
+  ctx.moveTo(X(0), vY);
+  ctx.lineTo(X(0), vY - r.RA * vScale);
+  ctx.lineTo(gx, vY - r.RA * vScale);
+  ctx.lineTo(gx, vY + r.RB * vScale);
+  ctx.lineTo(X(L), vY + r.RB * vScale);
+  ctx.lineTo(X(L), vY);
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 2.2; ctx.stroke();
+  ctx.fillStyle = 'rgba(44,95,138,0.10)';
+  ctx.fill();
+
+  ctx.fillStyle = '#2c5f8a'; ctx.font = '9.5px Segoe UI, Arial';
+  ctx.fillText('+' + r.RA.toFixed(0), X(0) + 4, vY - r.RA * vScale - 4);
+  ctx.fillText('−' + r.RB.toFixed(0), gx + 4, vY + r.RB * vScale + 11);
+
+  // ── Moment diagram ──────────────────────────────────────────────────
+  const mY = 360, mH = 62;
+  const mScale = mH / Math.max(r.Mmax, 0.001);
+  ctx.strokeStyle = '#9aa7b5'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(X(0) - 30, mY); ctx.lineTo(X(L) + 30, mY); ctx.stroke();
+  ctx.fillStyle = '#7a4aa0'; ctx.font = 'bold 10px Segoe UI, Arial';
+  ctx.fillText('M (N·m)', X(0) - 62, mY - 40);
+
+  ctx.beginPath();
+  ctx.moveTo(X(0), mY);
+  ctx.lineTo(gx, mY - r.Mmax * mScale);
+  ctx.lineTo(X(L), mY);
+  ctx.strokeStyle = '#7a4aa0'; ctx.lineWidth = 2.2; ctx.stroke();
+  ctx.fillStyle = 'rgba(122,74,160,0.10)'; ctx.fill();
+
+  // critical section marker
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#b03030'; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.moveTo(gx, sy0 + 34); ctx.lineTo(gx, mY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#7a4aa0'; ctx.font = 'bold 10px Segoe UI, Arial'; ctx.textAlign = 'center';
+  ctx.fillText('Mmax = ' + r.Mmax.toFixed(1) + ' N·m', gx, mY - r.Mmax * mScale - 8);
+  ctx.fillStyle = '#b03030'; ctx.font = '9.5px Segoe UI, Arial';
+  ctx.fillText('critical section → d ≥ ' + r.d.toFixed(1) + ' mm', gx, mY + 16);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+function upd() { updateOutputs(); draw(); }
+document.getElementById('sL').addEventListener('input', function () {
+  L = +this.value;
+  const sA = document.getElementById('sA');
+  sA.max = L - 20;
+  if (a > L - 20) { a = L - 20; sA.value = a; document.getElementById('vA').textContent = a + ' mm'; }
+  document.getElementById('vL').textContent = L + ' mm'; upd();
+});
+document.getElementById('sA').addEventListener('input', function () {
+  a = +this.value; document.getElementById('vA').textContent = a + ' mm'; upd();
+});
+document.getElementById('sP').addEventListener('input', function () {
+  P = +this.value; document.getElementById('vP').textContent = P + ' N'; upd();
+});
+document.getElementById('sT').addEventListener('input', function () {
+  T = +this.value; document.getElementById('vT').textContent = T + ' N·m'; upd();
+});
+document.getElementById('sMat').addEventListener('change', function () {
+  const p = this.value.split(',').map(Number);
+  Sn = p[0]; Sy = p[1]; upd();
+});
+
+upd();
+</script>
+</body>
+</html>

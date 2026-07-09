@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Challenge: Most Compact Gear Reducer — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #7a4a10 0%, #b05a10 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p { font-size: 0.8em; opacity: 0.85; }
+.spec { background: #fff8ec; border: 1.5px solid #e67300; margin: 16px 22px 8px; padding: 12px 16px;
+  border-radius: 7px; font-size: 0.84em; line-height: 1.7; }
+.spec strong { color: #b05a10; }
+.layout { display: grid; grid-template-columns: 300px 1fr; }
+.controls { padding: 16px 20px; border-right: 1px solid #e8ecf1; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: #b05a10; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #f2dfc8; }
+.slider-row { margin-bottom: 11px; }
+.slider-row label { display: flex; justify-content: space-between; font-size: 0.8em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #b05a10; }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #e8d4bc; outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: #b05a10; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.right { padding: 16px 20px; }
+.checks { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+.checks td { padding: 6px 4px; font-size: 0.8em; border-bottom: 1px solid #f0f3f7; }
+.checks td:last-child { text-align: right; font-weight: 700; }
+.checks tr.pass td:last-child { color: #2a7a3a; }
+.checks tr.fail td:last-child { color: #b03030; }
+.scorebox { border-radius: 8px; padding: 14px 16px; text-align: center; margin-bottom: 10px;
+  border: 2px solid #c0cad4; background: #f7f9fc; }
+.scorebox.feasible { border-color: #2a7a3a; background: #edf6ee; }
+.scorebox .mass { font-size: 1.7em; font-weight: 800; color: #2c5f8a; }
+.scorebox .stars { font-size: 1.4em; letter-spacing: 4px; }
+.scorebox .msg { font-size: 0.78em; color: #667; margin-top: 4px; line-height: 1.5; }
+.codeRow { display: flex; gap: 8px; margin-top: 8px; }
+.codeRow input[type=text] { flex: 0 0 110px; padding: 6px 8px; font-size: 0.8em; border: 1px solid #c0cad4; border-radius: 5px; }
+.codeRow button { padding: 6px 12px; font-size: 0.8em; border: 1px solid #b05a10; border-radius: 5px;
+  background: #b05a10; color: #fff; cursor: pointer; }
+.codeRow .code { flex: 1; font-family: Consolas, monospace; font-size: 0.85em; padding: 6px 8px;
+  background: #f4f7fb; border: 1px dashed #99a; border-radius: 5px; color: #2c5f8a; }
+.cascade-bar { background: #f7f0e6; padding: 11px 22px; border-top: 1px solid #ecdcc4;
+  font-size: 0.78em; color: #5a4a3a; line-height: 1.65; }
+.cascade-bar strong { color: #b05a10; }
+#gearCv { width: 100%; height: 190px; background: #fdfcf9; border: 1px solid #eee4d4; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>🏆 Design Challenge — The Most Compact Gear Reducer</h1>
+    <p>MET 320 · Module 4 &nbsp;|&nbsp; Hit the ratio, keep the teeth alive, and squeeze the center distance. Milestone 2 practice, gamified.</p>
+  </div>
+
+  <div class="spec">
+    <strong>SPEC SHEET (20° full-depth spur gears, steel, cut teeth):</strong>
+    Transmit 3.0 kW at 1150 rpm (pinion) · velocity ratio VR = 3.50 ± 2% ·
+    no involute interference · contact ratio m<sub>f</sub> ≥ 1.4 ·
+    tooth bending stress (Lewis with Barth K<sub>v</sub>) σ ≤ 140 MPa ·
+    face width within 8m ≤ F ≤ 16m. &nbsp;<strong>Objective: minimize center distance C.</strong>
+  </div>
+
+  <div class="layout">
+    <div class="controls">
+      <div class="panel-title">Your Design</div>
+      <div class="slider-row"><label>Pinion teeth N<sub>P</sub> <span class="val" id="vNp">18</span></label>
+        <input type="range" id="sNp" min="10" max="40" step="1" value="18"></div>
+      <div class="slider-row"><label>Gear teeth N<sub>G</sub> <span class="val" id="vNg">63</span></label>
+        <input type="range" id="sNg" min="30" max="140" step="1" value="63"></div>
+      <div class="slider-row"><label>Module m <span class="val" id="vM">2.5 mm</span></label>
+        <input type="range" id="sM" min="1" max="6" step="0.5" value="2.5"></div>
+      <div class="slider-row"><label>Face width F <span class="val" id="vF">30 mm</span></label>
+        <input type="range" id="sF" min="8" max="80" step="1" value="30"></div>
+      <canvas id="gearCv"></canvas>
+    </div>
+
+    <div class="right">
+      <div class="panel-title">Constraint Checks</div>
+      <table class="checks">
+        <tr id="cVR"><td>VR = 3.50 ± 2% (3.43–3.57)</td><td id="tVR">—</td></tr>
+        <tr id="cInt"><td>No interference</td><td id="tInt">—</td></tr>
+        <tr id="cCR"><td>Contact ratio ≥ 1.4</td><td id="tCR">—</td></tr>
+        <tr id="cSig"><td>Bending stress ≤ 140 MPa</td><td id="tSig">—</td></tr>
+        <tr id="cF"><td>8m ≤ F ≤ 16m</td><td id="tF">—</td></tr>
+        <tr><td>Pitch-line speed / K<sub>v</sub></td><td id="tKv">—</td></tr>
+        <tr><td>W<sub>t</sub> (transmitted load)</td><td id="tWt">—</td></tr>
+      </table>
+
+      <div class="scorebox" id="scorebox">
+        <div class="mass" id="cOut">— mm</div>
+        <div class="stars" id="starsOut"></div>
+        <div class="msg" id="msgOut">Center distance counts only when every constraint passes.</div>
+        <div class="codeRow">
+          <input type="text" id="initials" maxlength="6" placeholder="initials">
+          <div class="code" id="codeOut">score code appears here</div>
+          <button id="btnCode">Get code</button>
+        </div>
+      </div>
+      <div style="font-size:0.72em;color:#889;line-height:1.5">Post your C + score code in the Canvas
+      discussion. Smaller C wins the week.</div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>The engineering trade triangle:</strong> fewer pinion teeth shrink C — until interference bites.
+    A smaller module shrinks C — until bending stress bites. More face width buys stress margin — until
+    8–16m bites. Champions live where all three constraints are nearly active at once. Sub-85 mm is expert
+    territory; the theoretical frontier is a few mm below that.
+  </div>
+</div>
+
+<script>
+const P = 3000, n1 = 1150, phi = 20 * Math.PI / 180, SIGALLOW = 140;
+let Np = 18, Ng = 63, m = 2.5, Fw = 30;
+
+// Lewis form factor Y (20° full depth) — interpolated table
+const YT = [[12,.245],[13,.261],[14,.277],[15,.290],[16,.296],[17,.303],[18,.309],[19,.314],
+  [20,.322],[21,.328],[22,.331],[24,.337],[26,.346],[28,.353],[30,.359],[34,.371],[38,.384],
+  [43,.397],[50,.409],[60,.422],[75,.435],[100,.447],[150,.460],[300,.472]];
+function lewisY(N) {
+  if (N <= YT[0][0]) return YT[0][1];
+  for (let i = 1; i < YT.length; i++) {
+    if (N <= YT[i][0]) {
+      const [n0, y0] = YT[i - 1], [n1_, y1] = YT[i];
+      return y0 + (y1 - y0) * (N - n0) / (n1_ - n0);
+    }
+  }
+  return YT[YT.length - 1][1];
+}
+
+function calc() {
+  const VR = Ng / Np;
+  const Dp = m * Np, Dg = m * Ng;
+  const C = (Dp + Dg) / 2;
+  const T = 9550 * (P / 1000) / n1;                 // N·m
+  const Wt = 2 * T * 1000 / Dp;                      // N
+  const v = Math.PI * Dp * n1 / 60000;               // m/s
+  const Kv = (6.1 + v) / 6.1;
+  const Y = lewisY(Np);
+  const sig = Wt * Kv / (Fw * m * Y);
+  // interference: gear tip vs line-of-action tangency
+  const rp = Dp / 2, rg = Dg / 2, a = m;
+  const rbg = rg * Math.cos(phi);
+  const rogMax = Math.sqrt(rbg * rbg + Math.pow(C * Math.sin(phi), 2));
+  const interference = (rg + a) > rogMax + 1e-9;
+  // contact ratio
+  const rbp = rp * Math.cos(phi);
+  const pb = Math.PI * m * Math.cos(phi);
+  const CR = (Math.sqrt(Math.pow(rp + a, 2) - rbp * rbp) +
+              Math.sqrt(Math.pow(rg + a, 2) - rbg * rbg) - C * Math.sin(phi)) / pb;
+  return { VR, C, Wt, v, Kv, sig, interference, CR,
+    ok: {
+      VR: VR >= 3.43 && VR <= 3.57,
+      Int: !interference,
+      CR: CR >= 1.4,
+      Sig: sig <= SIGALLOW,
+      F: Fw >= 8 * m && Fw <= 16 * m
+    }};
+}
+
+function refresh() {
+  const r = calc();
+  const set = (row, cell, txt, pass) => {
+    document.getElementById(cell).textContent = txt;
+    if (row) document.getElementById(row).className = pass ? 'pass' : 'fail';
+  };
+  set('cVR', 'tVR', r.VR.toFixed(3) + (r.ok.VR ? ' ✓' : ' ✗'), r.ok.VR);
+  set('cInt', 'tInt', r.ok.Int ? 'clear ✓' : 'INTERFERES ✗', r.ok.Int);
+  set('cCR', 'tCR', r.CR.toFixed(2) + (r.ok.CR ? ' ✓' : ' ✗'), r.ok.CR);
+  set('cSig', 'tSig', r.sig.toFixed(0) + ' MPa' + (r.ok.Sig ? ' ✓' : ' ✗'), r.ok.Sig);
+  set('cF', 'tF', (8 * m).toFixed(0) + '–' + (16 * m).toFixed(0) + ' mm' + (r.ok.F ? ' ✓' : ' ✗'), r.ok.F);
+  set(null, 'tKv', r.v.toFixed(2) + ' m/s · Kv ' + r.Kv.toFixed(2), true);
+  set(null, 'tWt', r.Wt.toFixed(0) + ' N', true);
+
+  const feasible = Object.values(r.ok).every(Boolean);
+  const box = document.getElementById('scorebox');
+  document.getElementById('cOut').textContent = 'C = ' + r.C.toFixed(1) + ' mm';
+  const stars = document.getElementById('starsOut'), msg = document.getElementById('msgOut');
+  if (feasible) {
+    box.className = 'scorebox feasible';
+    stars.textContent = r.C <= 85 ? '★★★' : r.C <= 105 ? '★★☆' : '★☆☆';
+    msg.textContent = r.C <= 85 ? 'Expert-level compactness. Every mm from here is a fight with physics.' :
+                      r.C <= 105 ? 'Legal and tight. Check which constraint has slack left — then spend it.' :
+                      'All constraints met! Now shrink it.';
+  } else {
+    box.className = 'scorebox';
+    stars.textContent = '—';
+    msg.textContent = 'Design not yet legal — fix the red rows first.';
+  }
+  drawGears(r, feasible);
+  window._feasible = feasible;
+  window._C = r.C;
+}
+
+function makeCode() {
+  if (!window._feasible) { document.getElementById('codeOut').textContent = 'design must pass all checks first'; return; }
+  const ini = (document.getElementById('initials').value || 'ANON').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6) || 'ANON';
+  const c10 = Math.round(window._C * 10);
+  let h = 7;
+  const s = ini + '|' + c10 + '|MET320M4';
+  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) % 1679615; }
+  document.getElementById('codeOut').textContent =
+    'M4-' + ini + '-' + c10 + '-' + h.toString(36).toUpperCase().padStart(4, '0');
+}
+document.getElementById('btnCode').addEventListener('click', makeCode);
+
+// sketch: two pitch circles to scale
+const cv = document.getElementById('gearCv');
+const cx2 = cv.getContext('2d');
+function drawGears(r, feasible) {
+  const rect = cv.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = rect.width * dpr; cv.height = rect.height * dpr;
+  cx2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const W = rect.width, H = rect.height;
+  cx2.clearRect(0, 0, W, H);
+  const Dp = m * Np, Dg = m * Ng;
+  const scl = Math.min((W - 30) / (Dp + Dg), (H - 40) / Dg);
+  const rp = Dp / 2 * scl, rg = Dg / 2 * scl;
+  const cy = H / 2, x1 = (W - (rp + rg) * 1.99) / 2 + rp * 0.99, x2 = x1 + (rp + rg) * 0.99;
+  const col = feasible ? '#2a7a3a' : '#b05a10';
+  cx2.lineWidth = 2;
+  [[x1, rp], [x2, rg]].forEach(([x, rr]) => {
+    cx2.beginPath(); cx2.arc(x, cy, rr, 0, Math.PI * 2);
+    cx2.strokeStyle = col; cx2.setLineDash([6, 4]); cx2.stroke(); cx2.setLineDash([]);
+    cx2.beginPath(); cx2.arc(x, cy, 3, 0, Math.PI * 2); cx2.fillStyle = col; cx2.fill();
+  });
+  cx2.strokeStyle = '#99a'; cx2.lineWidth = 1;
+  cx2.beginPath(); cx2.moveTo(x1, cy); cx2.lineTo(x2, cy); cx2.stroke();
+  cx2.fillStyle = '#667'; cx2.font = '10.5px Segoe UI'; cx2.textAlign = 'center';
+  cx2.fillText('C = ' + r.C.toFixed(1) + ' mm (pitch circles to scale)', W / 2, H - 8);
+  cx2.fillText(Np + 'T', x1, cy - rp - 6);
+  cx2.fillText(Ng + 'T', x2, cy - rg - 6);
+}
+
+function bind(id, vid, fmt2, set) {
+  document.getElementById(id).addEventListener('input', function () {
+    set(+this.value);
+    document.getElementById(vid).textContent = fmt2(+this.value);
+    refresh();
+  });
+}
+bind('sNp', 'vNp', v => v, v => Np = v);
+bind('sNg', 'vNg', v => v, v => Ng = v);
+bind('sM', 'vM', v => v + ' mm', v => m = v);
+bind('sF', 'vF', v => v + ' mm', v => Fw = v);
+refresh();
+</script>
+</body>
+</html>

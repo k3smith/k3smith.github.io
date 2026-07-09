@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fits &amp; Tolerance Zones Visualizer — MET 320</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.82; }
+#simCanvas {
+  display: block; width: 100%; height: 360px;
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+  background: #c8d8e8; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: #2c5f8a; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.mat-row { margin-top: 4px; }
+.mat-row label { display: block; font-size: 0.8em; color: #555; margin-bottom: 4px; }
+select {
+  width: 100%; padding: 6px 8px; border: 1px solid #c0cad4; border-radius: 5px;
+  font-size: 0.8em; color: #333; background: #fff; cursor: pointer;
+}
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.result-table tr.trans td:last-child { color: #b05a10; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>📏 Fits Visualizer — Tolerance Zones, Clearance &amp; Interference</h1>
+    <p>MET 320 · Module 7 &nbsp;|&nbsp; Pick a fit and basic size; see the hole/shaft tolerance zones and the resulting fit range to scale</p>
+  </div>
+
+  <canvas id="simCanvas" width="940" height="360" aria-label="Tolerance zone diagram and shaft-hole cross section"></canvas>
+
+  <div class="scenario-note">
+    <strong>Reading tolerance zones:</strong> The horizontal line is the <em>basic size</em>. The hole zone (H = starts at basic size, grows upward) and shaft zone are drawn in micrometers — grossly magnified compared to the part! Whether the zones overlap decides clearance vs. transition vs. interference.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Inputs</div>
+
+      <div class="mat-row" style="margin-bottom:12px">
+        <label>ISO Fit (hole basis)</label>
+        <select id="sFit">
+          <option value="d,9,9">H9/d9 — Loose running (≈ RC7)</option>
+          <option value="f,8,7">H8/f7 — Close running (≈ RC4)</option>
+          <option value="g,7,6" selected>H7/g6 — Sliding (≈ RC2–3)</option>
+          <option value="h,7,6">H7/h6 — Locational clearance (≈ LC)</option>
+          <option value="k,7,6">H7/k6 — Transition, keying (≈ LT)</option>
+          <option value="n,7,6">H7/n6 — Transition, tight (≈ LT/LN)</option>
+          <option value="p,7,6">H7/p6 — Locational interference (≈ LN2/FN1)</option>
+          <option value="s,7,6">H7/s6 — Medium drive / press (≈ FN2)</option>
+        </select>
+      </div>
+
+      <div class="slider-row">
+        <label>Basic Size <span class="val" id="vD">40 mm</span></label>
+        <input type="range" id="sD" min="6" max="150" step="1" value="40">
+      </div>
+
+      <div class="mat-row">
+        <label>Fit application examples</label>
+        <select id="sApp" disabled>
+          <option>g6: sliding spool valves, guide pins</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Calculated Limits (ISO 286 approx.)</div>
+      <table class="result-table">
+        <tr><td>Hole Limits</td><td id="rHole">—</td></tr>
+        <tr><td>Shaft Limits</td><td id="rShaft">—</td></tr>
+        <tr><td>Hole / Shaft Tolerance</td><td id="rTol">—</td></tr>
+        <tr><td>Max Clearance</td><td id="rMaxC">—</td></tr>
+        <tr><td>Min Clearance (− = interference)</td><td id="rMinC">—</td></tr>
+        <tr id="rowType"><td><strong>Fit Type</strong></td><td id="rType">—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>Try this:</strong> Keep H7/g6 and slide the basic size from 6 → 150 mm. The tolerances grow with size (IT grades scale with ∛D) but the fit <em>character</em> stays the same — that's the genius of the ISO system.
+    Then switch to H7/s6 and note the guaranteed interference: that overlap is what generates the pressure analyzed in the force-fit stress lesson (M07-04).
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let dev = 'g', holeIT = 7, shaftIT = 6, D = 40;
+
+const appExamples = {
+  d: 'd9: loose pulleys, agricultural equipment',
+  f: 'f7: journal bearings with oil film',
+  g: 'g6: sliding spool valves, guide pins',
+  h: 'h6: ground dowels in reamed holes (hand fit)',
+  k: 'k6: gears/pulleys keyed to shafts',
+  n: 'n6: bearing inner races on rotating shafts',
+  p: 'p6: press-fit bushings, dowel pins',
+  s: 's6: shrink-fit couplings, gear rims'
+};
+
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+const CW = () => canvas.getBoundingClientRect().width;
+const CH = () => canvas.getBoundingClientRect().height;
+
+// ── ISO 286 (approximate continuous formulas) ─────────────────────────────
+function itValue(grade, d) {
+  const i = 0.45 * Math.cbrt(d) + 0.001 * d;   // µm, standard tolerance factor
+  const k = { 5: 7, 6: 10, 7: 16, 8: 25, 9: 40, 10: 64, 11: 100 }[grade];
+  return k * i; // µm
+}
+function fundamentalDev(letter, d, itShaft) {
+  // returns shaft fundamental deviation in µm:
+  // for clearance letters (d..h) it's es (upper); for k..s it's ei (lower)
+  switch (letter) {
+    case 'd': return { es: -16 * Math.pow(d, 0.44) };
+    case 'f': return { es: -5.5 * Math.pow(d, 0.41) };
+    case 'g': return { es: -2.5 * Math.pow(d, 0.34) };
+    case 'h': return { es: 0 };
+    case 'k': return { ei: 0.6 * Math.cbrt(d) };
+    case 'n': return { ei: 5 * Math.pow(d, 0.34) };
+    case 'p': return { ei: itValue(7, d) + 2 };
+    case 's': return { ei: d <= 50 ? itValue(8, d) + 2 : itValue(7, d) + 0.4 * d };
+    default: return { es: 0 };
+  }
+}
+function calc() {
+  const ITh = itValue(holeIT, D);      // hole tolerance µm
+  const ITs = itValue(shaftIT, D);     // shaft tolerance µm
+  const EI = 0, ES = ITh;              // H hole
+  const fd = fundamentalDev(dev, D, ITs);
+  let es, ei;
+  if ('es' in fd) { es = fd.es; ei = es - ITs; }
+  else { ei = fd.ei; es = ei + ITs; }
+  const maxC = ES - ei;                // µm
+  const minC = EI - es;
+  let type, cls;
+  if (minC >= 0) { type = 'CLEARANCE'; cls = 'ok'; }
+  else if (maxC > 0) { type = 'TRANSITION'; cls = 'trans'; }
+  else { type = 'INTERFERENCE'; cls = 'warn'; }
+  return { ES, EI, es, ei, ITh, ITs, maxC, minC, type, cls };
+}
+
+function fmtMM(um) {
+  return (um >= 0 ? '+' : '') + (um / 1000).toFixed(3);
+}
+
+function updateOutputs() {
+  const r = calc();
+  document.getElementById('rHole').textContent =
+    D.toFixed(0) + ' ' + fmtMM(r.EI) + ' / ' + fmtMM(r.ES) + ' mm';
+  document.getElementById('rShaft').textContent =
+    D.toFixed(0) + ' ' + fmtMM(r.ei) + ' / ' + fmtMM(r.es) + ' mm';
+  document.getElementById('rTol').textContent =
+    r.ITh.toFixed(0) + ' µm / ' + r.ITs.toFixed(0) + ' µm';
+  document.getElementById('rMaxC').textContent = (r.maxC / 1000).toFixed(3) + ' mm';
+  document.getElementById('rMinC').textContent = (r.minC / 1000).toFixed(3) + ' mm';
+  const row = document.getElementById('rowType');
+  document.getElementById('rType').textContent = r.type;
+  row.className = r.cls;
+  document.getElementById('sApp').innerHTML = '<option>' + appExamples[dev] + '</option>';
+}
+
+// ── Draw ──────────────────────────────────────────────────────────────────
+function draw() {
+  const W = CW(), H = CH();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f7f9fc'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  const r = calc();
+
+  // ── Left: tolerance zone diagram ────────────────────────────────────
+  const zx = W * 0.30, zeroY = H * 0.52;
+  const maxDev = Math.max(r.ES, r.es, 10);
+  const minDev = Math.min(r.EI, r.ei, -10);
+  const span = Math.max(maxDev - minDev, 20);
+  const scl = (H * 0.62) / span;
+  const Y = (um) => zeroY - um * scl;
+
+  // zero line (basic size)
+  ctx.strokeStyle = '#556'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([8, 4]);
+  ctx.beginPath(); ctx.moveTo(zx - 190, Y(0)); ctx.lineTo(zx + 150, Y(0)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#556'; ctx.font = '10px Segoe UI, Arial'; ctx.textAlign = 'left';
+  ctx.fillText('basic size Ø' + D + ' mm  (zero line)', zx - 190, Y(0) - 6);
+
+  // hole zone
+  const hw = 70;
+  ctx.fillStyle = 'rgba(44,95,138,0.35)';
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 1.5;
+  ctx.fillRect(zx - 160, Y(r.ES), hw, (r.ES - r.EI) * scl);
+  ctx.strokeRect(zx - 160, Y(r.ES), hw, (r.ES - r.EI) * scl);
+  ctx.fillStyle = '#2c5f8a'; ctx.font = 'bold 10.5px Segoe UI, Arial'; ctx.textAlign = 'center';
+  ctx.fillText('HOLE H' + holeIT, zx - 160 + hw / 2, Y(r.ES) - 7);
+  ctx.font = '9px Segoe UI, Arial';
+  ctx.fillText('+' + r.ES.toFixed(0) + ' µm', zx - 160 + hw / 2, Y(r.ES) + 11);
+  ctx.fillText('0', zx - 160 + hw / 2, Y(r.EI) - 3);
+
+  // shaft zone
+  const sx = zx - 30;
+  const shaftCol = r.cls === 'ok' ? '#2a7a3a' : (r.cls === 'warn' ? '#b03030' : '#b05a10');
+  ctx.fillStyle = r.cls === 'ok' ? 'rgba(42,122,58,0.35)' : (r.cls === 'warn' ? 'rgba(176,48,48,0.35)' : 'rgba(176,90,16,0.35)');
+  ctx.strokeStyle = shaftCol; ctx.lineWidth = 1.5;
+  ctx.fillRect(sx, Y(r.es), hw, (r.es - r.ei) * scl);
+  ctx.strokeRect(sx, Y(r.es), hw, (r.es - r.ei) * scl);
+  ctx.fillStyle = shaftCol; ctx.font = 'bold 10.5px Segoe UI, Arial';
+  ctx.fillText('SHAFT ' + dev + shaftIT, sx + hw / 2, Y(r.es) - 7);
+  ctx.font = '9px Segoe UI, Arial';
+  ctx.fillText((r.es >= 0 ? '+' : '') + r.es.toFixed(0) + ' µm', sx + hw / 2, Y(r.es) + 11);
+  ctx.fillText((r.ei >= 0 ? '+' : '') + r.ei.toFixed(0) + ' µm', sx + hw / 2, Y(r.ei) - 3);
+
+  // fit annotation between zones
+  ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.fillStyle = shaftCol;
+  ctx.fillText(r.type, zx - 45, H - 18);
+  ctx.font = '9.5px Segoe UI, Arial'; ctx.fillStyle = '#556';
+  ctx.fillText('fit range: ' + (r.minC / 1000).toFixed(3) + ' to ' + (r.maxC / 1000).toFixed(3) + ' mm', zx - 45, H - 6);
+
+  // ── Right: exaggerated cross-section ────────────────────────────────
+  const cx = W * 0.72, cy = H * 0.5;
+  const baseR = 92;
+  // exaggerate: mean clearance in µm → px
+  const meanC = (r.maxC + r.minC) / 2;
+  const exag = Math.max(-26, Math.min(26, meanC * 0.45));
+
+  // hole (housing block)
+  ctx.fillStyle = '#c8cdd8';
+  ctx.strokeStyle = '#889'; ctx.lineWidth = 1.5;
+  ctx.fillRect(cx - baseR - 34, cy - baseR - 34, 2 * (baseR + 34), 2 * (baseR + 34));
+  ctx.strokeRect(cx - baseR - 34, cy - baseR - 34, 2 * (baseR + 34), 2 * (baseR + 34));
+  ctx.beginPath(); ctx.arc(cx, cy, baseR, 0, Math.PI * 2);
+  ctx.fillStyle = '#f7f9fc'; ctx.fill();
+  ctx.strokeStyle = '#2c5f8a'; ctx.lineWidth = 2; ctx.stroke();
+
+  // shaft
+  const shaftR = baseR - exag;
+  const grd = ctx.createRadialGradient(cx - shaftR * 0.3, cy - shaftR * 0.3, shaftR * 0.1, cx, cy, shaftR);
+  grd.addColorStop(0, '#e8eef6'); grd.addColorStop(1, shaftCol);
+  ctx.beginPath(); ctx.arc(cx, cy, Math.max(20, shaftR), 0, Math.PI * 2);
+  ctx.fillStyle = grd;
+  ctx.globalAlpha = 0.85;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = shaftCol; ctx.lineWidth = 2; ctx.stroke();
+
+  ctx.fillStyle = '#334'; ctx.font = '10px Segoe UI, Arial'; ctx.textAlign = 'center';
+  if (exag > 2) {
+    ctx.fillText('gap (exaggerated)', cx, cy - baseR - 42);
+    ctx.strokeStyle = '#556'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx, cy - baseR - 38); ctx.lineTo(cx, cy - baseR + 2); ctx.stroke();
+  } else if (exag < -2) {
+    ctx.fillText('overlap → contact pressure (exaggerated)', cx, cy - baseR - 42);
+  } else {
+    ctx.fillText('line-to-line (transition)', cx, cy - baseR - 42);
+  }
+  ctx.fillText('HOUSING', cx, cy + baseR + 46);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.fillText('SHAFT', cx, cy + 4);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+function upd() { updateOutputs(); draw(); }
+document.getElementById('sFit').addEventListener('change', function () {
+  const p = this.value.split(',');
+  dev = p[0]; holeIT = +p[1]; shaftIT = +p[2];
+  upd();
+});
+document.getElementById('sD').addEventListener('input', function () {
+  D = +this.value; document.getElementById('vD').textContent = D + ' mm'; upd();
+});
+
+upd();
+</script>
+</body>
+</html>
