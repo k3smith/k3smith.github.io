@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MET 320 Demos | Katherine Smith</title>
+  <link rel="stylesheet" href="/assets/css/demos.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGPQ4HEBNW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EGPQ4HEBNW');
+  </script>
+</head>
+<body>
+  <script src="/assets/scripts/demos-data.js"></script>
+  <script src="/assets/scripts/demos-sidebar.js"></script>
+  <script>renderDemosSidebar({ courseId: 'met320' });</script>
+
+  <div class="container">
+    <h1>MET 320 — Machine Elements</h1>
+    <p class="subtitle">
+      Interactive demos for stress analysis, fatigue, drives, gears, shafts, fits, and springs.
+      Use the links below to open a demo, or copy the iframe URL for Canvas embeds.
+    </p>
+
+    <div id="module-sections"></div>
+
+    <p style="margin-top: 40px;"><a href="/demos/index.html">← All educational demos</a></p>
+  </div>
+
+  <script>
+    const course = getCourse('met320');
+    const base = 'https://k3smith.github.io/demos/met320/';
+    const container = document.getElementById('module-sections');
+
+    course.modules.forEach((mod) => {
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = `Module ${mod.number}: ${mod.title}`;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'demo-grid';
+
+      mod.demos.forEach((demo) => {
+        const url = demo.file;
+        const embedUrl = base + demo.file;
+        const card = document.createElement('article');
+        card.className = 'demo-card';
+        card.innerHTML = `
+          <p class="demo-meta">Module ${mod.number} · <code>${demo.file}</code></p>
+          <h3><a href="${url}">${demo.name}</a></h3>
+          <p>${demo.description}</p>
+          <div class="demo-links">
+            <a href="${url}" target="_blank" rel="noopener">Open demo</a>
+          </div>
+          <div class="embed-code" title="Canvas iframe src">${embedUrl}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+  </script>
+</body>
+</html>
