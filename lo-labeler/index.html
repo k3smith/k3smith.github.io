@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Learning objective match labeling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <h1>Learning objective matching</h1>
+        <span class="badge" id="round-badge">round</span>
+      </header>
+
+      <div id="sheet-warn" class="warn-banner" hidden>
+        Google Sheet is not configured yet (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Shared double-coverage needs the Sheet live
+        before you recruit raters.
+      </div>
+
+      <details class="how" id="how" open>
+        <summary>Instructions (about 1 minute)</summary>
+        <div class="body">
+          <p>
+            A <strong>learning objective</strong> is a short statement of what a
+            learner should be able to do or know after studying a section.
+          </p>
+          <p>
+            You will see two statements from the <em>same</em> textbook section:
+          </p>
+          <ul>
+            <li>
+              <strong>Candidate</strong> — produced by an automated system
+            </li>
+            <li>
+              <strong>Course</strong> — written by the course/textbook author
+            </li>
+          </ul>
+          <p>
+            Decide whether they describe the <strong>same learning goal</strong>.
+            You are <em>not</em> grading writing quality, grammar, or whether the
+            wording uses “action verbs.” Subject expertise is optional — judge from
+            the two statements alone.
+          </p>
+          <div class="defs">
+            <div>
+              <strong>Same</strong>
+              A learner who achieved one has essentially achieved the other.
+              Paraphrase is fine if the target skill or knowledge is the same.
+            </div>
+            <div>
+              <strong>Partially overlapping</strong>
+              Related topic, or one is broader/narrower, or they only overlap in
+              part. Achieving one would <em>not</em> clearly mean achieving the other.
+            </div>
+            <div>
+              <strong>Different</strong>
+              Distinct goals, or the candidate is not really stating a learning
+              objective for this course statement.
+            </div>
+          </div>
+          <p>
+            If stuck between Same and Partial, choose <strong>Partial</strong>.
+            Work in short batches (10–20). You can close the tab and return later —
+            use the <em>same name/initials</em> so we do not show you pairs you
+            already judged. Each pair is shown to up to two different people; the
+            site picks an available pair at random for you. Shortcuts:
+            <kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd>.
+          </p>
+        </div>
+      </details>
+
+      <section class="panel" id="setup">
+        <h2>Start a session</h2>
+        <p class="lead">
+          Enter a short name or initials (same every time you return). The site
+          will only offer pairs that still need a rating and that you have not
+          already labeled.
+        </p>
+        <label class="field" for="rater-id">Your name or initials</label>
+        <input
+          id="rater-id"
+          type="text"
+          autocomplete="nickname"
+          placeholder="e.g. jsmith"
+          maxlength="40"
+        />
+        <div class="actions">
+          <button type="button" id="start">Start labeling</button>
+        </div>
+      </section>
+
+      <section class="panel" id="main" hidden>
+        <div class="progress">
+          <div class="progress-text" id="progress-text">Your labels: 0</div>
+          <div class="progress-text" id="coverage-text" style="margin-top: 0.15rem">
+            Checking coverage…
+          </div>
+          <div class="bar" aria-hidden="true">
+            <span id="progress-fill"></span>
+          </div>
+        </div>
+
+        <div class="pair-meta">
+          <span>Book: <strong id="meta-book">—</strong></span>
+          <span>Section: <strong id="meta-section">—</strong></span>
+        </div>
+
+        <div class="lo-grid">
+          <article class="lo-card">
+            <h3>Candidate</h3>
+            <p id="text-candidate"></p>
+          </article>
+          <article class="lo-card">
+            <h3>Course</h3>
+            <p id="text-course"></p>
+          </article>
+        </div>
+
+        <p class="lead" style="margin-top: 1rem; margin-bottom: 0">
+          Do these describe the same learning goal?
+        </p>
+
+        <div class="btn-row">
+          <button type="button" data-label="match">
+            Same
+            <span class="key">key 1</span>
+          </button>
+          <button type="button" data-label="partial">
+            Partially overlapping
+            <span class="key">key 2</span>
+          </button>
+          <button type="button" data-label="no">
+            Different
+            <span class="key">key 3</span>
+          </button>
+        </div>
+
+        <div id="status" role="status"></div>
+
+        <div class="actions">
+          <button type="button" class="secondary" id="download">
+            Download backup CSV
+          </button>
+          <button type="button" class="secondary" id="reset">
+            Reset my progress
+          </button>
+        </div>
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>All caught up</h2>
+        <p class="lead" id="done-msg">Thank you!</p>
+        <div class="actions">
+          <button type="button" id="download-done">Download backup CSV</button>
+        </div>
+      </section>
+
+      <footer class="note">
+        Research labeling interface for learning-objective matching. Answers are used
+        only to calibrate automated matching thresholds.
+      </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
