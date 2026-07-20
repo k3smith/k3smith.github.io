@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Knowledge &amp; Skill span labeling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <h1>Knowledge &amp; Skill spans</h1>
+        <span class="badge" id="round-badge">round</span>
+      </header>
+
+      <div id="sheet-warn" class="warn-banner" hidden>
+        Google Sheet is not configured yet (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Shared coverage needs the Sheet live before
+        you recruit raters.
+      </div>
+
+      <details class="how" id="how" open>
+        <summary>Instructions (about 3 minutes) — please read once</summary>
+        <div class="body">
+          <p>
+            Mark contiguous spans that are <strong>Knowledge</strong> or
+            <strong>Skill</strong> building blocks. Tools and techniques count
+            (CAD, GD&amp;T, calipers) — not only full learning-objective sentences.
+            Subject expertise helps but is optional; judge from the sentence alone.
+          </p>
+
+          <div class="defs">
+            <div>
+              <strong>Knowledge</strong>
+              Facts, principles, theories, standards, or domain concepts someone
+              learns (ESCO / SkillSpan). Example concepts:
+              <em>geometric dimensioning and tolerancing</em>,
+              <em>ISO 9000</em>, <em>fundamentals of statistics</em>.
+            </div>
+            <div>
+              <strong>Skill</strong>
+              Applying know-how to do work — hard or soft. Includes
+              <em>operate a lathe</em>, <em>use calipers</em>,
+              <em>apply size tolerances</em>, and phrases like
+              <em>ability to program CNC</em> (that is a skill, not an innate ability).
+            </div>
+            <div>
+              <strong>Do not mark</strong>
+              Course chores (<em>read chapter 3</em>, <em>watch the video</em>,
+              <em>submit the quiz</em>), file/module names, or traits training cannot
+              develop (<em>innate dexterity</em>, <em>color vision</em>).
+              If nothing qualifies, use <strong>No K/S here</strong>.
+            </div>
+          </div>
+
+          <h3 class="ex-title">Worked examples</h3>
+          <p class="ex-lead">
+            Colored underlines show what you would paint. Mark the
+            <em>shortest useful span</em> that names the knowledge or skill —
+            not the whole sentence unless the whole sentence is the span.
+          </p>
+
+          <div class="example">
+            <div class="example-label">Manufacturing training · mark tools &amp; practices</div>
+            <p class="example-sent">
+              Students will
+              <span class="ex skill">use calipers</span>
+              and apply
+              <span class="ex knowledge">GD&amp;T</span>
+              when inspecting parts.
+            </p>
+            <p class="example-note">
+              <strong>Skill:</strong> use calipers ·
+              <strong>Knowledge:</strong> GD&amp;T ·
+              Leave “Students will … when inspecting parts” unmarked.
+            </p>
+          </div>
+
+          <div class="example">
+            <div class="example-label">Manufacturing training · machine operation</div>
+            <p class="example-sent">
+              <span class="ex skill">Operate lathes and milling machines</span>
+              to produce simple cylindrical parts.
+            </p>
+            <p class="example-note">
+              One skill span is fine when the verbs share one practice.
+              “Produce simple cylindrical parts” is the task outcome — optional to
+              mark only if it clearly states a trainable skill by itself.
+            </p>
+          </div>
+
+          <div class="example">
+            <div class="example-label">Job posting (SkillSpan-style) · software stack</div>
+            <p class="example-sent">
+              Looking for someone with
+              <span class="ex knowledge">Python</span>
+              and
+              <span class="ex skill">strong communication skills</span>.
+            </p>
+            <p class="example-note">
+              Languages / frameworks are usually <strong>knowledge</strong>;
+              soft skills are <strong>skill</strong>. Do not mark “Looking for someone with”.
+            </p>
+          </div>
+
+          <div class="example">
+            <div class="example-label">Do <em>not</em> mark · activity / homework</div>
+            <p class="example-sent example-bad">
+              Read Chapter 4 and submit the Excel homework by Friday.
+            </p>
+            <p class="example-note">
+              No Knowledge/Skill spans. Choose <strong>No K/S here</strong>.
+            </p>
+          </div>
+
+          <div class="example">
+            <div class="example-label">Borderline · prefer the trainable reading</div>
+            <p class="example-sent">
+              Must have the
+              <span class="ex skill">ability to read blueprints</span>.
+            </p>
+            <p class="example-note">
+              Mark as <strong>skill</strong> (apply know-how). Do not skip it as an
+              “ability” — we only exclude non-trainable traits.
+            </p>
+          </div>
+
+          <p>
+            <strong>How to use the tool:</strong> choose Knowledge / Skill / Clear,
+            then click or drag across tokens. Overlapping types are not allowed on
+            the same token (later paint replaces earlier). Work in short batches
+            (10–20). Use the <em>same initials</em> when you return. Some sentences
+            are SkillSpan job text (after Save you see how you scored vs expert gold);
+            others are MET training text (no gold — your marks create it). Shortcuts:
+            <kbd>1</kbd> Knowledge · <kbd>2</kbd> Skill · <kbd>3</kbd> Clear ·
+            <kbd>Enter</kbd> Save &amp; next · <kbd>0</kbd> No K/S here.
+          </p>
+        </div>
+      </details>
+
+      <section class="panel" id="setup">
+        <h2>Start a session</h2>
+        <p class="lead">
+          Enter a short name or initials (same every time you return). The site
+          only offers sentences that still need a rating and that you have not
+          already labeled.
+        </p>
+        <label class="field" for="rater-id">Your name or initials</label>
+        <input
+          id="rater-id"
+          type="text"
+          autocomplete="nickname"
+          placeholder="e.g. jsmith"
+          maxlength="40"
+        />
+        <div class="actions">
+          <button type="button" id="start">Start labeling</button>
+        </div>
+      </section>
+
+      <section class="panel" id="main" hidden>
+        <div class="progress-row">
+          <div class="progress-meta">
+            <span id="progress-text">…</span>
+            <span id="coverage-text" class="muted"></span>
+          </div>
+          <div class="bar"><div id="progress-fill"></div></div>
+        </div>
+
+        <div class="meta-line">
+          <span id="meta-corpus" class="pill">corpus</span>
+          <span id="meta-source" class="muted"></span>
+        </div>
+
+        <div id="tokens" class="tokens" aria-label="Sentence tokens"></div>
+
+        <div class="paint-row" role="group" aria-label="Paint mode">
+          <button type="button" class="paint" data-mode="knowledge" id="mode-k">
+            Knowledge <kbd>1</kbd>
+          </button>
+          <button type="button" class="paint" data-mode="skill" id="mode-s">
+            Skill <kbd>2</kbd>
+          </button>
+          <button type="button" class="paint" data-mode="clear" id="mode-c">
+            Clear <kbd>3</kbd>
+          </button>
+        </div>
+
+        <div id="feedback" class="feedback" hidden></div>
+
+        <div class="actions main-actions">
+          <button type="button" id="none" class="secondary">
+            No K/S here <kbd>0</kbd>
+          </button>
+          <button type="button" id="save">Save &amp; next <kbd>↵</kbd></button>
+          <button type="button" id="download" class="secondary">
+            Download backup CSV
+          </button>
+          <button type="button" id="reset" class="secondary">Reset my session</button>
+        </div>
+        <p id="status" class="status" role="status"></p>
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>You're caught up</h2>
+        <p id="done-msg" class="lead"></p>
+        <div class="actions">
+          <button type="button" id="download-done">Download backup CSV</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
