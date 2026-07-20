@@ -563,8 +563,13 @@
       return;
     }
     loadAnswers();
+    // Keep UI visible while Sheet coverage loads (avoid a blank page).
     els.setup.hidden = true;
     if (els.how) els.how.open = false;
+    els.done.hidden = true;
+    els.main.hidden = false;
+    setStatus("Loading coverage…", "pending");
+    els.tokens.innerHTML = "<span class='muted'>Loading…</span>";
     await refreshAndShowNext();
   }
 
