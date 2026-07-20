@@ -30,6 +30,8 @@
     roundBadge: document.getElementById("round-badge"),
     sheetWarn: document.getElementById("sheet-warn"),
     doneMsg: document.getElementById("done-msg"),
+    how: document.getElementById("how"),
+    setupStatus: null,
   };
 
   /** @type {Array<{sent_id:string,tokens:string[],corpus:string,source?:string,gold_skill?:string[],gold_knowledge?:string[]}>} */
@@ -69,6 +71,10 @@
   function setStatus(msg, kind) {
     els.status.textContent = msg || "";
     els.status.dataset.kind = kind || "";
+    if (els.setupStatus) {
+      els.setupStatus.textContent = msg || "";
+      els.setupStatus.dataset.kind = kind || "";
+    }
   }
 
   function sheetUrl() {
@@ -502,6 +508,11 @@
     raterId = (els.raterId.value || "").trim().toLowerCase();
     if (!raterId) {
       setStatus("Enter your name or initials.", "err");
+      if (els.setup) els.setup.classList.add("needs-name");
+      return;
+    }
+    if (!sentences.length) {
+      setStatus("Sentence bank still loading — try again in a moment.", "err");
       return;
     }
     loadAnswers();
@@ -514,14 +525,20 @@
       setStatus(`Coverage offline (${err.message}); using local only.`, "err");
     }
     els.setup.hidden = true;
-    els.how.open = false;
+    if (els.how) els.how.open = false;
     els.main.hidden = false;
     els.done.hidden = true;
     updateProgress();
     nextSentence();
   }
 
-  // Wire UI
+  // Status lives in #main; mirror onto setup so errors show before the session starts.
+  els.setupStatus = document.createElement("p");
+  els.setupStatus.className = "status";
+  els.setupStatus.id = "setup-status";
+  els.setupStatus.setAttribute("role", "status");
+  if (els.setup) els.setup.appendChild(els.setupStatus);
+
   els.roundBadge.textContent = LABELER_CONFIG.roundTitle || LABELER_CONFIG.roundId;
   if (!sheetUrl()) els.sheetWarn.hidden = false;
 
