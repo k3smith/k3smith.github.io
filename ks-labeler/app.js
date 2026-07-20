@@ -418,7 +418,10 @@
   }
 
   function showFeedback(metrics, item) {
-    if (!LABELER_CONFIG.showGoldFeedback || !metrics) return;
+    /** @returns {Promise<void>} resolves when the rater dismisses (or immediately if no gold). */
+    if (!LABELER_CONFIG.showGoldFeedback || !metrics) {
+      return Promise.resolve();
+    }
     const goldS = spansFromBio(item.gold_skill || [], "skill")
       .map(([a, b]) => item.tokens.slice(a, b).join(" "))
       .filter(Boolean);
@@ -427,9 +430,28 @@
       .filter(Boolean);
     els.feedback.hidden = false;
     els.feedback.innerHTML =
-      `<strong>SkillSpan gold check</strong> (hidden during labeling)<br>` +
+      `<strong>SkillSpan gold check</strong> — compare your marks to the expert spans below.<br>` +
       `Overlap F1 — skill: ${metrics.skill_overlap_f1} · knowledge: ${metrics.knowledge_overlap_f1} · combined: ${metrics.combined_overlap_f1}<br>` +
-      `<span class="muted">Gold skill: ${goldS.length ? goldS.join("; ") : "—"} · Gold knowledge: ${goldK.length ? goldK.join("; ") : "—"}</span>`;
+      `<span class="muted">Gold skill: ${goldS.length ? goldS.join("; ") : "—"} · Gold knowledge: ${goldK.length ? goldK.join("; ") : "—"}</span>` +
+      `<div class="feedback-actions"><button type="button" id="feedback-next" class="feedback-next">Continue to next →</button></div>`;
+    return new Promise((resolve) => {
+      const btn = document.getElementById("feedback-next");
+      const finish = () => {
+        document.removeEventListener("keydown", onKey);
+        els.feedback.hidden = true;
+        els.feedback.innerHTML = "";
+        resolve();
+      };
+      const onKey = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          finish();
+        }
+      };
+      if (btn) btn.addEventListener("click", finish, { once: true });
+      document.addEventListener("keydown", onKey);
+      if (btn) btn.focus();
+    });
   }
 
   async function postLabel(payload) {
@@ -483,16 +505,14 @@
     };
 
     els.save.disabled = true;
+    els.none.disabled = true;
     try {
       await postLabel(payload);
       setStatus(
         sheetUrl() ? "Saved to Sheet." : "Saved locally (Sheet not configured).",
         "ok"
       );
-      showFeedback(metrics, current);
-      // Brief pause so raters can read SkillSpan feedback, then advance
-      const delay = metrics && LABELER_CONFIG.showGoldFeedback ? 1800 : 200;
-      await new Promise((r) => setTimeout(r, delay));
+      await showFeedback(metrics, current);
       nextSentence();
     } catch (err) {
       setStatus(
@@ -501,6 +521,7 @@
       );
     } finally {
       els.save.disabled = false;
+      els.none.disabled = false;
     }
   }
 

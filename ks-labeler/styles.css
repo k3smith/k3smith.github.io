@@ -386,6 +386,16 @@ kbd {
   color: var(--accent);
 }
 
+.feedback-actions {
+  margin-top: 0.75rem;
+}
+
+.feedback-next {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
 .status {
   min-height: 1.25rem;
   margin: 0.75rem 0 0;
