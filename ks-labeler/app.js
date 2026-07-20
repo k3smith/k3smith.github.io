@@ -92,7 +92,7 @@
       const timer = setTimeout(() => {
         cleanup();
         reject(new Error("Sheet coverage timed out"));
-      }, 15000);
+      }, 8000);
       function cleanup() {
         clearTimeout(timer);
         delete window[cb];
@@ -340,17 +340,64 @@
     setStatus("");
   }
 
+  function showDone(reason) {
+    els.main.hidden = true;
+    els.setup.hidden = true;
+    els.done.hidden = false;
+    if (els.doneMsg) {
+      const mine = Object.keys(answers).length;
+      const full = sentencesFullyCovered();
+      els.doneMsg.innerHTML =
+        reason ||
+        `You have labeled <strong>${mine}</strong> sentences. ` +
+          `Coverage: <strong>${full}</strong> / ${sentences.length} have ${TARGET()} ratings. Thank you!`;
+    }
+  }
+
   function nextSentence() {
     const open = eligibleSentences();
     updateProgress();
     if (!open.length) {
-      els.main.hidden = true;
-      els.done.hidden = false;
-      els.doneMsg.textContent =
-        "No more sentences available for you in this round. Thank you — use Download backup CSV if the Sheet was offline.";
+      const full = sentencesFullyCovered();
+      if (full >= sentences.length) {
+        showDone(
+          `All ${sentences.length} sentences already have ${TARGET()} ratings. Thank you!`
+        );
+      } else {
+        showDone(
+          `No more sentences available for <strong>${raterId}</strong> right now ` +
+            `(you may have finished your share, or remaining slots need other raters). ` +
+            `Coverage: <strong>${full}</strong> / ${sentences.length} at ${TARGET()} ratings.`
+        );
+      }
       return;
     }
+    els.done.hidden = true;
+    els.main.hidden = false;
     showSentence(pickRandom(open));
+  }
+
+  async function refreshAndShowNext() {
+    setStatus("Finding a sentence…", "pending");
+    try {
+      const data = await fetchCoverageJsonp();
+      if (data && data.target) {
+        LABELER_CONFIG.targetRatings = data.target;
+      }
+      rebuildCoverage(data && data.labels);
+    } catch (err) {
+      rebuildCoverage([]);
+      if (sheetUrl()) {
+        setStatus(
+          `Could not read Sheet (${err.message}). Using local-only queue.`,
+          "err"
+        );
+      }
+    }
+    nextSentence();
+    if (!els.status.dataset.kind || els.status.dataset.kind === "pending") {
+      setStatus("", "");
+    }
   }
 
   function goldMetrics(item) {
@@ -505,31 +552,20 @@
   }
 
   async function startSession() {
-    raterId = (els.raterId.value || "").trim().toLowerCase();
+    raterId = (els.raterId.value || "").trim().toLowerCase().replace(/\s+/g, "_");
     if (!raterId) {
-      setStatus("Enter your name or initials.", "err");
-      if (els.setup) els.setup.classList.add("needs-name");
+      els.raterId.focus();
+      setStatus("Please enter your name or initials.", "err");
       return;
     }
     if (!sentences.length) {
-      setStatus("Sentence bank still loading — try again in a moment.", "err");
+      setStatus("Sentence bank not loaded yet. Wait a moment and try again.", "err");
       return;
     }
     loadAnswers();
-    setStatus("Loading coverage…");
-    try {
-      const cov = await fetchCoverageJsonp();
-      rebuildCoverage(cov.labels || []);
-    } catch (err) {
-      rebuildCoverage([]);
-      setStatus(`Coverage offline (${err.message}); using local only.`, "err");
-    }
     els.setup.hidden = true;
     if (els.how) els.how.open = false;
-    els.main.hidden = false;
-    els.done.hidden = true;
-    updateProgress();
-    nextSentence();
+    await refreshAndShowNext();
   }
 
   // Status lives in #main; mirror onto setup so errors show before the session starts.
@@ -539,55 +575,91 @@
   els.setupStatus.setAttribute("role", "status");
   if (els.setup) els.setup.appendChild(els.setupStatus);
 
-  els.roundBadge.textContent = LABELER_CONFIG.roundTitle || LABELER_CONFIG.roundId;
-  if (!sheetUrl()) els.sheetWarn.hidden = false;
+  async function init() {
+    els.roundBadge.textContent = LABELER_CONFIG.roundTitle || LABELER_CONFIG.roundId;
+    if (!sheetUrl()) els.sheetWarn.hidden = false;
 
-  document.querySelectorAll(".paint").forEach((btn) => {
-    btn.addEventListener("click", () => setPaintMode(btn.dataset.mode));
-  });
-  setPaintMode("skill");
+    els.start.disabled = true;
+    setStatus("Loading sentences…", "pending");
 
-  els.start.addEventListener("click", startSession);
-  els.raterId.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") startSession();
-  });
-  els.save.addEventListener("click", () => commitLabel({ empty: false }));
-  els.none.addEventListener("click", () => commitLabel({ empty: true }));
-  els.download.addEventListener("click", downloadCsv);
-  els.downloadDone.addEventListener("click", downloadCsv);
-  els.reset.addEventListener("click", () => {
-    if (!confirm("Clear your local labels for this round on this browser?")) return;
-    answers = {};
-    saveAnswers();
-    location.reload();
-  });
+    const res = await fetch(LABELER_CONFIG.sentencesUrl);
+    if (!res.ok) throw new Error(`Could not load sentences (${res.status})`);
+    const data = await res.json();
+    sentences = Array.isArray(data) ? data : [];
+    if (!sentences.length) throw new Error("Sentence bank is empty");
 
-  document.addEventListener("keydown", (e) => {
-    if (els.main.hidden) return;
-    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA"))
-      return;
-    if (e.key === "1") setPaintMode("knowledge");
-    if (e.key === "2") setPaintMode("skill");
-    if (e.key === "3") setPaintMode("clear");
-    if (e.key === "0") commitLabel({ empty: true });
-    if (e.key === "Enter") {
-      e.preventDefault();
-      commitLabel({ empty: false });
-    }
-  });
+    setStatus(`${sentences.length} sentences ready. Enter initials to start.`, "ok");
+    els.start.disabled = false;
 
-  fetch(LABELER_CONFIG.sentencesUrl)
-    .then((r) => {
-      if (!r.ok) throw new Error(`Failed to load ${LABELER_CONFIG.sentencesUrl}`);
-      return r.json();
-    })
-    .then((data) => {
-      sentences = Array.isArray(data) ? data : [];
-      els.roundBadge.textContent =
-        LABELER_CONFIG.roundTitle || LABELER_CONFIG.roundId;
-    })
-    .catch((err) => {
-      els.sheetWarn.hidden = false;
-      els.sheetWarn.textContent = `Could not load sentences: ${err.message}`;
+    document.querySelectorAll(".paint").forEach((btn) => {
+      btn.addEventListener("click", () => setPaintMode(btn.dataset.mode));
     });
+    setPaintMode("skill");
+
+    els.start.addEventListener("click", () => {
+      startSession().catch((e) => {
+        console.error(e);
+        setStatus(String(e.message || e), "err");
+        els.setup.hidden = false;
+      });
+    });
+    els.raterId.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        startSession().catch((err) => {
+          console.error(err);
+          setStatus(String(err.message || err), "err");
+          els.setup.hidden = false;
+        });
+      }
+    });
+    els.save.addEventListener("click", () => {
+      commitLabel({ empty: false }).catch((e) =>
+        setStatus(String(e.message || e), "err")
+      );
+    });
+    els.none.addEventListener("click", () => {
+      commitLabel({ empty: true }).catch((e) =>
+        setStatus(String(e.message || e), "err")
+      );
+    });
+    els.download.addEventListener("click", downloadCsv);
+    els.downloadDone.addEventListener("click", downloadCsv);
+    els.reset.addEventListener("click", () => {
+      if (!confirm("Clear your local labels for this round on this browser?")) return;
+      answers = {};
+      saveAnswers();
+      location.reload();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (els.main.hidden) return;
+      if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA"))
+        return;
+      if (e.key === "1") setPaintMode("knowledge");
+      if (e.key === "2") setPaintMode("skill");
+      if (e.key === "3") setPaintMode("clear");
+      if (e.key === "0") {
+        commitLabel({ empty: true }).catch((err) =>
+          setStatus(String(err.message || err), "err")
+        );
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        commitLabel({ empty: false }).catch((err) =>
+          setStatus(String(err.message || err), "err")
+        );
+      }
+    });
+  }
+
+  init().catch((err) => {
+    console.error(err);
+    setStatus(String(err.message || err), "err");
+    if (els.sheetWarn) {
+      els.sheetWarn.hidden = false;
+      els.sheetWarn.textContent = `Could not start labeler: ${err.message || err}`;
+    }
+    if (els.start) els.start.disabled = true;
+  });
 })();
