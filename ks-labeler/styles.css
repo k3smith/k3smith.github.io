@@ -386,6 +386,82 @@ kbd {
   color: var(--accent);
 }
 
+.fb-strip {
+  margin: 0.65rem 0 0.35rem;
+}
+
+.fb-strip-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.fb-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem 0.15rem;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.fb-tok {
+  padding: 0.05rem 0.18rem;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.fb-tok.knowledge {
+  background: var(--knowledge-bg);
+  color: var(--knowledge);
+  border-color: #9bb5d9;
+}
+
+.fb-tok.skill {
+  background: var(--skill-bg);
+  color: var(--skill);
+  border-color: #d4b98a;
+}
+
+.fb-list {
+  margin: 0.35rem 0 0.5rem;
+  padding-left: 1.2rem;
+  color: var(--ink);
+}
+
+.fb-chip {
+  display: inline-block;
+  margin: 0.15rem 0.25rem 0.15rem 0;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.fb-chip.skill {
+  background: var(--skill-bg);
+  color: var(--skill);
+  border-color: #d4b98a;
+}
+
+.fb-chip.knowledge {
+  background: var(--knowledge-bg);
+  color: var(--knowledge);
+  border-color: #9bb5d9;
+}
+
+.fb-f1 {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+}
+
 .feedback-actions {
   margin-top: 0.75rem;
 }

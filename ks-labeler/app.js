@@ -417,23 +417,150 @@
     };
   }
 
+  function spanPhrase(tokens, span) {
+    return tokens.slice(span[0], span[1]).join(" ");
+  }
+
+  function classifySpanMatches(gold, pred) {
+    const matched = [];
+    const onlyGold = [];
+    const onlyYou = [];
+    const used = new Set();
+    for (const g of gold) {
+      let bestJ = -1;
+      let best = -1;
+      for (let j = 0; j < pred.length; j++) {
+        if (used.has(j)) continue;
+        const p = pred[j];
+        if (g[2] !== p[2]) continue;
+        if (g[0] < p[1] && p[0] < g[1]) {
+          const inter = Math.min(g[1], p[1]) - Math.max(g[0], p[0]);
+          const union = Math.max(g[1], p[1]) - Math.min(g[0], p[0]);
+          const score = inter / (union || 1);
+          if (score > best) {
+            best = score;
+            bestJ = j;
+          }
+        }
+      }
+      if (bestJ >= 0) {
+        used.add(bestJ);
+        matched.push({ gold: g, you: pred[bestJ], overlap: best });
+      } else {
+        onlyGold.push(g);
+      }
+    }
+    for (let j = 0; j < pred.length; j++) {
+      if (!used.has(j)) onlyYou.push(pred[j]);
+    }
+    return { matched, onlyGold, onlyYou };
+  }
+
+  function renderTokenStrip(tokens, skillTags, knowTags, title) {
+    const chips = tokens
+      .map((tok, i) => {
+        let cls = "fb-tok";
+        if (skillTags[i] && skillTags[i] !== "O") cls += " skill";
+        else if (knowTags[i] && knowTags[i] !== "O") cls += " knowledge";
+        return `<span class="${cls}">${escapeHtml(tok)}</span>`;
+      })
+      .join(" ");
+    return `<div class="fb-strip"><div class="fb-strip-label">${title}</div><div class="fb-tokens">${chips}</div></div>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatSpanList(tokens, spans, emptyLabel) {
+    if (!spans.length) return `<em>${emptyLabel}</em>`;
+    return spans
+      .map((sp) => {
+        const kind = sp[2] === "skill" ? "Skill" : "Knowledge";
+        return `<span class="fb-chip ${sp[2]}">${kind}: ${escapeHtml(spanPhrase(tokens, sp))}</span>`;
+      })
+      .join(" ");
+  }
+
   function showFeedback(metrics, item) {
-    /** @returns {Promise<void>} resolves when the rater dismisses (or immediately if no gold). */
-    if (!LABELER_CONFIG.showGoldFeedback || !metrics) {
+    /** @returns {Promise<void>} resolves when the rater dismisses (or immediately if no gold panel). */
+    if (!LABELER_CONFIG.showGoldFeedback || item.corpus !== "skillspan") {
       return Promise.resolve();
     }
-    const goldS = spansFromBio(item.gold_skill || [], "skill")
-      .map(([a, b]) => item.tokens.slice(a, b).join(" "))
-      .filter(Boolean);
-    const goldK = spansFromBio(item.gold_knowledge || [], "knowledge")
-      .map(([a, b]) => item.tokens.slice(a, b).join(" "))
-      .filter(Boolean);
+
+    const goldSkillTags = item.gold_skill || Array(item.tokens.length).fill("O");
+    const goldKnowTags = item.gold_knowledge || Array(item.tokens.length).fill("O");
+    const goldS = spansFromBio(goldSkillTags, "skill");
+    const goldK = spansFromBio(goldKnowTags, "knowledge");
+    const predS = spansFromBio(tagsSkill, "skill");
+    const predK = spansFromBio(tagsKnowledge, "knowledge");
+    const goldAll = goldS.concat(goldK);
+    const predAll = predS.concat(predK);
+    const cmp = classifySpanMatches(goldAll, predAll);
+    const f1 =
+      metrics ||
+      {
+        skill_overlap_f1: Math.round(overlapF1(goldS, predS) * 1000) / 1000,
+        knowledge_overlap_f1: Math.round(overlapF1(goldK, predK) * 1000) / 1000,
+        combined_overlap_f1:
+          Math.round(overlapF1(goldAll, predAll) * 1000) / 1000,
+      };
+
+    let summary;
+    if (!goldAll.length && !predAll.length) {
+      summary =
+        "<p><strong>Match:</strong> You and the experts both marked nothing in this sentence.</p>";
+    } else if (!goldAll.length) {
+      summary =
+        "<p><strong>Experts marked nothing</strong> here (negative example). " +
+        "Anything you marked is an extra relative to gold.</p>";
+    } else if (!predAll.length) {
+      summary =
+        "<p><strong>You marked nothing</strong>, but experts marked the spans below.</p>";
+    } else {
+      summary = "<p><strong>Compared to experts:</strong></p><ul class='fb-list'>";
+      if (cmp.matched.length) {
+        summary +=
+          `<li><strong>Overlapping</strong> (${cmp.matched.length}): ` +
+          cmp.matched
+            .map((m) => {
+              const g = escapeHtml(spanPhrase(item.tokens, m.gold));
+              const y = escapeHtml(spanPhrase(item.tokens, m.you));
+              return g === y
+                ? `<span class="fb-chip ${m.gold[2]}">${g}</span>`
+                : `<span class="fb-chip ${m.gold[2]}">you “${y}” ≈ gold “${g}”</span>`;
+            })
+            .join(" ") +
+          "</li>";
+      }
+      if (cmp.onlyYou.length) {
+        summary +=
+          `<li><strong>Only you</strong> (not in gold): ` +
+          formatSpanList(item.tokens, cmp.onlyYou, "—") +
+          "</li>";
+      }
+      if (cmp.onlyGold.length) {
+        summary +=
+          `<li><strong>Only experts</strong> (you missed): ` +
+          formatSpanList(item.tokens, cmp.onlyGold, "—") +
+          "</li>";
+      }
+      summary += "</ul>";
+    }
+
     els.feedback.hidden = false;
     els.feedback.innerHTML =
-      `<strong>SkillSpan gold check</strong> — compare your marks to the expert spans below.<br>` +
-      `Overlap F1 — skill: ${metrics.skill_overlap_f1} · knowledge: ${metrics.knowledge_overlap_f1} · combined: ${metrics.combined_overlap_f1}<br>` +
-      `<span class="muted">Gold skill: ${goldS.length ? goldS.join("; ") : "—"} · Gold knowledge: ${goldK.length ? goldK.join("; ") : "—"}</span>` +
+      `<strong>SkillSpan gold check</strong> — your marks vs expert spans` +
+      renderTokenStrip(item.tokens, tagsSkill, tagsKnowledge, "Your marks") +
+      renderTokenStrip(item.tokens, goldSkillTags, goldKnowTags, "Expert gold") +
+      summary +
+      `<p class="muted fb-f1">Overlap F1 (skill ${f1.skill_overlap_f1} · knowledge ${f1.knowledge_overlap_f1} · combined ${f1.combined_overlap_f1})</p>` +
       `<div class="feedback-actions"><button type="button" id="feedback-next" class="feedback-next">Continue to next →</button></div>`;
+
     return new Promise((resolve) => {
       const btn = document.getElementById("feedback-next");
       const finish = () => {
