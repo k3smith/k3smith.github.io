@@ -173,6 +173,23 @@
     return tags;
   }
 
+  /** Merge same-type spans that touch (no O between). Paint order can leave B|B. */
+  function coalesceAdjacentSpans(spans) {
+    if (!spans.length) return spans;
+    const sorted = spans.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const out = [[sorted[0][0], sorted[0][1], sorted[0][2]]];
+    for (let i = 1; i < sorted.length; i++) {
+      const cur = sorted[i];
+      const prev = out[out.length - 1];
+      if (cur[2] === prev[2] && cur[0] <= prev[1]) {
+        prev[1] = Math.max(prev[1], cur[1]);
+      } else {
+        out.push([cur[0], cur[1], cur[2]]);
+      }
+    }
+    return out;
+  }
+
   function spansFromBio(tags, type) {
     const spans = [];
     let start = null;
@@ -189,7 +206,7 @@
       }
     }
     if (start !== null) spans.push([start, tags.length, type]);
-    return spans;
+    return coalesceAdjacentSpans(spans);
   }
 
   function overlapF1(gold, pred) {
