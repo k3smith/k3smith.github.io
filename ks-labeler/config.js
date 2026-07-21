@@ -7,6 +7,10 @@ window.LABELER_CONFIG = {
   sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbyxVsQQz9nxTFkYXU-NcIVtESU1ySv08LsB6_WFy1gblZQIOadxOecbaXip8HmSPjj9/exec",
   /** Each sentence stops being offered once this many distinct raters have labeled it. */
   targetRatings: 2,
-  /** After save on SkillSpan items, show overlap F1 vs hidden gold. */
-  showGoldFeedback: true,
+  /**
+   * After save on SkillSpan items, show overlap vs SkillSpan expert gold.
+   * Keep false for pilot labeling — gold is inconsistent; do not train raters to it.
+   * Offline compare is fine for RQ0 / denoise analysis.
+   */
+  showGoldFeedback: false,
 };
