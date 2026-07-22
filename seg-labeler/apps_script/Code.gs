@@ -1,0 +1,142 @@
+/**
+ * Google Apps Script web app for the segmentation block labeler.
+ *
+ * Setup:
+ * 1. Create a Google Sheet with a tab named "labels".
+ * 2. Extensions ? Apps Script ? paste this file ? Save.
+ * 3. Run ensureHeader once; approve permissions.
+ * 4. Deploy ? New deployment ? Web app
+ *    - Execute as: Me
+ *    - Who has access: Anyone
+ * 5. Paste the web-app URL into seg-labeler/config.js ? sheetWebAppUrl
+ *
+ * Endpoints:
+ * - GET  ?callback=fn   ? JSONP coverage { target, labels:[{block_id,rater_id}] }
+ * - POST text/plain JSON ? append one label row
+ */
+
+var SHEET_NAME = "labels";
+var TARGET_RATINGS = 2;
+
+var HEADER = [
+  "timestamp",
+  "round_id",
+  "block_id",
+  "rater_id",
+  "block_type",
+  "section_number",
+  "section_path",
+  "parent_section_number",
+  "must_not_split_with",
+  "page_start",
+  "page_end",
+  "document_name",
+  "document_class",
+  "version_label",
+  "text_excerpt",
+  "notes",
+  "client",
+];
+
+function ensureHeader() {
+  var sh = _sheet();
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(HEADER);
+  }
+}
+
+function doGet(e) {
+  var data = getCoverage();
+  var body = JSON.stringify(data);
+  var cb = e && e.parameter && e.parameter.callback;
+  if (cb) {
+    return ContentService.createTextOutput(cb + "(" + body + ")").setMimeType(
+      ContentService.MimeType.JAVASCRIPT
+    );
+  }
+  return ContentService.createTextOutput(body).setMimeType(
+    ContentService.MimeType.JSON
+  );
+}
+
+function doPost(e) {
+  try {
+    var raw = (e && e.postData && e.postData.contents) || "{}";
+    var data = JSON.parse(raw);
+    var sh = _sheet();
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(HEADER);
+    }
+    sh.appendRow([
+      new Date().toISOString(),
+      data.round_id || "",
+      data.block_id || "",
+      data.rater_id || "",
+      data.block_type || "",
+      data.section_number || "",
+      data.section_path || "",
+      data.parent_section_number || "",
+      data.must_not_split_with || "",
+      data.page_start || "",
+      data.page_end || "",
+      data.document_name || "",
+      data.document_class || "",
+      data.version_label || "",
+      data.text_excerpt || "",
+      data.notes || "",
+      data.client || "",
+    ]);
+    return _json({ ok: true });
+  } catch (err) {
+    return _json({ ok: false, error: String(err) });
+  }
+}
+
+/** Unique (block_id, rater_id) labels; latest row wins. */
+function getCoverage() {
+  var sh = _sheet();
+  var last = sh.getLastRow();
+  var map = {};
+  if (last >= 2) {
+    var values = sh.getRange(2, 1, last, HEADER.length).getValues();
+    for (var i = 0; i < values.length; i++) {
+      var row = values[i];
+      var blockId = String(row[2] || "").trim();
+      var raterId = String(row[3] || "").trim();
+      var blockType = String(row[4] || "").trim().toLowerCase();
+      if (!blockId || !raterId) continue;
+      if (!blockType) continue;
+      map[blockId + "\t" + raterId] = {
+        block_id: blockId,
+        rater_id: raterId,
+        block_type: blockType,
+      };
+    }
+  }
+  var labels = [];
+  for (var k in map) {
+    if (Object.prototype.hasOwnProperty.call(map, k)) {
+      labels.push(map[k]);
+    }
+  }
+  return {
+    ok: true,
+    target: TARGET_RATINGS,
+    labels: labels,
+  };
+}
+
+function _sheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET_NAME);
+  if (!sh) {
+    sh = ss.insertSheet(SHEET_NAME);
+  }
+  return sh;
+}
+
+function _json(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(
+    ContentService.MimeType.JSON
+  );
+}

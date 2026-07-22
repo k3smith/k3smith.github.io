@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document chunk block labeling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <h1>Chunk block labeling</h1>
+        <span class="badge" id="round-badge">round</span>
+      </header>
+
+      <div id="sheet-warn" class="warn-banner" hidden>
+        Google Sheet is not configured yet (<code>config.js</code> ?
+        <code>sheetWebAppUrl</code>). Shared double-coverage needs the Sheet live
+        before you recruit raters.
+      </div>
+
+      <details class="how" id="how" open>
+        <summary>Instructions (about 2 minutes)</summary>
+        <div class="body">
+          <p>
+            You will see one <strong>text block</strong> from a Navy / regulatory
+            PDF (with a little context above and below). Decide what kind of chunk
+            unit it is and which section it belongs to — so an automated system can
+            cite document, section, page, and quote correctly.
+          </p>
+          <div class="defs">
+            <div>
+              <strong>requirement</strong>
+              Obligation language (<em>shall</em>, <em>must</em>, numbered
+              requirement). Prefer this for nested sub-requirements.
+            </div>
+            <div>
+              <strong>definition</strong>
+              Defines a term (“means”, “DEFINITION”, glossary-style).
+            </div>
+            <div>
+              <strong>reference</strong>
+              Citation to another standard, CFR, NSI, or document list entry.
+            </div>
+            <div>
+              <strong>scope</strong>
+              Title / purpose / applicability of an item or chapter.
+            </div>
+            <div>
+              <strong>note</strong>
+              NOTES section, guidance, or non-binding commentary.
+            </div>
+            <div>
+              <strong>table</strong>
+              Tabular content (or a clear table caption/row blob).
+            </div>
+            <div>
+              <strong>paragraph</strong>
+              Ordinary body prose that is still a citeable unit.
+            </div>
+            <div>
+              <strong>skip</strong>
+              Running header/footer, TOC noise, blank/junk, or not a chunk unit.
+            </div>
+          </div>
+          <p>
+            Prefill fields are <em>suggestions only</em> — correct them when wrong.
+            For nested requirements, set <strong>parent section</strong> and
+            <strong>must not split with</strong> so parent/child stay in one chunk.
+            Use the same name/initials when you return. Each block is labeled by up
+            to two people.
+          </p>
+        </div>
+      </details>
+
+      <section class="panel" id="setup">
+        <h2>Start a session</h2>
+        <p class="lead">
+          Enter a short name or initials (same every time you return). The site
+          will only offer blocks that still need a rating and that you have not
+          already labeled.
+        </p>
+        <label class="field" for="rater-id">Your name or initials</label>
+        <input
+          id="rater-id"
+          type="text"
+          autocomplete="nickname"
+          placeholder="e.g. jsmith"
+          maxlength="40"
+        />
+        <div class="actions">
+          <button type="button" id="start">Start labeling</button>
+        </div>
+        <div id="setup-status" role="status"></div>
+      </section>
+
+      <section class="panel" id="main" hidden>
+        <div class="progress">
+          <div class="progress-text" id="progress-text">Your labels: 0</div>
+          <div class="progress-text" id="coverage-text" style="margin-top: 0.15rem">
+            Checking coverage…
+          </div>
+          <div class="bar" aria-hidden="true">
+            <span id="progress-fill"></span>
+          </div>
+        </div>
+
+        <div class="pair-meta">
+          <span>Document: <strong id="meta-doc">—</strong></span>
+          <span>Class: <strong id="meta-class">—</strong></span>
+          <span>Version: <strong id="meta-version">—</strong></span>
+          <span>Page: <strong id="meta-page">—</strong></span>
+        </div>
+
+        <div class="context-stack">
+          <article class="ctx-card muted-card" id="ctx-before-wrap" hidden>
+            <h3>Context before</h3>
+            <p id="ctx-before"></p>
+          </article>
+          <article class="ctx-card focal">
+            <h3>Block to label</h3>
+            <p id="block-text"></p>
+          </article>
+          <article class="ctx-card muted-card" id="ctx-after-wrap" hidden>
+            <h3>Context after</h3>
+            <p id="ctx-after"></p>
+          </article>
+        </div>
+
+        <form id="label-form" class="label-form" autocomplete="off">
+          <label class="field" for="block-type">Block type</label>
+          <select id="block-type" required>
+            <option value="">Select…</option>
+            <option value="requirement">requirement</option>
+            <option value="definition">definition</option>
+            <option value="reference">reference</option>
+            <option value="scope">scope</option>
+            <option value="note">note</option>
+            <option value="table">table</option>
+            <option value="paragraph">paragraph</option>
+            <option value="skip">skip</option>
+          </select>
+
+          <div class="form-grid">
+            <div>
+              <label class="field" for="section-number">Section number</label>
+              <input id="section-number" type="text" placeholder="e.g. 3.3.1.1" />
+            </div>
+            <div>
+              <label class="field" for="parent-section"
+                >Parent section (optional)</label
+              >
+              <input id="parent-section" type="text" placeholder="e.g. 3.3.1" />
+            </div>
+          </div>
+
+          <label class="field" for="section-path"
+            >Section path (breadcrumb, use › or |)</label
+          >
+          <input
+            id="section-path"
+            type="text"
+            placeholder="ITEM 009-003 › 3. REQUIREMENTS › 3.3 › 3.3.1 › 3.3.1.1"
+          />
+
+          <label class="field" for="must-not-split"
+            >Must not split with (comma-separated section numbers)</label
+          >
+          <input id="must-not-split" type="text" placeholder="e.g. 3.3.1" />
+
+          <label class="field" for="notes">Notes (optional)</label>
+          <input id="notes" type="text" placeholder="Ambiguity, page OCR issues…" />
+
+          <div class="actions">
+            <button type="submit" id="save">Save &amp; next</button>
+            <button type="button" class="secondary" id="use-suggestions">
+              Reset to suggestions
+            </button>
+          </div>
+        </form>
+
+        <div id="status" role="status"></div>
+
+        <div class="actions">
+          <button type="button" class="secondary" id="download">
+            Download backup CSV
+          </button>
+          <button type="button" class="secondary" id="reset">
+            Reset my progress
+          </button>
+        </div>
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>All caught up</h2>
+        <p class="lead" id="done-msg">Thank you!</p>
+        <div class="actions">
+          <button type="button" id="download-done">Download backup CSV</button>
+        </div>
+      </section>
+
+      <footer class="note">
+        Research labeling for structural document chunking. Labels become gold
+        boundaries for ingestion eval (section path, block type, hierarchy).
+      </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
