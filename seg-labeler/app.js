@@ -163,7 +163,7 @@
     const full = blocksFullyCovered();
     const total = blocks.length;
     const t = TARGET();
-    els.progressText.textContent = `Your labels: ${mine} ù Blocks with ${t} ratings: ${full} / ${total}`;
+    els.progressText.textContent = `Your labels: ${mine} - Blocks with ${t} ratings: ${full} / ${total}`;
     els.progressFill.style.width = total ? `${(100 * full) / total}%` : "0%";
     if (els.coverageText) {
       const open = eligibleBlocks().length;
@@ -178,7 +178,7 @@
   }
 
   function pathToDisplay(path) {
-    if (Array.isArray(path)) return path.filter(Boolean).join(" ù ");
+    if (Array.isArray(path)) return path.filter(Boolean).join(" - ");
     return String(path || "");
   }
 
@@ -212,12 +212,12 @@
     current = b;
     els.done.hidden = true;
     els.main.hidden = false;
-    els.metaDoc.textContent = b.documentName || "ù";
-    els.metaClass.textContent = b.documentClass || "ù";
-    els.metaVersion.textContent = b.versionLabel || "ù";
-    const ps = b.pageStart != null ? b.pageStart : "ù";
+    els.metaDoc.textContent = b.documentName || "-";
+    els.metaClass.textContent = b.documentClass || "-";
+    els.metaVersion.textContent = b.versionLabel || "-";
+    const ps = b.pageStart != null ? b.pageStart : "-";
     const pe = b.pageEnd != null ? b.pageEnd : ps;
-    els.metaPage.textContent = ps === pe ? String(ps) : `${ps}ù${pe}`;
+    els.metaPage.textContent = ps === pe ? String(ps) : `${ps}-${pe}`;
 
     const before = (b.contextBefore || "").trim();
     const after = (b.contextAfter || "").trim();
@@ -242,7 +242,7 @@
   }
 
   async function refreshAndShowNext() {
-    setStatus("Finding a blockù", "pending");
+    setStatus("Finding a block-", "pending");
     try {
       const data = await fetchCoverageJsonp();
       if (data && data.target) {
@@ -350,7 +350,7 @@
       client: "gh-pages-seg-labeler",
     };
 
-    setStatus("Savingù", "pending");
+    setStatus("Saving-", "pending");
     try {
       const result = await postToSheet(payload);
       if (result.skipped) {
@@ -446,7 +446,7 @@
     }
     if (!sheetUrl()) {
       setStatus(
-        "No Sheet URL ó saving locally only. Configure sheetWebAppUrl before recruiting raters.",
+        "No Sheet URL - saving locally only. Configure sheetWebAppUrl before recruiting raters.",
         "warn"
       );
     }

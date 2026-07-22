@@ -12,7 +12,7 @@
 
 1. **Create Google Sheet** ? paste `apps_script/Code.gs` ? deploy web app (Anyone) ? put URL in `config.js` ? `sheetWebAppUrl`.
 2. **Push** `k3smith.github.io` so https://k3smith.github.io/seg-labeler/ is public.
-3. **Self-calibrate** (~10–15 blocks): confirm suggestions, adjust instructions if needed. Local-only mode works before the Sheet URL is set (backup CSV).
+3. **Self-calibrate** (~10-15 blocks): confirm suggestions, adjust instructions if needed. Local-only mode works before the Sheet URL is set (backup CSV).
 4. **Recruit raters** (same as lo/ks): aim for 2 ratings/block. After enough coverage:
 
 ```bash

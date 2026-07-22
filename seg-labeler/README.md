@@ -23,7 +23,7 @@ and hierarchy constraints (`mustNotSplitWith`). Same deployment pattern as
 | `index.html` | UI + rater instructions |
 | `app.js` / `styles.css` | Behavior & layout |
 | `config.js` | Round id, blocks JSON path, Sheet web-app URL, `targetRatings` |
-| `blocks/*.json` | Block banks (pilot excerpts only — no full PDFs) |
+| `blocks/*.json` | Block banks (pilot excerpts only - no full PDFs) |
 | `apps_script/Code.gs` | Paste into Google Apps Script |
 
 ## One-time Google Sheet setup
