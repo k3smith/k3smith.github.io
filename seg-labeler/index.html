@@ -65,16 +65,25 @@
               Ordinary body prose that is still a citeable unit.
             </div>
             <div>
+              <strong>not_section_start</strong>
+              This block is <em>not</em> a new section header. Merge it with the
+              previous section. Example: <em>3M 301 Personnel Qualification
+              Standard...</em> is a training name in body text, not section 3/301.
+              Set section path to the true continuing section from context (e.g.
+              <code>1 &gt; 1.4</code>).
+            </div>
+            <div>
               <strong>skip</strong>
               Running header/footer, TOC noise, blank/junk, or not a chunk unit.
             </div>
           </div>
           <p>
             Prefill fields are <em>suggestions only</em> - correct them when wrong.
-            For nested requirements, set <strong>parent section</strong> and
-            <strong>must not split with</strong> so parent/child stay in one chunk.
-            Use the same name/initials when you return. Each block is labeled by up
-            to two people.
+            Section path should be numbers only (e.g. <code>2 &gt; 2.6 &gt; 2.6.2</code>),
+            not chapter titles. For nested requirements, set
+            <strong>parent section</strong> and <strong>must not split with</strong>
+            to the immediate parent. Use the same name/initials when you return.
+            Each block is labeled by up to two people.
           </p>
         </div>
       </details>
@@ -144,6 +153,7 @@
             <option value="note">note</option>
             <option value="table">table</option>
             <option value="paragraph">paragraph</option>
+            <option value="not_section_start">not_section_start</option>
             <option value="skip">skip</option>
           </select>
 

@@ -11,6 +11,7 @@
     "note",
     "table",
     "paragraph",
+    "not_section_start",
     "skip",
   ]);
 
@@ -312,6 +313,17 @@
     if (!BLOCK_TYPES.has(blockType)) {
       setStatus("Select a block type.", "err");
       els.blockType.focus();
+      return;
+    }
+    if (
+      blockType === "not_section_start" &&
+      !(els.sectionNumber.value || "").trim()
+    ) {
+      setStatus(
+        "not_section_start needs the true continuing section number (e.g. 1.4).",
+        "err"
+      );
+      els.sectionNumber.focus();
       return;
     }
 
