@@ -1,0 +1,67 @@
+{
+  "id": "onet",
+  "default_soc": "17-3027.00",
+  "occupations": [
+    {
+      "soc_code": "17-3027.00",
+      "title": "Mechanical Engineering Technologists and Technicians",
+      "url": "https://www.onetonline.org/link/summary/17-3027.00",
+      "elements": [
+        {"category": "task", "id": "5377", "name": "Read and interpret blueprints, technical drawings, schematics, or computer-generated reports", "importance": 83},
+        {"category": "task", "id": "20754", "name": "Draft detail drawings or sketches for drafting room layout or for use by technicians or engineers", "importance": 70},
+        {"category": "task", "id": "20755", "name": "Review project instructions and specifications to identify, modify, or clarify requirements", "importance": 72},
+        {"category": "task", "id": "20760", "name": "Set up and operate machine tools to produce precision parts", "importance": 65},
+        {"category": "task", "id": "20761", "name": "Inspect completed work for conformance to specifications", "importance": 74},
+        {"category": "work_activity", "id": "4.A.3.b.1", "name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment", "importance": 78, "onet_element_id": "5012"},
+        {"category": "work_activity", "id": "4.A.2.a.2", "name": "Processing Information", "importance": 72},
+        {"category": "work_activity", "id": "4.A.2.b.2", "name": "Thinking Creatively", "importance": 66},
+        {"category": "work_activity", "id": "4.A.1.b.2", "name": "Inspecting Equipment, Structures, or Materials", "importance": 70},
+        {"category": "dwa", "id": "4.A.3.b.1.I07", "name": "Document technical design details", "importance": null},
+        {"category": "dwa", "id": "4.A.3.b.1.I05", "name": "Create physical models or mechanical designs", "importance": null},
+        {"category": "dwa", "id": "4.A.1.b.2.I05", "name": "Test products for functionality or quality", "importance": null},
+        {"category": "knowledge", "id": "2.C.3.a", "name": "Design", "importance": 88},
+        {"category": "knowledge", "id": "2.C.3.b", "name": "Mechanical", "importance": 81},
+        {"category": "knowledge", "id": "2.C.3.c", "name": "Production and Processing", "importance": 69},
+        {"category": "knowledge", "id": "2.C.4.a", "name": "Mathematics", "importance": 72},
+        {"category": "knowledge", "id": "2.C.3.e", "name": "Engineering and Technology", "importance": 85},
+        {"category": "knowledge", "id": "2.C.4.c", "name": "Computers and Electronics", "importance": 66},
+        {"category": "skill", "id": "2.B.2.i", "name": "Complex Problem Solving", "importance": 66},
+        {"category": "skill", "id": "2.A.1.e", "name": "Mathematics", "importance": 63},
+        {"category": "skill", "id": "2.B.3.a", "name": "Operations Monitoring", "importance": 60},
+        {"category": "ability", "id": "1.A.1.c.1", "name": "Mathematical Reasoning", "importance": 72},
+        {"category": "ability", "id": "1.A.1.b.4", "name": "Visualization", "importance": 63},
+        {"category": "ability", "id": "1.A.1.b.3", "name": "Problem Sensitivity", "importance": 66},
+        {"category": "ability", "id": "1.A.1.a.2", "name": "Written Comprehension", "importance": 72}
+      ]
+    },
+    {
+      "soc_code": "51-4041.00",
+      "title": "Machinists",
+      "url": "https://www.onetonline.org/link/summary/51-4041.00",
+      "elements": [
+        {"category": "task", "id": "11949", "name": "Calculate dimensions or tolerances using instruments such as micrometers or vernier calipers", "importance": 88},
+        {"category": "task", "id": "11950", "name": "Machine parts to specifications using machine tools such as lathes, milling machines, shapers, or grinders", "importance": 91},
+        {"category": "task", "id": "11955", "name": "Set up, adjust, or operate basic or specialized machine tools used to perform precision machining operations", "importance": 90},
+        {"category": "knowledge", "id": "2.C.3.b", "name": "Mechanical", "importance": 88},
+        {"category": "knowledge", "id": "2.C.4.a", "name": "Mathematics", "importance": 81},
+        {"category": "knowledge", "id": "2.C.3.c", "name": "Production and Processing", "importance": 78},
+        {"category": "ability", "id": "1.A.1.b.4", "name": "Visualization", "importance": 72},
+        {"category": "ability", "id": "1.A.1.c.1", "name": "Mathematical Reasoning", "importance": 69}
+      ]
+    },
+    {
+      "soc_code": "51-9061.00",
+      "title": "Inspectors, Testers, Sorters, Samplers, and Weighers",
+      "url": "https://www.onetonline.org/link/summary/51-9061.00",
+      "elements": [
+        {"category": "task", "id": "12463", "name": "Inspect, test, or measure materials, products, installations, or work for conformance to specifications", "importance": 90},
+        {"category": "task", "id": "12468", "name": "Read blueprints, data, manuals, or other material to determine specifications", "importance": 78},
+        {"category": "knowledge", "id": "2.C.3.c", "name": "Production and Processing", "importance": 72},
+        {"category": "knowledge", "id": "2.C.4.a", "name": "Mathematics", "importance": 66},
+        {"category": "ability", "id": "1.A.1.b.3", "name": "Problem Sensitivity", "importance": 72}
+      ]
+    }
+  ],
+  "categories": ["task", "dwa", "work_activity", "knowledge", "skill", "ability"],
+  "max_items": 3
+}

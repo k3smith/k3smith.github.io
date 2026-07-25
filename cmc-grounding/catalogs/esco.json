@@ -1,0 +1,21 @@
+{
+  "id": "esco",
+  "label": "ESCO",
+  "source_url": "https://esco.ec.europa.eu/en/classification/skill_main",
+  "max_items": 3,
+  "items": [
+    {"uri": "http://data.europa.eu/esco/skill/c2eb987a-1db5-4b9e-8c4e-0c5c0c8f0cad", "preferred_label": "use CAD software", "broader_label": "use digital tools for engineering", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/8f4c8f2e-cad", "preferred_label": "interpret 2D and 3D digital design drawings", "broader_label": "technical drawing", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/gdt-seed", "preferred_label": "geometric dimensioning and tolerancing", "broader_label": "engineering drawing standards", "skill_type": "knowledge"},
+    {"uri": "http://data.europa.eu/esco/skill/asme-seed", "preferred_label": "technical drawings standards", "broader_label": "engineering documentation", "skill_type": "knowledge"},
+    {"uri": "http://data.europa.eu/esco/skill/lathe-seed", "preferred_label": "operate lathe machine", "broader_label": "operate machine tools", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/mill-seed", "preferred_label": "operate milling machine", "broader_label": "operate machine tools", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/metrology-seed", "preferred_label": "use measuring instruments", "broader_label": "metrology", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/qa-seed", "preferred_label": "perform quality control", "broader_label": "quality assurance", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/composites-seed", "preferred_label": "composite materials", "broader_label": "materials science", "skill_type": "knowledge"},
+    {"uri": "http://data.europa.eu/esco/skill/mfg-process-seed", "preferred_label": "manufacturing processes", "broader_label": "production and manufacturing", "skill_type": "knowledge"},
+    {"uri": "http://data.europa.eu/esco/skill/cam-seed", "preferred_label": "use CAM software", "broader_label": "use digital tools for engineering", "skill_type": "skill"},
+    {"uri": "http://data.europa.eu/esco/skill/blueprint-seed", "preferred_label": "read engineering drawings", "broader_label": "technical drawing", "skill_type": "skill"}
+  ],
+  "notes": "Seed list for MET pilot — replace URIs with verified ESCO concept URLs when accepting; search ESCO if none fit."
+}

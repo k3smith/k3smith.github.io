@@ -31,21 +31,24 @@ var HEADER = [
   "eng_competency_name",
   "eng_block_url",
   "eng_notes",
+  "eng_items_json",
   "am_match",
   "am_tier",
   "am_competency_name",
   "am_block_url",
   "am_notes",
-  "esco_uri",
-  "esco_preferred_label",
-  "esco_broader_label",
+  "am_items_json",
   "esco_match",
+  "esco_notes",
+  "esco_items_json",
+  "onet_match",
   "onet_soc_code",
   "onet_occupation_title",
-  "onet_element_name",
   "onet_url",
-  "onet_match",
+  "onet_notes",
   "onet_elements_json",
+  "onet_categories_json",
+  "onet_max_importance_json",
   "rater_id",
   "date",
   "confidence_1to3",
@@ -83,41 +86,16 @@ function doPost(e) {
     if (sh.getLastRow() === 0) {
       sh.appendRow(HEADER);
     }
-    sh.appendRow([
-      data.timestamp || new Date().toISOString(),
-      data.round_id || "",
-      data.atom_id || "",
-      data.atom_type || "",
-      data.atom_text || "",
-      data.source_competency_id || "",
-      data.source_competency_title || "",
-      data.eng_match || "",
-      data.eng_tier || "",
-      data.eng_competency_name || "",
-      data.eng_block_url || "",
-      data.eng_notes || "",
-      data.am_match || "",
-      data.am_tier || "",
-      data.am_competency_name || "",
-      data.am_block_url || "",
-      data.am_notes || "",
-      data.esco_uri || "",
-      data.esco_preferred_label || "",
-      data.esco_broader_label || "",
-      data.esco_match || "",
-      data.onet_soc_code || "",
-      data.onet_occupation_title || "",
-      data.onet_element_name || "",
-      data.onet_url || "",
-      data.onet_match || "",
-      data.onet_elements_json || "",
-      data.rater_id || "",
-      data.date || "",
-      data.confidence_1to3 || "",
-      data.notes || "",
-      data.frameworks_json || "",
-      data.client || "",
-    ]);
+    var row = [];
+    for (var i = 0; i < HEADER.length; i++) {
+      var key = HEADER[i];
+      var val = data[key];
+      if (key === "timestamp" && !val) {
+        val = new Date().toISOString();
+      }
+      row.push(val == null ? "" : val);
+    }
+    sh.appendRow(row);
     return _json({ ok: true });
   } catch (err) {
     return _json({ ok: false, error: String(err) });
@@ -128,12 +106,13 @@ function getCoverage() {
   var sh = _sheet();
   var last = sh.getLastRow();
   var map = {};
-  if (last >= 2) {
+  var raterCol = HEADER.indexOf("rater_id");
+  var atomCol = HEADER.indexOf("atom_id");
+  if (last >= 2 && raterCol >= 0 && atomCol >= 0) {
     var values = sh.getRange(2, 1, last, HEADER.length).getValues();
     for (var i = 0; i < values.length; i++) {
-      var row = values[i];
-      var atomId = String(row[2] || "").trim();
-      var raterId = String(row[27] || "").trim();
+      var atomId = String(values[i][atomCol] || "").trim();
+      var raterId = String(values[i][raterCol] || "").trim();
       if (!atomId || !raterId) continue;
       map[atomId + "\t" + raterId] = {
         atom_id: atomId,

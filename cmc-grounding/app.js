@@ -1,4 +1,4 @@
-/* global GROUNDING_CONFIG */
+/* global GROUNDING_CONFIG, GROUNDING_PROMPTS */
 
 (function () {
   "use strict";
@@ -7,6 +7,20 @@
     Number(GROUNDING_CONFIG.targetRatings) > 0
       ? Number(GROUNDING_CONFIG.targetRatings)
       : 1;
+
+  const MAX_ITEMS = () => {
+    const n = Number(GROUNDING_CONFIG.maxItemsPerFramework);
+    return n > 0 ? n : 3;
+  };
+
+  const ONET_CATEGORIES = [
+    "task",
+    "dwa",
+    "work_activity",
+    "knowledge",
+    "skill",
+    "ability",
+  ];
 
   const DEFAULT_FRAMEWORKS = [
     {
@@ -77,6 +91,8 @@
 
   /** @type {{atoms:any[],frameworks:any[],round_id?:string,framework_id?:string}} */
   let bank = { atoms: [], frameworks: DEFAULT_FRAMEWORKS };
+  /** framework id → catalog JSON */
+  let catalogs = {};
   /** atom_id → answer object */
   let answers = {};
   /** atom_id → Set of rater_ids */
@@ -87,6 +103,22 @@
   let activeFw = "engineering";
   /** @type {Record<string, any>} */
   let draft = {};
+
+  // ---------------------------------------------------------------------
+  // small utils
+  // ---------------------------------------------------------------------
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function catalogFor(id) {
+    return catalogs[id] || {};
+  }
 
   function requiredIds() {
     const cfg = GROUNDING_CONFIG.requiredFrameworks || [];
@@ -123,35 +155,66 @@
     return (GROUNDING_CONFIG.sheetWebAppUrl || "").trim();
   }
 
-  function emptyFwState(fw) {
-    if (fw.id === "esco") {
-      return {
-        match: "",
-        uri: "",
-        preferred_label: "",
-        broader_label: "",
-        notes: "",
-      };
+  // ---------------------------------------------------------------------
+  // draft state
+  // ---------------------------------------------------------------------
+
+  function recomputeOnetDerived(onet) {
+    const present = {};
+    const maxImp = {};
+    for (const c of ONET_CATEGORIES) {
+      present[c] = false;
+      maxImp[c] = null;
     }
-    if (fw.id === "onet") {
-      return {
-        match: "",
-        soc_code: "",
-        occupation_title: "",
-        element_name: "",
-        url: "",
-        notes: "",
-        /** @type {any[]} accepted multi-facet mappings */
-        elements: [],
-      };
+    for (const el of onet.elements || []) {
+      const c = el.category;
+      if (!ONET_CATEGORIES.includes(c)) continue;
+      present[c] = true;
+      if (typeof el.importance === "number" && !Number.isNaN(el.importance)) {
+        maxImp[c] = maxImp[c] == null ? el.importance : Math.max(maxImp[c], el.importance);
+      }
+    }
+    onet.categories_present = present;
+    onet.max_importance_by_category = maxImp;
+  }
+
+  function normalizeOnetElement(src, extra) {
+    extra = extra || {};
+    const rawImportance = src.importance;
+    let importance = null;
+    if (typeof rawImportance === "number" && !Number.isNaN(rawImportance)) {
+      importance = rawImportance;
+    } else if (rawImportance != null && rawImportance !== "" && !Number.isNaN(Number(rawImportance))) {
+      importance = Number(rawImportance);
     }
     return {
-      match: "",
-      tier: "",
-      competency_name: "",
-      block_url: "",
-      notes: "",
+      category: src.category || src.facet || "",
+      element_id: src.element_id || src.id || "",
+      element_name: src.element_name || src.name || "",
+      importance,
+      match: src.match || "",
+      url: src.url || extra.url || "",
+      rationale: src.rationale || "",
     };
+  }
+
+  function emptyFwState(fw) {
+    if (fw.id === "esco") {
+      return { match: "", notes: "", items: [] };
+    }
+    if (fw.id === "onet") {
+      const st = {
+        match: "",
+        notes: "",
+        soc_code: "",
+        occupation_title: "",
+        url: "",
+        elements: [],
+      };
+      recomputeOnetDerived(st);
+      return st;
+    }
+    return { match: "", notes: "", items: [] };
   }
 
   function blankDraft() {
@@ -165,6 +228,23 @@
     }
     return d;
   }
+
+  function itemsFor(fwId) {
+    const st = draft.frameworks[fwId];
+    if (!st) return [];
+    return fwId === "onet" ? st.elements || [] : st.items || [];
+  }
+
+  function fwDone(fwId) {
+    const st = draft.frameworks[fwId];
+    if (!st || !st.match) return false;
+    if (st.match === "none") return true;
+    return itemsFor(fwId).length >= 1;
+  }
+
+  // ---------------------------------------------------------------------
+  // coverage (JSONP)
+  // ---------------------------------------------------------------------
 
   function fetchCoverageJsonp() {
     const url = sheetUrl();
@@ -239,9 +319,12 @@
     els.progressFill.style.width = `${total ? Math.round((100 * full) / total) : 0}%`;
   }
 
-  function fwDone(fwId) {
-    const st = draft.frameworks[fwId];
-    return !!(st && st.match);
+  // ---------------------------------------------------------------------
+  // checklist / tabs
+  // ---------------------------------------------------------------------
+
+  function stLabel(m) {
+    return m || "—";
   }
 
   function updateChecklist() {
@@ -261,8 +344,94 @@
     }
   }
 
-  function stLabel(m) {
-    return m || "—";
+  function onDraftChanged(fwId) {
+    updateChecklist();
+    refreshPrompt(fwId);
+    setStatus("");
+  }
+
+  function syncMatchButtons(panel, match) {
+    panel.querySelectorAll(".match-btn").forEach((b) => {
+      b.setAttribute("aria-pressed", b.dataset.match === match ? "true" : "false");
+    });
+  }
+
+  function matchOptions(selected) {
+    const opts = ["", ...MATCHES];
+    return opts
+      .map(
+        (m) =>
+          `<option value="${m}"${m === (selected || "") ? " selected" : ""}>${
+            m || "match…"
+          }</option>`
+      )
+      .join("");
+  }
+
+  function commonHead(fw) {
+    const openLink = fw.url
+      ? `<a href="${fw.url}" target="_blank" rel="noopener">Open model ↗</a>`
+      : "";
+    return `<h3>${escapeHtml(fw.label)} <span class="muted">(${escapeHtml(
+      fw.priority || ""
+    )})</span></h3>
+      <p class="fw-desc">${openLink}</p>
+      <div class="match-row" data-match-group></div>`;
+  }
+
+  function promptBoxHtml() {
+    return `<details class="llm-box">
+      <summary>LLM assist prompt</summary>
+      <pre class="llm-prompt"></pre>
+      <button type="button" class="secondary copy-prompt">Copy prompt</button>
+    </details>`;
+  }
+
+  function panelHtml(fw) {
+    if (fw.id === "esco") {
+      const notes = catalogFor("esco").notes;
+      return `${commonHead(fw)}
+        <p class="fw-desc-sub muted">Add up to ${MAX_ITEMS()} concepts. Prefer verified ESCO URIs; use <em>none</em> if the seed list is a poor fit.${
+          notes ? " " + escapeHtml(notes) : ""
+        }</p>
+        <div class="item-list" data-item-list></div>
+        <label class="field">Add from catalog
+          <select data-add-select><option value="">+ Select a seed concept…</option></select>
+        </label>
+        <label class="field wide">Framework notes<textarea data-f="notes" rows="2" placeholder="Optional"></textarea></label>
+        ${promptBoxHtml()}`;
+    }
+    if (fw.id === "onet") {
+      return `${commonHead(fw)}
+        <p class="fw-desc-sub muted">O*NET is multi-facet: accept Task / DWA / Work activity / Knowledge
+          suggestions below, or add elements manually (Abilities optional). Overall match can be
+          <em>none</em> if nothing fits.</p>
+        <div class="grid-2">
+          <label class="field">SOC / Occupation<select data-f="soc_code"></select></label>
+          <label class="field">Page URL<input data-f="url" type="url" placeholder="https://www.onetonline.org/…" /></label>
+        </div>
+        <div class="onet-matrix" data-onet-matrix></div>
+        <div id="onet-suggestions" class="onet-suggestions"></div>
+        <label class="field">Add element from catalog
+          <select data-add-select><option value="">+ Select an element…</option></select>
+        </label>
+        <div id="onet-accepted" class="onet-accepted" data-item-list></div>
+        <label class="field wide">Framework notes<textarea data-f="notes" rows="2" placeholder="Optional"></textarea></label>
+        ${promptBoxHtml()}`;
+    }
+    const tierHint =
+      fw.id === "advanced_manufacturing"
+        ? " Tier 4 industry-technical is especially useful."
+        : "";
+    return `${commonHead(fw)}
+      <p class="fw-desc-sub muted">Add up to ${MAX_ITEMS()} related blocks; copy the block URL from the address bar.${tierHint}</p>
+      <div class="item-list" data-item-list></div>
+      <label class="field">Add from catalog
+        <select data-add-select><option value="">+ Select a block…</option></select>
+      </label>
+      <datalist id="datalist-${fw.id}"></datalist>
+      <label class="field wide">Framework notes<textarea data-f="notes" rows="2" placeholder="Optional"></textarea></label>
+      ${promptBoxHtml()}`;
   }
 
   function buildTabs() {
@@ -294,55 +463,6 @@
     }
   }
 
-  function panelHtml(fw) {
-    const openLink = fw.url
-      ? `<a href="${fw.url}" target="_blank" rel="noopener">Open model ↗</a>`
-      : "";
-    if (fw.id === "esco") {
-      return `
-        <h3>${fw.label} <span class="muted">(${fw.priority})</span></h3>
-        <p class="fw-desc">${openLink} — paste concept URL if found.</p>
-        <div class="match-row" data-match-group></div>
-        <div class="grid-2">
-          <label class="field">ESCO URI<input data-f="uri" type="url" placeholder="https://esco.ec.europa.eu/…" /></label>
-          <label class="field">Preferred label<input data-f="preferred_label" type="text" /></label>
-          <label class="field">Broader label<input data-f="broader_label" type="text" /></label>
-          <label class="field">Framework notes<input data-f="notes" type="text" /></label>
-        </div>`;
-    }
-    if (fw.id === "onet") {
-      return `
-        <h3>${fw.label} <span class="muted">(${fw.priority})</span></h3>
-        <p class="fw-desc">${openLink} — O*NET is multi-facet: accept Task / DWA /
-          Work activity / Knowledge suggestions below (Abilities optional).
-          Overall match can be <em>none</em> if nothing fits.</p>
-        <div class="match-row" data-match-group></div>
-        <div id="onet-suggestions" class="onet-suggestions"></div>
-        <div class="grid-2">
-          <label class="field">SOC code<input data-f="soc_code" type="text" placeholder="17-3027.00" /></label>
-          <label class="field">Occupation title<input data-f="occupation_title" type="text" /></label>
-          <label class="field">Primary element (optional summary)<input data-f="element_name" type="text" /></label>
-          <label class="field">Page URL<input data-f="url" type="url" /></label>
-          <label class="field wide">Framework notes<input data-f="notes" type="text" /></label>
-        </div>
-        <div id="onet-accepted" class="onet-accepted"></div>`;
-    }
-    const tierHint =
-      fw.id === "advanced_manufacturing"
-        ? " Tier 4 industry-technical is especially useful."
-        : "";
-    return `
-      <h3>${fw.label} <span class="muted">(${fw.priority})</span></h3>
-      <p class="fw-desc">${openLink} — copy the block URL from the address bar.${tierHint}</p>
-      <div class="match-row" data-match-group></div>
-      <div class="grid-2">
-        <label class="field">Tier (1–5)<input data-f="tier" type="text" inputmode="numeric" maxlength="1" placeholder="e.g. 4" /></label>
-        <label class="field">Competency / block name<input data-f="competency_name" type="text" /></label>
-        <label class="field wide">Block URL<input data-f="block_url" type="url" placeholder="https://www.careeronestop.org/…" /></label>
-        <label class="field wide">Framework notes<input data-f="notes" type="text" /></label>
-      </div>`;
-  }
-
   function wirePanel(panel, fw) {
     const group = panel.querySelector("[data-match-group]");
     for (const m of MATCHES) {
@@ -354,56 +474,248 @@
       btn.addEventListener("click", () => {
         draft.frameworks[fw.id].match = m;
         syncMatchButtons(panel, m);
-        updateChecklist();
-        setStatus("");
+        onDraftChanged(fw.id);
       });
       group.appendChild(btn);
     }
+
     panel.querySelectorAll("[data-f]").forEach((inp) => {
-      inp.addEventListener("input", () => {
-        const key = inp.getAttribute("data-f");
+      const key = inp.getAttribute("data-f");
+      const evt = inp.tagName === "SELECT" ? "change" : "input";
+      inp.addEventListener(evt, () => {
         draft.frameworks[fw.id][key] = inp.value;
+        if (fw.id === "onet" && key === "soc_code") {
+          syncOnetOccupationTitle();
+          renderOnetPanel(panel);
+        }
+        onDraftChanged(fw.id);
       });
     });
+
+    if (fw.id === "onet") {
+      wireOnetPanel(panel);
+    } else {
+      renderDatalist(panel, fw);
+      renderCatalogAddSelect(panel, fw);
+      const addSel = panel.querySelector("[data-add-select]");
+      addSel.addEventListener("change", () => {
+        const idx = addSel.value;
+        addSel.value = "";
+        if (idx === "") return;
+        const items = catalogFor(fw.id).items || [];
+        const it = items[Number(idx)];
+        if (!it) return;
+        const list = draft.frameworks[fw.id].items;
+        if (list.length >= MAX_ITEMS()) {
+          setStatus(`Max ${MAX_ITEMS()} items reached for ${fw.label}.`, "err");
+          return;
+        }
+        if (fw.id === "esco") {
+          list.push({
+            uri: it.uri || "",
+            preferred_label: it.preferred_label || "",
+            broader_label: it.broader_label || "",
+            skill_type: it.skill_type || "skill",
+            match: "",
+          });
+        } else {
+          list.push({
+            ref: it.ref || "",
+            title: it.title || "",
+            tier: it.tier != null ? String(it.tier) : "",
+            url: it.url || "",
+            match: "",
+          });
+        }
+        renderItemList(panel, fw);
+        onDraftChanged(fw.id);
+      });
+    }
+
+    const copyBtn = panel.querySelector(".copy-prompt");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => copyPrompt(panel));
+    }
   }
 
-  function syncMatchButtons(panel, match) {
-    panel.querySelectorAll(".match-btn").forEach((b) => {
-      b.setAttribute("aria-pressed", b.dataset.match === match ? "true" : "false");
+  function renderDatalist(panel, fw) {
+    const dl = panel.querySelector(`#datalist-${fw.id}`);
+    if (!dl) return;
+    const items = catalogFor(fw.id).items || [];
+    dl.innerHTML = items
+      .map((it) => `<option value="${escapeHtml(it.ref)}">${escapeHtml(it.title)}</option>`)
+      .join("");
+  }
+
+  function catalogOptionLabel(fwId, it) {
+    if (fwId === "esco") {
+      return `${it.preferred_label || ""}${it.broader_label ? " — " + it.broader_label : ""}`;
+    }
+    return `${it.ref || ""} — ${it.title || ""}${it.tier != null ? ` (T${it.tier})` : ""}`;
+  }
+
+  function renderCatalogAddSelect(panel, fw) {
+    const sel = panel.querySelector("[data-add-select]");
+    if (!sel) return;
+    const items = catalogFor(fw.id).items || [];
+    const placeholder =
+      fw.id === "esco" ? "+ Select a seed concept…" : "+ Select a block…";
+    sel.innerHTML =
+      `<option value="">${placeholder}</option>` +
+      items
+        .map((it, i) => `<option value="${i}">${escapeHtml(catalogOptionLabel(fw.id, it))}</option>`)
+        .join("");
+  }
+
+  // ---------------------------------------------------------------------
+  // eng / am / esco item list rendering
+  // ---------------------------------------------------------------------
+
+  function renderItemList(panel, fw) {
+    const box = panel.querySelector("[data-item-list]");
+    if (!box || !draft.frameworks || !draft.frameworks[fw.id]) return;
+    const list = draft.frameworks[fw.id].items || [];
+    box.innerHTML = "";
+    list.forEach((item, idx) => {
+      const row = document.createElement("div");
+      row.className = "item-row";
+      row.dataset.idx = String(idx);
+      if (fw.id === "esco") {
+        row.innerHTML = `
+          <input type="url" data-item-f="uri" placeholder="ESCO URI" value="${escapeHtml(item.uri)}">
+          <input type="text" data-item-f="preferred_label" placeholder="Preferred label" value="${escapeHtml(item.preferred_label)}">
+          <input type="text" data-item-f="broader_label" placeholder="Broader label" value="${escapeHtml(item.broader_label)}">
+          <select data-item-f="skill_type"><option value="skill">skill</option><option value="knowledge">knowledge</option></select>
+          <select data-item-f="match">${matchOptions(item.match)}</select>
+          <button type="button" class="secondary remove-item" title="Remove">✕</button>`;
+      } else {
+        row.innerHTML = `
+          <input list="datalist-${fw.id}" data-item-f="ref" placeholder="Ref" value="${escapeHtml(item.ref)}">
+          <input type="text" data-item-f="title" placeholder="Title" value="${escapeHtml(item.title)}">
+          <select data-item-f="match">${matchOptions(item.match)}</select>
+          <input type="url" data-item-f="url" placeholder="Block URL" value="${escapeHtml(item.url)}">
+          <button type="button" class="secondary remove-item" title="Remove">✕</button>`;
+      }
+      box.appendChild(row);
+
+      row.querySelectorAll("[data-item-f]").forEach((inp) => {
+        const key = inp.getAttribute("data-item-f");
+        if (inp.tagName === "SELECT") {
+          inp.value = item[key] || (key === "skill_type" ? "skill" : "");
+        }
+        const evt = inp.tagName === "SELECT" ? "change" : "input";
+        inp.addEventListener(evt, () => {
+          item[key] = inp.value;
+          onDraftChanged(fw.id);
+        });
+      });
+      row.querySelector(".remove-item").addEventListener("click", () => {
+        list.splice(idx, 1);
+        renderItemList(panel, fw);
+        onDraftChanged(fw.id);
+      });
+    });
+    const addSel = panel.querySelector("[data-add-select]");
+    if (addSel) addSel.disabled = list.length >= MAX_ITEMS();
+  }
+
+  // ---------------------------------------------------------------------
+  // O*NET panel
+  // ---------------------------------------------------------------------
+
+  function findOnetOccupation(soc) {
+    const occs = catalogFor("onet").occupations || [];
+    return occs.find((o) => o.soc_code === soc);
+  }
+
+  function syncOnetOccupationTitle() {
+    const onet = draft.frameworks.onet;
+    const occ = findOnetOccupation(onet.soc_code);
+    if (occ) {
+      onet.occupation_title = occ.title || "";
+      if (!onet.url) onet.url = occ.url || "";
+    }
+  }
+
+  function wireOnetPanel(panel) {
+    const socSel = panel.querySelector('[data-f="soc_code"]');
+    const occs = catalogFor("onet").occupations || [];
+    socSel.innerHTML = occs
+      .map(
+        (o) =>
+          `<option value="${escapeHtml(o.soc_code)}">${escapeHtml(o.soc_code)} — ${escapeHtml(o.title)}</option>`
+      )
+      .join("");
+
+    const addSel = panel.querySelector("[data-add-select]");
+    addSel.addEventListener("change", () => {
+      const idx = addSel.value;
+      addSel.value = "";
+      if (idx === "") return;
+      const pool = panel._onetAddPool || [];
+      const e = pool[Number(idx)];
+      if (!e) return;
+      const onet = draft.frameworks.onet;
+      if (!onet.elements) onet.elements = [];
+      if (onet.elements.length >= MAX_ITEMS()) {
+        setStatus(`Max ${MAX_ITEMS()} elements reached for O*NET.`, "err");
+        return;
+      }
+      const occ = findOnetOccupation(onet.soc_code);
+      onet.elements.push(normalizeOnetElement(e, { url: (occ && occ.url) || "" }));
+      recomputeOnetDerived(onet);
+      renderOnetPanel(panel);
+      onDraftChanged("onet");
     });
   }
 
-  function facetKey(f) {
-    return `${f.facet}|${f.element_id || ""}|${(f.element_name || "").toLowerCase()}`;
-  }
-
-  function acceptedKeys() {
-    const elsAccepted = (draft.frameworks.onet && draft.frameworks.onet.elements) || [];
-    return new Set(elsAccepted.map(facetKey));
-  }
-
-  function renderOnetSuggestions() {
-    const box = document.getElementById("onet-suggestions");
-    const acc = document.getElementById("onet-accepted");
-    if (!box || !acc || !current) return;
-    const sug = current.onet_suggestions || {};
-    const occ = sug.occupation || {};
-    const facets = sug.facets || [];
+  function renderOnetMatrix(panel) {
+    const box = panel.querySelector("[data-onet-matrix]");
+    if (!box) return;
     const onet = draft.frameworks.onet;
+    box.innerHTML = ONET_CATEGORIES.map((c) => {
+      const present = onet.categories_present && onet.categories_present[c];
+      const maxImp = onet.max_importance_by_category ? onet.max_importance_by_category[c] : null;
+      const suffix = present ? (maxImp != null ? ` · ${maxImp}` : " · ✓") : " · —";
+      return `<span class="pill facet-${escapeHtml(c)}" ${present ? "" : 'style="opacity:.45"'}>${escapeHtml(
+        c
+      )}${suffix}</span>`;
+    }).join(" ");
+  }
 
-    // Prefill occupation once if empty
-    if (occ.soc_code && !onet.soc_code) {
-      onet.soc_code = occ.soc_code;
-      const inp = document.querySelector('#panel-onet [data-f="soc_code"]');
-      if (inp) inp.value = occ.soc_code;
-    }
-    if (occ.title && !onet.occupation_title) {
-      onet.occupation_title = occ.title;
-      const inp = document.querySelector('#panel-onet [data-f="occupation_title"]');
-      if (inp) inp.value = occ.title;
-    }
+  function onetAcceptedKeys() {
+    const elements = draft.frameworks.onet.elements || [];
+    return new Set(elements.map((e) => `${e.category}|${e.element_id}`));
+  }
 
-    const have = acceptedKeys();
+  function acceptFacet(panel, f) {
+    const onet = draft.frameworks.onet;
+    if (!onet.elements) onet.elements = [];
+    const key = `${f.facet}|${f.element_id || ""}`;
+    if (onetAcceptedKeys().has(key)) return;
+    if (onet.elements.length >= MAX_ITEMS()) {
+      setStatus(`Max ${MAX_ITEMS()} elements reached for O*NET.`, "err");
+      return;
+    }
+    const norm = normalizeOnetElement(f, {});
+    if (!norm.match) norm.match = "close";
+    onet.elements.push(norm);
+    if (!onet.match || onet.match === "none") {
+      onet.match = norm.match || "close";
+      syncMatchButtons(panel, onet.match);
+    }
+    recomputeOnetDerived(onet);
+    renderOnetPanel(panel);
+    onDraftChanged("onet");
+    setStatus(`Accepted ${norm.category}: ${norm.element_name}`, "ok");
+  }
+
+  function renderOnetSuggestions(panel) {
+    const box = document.getElementById("onet-suggestions");
+    if (!box || !current) return;
+    const sug = current.onet_suggestions || {};
+    const facets = sug.facets || [];
+    const have = onetAcceptedKeys();
     box.innerHTML = "";
     if (!facets.length) {
       box.innerHTML =
@@ -414,15 +726,16 @@
       head.textContent = `Suggestions (${sug.method || "rules"}) — click Accept to keep:`;
       box.appendChild(head);
       for (const f of facets) {
+        const key = `${f.facet}|${f.element_id || ""}`;
+        const taken = have.has(key);
         const card = document.createElement("div");
         card.className = "onet-card";
-        const taken = have.has(facetKey(f));
         card.innerHTML = `
           <div class="onet-card-top">
-            <span class="pill facet-${f.facet}">${f.facet}</span>
-            ${f.element_id ? `<code>${f.element_id}</code>` : ""}
-            ${f.importance != null ? `<span class="muted">imp. ${f.importance}</span>` : ""}
-            <span class="muted">${f.match || ""}</span>
+            <span class="pill facet-${escapeHtml(f.facet || "")}">${escapeHtml(f.facet || "")}</span>
+            ${f.element_id ? `<code>${escapeHtml(f.element_id)}</code>` : ""}
+            ${f.importance != null ? `<span class="muted">imp. ${escapeHtml(String(f.importance))}</span>` : ""}
+            <span class="muted">${escapeHtml(f.match || "")}</span>
           </div>
           <div class="onet-card-name">${escapeHtml(f.element_name || "")}</div>
           <p class="onet-card-why muted">${escapeHtml(f.rationale || "")}</p>
@@ -430,87 +743,173 @@
             <button type="button" class="secondary accept-facet" ${taken ? "disabled" : ""}>
               ${taken ? "Accepted" : "Accept"}
             </button>
-            ${
-              f.url
-                ? `<a href="${f.url}" target="_blank" rel="noopener">Open ↗</a>`
-                : ""
-            }
+            ${f.url ? `<a href="${f.url}" target="_blank" rel="noopener">Open ↗</a>` : ""}
           </div>`;
-        const btn = card.querySelector(".accept-facet");
-        btn.addEventListener("click", () => acceptFacet(f));
+        card.querySelector(".accept-facet").addEventListener("click", () => acceptFacet(panel, f));
         box.appendChild(card);
       }
     }
-    renderAccepted();
+    renderOnetAccepted(panel);
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function acceptFacet(f) {
+  function renderOnetAccepted(panel) {
+    const box = document.getElementById("onet-accepted");
+    if (!box) return;
     const onet = draft.frameworks.onet;
-    if (!onet.elements) onet.elements = [];
-    if (acceptedKeys().has(facetKey(f))) return;
-    onet.elements.push({ ...f, accepted: true });
-    if (!onet.match || onet.match === "none") {
-      // Promote overall match from best accepted facet match
-      onet.match = f.match || "close";
-      const panel = document.getElementById("panel-onet");
-      if (panel) syncMatchButtons(panel, onet.match);
-    }
-    if (!onet.element_name) {
-      onet.element_name = f.element_name || "";
-      const inp = document.querySelector('#panel-onet [data-f="element_name"]');
-      if (inp) inp.value = onet.element_name;
-    }
-    if (f.url && !onet.url) {
-      onet.url = f.url;
-      const inp = document.querySelector('#panel-onet [data-f="url"]');
-      if (inp) inp.value = onet.url;
-    }
-    updateChecklist();
-    renderOnetSuggestions();
-    setStatus(`Accepted ${f.facet}: ${f.element_name}`, "ok");
-  }
-
-  function removeAccepted(idx) {
-    const onet = draft.frameworks.onet;
-    onet.elements.splice(idx, 1);
-    renderOnetSuggestions();
-    updateChecklist();
-  }
-
-  function renderAccepted() {
-    const acc = document.getElementById("onet-accepted");
-    if (!acc) return;
-    const elsList = (draft.frameworks.onet && draft.frameworks.onet.elements) || [];
-    if (!elsList.length) {
-      acc.innerHTML = "";
-      return;
-    }
-    acc.innerHTML = "<strong>Accepted facets</strong>";
-    const ul = document.createElement("ul");
-    ul.className = "onet-accepted-list";
-    elsList.forEach((f, idx) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span class="pill facet-${f.facet}">${f.facet}</span> ${escapeHtml(
-        f.element_name || ""
-      )} `;
-      const rm = document.createElement("button");
-      rm.type = "button";
-      rm.className = "secondary";
-      rm.textContent = "Remove";
-      rm.addEventListener("click", () => removeAccepted(idx));
-      li.appendChild(rm);
-      ul.appendChild(li);
+    const list = onet.elements || [];
+    box.innerHTML = "";
+    const head = document.createElement("p");
+    head.className = "onet-sug-head";
+    head.textContent = list.length ? "Accepted elements" : "No elements accepted yet.";
+    box.appendChild(head);
+    list.forEach((e, idx) => {
+      const row = document.createElement("div");
+      row.className = "item-row onet-item-row";
+      row.innerHTML = `
+        <span class="pill facet-${escapeHtml(e.category)}">${escapeHtml(e.category)}</span>
+        <span class="onet-item-name">${escapeHtml(e.element_name)}${
+          e.importance != null ? ` <span class="muted">(imp ${escapeHtml(String(e.importance))})</span>` : ""
+        }</span>
+        <select data-item-f="match">${matchOptions(e.match)}</select>
+        ${e.url ? `<a href="${e.url}" target="_blank" rel="noopener">Open ↗</a>` : ""}
+        <button type="button" class="secondary remove-item" title="Remove">✕</button>`;
+      box.appendChild(row);
+      row.querySelector('[data-item-f="match"]').addEventListener("change", (ev) => {
+        e.match = ev.target.value;
+        onDraftChanged("onet");
+      });
+      row.querySelector(".remove-item").addEventListener("click", () => {
+        list.splice(idx, 1);
+        recomputeOnetDerived(onet);
+        renderOnetPanel(panel);
+        onDraftChanged("onet");
+      });
     });
-    acc.appendChild(ul);
   }
+
+  function renderOnetAddSelect(panel) {
+    const sel = panel.querySelector("[data-add-select]");
+    if (!sel) return;
+    const onet = draft.frameworks.onet;
+    const occ = findOnetOccupation(onet.soc_code);
+    const elements = (occ && occ.elements) || [];
+    const have = onetAcceptedKeys();
+    const pool = elements.filter((e) => !have.has(`${e.category}|${e.id}`));
+    panel._onetAddPool = pool;
+    sel.innerHTML =
+      '<option value="">+ Select an element…</option>' +
+      pool
+        .map(
+          (e, i) =>
+            `<option value="${i}">[${escapeHtml(e.category)}] ${escapeHtml(e.name)}${
+              e.importance != null ? ` (imp ${escapeHtml(String(e.importance))})` : ""
+            }</option>`
+        )
+        .join("");
+    sel.disabled = (onet.elements || []).length >= MAX_ITEMS() || pool.length === 0;
+  }
+
+  function renderOnetPanel(panel) {
+    if (!draft.frameworks || !draft.frameworks.onet) return;
+    const onet = draft.frameworks.onet;
+    const socSel = panel.querySelector('[data-f="soc_code"]');
+    if (socSel) {
+      if (!onet.soc_code) {
+        const sugSoc =
+          current &&
+          current.onet_suggestions &&
+          current.onet_suggestions.occupation &&
+          current.onet_suggestions.occupation.soc_code;
+        onet.soc_code =
+          sugSoc ||
+          GROUNDING_CONFIG.defaultOnetSoc ||
+          catalogFor("onet").default_soc ||
+          (socSel.options[0] && socSel.options[0].value) ||
+          "";
+      }
+      socSel.value = onet.soc_code;
+      if (socSel.value !== onet.soc_code && socSel.options.length) {
+        onet.soc_code = socSel.value;
+      }
+    }
+    syncOnetOccupationTitle();
+    const urlInp = panel.querySelector('[data-f="url"]');
+    if (urlInp) urlInp.value = onet.url || "";
+    renderOnetMatrix(panel);
+    renderOnetSuggestions(panel);
+    renderOnetAddSelect(panel);
+  }
+
+  // ---------------------------------------------------------------------
+  // LLM prompt panel
+  // ---------------------------------------------------------------------
+
+  function refreshPrompt(fwId) {
+    if (!current || !window.GROUNDING_PROMPTS) return;
+    const panel = document.getElementById(`panel-${fwId}`);
+    if (!panel) return;
+    const pre = panel.querySelector(".llm-prompt");
+    if (!pre) return;
+    let catalogSlice = [];
+    let cueSuggestions;
+    if (fwId === "onet") {
+      const occ = findOnetOccupation(draft.frameworks.onet.soc_code);
+      catalogSlice = (occ && occ.elements) || [];
+      cueSuggestions = current.onet_suggestions;
+    } else {
+      catalogSlice = catalogFor(fwId).items || [];
+    }
+    try {
+      pre.textContent = window.GROUNDING_PROMPTS.build({
+        frameworkId: fwId,
+        atom: current,
+        catalogSlice,
+        cueSuggestions,
+      });
+    } catch (err) {
+      pre.textContent = `Prompt build failed: ${err.message}`;
+    }
+  }
+
+  function refreshAllPrompts() {
+    for (const fw of bank.frameworks) refreshPrompt(fw.id);
+  }
+
+  function copyPrompt(panel) {
+    const pre = panel.querySelector(".llm-prompt");
+    if (!pre) return;
+    const text = pre.textContent || "";
+    const done = () => setStatus("Prompt copied to clipboard.", "ok");
+    const fail = (err) =>
+      setStatus(`Copy failed: ${err && err.message ? err.message : "unknown error"}`, "err");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done, fail));
+    } else {
+      fallbackCopy(text, done, fail);
+    }
+  }
+
+  function fallbackCopy(text, done, fail) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (ok) done();
+      else fail(new Error("execCommand copy failed"));
+    } catch (err) {
+      fail(err);
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // atom navigation
+  // ---------------------------------------------------------------------
 
   function showFw(id) {
     activeFw = id;
@@ -520,7 +919,11 @@
     els.fwPanels.querySelectorAll(".fw-panel").forEach((p) => {
       p.hidden = p.dataset.fw !== id;
     });
-    if (id === "onet") renderOnetSuggestions();
+    if (id === "onet") {
+      const panel = document.getElementById("panel-onet");
+      if (panel) renderOnetPanel(panel);
+    }
+    refreshPrompt(id);
   }
 
   function paintDraftToForm() {
@@ -528,15 +931,19 @@
     els.globalNotes.value = draft.notes || "";
     for (const fw of bank.frameworks) {
       const panel = document.getElementById(`panel-${fw.id}`);
+      if (!panel) continue;
       const st = draft.frameworks[fw.id] || emptyFwState(fw);
       syncMatchButtons(panel, st.match || "");
-      panel.querySelectorAll("[data-f]").forEach((inp) => {
-        const key = inp.getAttribute("data-f");
-        inp.value = st[key] || "";
-      });
+      const notes = panel.querySelector('[data-f="notes"]');
+      if (notes) notes.value = st.notes || "";
+      if (fw.id === "onet") {
+        renderOnetPanel(panel);
+      } else {
+        renderItemList(panel, fw);
+      }
     }
     updateChecklist();
-    renderOnetSuggestions();
+    refreshAllPrompts();
   }
 
   function showAtom(atom) {
@@ -584,11 +991,17 @@
     return true;
   }
 
+  // ---------------------------------------------------------------------
+  // save / CSV
+  // ---------------------------------------------------------------------
+
   function packRow() {
     const eng = draft.frameworks.engineering || {};
     const am = draft.frameworks.advanced_manufacturing || {};
     const esco = draft.frameworks.esco || {};
     const onet = draft.frameworks.onet || {};
+    const engFirst = (eng.items && eng.items[0]) || {};
+    const amFirst = (am.items && am.items[0]) || {};
     const today = new Date().toISOString().slice(0, 10);
     return {
       timestamp: new Date().toISOString(),
@@ -599,25 +1012,28 @@
       source_competency_id: current.source_competency_id || "",
       source_competency_title: current.source_competency_title || "",
       eng_match: eng.match || "",
-      eng_tier: eng.tier || "",
-      eng_competency_name: eng.competency_name || "",
-      eng_block_url: eng.block_url || "",
+      eng_tier: engFirst.tier || "",
+      eng_competency_name: engFirst.title || "",
+      eng_block_url: engFirst.url || "",
       eng_notes: eng.notes || "",
+      eng_items_json: JSON.stringify(eng.items || []),
       am_match: am.match || "",
-      am_tier: am.tier || "",
-      am_competency_name: am.competency_name || "",
-      am_block_url: am.block_url || "",
+      am_tier: amFirst.tier || "",
+      am_competency_name: amFirst.title || "",
+      am_block_url: amFirst.url || "",
       am_notes: am.notes || "",
-      esco_uri: esco.uri || "",
-      esco_preferred_label: esco.preferred_label || "",
-      esco_broader_label: esco.broader_label || "",
+      am_items_json: JSON.stringify(am.items || []),
       esco_match: esco.match || "",
+      esco_notes: esco.notes || "",
+      esco_items_json: JSON.stringify(esco.items || []),
+      onet_match: onet.match || "",
       onet_soc_code: onet.soc_code || "",
       onet_occupation_title: onet.occupation_title || "",
-      onet_element_name: onet.element_name || "",
       onet_url: onet.url || "",
-      onet_match: onet.match || "",
+      onet_notes: onet.notes || "",
       onet_elements_json: JSON.stringify(onet.elements || []),
+      onet_categories_json: JSON.stringify(onet.categories_present || {}),
+      onet_max_importance_json: JSON.stringify(onet.max_importance_by_category || {}),
       rater_id: raterId,
       date: today,
       confidence_1to3: draft.confidence_1to3 || els.confidence.value,
@@ -681,21 +1097,24 @@
       "eng_competency_name",
       "eng_block_url",
       "eng_notes",
+      "eng_items_json",
       "am_match",
       "am_tier",
       "am_competency_name",
       "am_block_url",
       "am_notes",
-      "esco_uri",
-      "esco_preferred_label",
-      "esco_broader_label",
+      "am_items_json",
       "esco_match",
+      "esco_notes",
+      "esco_items_json",
+      "onet_match",
       "onet_soc_code",
       "onet_occupation_title",
-      "onet_element_name",
       "onet_url",
-      "onet_match",
+      "onet_notes",
       "onet_elements_json",
+      "onet_categories_json",
+      "onet_max_importance_json",
       "rater_id",
       "date",
       "confidence_1to3",
@@ -715,6 +1134,10 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
+
+  // ---------------------------------------------------------------------
+  // session / init
+  // ---------------------------------------------------------------------
 
   function startSession() {
     raterId = (els.raterId.value || "").trim().toLowerCase();
@@ -738,6 +1161,45 @@
         nextAtom();
         setStatus(`Coverage offline (${err.message}); using local only.`, "err");
       });
+  }
+
+  function loadAtomsBank() {
+    return fetch(GROUNDING_CONFIG.atomsUrl)
+      .then((r) => {
+        if (!r.ok) throw new Error(`atoms ${r.status}`);
+        return r.json();
+      })
+      .then((data) => {
+        bank = {
+          atoms: data.atoms || [],
+          frameworks: data.frameworks || DEFAULT_FRAMEWORKS,
+          round_id: data.round_id,
+          framework_id: data.framework_id,
+        };
+        if (data.round_id) {
+          GROUNDING_CONFIG.roundId = data.round_id;
+        }
+      });
+  }
+
+  function loadCatalogs() {
+    const entries = Object.entries(GROUNDING_CONFIG.catalogs || {});
+    return Promise.all(
+      entries.map(([id, url]) =>
+        fetch(url)
+          .then((r) => {
+            if (!r.ok) throw new Error(`${id} ${r.status}`);
+            return r.json();
+          })
+          .then((data) => {
+            catalogs[id] = data;
+          })
+          .catch((err) => {
+            catalogs[id] = { items: [], occupations: [] };
+            setStatus(`Catalog "${id}" failed to load: ${err.message}`, "err");
+          })
+      )
+    );
   }
 
   function init() {
@@ -781,23 +1243,10 @@
       }
     });
 
-    fetch(GROUNDING_CONFIG.atomsUrl)
-      .then((r) => {
-        if (!r.ok) throw new Error(`atoms ${r.status}`);
-        return r.json();
-      })
-      .then((data) => {
-        bank = {
-          atoms: data.atoms || [],
-          frameworks: data.frameworks || DEFAULT_FRAMEWORKS,
-          round_id: data.round_id,
-          framework_id: data.framework_id,
-        };
-        if (data.round_id) {
-          GROUNDING_CONFIG.roundId = data.round_id;
-        }
+    Promise.all([loadAtomsBank(), loadCatalogs()])
+      .then(() => {
         buildTabs();
-        showFw("engineering");
+        showFw(activeFw || "engineering");
         setStatus(`Loaded ${bank.atoms.length} atoms.`, "ok");
       })
       .catch((err) => {

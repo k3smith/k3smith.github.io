@@ -1,0 +1,23 @@
+{
+  "id": "advanced_manufacturing",
+  "label": "Advanced Manufacturing (CMC)",
+  "source_url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx",
+  "max_items": 3,
+  "tier_emphasis": 4,
+  "items": [
+    {"ref": "4.1", "tier": 4, "title": "Manufacturing Process Design and Development", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.2", "tier": 4, "title": "Production", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.3", "tier": 4, "title": "Maintenance, Installation, and Repair", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.4", "tier": 4, "title": "Supply Chain Logistics", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.5", "tier": 4, "title": "Quality Assurance and Continuous Improvement", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.6", "tier": 4, "title": "Health, Safety, Security, and Environment", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "4.7", "tier": 4, "title": "Sustainable and Green Manufacturing", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "3.1", "tier": 3, "title": "Teamwork", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "3.4", "tier": 3, "title": "Problem Solving and Decision Making", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "3.5", "tier": 3, "title": "Working with Tools and Technology", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "3.6", "tier": 3, "title": "Checking, Examining and Recording", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "2.3", "tier": 2, "title": "Mathematics", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "2.4", "tier": 2, "title": "Science", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"},
+    {"ref": "2.5", "tier": 2, "title": "Communication", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"}
+  ]
+}

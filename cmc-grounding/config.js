@@ -4,8 +4,14 @@ window.GROUNDING_CONFIG = {
   roundTitle: "CMC grounding pilot",
   atomsUrl: "atoms/cmc_grounding_pilot.json",
   sheetWebAppUrl: "",
-  /** Atom stops being offered once this many distinct raters finished it. */
   targetRatings: 1,
-  /** Frameworks that must have a match before Save. */
   requiredFrameworks: ["engineering", "advanced_manufacturing"],
+  maxItemsPerFramework: 3,
+  catalogs: {
+    engineering: "catalogs/engineering.json",
+    advanced_manufacturing: "catalogs/advanced_manufacturing.json",
+    onet: "catalogs/onet.json",
+    esco: "catalogs/esco.json",
+  },
+  defaultOnetSoc: "17-3027.00",
 };

@@ -1,0 +1,30 @@
+{
+  "id": "engineering",
+  "label": "Engineering (CMC)",
+  "source_url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx",
+  "max_items": 3,
+  "items": [
+    {"ref": "4.1", "tier": 4, "title": "Foundations of Engineering", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"},
+    {"ref": "4.2", "tier": 4, "title": "Design", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"},
+    {"ref": "4.3", "tier": 4, "title": "Manufacturing and Construction", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2980&eng=Y"},
+    {"ref": "4.4", "tier": 4, "title": "Operations and Maintenance", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2981&eng=Y"},
+    {"ref": "4.5", "tier": 4, "title": "Professional Ethics", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"},
+    {"ref": "4.6", "tier": 4, "title": "Business, Legal and Public Policy", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"},
+    {"ref": "4.7", "tier": 4, "title": "Sustainability and Societal and Environmental Impact", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"},
+    {"ref": "4.8", "tier": 4, "title": "Engineering Economics", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2985&eng=Y"},
+    {"ref": "4.9", "tier": 4, "title": "Quality Control and Quality Assurance", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2986&eng=Y"},
+    {"ref": "4.10", "tier": 4, "title": "Safety, Health, Security and Environment", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"},
+    {"ref": "3.1", "tier": 3, "title": "Teamwork", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"},
+    {"ref": "3.2", "tier": 3, "title": "Customer Focus", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"},
+    {"ref": "3.3", "tier": 3, "title": "Planning and Organizing", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"},
+    {"ref": "3.4", "tier": 3, "title": "Creative Thinking", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2971&eng=Y"},
+    {"ref": "3.5", "tier": 3, "title": "Problem Solving and Decision Making", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"},
+    {"ref": "3.6", "tier": 3, "title": "Working with Tools and Technology", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2973&eng=Y"},
+    {"ref": "3.7", "tier": 3, "title": "Scheduling and Coordinating", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2975&eng=Y"},
+    {"ref": "3.9", "tier": 3, "title": "Checking, Examining, and Recording", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2976&eng=Y"},
+    {"ref": "2.1", "tier": 2, "title": "Reading", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
+    {"ref": "2.3", "tier": 2, "title": "Mathematics", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
+    {"ref": "2.4", "tier": 2, "title": "Science and Technology", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
+    {"ref": "2.7", "tier": 2, "title": "Critical and Analytical Thinking", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"}
+  ]
+}
