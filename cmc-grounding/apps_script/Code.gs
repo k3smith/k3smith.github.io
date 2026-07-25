@@ -45,6 +45,7 @@ var HEADER = [
   "onet_element_name",
   "onet_url",
   "onet_match",
+  "onet_elements_json",
   "rater_id",
   "date",
   "confidence_1to3",
@@ -109,6 +110,7 @@ function doPost(e) {
       data.onet_element_name || "",
       data.onet_url || "",
       data.onet_match || "",
+      data.onet_elements_json || "",
       data.rater_id || "",
       data.date || "",
       data.confidence_1to3 || "",
@@ -131,7 +133,7 @@ function getCoverage() {
     for (var i = 0; i < values.length; i++) {
       var row = values[i];
       var atomId = String(row[2] || "").trim();
-      var raterId = String(row[26] || "").trim();
+      var raterId = String(row[27] || "").trim();
       if (!atomId || !raterId) continue;
       map[atomId + "\t" + raterId] = {
         atom_id: atomId,

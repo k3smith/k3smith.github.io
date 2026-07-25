@@ -386,6 +386,91 @@ button.secondary kbd {
   font-weight: 500;
 }
 
-.fw-checklist .miss {
-  color: var(--err);
+.onet-suggestions {
+  margin: 0.75rem 0 1rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.onet-sug-head {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.onet-card {
+  border: 1px solid var(--line);
+  background: #f7fafb;
+  padding: 0.65rem 0.75rem;
+}
+
+.onet-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  align-items: baseline;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.onet-card-name {
+  font-weight: 550;
+  font-size: 0.95rem;
+}
+
+.onet-card-why {
+  margin: 0.25rem 0 0.45rem;
+  font-size: 0.82rem;
+}
+
+.onet-card-actions {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.onet-card-actions a {
+  color: var(--accent);
+}
+
+.pill.facet-task,
+.pill.facet-dwa,
+.pill.facet-work_activity {
+  background: #e4eef5;
+  color: #1a4a66;
+}
+
+.pill.facet-knowledge {
+  background: var(--knowledge-bg);
+  color: var(--knowledge);
+}
+
+.pill.facet-ability {
+  background: #efe8f5;
+  color: #5a3a78;
+}
+
+.onet-accepted {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.onet-accepted-list {
+  margin: 0.4rem 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.onet-accepted-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.onet-accepted-list button {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.78rem;
 }

@@ -141,6 +141,8 @@
         element_name: "",
         url: "",
         notes: "",
+        /** @type {any[]} accepted multi-facet mappings */
+        elements: [],
       };
     }
     return {
@@ -311,15 +313,19 @@
     if (fw.id === "onet") {
       return `
         <h3>${fw.label} <span class="muted">(${fw.priority})</span></h3>
-        <p class="fw-desc">${openLink} — occupation is context; element is the K/S name.</p>
+        <p class="fw-desc">${openLink} — O*NET is multi-facet: accept Task / DWA /
+          Work activity / Knowledge suggestions below (Abilities optional).
+          Overall match can be <em>none</em> if nothing fits.</p>
         <div class="match-row" data-match-group></div>
+        <div id="onet-suggestions" class="onet-suggestions"></div>
         <div class="grid-2">
-          <label class="field">SOC code<input data-f="soc_code" type="text" placeholder="17-3026" /></label>
+          <label class="field">SOC code<input data-f="soc_code" type="text" placeholder="17-3027.00" /></label>
           <label class="field">Occupation title<input data-f="occupation_title" type="text" /></label>
-          <label class="field">Element name<input data-f="element_name" type="text" /></label>
+          <label class="field">Primary element (optional summary)<input data-f="element_name" type="text" /></label>
           <label class="field">Page URL<input data-f="url" type="url" /></label>
           <label class="field wide">Framework notes<input data-f="notes" type="text" /></label>
-        </div>`;
+        </div>
+        <div id="onet-accepted" class="onet-accepted"></div>`;
     }
     const tierHint =
       fw.id === "advanced_manufacturing"
@@ -367,6 +373,145 @@
     });
   }
 
+  function facetKey(f) {
+    return `${f.facet}|${f.element_id || ""}|${(f.element_name || "").toLowerCase()}`;
+  }
+
+  function acceptedKeys() {
+    const elsAccepted = (draft.frameworks.onet && draft.frameworks.onet.elements) || [];
+    return new Set(elsAccepted.map(facetKey));
+  }
+
+  function renderOnetSuggestions() {
+    const box = document.getElementById("onet-suggestions");
+    const acc = document.getElementById("onet-accepted");
+    if (!box || !acc || !current) return;
+    const sug = current.onet_suggestions || {};
+    const occ = sug.occupation || {};
+    const facets = sug.facets || [];
+    const onet = draft.frameworks.onet;
+
+    // Prefill occupation once if empty
+    if (occ.soc_code && !onet.soc_code) {
+      onet.soc_code = occ.soc_code;
+      const inp = document.querySelector('#panel-onet [data-f="soc_code"]');
+      if (inp) inp.value = occ.soc_code;
+    }
+    if (occ.title && !onet.occupation_title) {
+      onet.occupation_title = occ.title;
+      const inp = document.querySelector('#panel-onet [data-f="occupation_title"]');
+      if (inp) inp.value = occ.title;
+    }
+
+    const have = acceptedKeys();
+    box.innerHTML = "";
+    if (!facets.length) {
+      box.innerHTML =
+        '<p class="muted">No cue-rule suggestions for this atom. Search O*NET manually or set match to <em>none</em>.</p>';
+    } else {
+      const head = document.createElement("p");
+      head.className = "onet-sug-head";
+      head.textContent = `Suggestions (${sug.method || "rules"}) — click Accept to keep:`;
+      box.appendChild(head);
+      for (const f of facets) {
+        const card = document.createElement("div");
+        card.className = "onet-card";
+        const taken = have.has(facetKey(f));
+        card.innerHTML = `
+          <div class="onet-card-top">
+            <span class="pill facet-${f.facet}">${f.facet}</span>
+            ${f.element_id ? `<code>${f.element_id}</code>` : ""}
+            ${f.importance != null ? `<span class="muted">imp. ${f.importance}</span>` : ""}
+            <span class="muted">${f.match || ""}</span>
+          </div>
+          <div class="onet-card-name">${escapeHtml(f.element_name || "")}</div>
+          <p class="onet-card-why muted">${escapeHtml(f.rationale || "")}</p>
+          <div class="onet-card-actions">
+            <button type="button" class="secondary accept-facet" ${taken ? "disabled" : ""}>
+              ${taken ? "Accepted" : "Accept"}
+            </button>
+            ${
+              f.url
+                ? `<a href="${f.url}" target="_blank" rel="noopener">Open ↗</a>`
+                : ""
+            }
+          </div>`;
+        const btn = card.querySelector(".accept-facet");
+        btn.addEventListener("click", () => acceptFacet(f));
+        box.appendChild(card);
+      }
+    }
+    renderAccepted();
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function acceptFacet(f) {
+    const onet = draft.frameworks.onet;
+    if (!onet.elements) onet.elements = [];
+    if (acceptedKeys().has(facetKey(f))) return;
+    onet.elements.push({ ...f, accepted: true });
+    if (!onet.match || onet.match === "none") {
+      // Promote overall match from best accepted facet match
+      onet.match = f.match || "close";
+      const panel = document.getElementById("panel-onet");
+      if (panel) syncMatchButtons(panel, onet.match);
+    }
+    if (!onet.element_name) {
+      onet.element_name = f.element_name || "";
+      const inp = document.querySelector('#panel-onet [data-f="element_name"]');
+      if (inp) inp.value = onet.element_name;
+    }
+    if (f.url && !onet.url) {
+      onet.url = f.url;
+      const inp = document.querySelector('#panel-onet [data-f="url"]');
+      if (inp) inp.value = onet.url;
+    }
+    updateChecklist();
+    renderOnetSuggestions();
+    setStatus(`Accepted ${f.facet}: ${f.element_name}`, "ok");
+  }
+
+  function removeAccepted(idx) {
+    const onet = draft.frameworks.onet;
+    onet.elements.splice(idx, 1);
+    renderOnetSuggestions();
+    updateChecklist();
+  }
+
+  function renderAccepted() {
+    const acc = document.getElementById("onet-accepted");
+    if (!acc) return;
+    const elsList = (draft.frameworks.onet && draft.frameworks.onet.elements) || [];
+    if (!elsList.length) {
+      acc.innerHTML = "";
+      return;
+    }
+    acc.innerHTML = "<strong>Accepted facets</strong>";
+    const ul = document.createElement("ul");
+    ul.className = "onet-accepted-list";
+    elsList.forEach((f, idx) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="pill facet-${f.facet}">${f.facet}</span> ${escapeHtml(
+        f.element_name || ""
+      )} `;
+      const rm = document.createElement("button");
+      rm.type = "button";
+      rm.className = "secondary";
+      rm.textContent = "Remove";
+      rm.addEventListener("click", () => removeAccepted(idx));
+      li.appendChild(rm);
+      ul.appendChild(li);
+    });
+    acc.appendChild(ul);
+  }
+
   function showFw(id) {
     activeFw = id;
     els.fwTabs.querySelectorAll(".fw-tab").forEach((t) => {
@@ -375,6 +520,7 @@
     els.fwPanels.querySelectorAll(".fw-panel").forEach((p) => {
       p.hidden = p.dataset.fw !== id;
     });
+    if (id === "onet") renderOnetSuggestions();
   }
 
   function paintDraftToForm() {
@@ -390,6 +536,7 @@
       });
     }
     updateChecklist();
+    renderOnetSuggestions();
   }
 
   function showAtom(atom) {
@@ -470,6 +617,7 @@
       onet_element_name: onet.element_name || "",
       onet_url: onet.url || "",
       onet_match: onet.match || "",
+      onet_elements_json: JSON.stringify(onet.elements || []),
       rater_id: raterId,
       date: today,
       confidence_1to3: draft.confidence_1to3 || els.confidence.value,
@@ -547,6 +695,7 @@
       "onet_element_name",
       "onet_url",
       "onet_match",
+      "onet_elements_json",
       "rater_id",
       "date",
       "confidence_1to3",

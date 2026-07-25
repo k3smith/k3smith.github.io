@@ -49,323 +49,1747 @@
       "atom_type": "knowledge",
       "atom_text": "applying Geometric Dimensioning and Tolerancing",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "b023d5b6-bfdb-43a0-9a32-adeba922fcaa",
       "atom_type": "knowledge",
       "atom_text": "ASME Y14.41-2003 Digital Definitions\u2014however it",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "d9c3b601-0624-46e5-b7e0-54d319db5ea5",
       "atom_type": "knowledge",
       "atom_text": "ASME Y14.5-2009 \u2018Dimensioning and Tolerancing\u2019",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "343334c9-0064-491d-8f98-68af8bb81e3f",
       "atom_type": "knowledge",
       "atom_text": "ASME Y14.5.1M-1994 MATHEMATICAL DEFINITION OF DIMENSIONING AND TOLERANCING PRINCIPLES",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          },
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.4.a",
+            "element_name": "Mathematics",
+            "match": "close",
+            "importance": 72,
+            "rationale": "Geometry/statistics for tolerance zones and stack-ups.",
+            "rule_id": "gdt_inspection_math",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "ability",
+            "element_id": "1.A.1.c.1",
+            "element_name": "Mathematical Reasoning",
+            "match": "related",
+            "importance": 72,
+            "rationale": "Optional Ability parent (not a harvest unit): choosing methods for true-position / stack-up calculations.",
+            "rule_id": "gdt_inspection_math",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Abilities"
+          },
+          {
+            "facet": "ability",
+            "element_id": "1.A.1.b.4",
+            "element_name": "Visualization",
+            "match": "related",
+            "importance": 63,
+            "rationale": "Optional Ability parent: imagining 3D feature control / MMC.",
+            "rule_id": "gdt_inspection_math",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Abilities"
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "19288497-9062-40d9-8ae6-1503d1ed2ed1",
       "atom_type": "knowledge",
       "atom_text": "build on your knowledge of the various classes of advanced composite structures",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "28af4765-8fbc-4306-bd5c-54f21990851d",
       "atom_type": "knowledge",
       "atom_text": "Define assemblies using 3-D modeling software package",
       "source_competency_id": "80da5677-ebec-4aab-8a82-20d65ae0dba6",
-      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software"
+      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "close",
+            "importance": 88,
+            "rationale": "CAD / 3-D modeling sits under Design knowledge.",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "ad75b8ef-f836-486b-b35b-2315a5c6a08b",
       "atom_type": "knowledge",
       "atom_text": "Define basic drawings required to document designs and use proper dimensioning and tolerancing using the software package",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "ad6a966a-f432-48b1-b3e2-9d0dd534d7a0",
       "atom_type": "knowledge",
       "atom_text": "Define basic parts using 3-D modeling software package",
       "source_competency_id": "80da5677-ebec-4aab-8a82-20d65ae0dba6",
-      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software"
+      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "close",
+            "importance": 88,
+            "rationale": "CAD / 3-D modeling sits under Design knowledge.",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "135b97c4-6875-4f5e-a45d-9798a4a4d465",
       "atom_type": "knowledge",
       "atom_text": "dimensional tolerancing concepts for product drawings",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "5c58b286-d8ca-46af-8a09-76541180a370",
       "atom_type": "knowledge",
       "atom_text": "geometric dimensioning and tolerancing (GD&T)",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "62ce444c-3b0a-4b16-9059-64818cdcb3d3",
       "atom_type": "knowledge",
       "atom_text": "Geometric Dimensioning and Tolerancing Form Tolerances",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "e81f80ac-3cbb-4a77-b6c2-222aa3082041",
       "atom_type": "knowledge",
       "atom_text": "Geometric Dimensioning and Tolerancing Geometry",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "8b7ffad7-b085-4891-a8d5-e80e67b4001c",
       "atom_type": "knowledge",
       "atom_text": "Geometric Dimensioning and Tolerancing Orientation Tolerances",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "c8f25479-f275-49b2-8cf6-9ba39994cf4e",
       "atom_type": "knowledge",
       "atom_text": "Quality Assurance and Improvement/Engineering Ethics",
       "source_competency_id": "8d7cbbe9-1241-4a22-b240-2a4702737eff",
-      "source_competency_title": "Apply Quality Assurance / Quality Assurance those boundaries are / quality control systems in manufa"
+      "source_competency_title": "Apply Quality Assurance / Quality Assurance those boundaries are / quality control systems in manufa",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.7.e",
+            "element_name": "Law and Government",
+            "match": "related",
+            "importance": null,
+            "rationale": "Ethics/standards often co-occur; prefer Production/QA on verify.",
+            "rule_id": "quality_assurance",
+            "url": ""
+          },
+          {
+            "facet": "task",
+            "element_id": "",
+            "element_name": "Inspect completed work for conformance to specifications",
+            "match": "close",
+            "importance": null,
+            "rationale": "QA / metrology inspection task family.",
+            "rule_id": "quality_assurance",
+            "url": "https://www.onetonline.org/link/summary/51-9061.00#Tasks"
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "98cbca2d-d8b0-495c-a0c4-6e6913f9570c",
       "atom_type": "knowledge",
       "atom_text": "quality assurance, including basic definitions",
       "source_competency_id": "8d7cbbe9-1241-4a22-b240-2a4702737eff",
-      "source_competency_title": "Apply Quality Assurance / Quality Assurance those boundaries are / quality control systems in manufa"
+      "source_competency_title": "Apply Quality Assurance / Quality Assurance those boundaries are / quality control systems in manufa",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.7.e",
+            "element_name": "Law and Government",
+            "match": "related",
+            "importance": null,
+            "rationale": "Ethics/standards often co-occur; prefer Production/QA on verify.",
+            "rule_id": "quality_assurance",
+            "url": ""
+          },
+          {
+            "facet": "task",
+            "element_id": "",
+            "element_name": "Inspect completed work for conformance to specifications",
+            "match": "close",
+            "importance": null,
+            "rationale": "QA / metrology inspection task family.",
+            "rule_id": "quality_assurance",
+            "url": "https://www.onetonline.org/link/summary/51-9061.00#Tasks"
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "f80153ee-aa3a-42ca-a4b8-3e57de018455",
       "atom_type": "knowledge",
       "atom_text": "working knowledge of the dimensional methods used on product drawings by all",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "a2b3e20c-2f20-48b3-93c4-aabd9fc237cb",
       "atom_type": "knowledge",
       "atom_text": "Yes, I\u2019m familiar with ASME Y14.5-2009 \u2018Dimensioning and Tolerancing\u2019",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "c1c3bec5-b8b7-4c96-be81-54f19240ca29",
       "atom_type": "skill",
       "atom_text": "Adapt product design features to viable and alternative production techniques and manufacturing processes",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "11fd5e5f-55fd-41ac-96ff-35163932b0a2",
       "atom_type": "skill",
       "atom_text": "Analyze and determine material fabrication processes",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "2b5d5b1d-6a84-499c-8ac9-81e1f2df5a84",
       "atom_type": "skill",
       "atom_text": "Apply a number of finishing techniques common to the fabrication of composite",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "ab5f22e7-89d5-4e61-a857-8a36c9ec0cba",
       "atom_type": "skill",
       "atom_text": "apply GD&T symbols based on the precedents found in your TEXTBOOK",
       "source_competency_id": "dc39b239-1d9d-4820-b1c1-d79e09da6b47",
-      "source_competency_title": "Apply GD&T to the orthographic drawing / GD&T) interchangeability is not guaranteed / GD&T in manufa"
+      "source_competency_title": "Apply GD&T to the orthographic drawing / GD&T) interchangeability is not guaranteed / GD&T in manufa",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "0cb800a7-542b-450a-b25e-f652d0c46a94",
       "atom_type": "skill",
       "atom_text": "Apply material knowledge to the manufacturing processes",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "d70405c2-7424-471c-88c6-9755e20bf8e0",
       "atom_type": "skill",
       "atom_text": "apply the design process for engineering graphics",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "18395000-8762-4a93-bb8c-2f45014d576e",
       "atom_type": "skill",
       "atom_text": "Calculate the RPM to run the spindle on a lathe to generate a cutting speed of 80sfpm if the outside diameter of the workpiece is 8in",
       "source_competency_id": "b9caa76c-6be2-433a-aa43-9f18949d3c88",
-      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice"
+      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "task",
+            "element_id": "",
+            "element_name": "Set up and operate machine tools to produce precision parts",
+            "match": "close",
+            "importance": null,
+            "rationale": "Lathe setup/ops \u2192 machine-tool task family (verify ID on occupation page).",
+            "rule_id": "lathe_machine_ops",
+            "url": "https://www.onetonline.org/link/summary/51-4041.00#Tasks"
+          },
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.b",
+            "element_name": "Mechanical",
+            "match": "related",
+            "importance": null,
+            "rationale": "Machine operation knowledge parent.",
+            "rule_id": "lathe_machine_ops",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "cffcbcb1-66f4-454d-9170-4687a3353386",
       "atom_type": "skill",
       "atom_text": "Create assemblies using 3-D modeling software package",
       "source_competency_id": "80da5677-ebec-4aab-8a82-20d65ae0dba6",
-      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software"
+      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "close",
+            "importance": 88,
+            "rationale": "CAD / 3-D modeling sits under Design knowledge.",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "debf8fe6-60fe-4955-a573-3e0e2112b66b",
       "atom_type": "skill",
       "atom_text": "Create basic drawings required to document designs and use proper dimensioning",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "19fc1e1f-4bea-44a9-9cc3-844aadbedf7b",
       "atom_type": "skill",
       "atom_text": "Create basic parts using 3-D modeling software package",
       "source_competency_id": "80da5677-ebec-4aab-8a82-20d65ae0dba6",
-      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software"
+      "source_competency_title": "Apply create part models, assemblies, and drawings / Define basic parts using 3-D modeling software",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "close",
+            "importance": 88,
+            "rationale": "CAD / 3-D modeling sits under Design knowledge.",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "17c3854d-6570-4565-9a8a-16c44c2571af",
       "atom_type": "skill",
       "atom_text": "Create the drawing per instructions in this file",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "ae2037a7-38ed-46ab-b625-01a408b8e489",
       "atom_type": "skill",
       "atom_text": "Create the drawing using the dimensions in this file",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "0b02298e-6b6f-481c-9bb3-58afe0f7f885",
       "atom_type": "skill",
       "atom_text": "Create your personal drawing format at about 7x10 inches (whatever",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "6d6124fe-a9ac-48f0-bb9e-387f36090904",
       "atom_type": "skill",
       "atom_text": "develop 2D design drawings utilizing Computer-aided",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "a99c1345-80e9-4bad-a374-85a3ebcbbc2c",
       "atom_type": "skill",
       "atom_text": "develop 2D drawings utilizing Computer-aided design package",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "999e9cb7-c38a-4e64-ae02-2a2f2a17bfeb",
       "atom_type": "skill",
       "atom_text": "Develop an appreciation for the economical advantages of using geometric dimensioning and tolerancing concepts on product design drawings",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "exact",
+            "importance": 88,
+            "rationale": "GD&T / drawing language \u2192 Design knowledge (precision plans, blueprints, drawings, models).",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#Knowledge"
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "Applying symbols / specifying geometry on drawings.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": "https://www.onetonline.org/link/summary/17-3027.00#WorkActivities"
+          },
+          {
+            "facet": "dwa",
+            "element_id": "4.A.3.b.1.I07",
+            "element_name": "Document technical design details",
+            "match": "close",
+            "importance": null,
+            "rationale": "DWA under drafting / specifying work activities.",
+            "rule_id": "gdt_symbols_drawings",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "c78a168a-5944-409e-bd3c-e99aed7fc994",
       "atom_type": "skill",
       "atom_text": "Evaluate and select appropriate 3D manufacturing technologies for specific applications",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "f3ba4679-2015-4494-af69-90fb5f16bcbd",
       "atom_type": "skill",
       "atom_text": "Evaluate various composites through use of laboratory experiments for mechanical and environmental performance",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "6fb1000c-b330-44a8-a67f-dee043437773",
       "atom_type": "skill",
       "atom_text": "Identify a part that is made from composite materials",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "2f5e7ef2-da60-4745-bd42-8977a9e35857",
       "atom_type": "skill",
       "atom_text": "Identify three advantages of composites over metals for structural applications",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "ed63f641-9fe1-4107-97be-cdb52898d38f",
       "atom_type": "skill",
       "atom_text": "Identify types, structures, properties and fabrication techniques of plastics, ceramics and composite",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "9eaafc92-4830-481b-a11d-fb75e781d197",
       "atom_type": "skill",
       "atom_text": "Identify, describe and categorize manufacturing processes according to the methods used",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "a1cc7681-03a5-40bd-881e-51bbf1a74e71",
       "atom_type": "skill",
       "atom_text": "select appropriate 3D manufacturing technologies for specific applications",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "eb2cb4ad-bd51-4eec-b309-4399f54afbcb",
       "atom_type": "skill",
       "atom_text": "Select appropriate manufacturing methods based on the product form and material properties",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "3f44a48d-5916-4637-bd7d-c95bd60d6ce5",
       "atom_type": "skill",
       "atom_text": "Select the appropriate manufacturing process for a new product based on analysis of the product",
       "source_competency_id": "31ab55da-13b7-4a30-b983-4614e3b134e7",
-      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des"
+      "source_competency_title": "Apply Analyze and determine material fabrication processes / manufacturing processes / Identify, des",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.c",
+            "element_name": "Production and Processing",
+            "match": "close",
+            "importance": null,
+            "rationale": "Process selection / composites \u2192 Production and Processing.",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "",
+            "element_name": "Making Decisions and Solving Problems",
+            "match": "related",
+            "importance": null,
+            "rationale": "Choosing processes for a product form (verify on occupation).",
+            "rule_id": "manufacturing_process_select",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "c5cc9bdd-c6b8-4473-9229-767abd2b15d4",
       "atom_type": "skill",
       "atom_text": "Set up lathe for facing operations (see facing/center",
       "source_competency_id": "b9caa76c-6be2-433a-aa43-9f18949d3c88",
-      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice"
+      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "task",
+            "element_id": "",
+            "element_name": "Set up and operate machine tools to produce precision parts",
+            "match": "close",
+            "importance": null,
+            "rationale": "Lathe setup/ops \u2192 machine-tool task family (verify ID on occupation page).",
+            "rule_id": "lathe_machine_ops",
+            "url": "https://www.onetonline.org/link/summary/51-4041.00#Tasks"
+          },
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.b",
+            "element_name": "Mechanical",
+            "match": "related",
+            "importance": null,
+            "rationale": "Machine operation knowledge parent.",
+            "rule_id": "lathe_machine_ops",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "95390875-1746-4050-9a8a-38bc218ed385",
       "atom_type": "skill",
       "atom_text": "Set up the lathe for center drilling operations",
       "source_competency_id": "b9caa76c-6be2-433a-aa43-9f18949d3c88",
-      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice"
+      "source_competency_title": "Apply a lathe / lathe, / set up the lathe in manufacturing practice",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "task",
+            "element_id": "",
+            "element_name": "Set up and operate machine tools to produce precision parts",
+            "match": "close",
+            "importance": null,
+            "rationale": "Lathe setup/ops \u2192 machine-tool task family (verify ID on occupation page).",
+            "rule_id": "lathe_machine_ops",
+            "url": "https://www.onetonline.org/link/summary/51-4041.00#Tasks"
+          },
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.b",
+            "element_name": "Mechanical",
+            "match": "related",
+            "importance": null,
+            "rationale": "Machine operation knowledge parent.",
+            "rule_id": "lathe_machine_ops",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "7f5806b8-c7ab-4be0-aaa4-10f457b2f021",
       "atom_type": "skill",
       "atom_text": "use CAD tool to communicate the technical drawing and not how well",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [
+          {
+            "facet": "knowledge",
+            "element_id": "2.C.3.a",
+            "element_name": "Design",
+            "match": "close",
+            "importance": 88,
+            "rationale": "CAD / 3-D modeling sits under Design knowledge.",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          },
+          {
+            "facet": "work_activity",
+            "element_id": "5012",
+            "element_name": "Drafting, Laying Out, and Specifying Technical Devices, Parts, and Equipment",
+            "match": "close",
+            "importance": null,
+            "rationale": "",
+            "rule_id": "cad_3d_modeling",
+            "url": ""
+          }
+        ],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     },
     {
       "atom_id": "a72f1806-7ad6-42c5-a0ec-6dec0c611d58",
       "atom_type": "skill",
       "atom_text": "use on engineering drawings and in related documents",
       "source_competency_id": "77a1dffa-d717-4cd4-8978-cb86f44b1a98",
-      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer"
+      "source_competency_title": "Apply design project / Create your personal drawing format at about 7x10 inches (whatever / computer",
+      "onet_suggestions": {
+        "occupation": {
+          "soc_code": "17-3027.00",
+          "title": "Mechanical Engineering Technologists and Technicians"
+        },
+        "facets": [],
+        "method": "cue_rules_v1",
+        "notes": "Accept facets that clearly fit; Ability facets are optional external parents (not induction harvest units). Verify IDs on the occupation O*NET page when element_id is blank."
+      }
     }
   ],
-  "instructions_url": "../README.md"
+  "instructions_url": "../README.md",
+  "onet_suggest": {
+    "method": "cue_rules_v1",
+    "n_atoms": 46,
+    "n_with_suggestions": 38,
+    "translation_rules": [
+      {
+        "rule_id": "gdt_prints_read",
+        "notes": "Reading / interpreting prints \u2192 Task 5377",
+        "pattern": "(?i)\\b(read(?:ing)?\\s+(?:engineering\\s+)?(?:blue)?prints?|interpret(?:ing)?\\s+(?:blueprints?|drawings?|prints?)|blueprint\\s+reading|establish(?:ing)?\\s+datums?)\\b"
+      },
+      {
+        "rule_id": "gdt_symbols_drawings",
+        "notes": "Symbols / creating drawings \u2192 Design + Drafting WA + DWA",
+        "pattern": "(?i)\\b(g(?:eometric\\s+)?d(?:imensioning)?\\s*(?:&|and)?\\s*t(?:olerancing)?|gd\\s*&\\s*t|gd&t|feature\\s+control\\s+frames?|apply(?:ing)?\\s+g(?:eometric\\s+)?(?:dimension|toleranc)\\w*|geometric\\s+(?:dimension|symbol|toleranc)\\w*|(?:create|creating|develop(?:ing)?)\\s+(?:2d\\s+)?(?:design\\s+)?drawings?|dimensioning\\s+and\\s+tolerancing|asme\\s*y\\s*14(?:\\.\\d+)?)\\b"
+      },
+      {
+        "rule_id": "gdt_inspection_math",
+        "notes": "Inspection / stack-up \u2192 Mathematics + Abilities (optional)",
+        "pattern": "(?i)\\b(stack[- ]?up|true\\s+position|tolerance\\s+zones?|inspect(?:ion|ing)?\\s+(?:with\\s+)?(?:gd&t|geometric)|maximum\\s+material\\s+condition|\\bmmc\\b|mathematical\\s+definition\\s+of\\s+dimensioning)\\b"
+      },
+      {
+        "rule_id": "cad_3d_modeling",
+        "notes": "",
+        "pattern": "(?i)\\b(3[- ]?d\\s+modeling|cad\\b|computer[- ]aided\\s+design|solidworks|autocad|(?:create|define|develop)\\s+(?:basic\\s+)?(?:parts?|assemblies)\\s+using)\\b"
+      },
+      {
+        "rule_id": "lathe_machine_ops",
+        "notes": "",
+        "pattern": "(?i)\\b(lathe|facing\\s+operations?|center\\s+drill|cutting\\s+speed|spindle|rpm\\b|collet\\s+closer|set\\s+up\\s+the\\s+lathe)\\b"
+      },
+      {
+        "rule_id": "manufacturing_process_select",
+        "notes": "",
+        "pattern": "(?i)\\b(manufacturing\\s+process(?:es)?|fabrication\\s+process(?:es)?|select(?:ing)?\\s+appropriate\\s+(?:3d\\s+)?manufacturing|material\\s+fabrication|composites?\\b|additive\\s+manufacturing)\\b"
+      },
+      {
+        "rule_id": "quality_assurance",
+        "notes": "",
+        "pattern": "(?i)\\b(quality\\s+assurance|quality\\s+control|engineering\\s+ethics|inspectors?|metrology|calipers|micrometers)\\b"
+      }
+    ]
+  }
 }
