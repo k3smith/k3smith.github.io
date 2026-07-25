@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CMC grounding labeler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <h1>CMC grounding</h1>
+        <span class="badge" id="round-badge">round</span>
+      </header>
+
+      <div id="sheet-warn" class="warn-banner" hidden>
+        Google Sheet is not configured (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Labels stay in this browser + CSV download
+        until the Sheet is live.
+      </div>
+
+      <details class="how" id="how" open>
+        <summary>Instructions — read once</summary>
+        <div class="body">
+          <p>
+            For each harvested <strong>Knowledge</strong> or <strong>Skill</strong>
+            atom, ground it against the frameworks below. Judge the
+            <em>atom text</em>, not the induced competency title. Prefer a real
+            match in the CMC model; <strong>none</strong> is a valid outcome.
+          </p>
+          <div class="defs">
+            <div>
+              <strong>exact</strong> — same meaning; wording may differ slightly
+            </div>
+            <div>
+              <strong>close</strong> — same idea, narrower/broader or missing a
+              qualifier
+            </div>
+            <div>
+              <strong>related</strong> — same family, not the same atom
+            </div>
+            <div>
+              <strong>none</strong> — no defensible home in that model
+            </div>
+          </div>
+          <p>
+            Do <strong>Engineering</strong> and
+            <strong>Advanced Manufacturing</strong> on every atom (Tier 4
+            emphasis for AM). ESCO and O*NET are optional but available for full
+            grounding when you have time. Copy block URLs from the browser
+            address bar. Use the <em>same initials</em> every session.
+          </p>
+          <p class="links-inline">
+            Quick links:
+            <a
+              href="https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+              target="_blank"
+              rel="noopener"
+              >Engineering</a
+            >
+            ·
+            <a
+              href="https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+              target="_blank"
+              rel="noopener"
+              >Advanced Manufacturing</a
+            >
+            ·
+            <a
+              href="https://esco.ec.europa.eu/en/classification/skill_main"
+              target="_blank"
+              rel="noopener"
+              >ESCO</a
+            >
+            ·
+            <a href="https://www.onetonline.org/" target="_blank" rel="noopener"
+              >O*NET</a
+            >
+          </p>
+        </div>
+      </details>
+
+      <section class="panel" id="setup">
+        <h2>Start a session</h2>
+        <p class="lead">
+          Enter initials (same every time). You only see atoms you have not
+          finished yet.
+        </p>
+        <label class="field" for="rater-id">Your name or initials</label>
+        <input
+          id="rater-id"
+          type="text"
+          autocomplete="nickname"
+          placeholder="e.g. kls"
+          maxlength="40"
+        />
+        <div class="actions">
+          <button type="button" id="start">Start grounding</button>
+        </div>
+        <p id="setup-status" class="status" role="status"></p>
+      </section>
+
+      <section class="panel" id="main" hidden>
+        <div class="progress-row">
+          <div class="progress-meta">
+            <span id="progress-text">…</span>
+            <span id="coverage-text" class="muted"></span>
+          </div>
+          <div class="bar"><div id="progress-fill"></div></div>
+        </div>
+
+        <div class="atom-card">
+          <div class="meta-line">
+            <span id="meta-type" class="pill">skill</span>
+            <span id="meta-comp" class="muted"></span>
+          </div>
+          <p id="atom-text" class="atom-text"></p>
+        </div>
+
+        <div class="fw-tabs" id="fw-tabs" role="tablist"></div>
+        <div id="fw-panels"></div>
+
+        <div class="global-fields">
+          <label class="field"
+            >Confidence (1–3)
+            <select id="confidence">
+              <option value="3">3 — clear</option>
+              <option value="2" selected>2 — mostly sure</option>
+              <option value="1">1 — guessy</option>
+            </select>
+          </label>
+          <label class="field wide"
+            >Notes (any framework / nested K-in-S / ambiguity)
+            <textarea id="global-notes" rows="2" placeholder="Optional"></textarea>
+          </label>
+        </div>
+
+        <div class="fw-checklist" id="fw-checklist" aria-live="polite"></div>
+
+        <div class="actions main-actions">
+          <button type="button" id="save">Save &amp; next <kbd>↵</kbd></button>
+          <button type="button" id="skip" class="secondary">
+            Skip for now
+          </button>
+          <button type="button" id="download" class="secondary">
+            Download backup CSV
+          </button>
+          <button type="button" id="reset" class="secondary">
+            Reset my session
+          </button>
+        </div>
+        <p id="status" class="status" role="status"></p>
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>You're caught up</h2>
+        <p id="done-msg" class="lead"></p>
+        <div class="actions">
+          <button type="button" id="download-done">Download backup CSV</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="config.js?v=1"></script>
+    <script src="app.js?v=1"></script>
+  </body>
+</html>
