@@ -386,6 +386,83 @@ button.secondary kbd {
   font-weight: 500;
 }
 
+.fw-checklist .miss {
+  color: var(--err);
+  font-weight: 500;
+}
+
+.pass-picker {
+  border: 1px solid var(--line);
+  background: #f7fafb;
+  padding: 0.75rem 0.9rem;
+  margin: 0.85rem 0 0.5rem;
+}
+
+.pass-picker legend {
+  font-weight: 600;
+  padding: 0 0.25rem;
+}
+
+.pass-option {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  margin: 0.55rem 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.pass-option input {
+  margin-top: 0.25rem;
+}
+
+.pass-option .muted {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.15rem;
+}
+
+.pass-banner {
+  border: 1px solid var(--line);
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
+  background: #f0f4f6;
+}
+
+.pass-banner.cmc {
+  border-color: #a8c9d6;
+  background: var(--accent-soft);
+}
+
+.pass-banner.optional {
+  border-color: #c5b89a;
+  background: #f7f1e4;
+}
+
+.fw-tab.secondary-tab {
+  opacity: 0.75;
+  font-size: 0.8rem;
+}
+
+.fw-panel.cmc-readonly {
+  background: #f4f6f7;
+}
+
+.fw-panel.cmc-readonly::before {
+  content: "CMC (locked from Pass 1)";
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+button.primary-next {
+  background: var(--accent);
+  color: #fff;
+}
+
 .onet-suggestions {
   margin: 0.75rem 0 1rem;
   display: grid;
@@ -487,6 +564,49 @@ button.secondary kbd {
   padding: 0.55rem 0.65rem;
   display: grid;
   gap: 0.4rem;
+}
+
+.item-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  align-items: baseline;
+  font-size: 0.8rem;
+}
+
+.pill.kind-knowledge {
+  background: var(--knowledge-bg);
+  color: var(--knowledge);
+}
+
+.pill.kind-skill {
+  background: var(--skill-bg);
+  color: var(--skill);
+}
+
+.pill.kind-block {
+  background: #e8ecee;
+  color: #3a4650;
+}
+
+.pill.kind-critical_work_function {
+  background: #efe8f5;
+  color: #5a3a78;
+}
+
+select[data-add-select][size] {
+  min-height: 10rem;
+  font-size: 0.82rem;
+}
+
+input[data-catalog-filter] {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  font: inherit;
 }
 
 .item-row .row-actions {

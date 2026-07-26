@@ -2,29 +2,3568 @@
   "id": "engineering",
   "label": "Engineering (CMC)",
   "source_url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx",
+  "source_note": "Leaf Knowledge/Skill items from DOL/AAES Engineering Competency Model (May 2015). Prefer most specific ref (e.g. 4.1.4.8 Materials properties over 4.1 Foundations of Engineering).",
   "max_items": 3,
   "items": [
-    {"ref": "4.1", "tier": 4, "title": "Foundations of Engineering", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"},
-    {"ref": "4.2", "tier": 4, "title": "Design", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"},
-    {"ref": "4.3", "tier": 4, "title": "Manufacturing and Construction", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2980&eng=Y"},
-    {"ref": "4.4", "tier": 4, "title": "Operations and Maintenance", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2981&eng=Y"},
-    {"ref": "4.5", "tier": 4, "title": "Professional Ethics", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"},
-    {"ref": "4.6", "tier": 4, "title": "Business, Legal and Public Policy", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"},
-    {"ref": "4.7", "tier": 4, "title": "Sustainability and Societal and Environmental Impact", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"},
-    {"ref": "4.8", "tier": 4, "title": "Engineering Economics", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2985&eng=Y"},
-    {"ref": "4.9", "tier": 4, "title": "Quality Control and Quality Assurance", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2986&eng=Y"},
-    {"ref": "4.10", "tier": 4, "title": "Safety, Health, Security and Environment", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"},
-    {"ref": "3.1", "tier": 3, "title": "Teamwork", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"},
-    {"ref": "3.2", "tier": 3, "title": "Customer Focus", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"},
-    {"ref": "3.3", "tier": 3, "title": "Planning and Organizing", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"},
-    {"ref": "3.4", "tier": 3, "title": "Creative Thinking", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2971&eng=Y"},
-    {"ref": "3.5", "tier": 3, "title": "Problem Solving and Decision Making", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"},
-    {"ref": "3.6", "tier": 3, "title": "Working with Tools and Technology", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2973&eng=Y"},
-    {"ref": "3.7", "tier": 3, "title": "Scheduling and Coordinating", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2975&eng=Y"},
-    {"ref": "3.9", "tier": 3, "title": "Checking, Examining, and Recording", "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2976&eng=Y"},
-    {"ref": "2.1", "tier": 2, "title": "Reading", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
-    {"ref": "2.3", "tier": 2, "title": "Mathematics", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
-    {"ref": "2.4", "tier": 2, "title": "Science and Technology", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"},
-    {"ref": "2.7", "tier": 2, "title": "Critical and Analytical Thinking", "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"}
+    {
+      "ref": "1.1",
+      "tier": 1,
+      "title": "Interpersonal Skills: Displaying skills to work effectively with others from diverse",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.1",
+      "tier": 1,
+      "title": "Demonstrating sensitivity/empathy",
+      "kind": "knowledge",
+      "parent_ref": "1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.1.1",
+      "tier": 1,
+      "title": "Show sincere interest in others and their concerns",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.1.2",
+      "tier": 1,
+      "title": "Demonstrate sensitivity to the needs and feelings of others",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.1.3",
+      "tier": 1,
+      "title": "Look for ways to help people and deliver assistance",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2",
+      "tier": 1,
+      "title": "Demonstrating insight into behavior",
+      "kind": "knowledge",
+      "parent_ref": "1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2.1",
+      "tier": 1,
+      "title": "Recognize and accurately interpret the communications of others as expressed",
+      "kind": "skill",
+      "parent_ref": "1.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2.2",
+      "tier": 1,
+      "title": "Recognize when relationships with others are strained",
+      "kind": "skill",
+      "parent_ref": "1.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2.3",
+      "tier": 1,
+      "title": "Show understanding of other\u2019s behaviors and motives by demonstrating",
+      "kind": "skill",
+      "parent_ref": "1.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2.4",
+      "tier": 1,
+      "title": "Demonstrate flexibility for change based on the ideas and actions of others",
+      "kind": "skill",
+      "parent_ref": "1.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.2.5",
+      "tier": 1,
+      "title": "Understand the impact of unconscious bias",
+      "kind": "skill",
+      "parent_ref": "1.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.3",
+      "tier": 1,
+      "title": "Maintaining open relationships",
+      "kind": "knowledge",
+      "parent_ref": "1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.3.1",
+      "tier": 1,
+      "title": "Maintain open lines of communication with others",
+      "kind": "skill",
+      "parent_ref": "1.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.3.2",
+      "tier": 1,
+      "title": "Encourage others to share problems and successes",
+      "kind": "skill",
+      "parent_ref": "1.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.3.3",
+      "tier": 1,
+      "title": "Establish a high degree of trust and credibility with others",
+      "kind": "skill",
+      "parent_ref": "1.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.4",
+      "tier": 1,
+      "title": "Showing Cultural Awareness",
+      "kind": "knowledge",
+      "parent_ref": "1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.4.1",
+      "tier": 1,
+      "title": "Demonstrate respect for coworkers, colleagues, and clients",
+      "kind": "skill",
+      "parent_ref": "1.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.4.2",
+      "tier": 1,
+      "title": "Interact respectfully and cooperatively with others who are of a different race,",
+      "kind": "skill",
+      "parent_ref": "1.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.4.3",
+      "tier": 1,
+      "title": "Demonstrate sensitivity, flexibility, open-mindedness, and inclusivity when",
+      "kind": "skill",
+      "parent_ref": "1.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.1.4.4",
+      "tier": 1,
+      "title": "Value an environment that supports and accommodates a diversity of people",
+      "kind": "skill",
+      "parent_ref": "1.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2",
+      "tier": 1,
+      "title": "Integrity: Displaying strong moral principles and work ethic",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.1",
+      "tier": 1,
+      "title": "Taking responsibility and being accountable",
+      "kind": "knowledge",
+      "parent_ref": "1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.1.1",
+      "tier": 1,
+      "title": "Accept responsibility and accountability for one\u2019s decisions and actions and for",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.1.2",
+      "tier": 1,
+      "title": "Demonstrate global, social, intellectual, and technological responsibility",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.2",
+      "tier": 1,
+      "title": "Taking responsibility and being accountable",
+      "kind": "knowledge",
+      "parent_ref": "1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.2.1",
+      "tier": 1,
+      "title": "Encourage others to behave ethically",
+      "kind": "skill",
+      "parent_ref": "1.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.2.2",
+      "tier": 1,
+      "title": "Understand that behaving ethically goes beyond what the law requires",
+      "kind": "skill",
+      "parent_ref": "1.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.2.3",
+      "tier": 1,
+      "title": "Accept responsibility and accountability for one\u2019s decisions and actions and for",
+      "kind": "skill",
+      "parent_ref": "1.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.2.4",
+      "tier": 1,
+      "title": "Acting fairly",
+      "kind": "knowledge",
+      "parent_ref": "1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.3",
+      "tier": 1,
+      "title": "Professionalism",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.3.4",
+      "tier": 1,
+      "title": "Demonstrating emotional intelligence",
+      "kind": "knowledge",
+      "parent_ref": "1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.3.4.1",
+      "tier": 1,
+      "title": "Maintain composure and keep emotions in check. Deal calmly and effectively with s",
+      "kind": "skill",
+      "parent_ref": "1.3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.4",
+      "tier": 1,
+      "title": "Initiative",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.4.2",
+      "tier": 1,
+      "title": "Persisting",
+      "kind": "knowledge",
+      "parent_ref": "1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.4.5",
+      "tier": 1,
+      "title": "Setting challenging goals",
+      "kind": "knowledge",
+      "parent_ref": "1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.4.5.2",
+      "tier": 1,
+      "title": "and taking risks Establish and maintain personally challenging but realistic work",
+      "kind": "knowledge",
+      "parent_ref": "1.4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.5",
+      "tier": 1,
+      "title": "Adaptability and Flexibility",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.5.2",
+      "tier": 1,
+      "title": "Entertaining new ideas",
+      "kind": "knowledge",
+      "parent_ref": "1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.5.2.3",
+      "tier": 1,
+      "title": "Is open to considering new ways of doing things. Actively seek out and carefully",
+      "kind": "knowledge",
+      "parent_ref": "1.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6",
+      "tier": 1,
+      "title": "Dependability and Reliability",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.3",
+      "tier": 1,
+      "title": "Fulfilling obligations",
+      "kind": "knowledge",
+      "parent_ref": "1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.3.1",
+      "tier": 1,
+      "title": "Behave consistently and predictably. Is reliable, responsible, and dependable in",
+      "kind": "knowledge",
+      "parent_ref": "1.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.3.2",
+      "tier": 1,
+      "title": "Notice errors or inconsistencies and take prompt, thorough action to correct",
+      "kind": "skill",
+      "parent_ref": "1.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.4",
+      "tier": 1,
+      "title": "Following directions",
+      "kind": "knowledge",
+      "parent_ref": "1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.4.1",
+      "tier": 1,
+      "title": "Follow directions as communicated in a variety of ways such as writing, speech,",
+      "kind": "skill",
+      "parent_ref": "1.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.4.2",
+      "tier": 1,
+      "title": "Comply with organizational rules, policies, and procedures",
+      "kind": "skill",
+      "parent_ref": "1.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.6.4.3",
+      "tier": 1,
+      "title": "Notice errors or inconsistencies and take prompt, thorough action to correct them",
+      "kind": "skill",
+      "parent_ref": "1.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7",
+      "tier": 1,
+      "title": "Lifelong Learning: Demonstrating curiosity and a persistent desire for continuous",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1",
+      "tier": 1,
+      "title": "Demonstrating an interest in learning",
+      "kind": "knowledge",
+      "parent_ref": "1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1.1",
+      "tier": 1,
+      "title": "Take actions showing an interest in personal and professional lifelong learning",
+      "kind": "knowledge",
+      "parent_ref": "1.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1.2",
+      "tier": 1,
+      "title": "Seek feedback from multiple sources about how to improve and develop",
+      "kind": "knowledge",
+      "parent_ref": "1.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1.3",
+      "tier": 1,
+      "title": "Perform a self-evaluation to recognize preferences, strengths, and weaknesses",
+      "kind": "skill",
+      "parent_ref": "1.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1.4",
+      "tier": 1,
+      "title": "Modify behavior based on feedback or self-analysis of past mistakes",
+      "kind": "knowledge",
+      "parent_ref": "1.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.1.5",
+      "tier": 1,
+      "title": "Learn and accept help from supervisors and co-workers",
+      "kind": "knowledge",
+      "parent_ref": "1.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.2",
+      "tier": 1,
+      "title": "Participating in learning activities",
+      "kind": "knowledge",
+      "parent_ref": "1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.2.1",
+      "tier": 1,
+      "title": "Identify when it is necessary to acquire new knowledge and skills",
+      "kind": "skill",
+      "parent_ref": "1.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.2.2",
+      "tier": 1,
+      "title": "Take steps to develop and maintain knowledge, skills, and expertise necessary to",
+      "kind": "knowledge",
+      "parent_ref": "1.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.2.3",
+      "tier": 1,
+      "title": "Actively pursue opportunities to broaden and deepen knowledge and skills",
+      "kind": "knowledge",
+      "parent_ref": "1.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.3",
+      "tier": 1,
+      "title": "Using change as a learning opportunity",
+      "kind": "knowledge",
+      "parent_ref": "1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.3.1",
+      "tier": 1,
+      "title": "Anticipate changes in work demands and searches for and participates in",
+      "kind": "knowledge",
+      "parent_ref": "1.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.3.2",
+      "tier": 1,
+      "title": "Treat unexpected circumstances as opportunities to learn",
+      "kind": "knowledge",
+      "parent_ref": "1.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.4",
+      "tier": 1,
+      "title": "Identifying career interests",
+      "kind": "knowledge",
+      "parent_ref": "1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.4.1",
+      "tier": 1,
+      "title": "Take charge of personal career development by identifying occupational",
+      "kind": "knowledge",
+      "parent_ref": "1.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.4.2",
+      "tier": 1,
+      "title": "Make insightful career planning decisions that integrates others\u2019 feedback",
+      "kind": "knowledge",
+      "parent_ref": "1.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.4.3",
+      "tier": 1,
+      "title": "Choose topics most appropriate for continuing education to increase depth of",
+      "kind": "knowledge",
+      "parent_ref": "1.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.4.4",
+      "tier": 1,
+      "title": "Identify means by which engineers can continue to learn throughout their",
+      "kind": "skill",
+      "parent_ref": "1.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "1.7.5",
+      "tier": 1,
+      "title": "Integrating and applying learning",
+      "kind": "knowledge",
+      "parent_ref": "1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.1",
+      "tier": 2,
+      "title": "Reading",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.1.4",
+      "tier": 2,
+      "title": "Comprehension",
+      "kind": "knowledge",
+      "parent_ref": "2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.1.4.3",
+      "tier": 2,
+      "title": "Locate and understand written information in prose and in documents such as manua",
+      "kind": "knowledge",
+      "parent_ref": "2.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2",
+      "tier": 2,
+      "title": "Writing",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.1",
+      "tier": 2,
+      "title": "Organization and development",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.2",
+      "tier": 2,
+      "title": "Mechanics",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.2.1",
+      "tier": 2,
+      "title": "Use standard syntax and sentence structure",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.2.2",
+      "tier": 2,
+      "title": "Use correct spelling, punctuation, and capitalization",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.2.3",
+      "tier": 2,
+      "title": "Use correct grammar (e.g., correct tense, subject-verb agreement, no missing",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.2.4",
+      "tier": 2,
+      "title": "Write legibly when using handwriting to communicate",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.3",
+      "tier": 2,
+      "title": "Mechanics",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.3.1",
+      "tier": 2,
+      "title": "Use language appropriate for the target audience",
+      "kind": "skill",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.3.2",
+      "tier": 2,
+      "title": "Use a tone and word choice appropriate for the industry and organization (e.g.,",
+      "kind": "skill",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.2.3.3",
+      "tier": 2,
+      "title": "Show insight, perception, and depth in writing",
+      "kind": "skill",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3",
+      "tier": 2,
+      "title": "Mathematics: Using mathematics to express ideas and solve problems",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1",
+      "tier": 2,
+      "title": "Computation",
+      "kind": "knowledge",
+      "parent_ref": "2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.1",
+      "tier": 2,
+      "title": "Add, subtract, multiply, and divide with whole numbers, fractions, decimals,",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.2",
+      "tier": 2,
+      "title": "Calculate averages, ratios, proportions, and rates",
+      "kind": "skill",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.3",
+      "tier": 2,
+      "title": "Convert decimals to fractions and fractions to decimals",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.4",
+      "tier": 2,
+      "title": "Convert fractions to percents and percents to fractions",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.5",
+      "tier": 2,
+      "title": "Convert decimals to percents and percents to decimals",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.6",
+      "tier": 2,
+      "title": "Understand relationships between numbers and identify and understand",
+      "kind": "skill",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.1.7",
+      "tier": 2,
+      "title": "Apply arithmetic operations on numbers, percentages, square root,",
+      "kind": "skill",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.2",
+      "tier": 2,
+      "title": "Measurement and estimation",
+      "kind": "knowledge",
+      "parent_ref": "2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.2.1",
+      "tier": 2,
+      "title": "Take measurements of time, temperature, distances, length, width, height,",
+      "kind": "knowledge",
+      "parent_ref": "2.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.2.2",
+      "tier": 2,
+      "title": "Use and report measurements correctly",
+      "kind": "skill",
+      "parent_ref": "2.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.2.3",
+      "tier": 2,
+      "title": "Correctly convert from one measurement or unit to another (e.g., from English to",
+      "kind": "knowledge",
+      "parent_ref": "2.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3",
+      "tier": 2,
+      "title": "Application",
+      "kind": "knowledge",
+      "parent_ref": "2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.1",
+      "tier": 2,
+      "title": "Understand number systems and relationships (e.g., whole numbers, decimals,",
+      "kind": "skill",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.2",
+      "tier": 2,
+      "title": "Understand plane and solid geometry (e.g., distance, perimeter, area, volume,",
+      "kind": "skill",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.3",
+      "tier": 2,
+      "title": "Use appropriate mathematical formulas and techniques to solve problems",
+      "kind": "skill",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.4",
+      "tier": 2,
+      "title": "Translate practical problems into useful mathematical expressions",
+      "kind": "knowledge",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.5",
+      "tier": 2,
+      "title": "Apply algebra, trigonometry, probability and statistics, differential and integral",
+      "kind": "skill",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.3.3.10",
+      "tier": 2,
+      "title": "Apply an appropriate area of mathematics in the planning or design of a facility,",
+      "kind": "skill",
+      "parent_ref": "2.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.4",
+      "tier": 2,
+      "title": "Science and Technology",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.4.2",
+      "tier": 2,
+      "title": "Comprehension",
+      "kind": "knowledge",
+      "parent_ref": "2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.4.2.5",
+      "tier": 2,
+      "title": "Understand basic scientific principles and use appropriate technology. Understand",
+      "kind": "skill",
+      "parent_ref": "2.4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.5",
+      "tier": 2,
+      "title": "Communication",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.5.1",
+      "tier": 2,
+      "title": "Communicating",
+      "kind": "knowledge",
+      "parent_ref": "2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.5.4.3",
+      "tier": 2,
+      "title": "Explain the technical aspects and benefits of an engineering project to nontechni",
+      "kind": "knowledge",
+      "parent_ref": "2.5.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.6",
+      "tier": 2,
+      "title": "Critical and Analytical Thinking",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.6.2",
+      "tier": 2,
+      "title": "Reasoning",
+      "kind": "knowledge",
+      "parent_ref": "2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7",
+      "tier": 2,
+      "title": "Computer Skills: Using information technology and related applications, including",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.1",
+      "tier": 2,
+      "title": "Digital literacy",
+      "kind": "knowledge",
+      "parent_ref": "2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.1.1",
+      "tier": 2,
+      "title": "Understand the basic functions and terminology related to computer hardware,",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.1.2",
+      "tier": 2,
+      "title": "Use basic computer software, hardware, and communication devices to perform",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2",
+      "tier": 2,
+      "title": "Using software",
+      "kind": "knowledge",
+      "parent_ref": "2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.1",
+      "tier": 2,
+      "title": "Use word processing software to compose, organize, edit, and print documents",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.2",
+      "tier": 2,
+      "title": "Use spreadsheet software to enter, manipulate, edit, and format text and",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.3",
+      "tier": 2,
+      "title": "Use presentation software to create, manipulate, edit, and present digital",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.4",
+      "tier": 2,
+      "title": "Use database software to manage data",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.5",
+      "tier": 2,
+      "title": "Use system modeling software to diagnose problems and explore possible",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.6",
+      "tier": 2,
+      "title": "Create and manipulate pictures in graphics programs or other applications",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.2.7",
+      "tier": 2,
+      "title": "Create and maintain a well-organized electronic file storage system",
+      "kind": "skill",
+      "parent_ref": "2.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3",
+      "tier": 2,
+      "title": "Using the Internet and email",
+      "kind": "knowledge",
+      "parent_ref": "2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3.1",
+      "tier": 2,
+      "title": "Use the Internet to search for online information and interact with Web sites",
+      "kind": "skill",
+      "parent_ref": "2.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3.2",
+      "tier": 2,
+      "title": "Use the Internet and web-based tools to manage basic workplace tasks (e.g.,",
+      "kind": "skill",
+      "parent_ref": "2.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3.3",
+      "tier": 2,
+      "title": "Use email to communicate in the workplace",
+      "kind": "skill",
+      "parent_ref": "2.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3.4",
+      "tier": 2,
+      "title": "Understand the different types of social media and their appropriate workplace",
+      "kind": "skill",
+      "parent_ref": "2.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.3.5",
+      "tier": 2,
+      "title": "Employ collaborative/groupware applications to facilitate group work",
+      "kind": "skill",
+      "parent_ref": "2.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4",
+      "tier": 2,
+      "title": "Ensuring computer security",
+      "kind": "knowledge",
+      "parent_ref": "2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.1",
+      "tier": 2,
+      "title": "Understand and comply with the organization\u2019s privacy policy and information",
+      "kind": "skill",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.2",
+      "tier": 2,
+      "title": "Defend against potential abuses of private information",
+      "kind": "knowledge",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.3",
+      "tier": 2,
+      "title": "Recognize and respond appropriately to suspicious vulnerabilities and threats",
+      "kind": "skill",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.4",
+      "tier": 2,
+      "title": "Handle removable media with care, recognizing it as a potential source of",
+      "kind": "knowledge",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.5",
+      "tier": 2,
+      "title": "Use the most recent security software, web browser, and operating system to",
+      "kind": "skill",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.6",
+      "tier": 2,
+      "title": "Utilize strong passwords, passphrases, and basic encryption",
+      "kind": "knowledge",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.7",
+      "tier": 2,
+      "title": "Recognize secure Web addresses",
+      "kind": "skill",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "2.7.4.8",
+      "tier": 2,
+      "title": "Ensure backups exist for important files and information, so that they can be",
+      "kind": "skill",
+      "parent_ref": "2.7.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.1",
+      "tier": 3,
+      "title": "Teamwork: Working cooperatively with others to complete work assignments",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1",
+      "tier": 3,
+      "title": "Identifying team membership and role",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1.1",
+      "tier": 3,
+      "title": "Serve as a leader or a follower, depending on what is needed to achieve the",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1.2",
+      "tier": 3,
+      "title": "Identify and draw upon team members\u2019 strengths and weaknesses to achieve",
+      "kind": "skill",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1.3",
+      "tier": 3,
+      "title": "Instruct others in learning new knowledge and acquiring new skills and learn",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1.4",
+      "tier": 3,
+      "title": "Assist others who have less experience or have heavy workloads",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.1.5",
+      "tier": 3,
+      "title": "Encourage others to express their ideas and opinions",
+      "kind": "skill",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2",
+      "tier": 3,
+      "title": "Establishing productive relationships",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.1",
+      "tier": 3,
+      "title": "Develop constructive and cooperative working relationships with others",
+      "kind": "skill",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.2",
+      "tier": 3,
+      "title": "Exhibit tact and diplomacy and strive to build consensus",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.3",
+      "tier": 3,
+      "title": "Deliver feedback and constructive criticism and voice objections to others\u2019 ideas",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.4",
+      "tier": 3,
+      "title": "Respond appropriately to positive and negative feedback",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.5",
+      "tier": 3,
+      "title": "Effectively communicate with all members of a multi-disciplinary group or team",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.6",
+      "tier": 3,
+      "title": "Use tools and approaches that facilitate a productive virtual team environment",
+      "kind": "skill",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.2.7",
+      "tier": 3,
+      "title": "Mentor others",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3",
+      "tier": 3,
+      "title": "Meeting team objectives",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3.1",
+      "tier": 3,
+      "title": "Work as part of a team, contributing to the group\u2019s effort to achieve goals",
+      "kind": "knowledge",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3.2",
+      "tier": 3,
+      "title": "Identify and commit to the goals, norms, values, and customs of the team",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3.3",
+      "tier": 3,
+      "title": "Choose behaviors and actions that best support the team and accomplishment of",
+      "kind": "knowledge",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3.4",
+      "tier": 3,
+      "title": "Use a group approach to identify problems and develop solutions based on",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.3.5",
+      "tier": 3,
+      "title": "Identify elements of successful teamwork",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.4",
+      "tier": 3,
+      "title": "Resolving conflicts",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.4.1",
+      "tier": 3,
+      "title": "Bring others together to reconcile differences",
+      "kind": "knowledge",
+      "parent_ref": "3.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.4.2",
+      "tier": 3,
+      "title": "Handle conflicts maturely by exercising \u201cgive and take\u201d to achieve positive",
+      "kind": "knowledge",
+      "parent_ref": "3.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.1.4.3",
+      "tier": 3,
+      "title": "Reach formal or informal agreements that promote mutual goals and interests,",
+      "kind": "knowledge",
+      "parent_ref": "3.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2968&eng=Y"
+    },
+    {
+      "ref": "3.2",
+      "tier": 3,
+      "title": "Client/Stakeholder Focus: Efficiently and effectively addressing the needs of clients",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"
+    },
+    {
+      "ref": "3.2.1",
+      "tier": 3,
+      "title": "Understanding client needs",
+      "kind": "knowledge",
+      "parent_ref": "3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"
+    },
+    {
+      "ref": "3.2.1.1",
+      "tier": 3,
+      "title": "Identify internal and external clients/stakeholders",
+      "kind": "skill",
+      "parent_ref": "3.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"
+    },
+    {
+      "ref": "3.2.3.4",
+      "tier": 3,
+      "title": "Attend to what clients/stakeholders are saying and ask questions to identify thei",
+      "kind": "knowledge",
+      "parent_ref": "3.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2969&eng=Y"
+    },
+    {
+      "ref": "3.3",
+      "tier": 3,
+      "title": "Planning and Organizing",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"
+    },
+    {
+      "ref": "3.3.2",
+      "tier": 3,
+      "title": "Planning",
+      "kind": "knowledge",
+      "parent_ref": "3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"
+    },
+    {
+      "ref": "3.3.3",
+      "tier": 3,
+      "title": "Managing projects",
+      "kind": "knowledge",
+      "parent_ref": "3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"
+    },
+    {
+      "ref": "3.3.3.9",
+      "tier": 3,
+      "title": "Identify work tasks and budgets for a portion of a project and direct the project",
+      "kind": "skill",
+      "parent_ref": "3.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2970&eng=Y"
+    },
+    {
+      "ref": "3.4",
+      "tier": 3,
+      "title": "Creative Thinking",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2971&eng=Y"
+    },
+    {
+      "ref": "3.4.3",
+      "tier": 3,
+      "title": "Employing unique analyses",
+      "kind": "knowledge",
+      "parent_ref": "3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2971&eng=Y"
+    },
+    {
+      "ref": "3.4.3.4",
+      "tier": 3,
+      "title": "Learn and use facilitation tools and methods that encourage creative and innovati",
+      "kind": "knowledge",
+      "parent_ref": "3.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2971&eng=Y"
+    },
+    {
+      "ref": "3.5",
+      "tier": 3,
+      "title": "Problem Solving, Prevention and Decision Making: Generating, evaluating, and",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1",
+      "tier": 3,
+      "title": "Identifying the problem",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.1",
+      "tier": 3,
+      "title": "Anticipate or recognize the existence of a problem",
+      "kind": "knowledge",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.2",
+      "tier": 3,
+      "title": "Recognize that problem-solving is based partly on the past because that is where",
+      "kind": "skill",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.3",
+      "tier": 3,
+      "title": "Analyze existing conditions to identify the true nature of the problem and define",
+      "kind": "skill",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.4",
+      "tier": 3,
+      "title": "Use all available reference systems to analyze information relevant to",
+      "kind": "skill",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.5",
+      "tier": 3,
+      "title": "Evaluate the importance and criticality of the problem",
+      "kind": "skill",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.6",
+      "tier": 3,
+      "title": "Recall previously learned information that is relevant to the problem",
+      "kind": "skill",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.1.7",
+      "tier": 3,
+      "title": "Formulate ideas on how to prevent those problems in similar circumstances and",
+      "kind": "knowledge",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.2",
+      "tier": 3,
+      "title": "Locating, gathering, and organizing relevant information",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.2.1",
+      "tier": 3,
+      "title": "Effectively use both internal resources (e.g., internal computer networks,",
+      "kind": "knowledge",
+      "parent_ref": "3.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.2.2",
+      "tier": 3,
+      "title": "Examine information obtained for relevance and completeness",
+      "kind": "skill",
+      "parent_ref": "3.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.2.3",
+      "tier": 3,
+      "title": "Recognize important gaps in existing information and takes steps to eliminate",
+      "kind": "skill",
+      "parent_ref": "3.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.2.4",
+      "tier": 3,
+      "title": "Organize/reorganize information as appropriate to gain a better understanding",
+      "kind": "skill",
+      "parent_ref": "3.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.3",
+      "tier": 3,
+      "title": "Generating alternatives",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.3.1",
+      "tier": 3,
+      "title": "Consider the causes and effects of current and recently-resolved technical and",
+      "kind": "knowledge",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.3.2",
+      "tier": 3,
+      "title": "Integrate previously learned and externally obtained information to generate a",
+      "kind": "knowledge",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.3.3",
+      "tier": 3,
+      "title": "Skillfully use logic and analysis to identify the strengths and weaknesses, the",
+      "kind": "knowledge",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.4",
+      "tier": 3,
+      "title": "Choosing a solution",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.4.1",
+      "tier": 3,
+      "title": "Decisively choose the best solution after evaluating the relative merits of each",
+      "kind": "knowledge",
+      "parent_ref": "3.5.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.4.2",
+      "tier": 3,
+      "title": "Make difficult decisions even in highly ambiguous or ill-defined situations",
+      "kind": "knowledge",
+      "parent_ref": "3.5.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.5",
+      "tier": 3,
+      "title": "Implementing the solution",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.5.1",
+      "tier": 3,
+      "title": "Commit to a solution in a timely manner and develop a realistic approach for",
+      "kind": "knowledge",
+      "parent_ref": "3.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.5.2",
+      "tier": 3,
+      "title": "Document the problem and corrective actions taken and their outcomes and",
+      "kind": "skill",
+      "parent_ref": "3.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.5.5.4",
+      "tier": 3,
+      "title": "Observe and evaluate the outcomes of implementing the solution to assess the need",
+      "kind": "knowledge",
+      "parent_ref": "3.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2972&eng=Y"
+    },
+    {
+      "ref": "3.6",
+      "tier": 3,
+      "title": "Seeking and Developing Opportunities",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2973&eng=Y"
+    },
+    {
+      "ref": "3.6.2",
+      "tier": 3,
+      "title": "Maintaining Perspective",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2973&eng=Y"
+    },
+    {
+      "ref": "3.6.2.6",
+      "tier": 3,
+      "title": "Appreciate that the engineer can also think in a forward-looking problem avoidanc",
+      "kind": "knowledge",
+      "parent_ref": "3.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2973&eng=Y"
+    },
+    {
+      "ref": "3.7",
+      "tier": 3,
+      "title": "Working with Tools and Technology",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2975&eng=Y"
+    },
+    {
+      "ref": "3.7.1",
+      "tier": 3,
+      "title": "Selection and application",
+      "kind": "knowledge",
+      "parent_ref": "3.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2975&eng=Y"
+    },
+    {
+      "ref": "3.7.3.4",
+      "tier": 3,
+      "title": "Operate tools and equipment in accordance with established operating procedures a",
+      "kind": "skill",
+      "parent_ref": "3.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2975&eng=Y"
+    },
+    {
+      "ref": "3.8",
+      "tier": 3,
+      "title": "Scheduling and Coordinating",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.8.2",
+      "tier": 3,
+      "title": "Arranging and informing",
+      "kind": "knowledge",
+      "parent_ref": "3.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.8.2.3",
+      "tier": 3,
+      "title": "Make arrangements (e.g. for meetings or travel) that fulfill all requirements as",
+      "kind": "knowledge",
+      "parent_ref": "3.8.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.9",
+      "tier": 3,
+      "title": "Checking, Examining, and Recording",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2976&eng=Y"
+    },
+    {
+      "ref": "3.9.5",
+      "tier": 3,
+      "title": "Capturing data",
+      "kind": "knowledge",
+      "parent_ref": "3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2976&eng=Y"
+    },
+    {
+      "ref": "3.9.5.4",
+      "tier": 3,
+      "title": "Record data in documentation. Compile, code, categorize, calculate, inspect, or v",
+      "kind": "knowledge",
+      "parent_ref": "3.9.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=3&block_id=2976&eng=Y"
+    },
+    {
+      "ref": "3.10",
+      "tier": 3,
+      "title": "Business Fundamentals",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.1",
+      "tier": 3,
+      "title": "Organizational context",
+      "kind": "knowledge",
+      "parent_ref": "3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.2",
+      "tier": 3,
+      "title": "Integrity in Business",
+      "kind": "knowledge",
+      "parent_ref": "3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.2.1",
+      "tier": 3,
+      "title": "Act ethically in the best interest of the company, the community, and the",
+      "kind": "knowledge",
+      "parent_ref": "3.10.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.2.2",
+      "tier": 3,
+      "title": "Comply with applicable laws and rules governing work and report loss, waste,",
+      "kind": "skill",
+      "parent_ref": "3.10.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.3",
+      "tier": 3,
+      "title": "Market knowledge",
+      "kind": "knowledge",
+      "parent_ref": "3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.3.1",
+      "tier": 3,
+      "title": "Understand market trends in the industry and stay current on organizational",
+      "kind": "skill",
+      "parent_ref": "3.10.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "3.10.3.2",
+      "tier": 3,
+      "title": "Recognize major challenges faced by the organization and industry and key",
+      "kind": "skill",
+      "parent_ref": "3.10.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/engineering.aspx"
+    },
+    {
+      "ref": "4.1",
+      "tier": 4,
+      "title": "Foundations of Engineering: Engineering fundamentals and its interactions with",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.1",
+      "tier": 4,
+      "title": "Engineering Science",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.1.1",
+      "tier": 4,
+      "title": "Identify and describe the basic principles of a related science and technology",
+      "kind": "skill",
+      "parent_ref": "4.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.1.2",
+      "tier": 4,
+      "title": "Define key factual information in one or more applicable areas of engineering",
+      "kind": "skill",
+      "parent_ref": "4.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.1.3",
+      "tier": 4,
+      "title": "Employ principles, use knowledge and integrate concepts of one or more areas",
+      "kind": "skill",
+      "parent_ref": "4.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.1.4",
+      "tier": 4,
+      "title": "Apply critical thinking skills to a project or product based on knowledge of",
+      "kind": "skill",
+      "parent_ref": "4.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.2",
+      "tier": 4,
+      "title": "Natural Science",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.2.1",
+      "tier": 4,
+      "title": "Use elements from one or more areas of natural science to aid in design",
+      "kind": "skill",
+      "parent_ref": "4.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.2.2",
+      "tier": 4,
+      "title": "Explain key concepts of the scientific method and/or associated inquiry",
+      "kind": "knowledge",
+      "parent_ref": "4.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.2.3",
+      "tier": 4,
+      "title": "Apply critical thinking skills through the application of the scientific method",
+      "kind": "skill",
+      "parent_ref": "4.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.2.4",
+      "tier": 4,
+      "title": "Use the laws of science to solve engineering problems",
+      "kind": "skill",
+      "parent_ref": "4.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3",
+      "tier": 4,
+      "title": "Humanities and Social Sciences",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.1",
+      "tier": 4,
+      "title": "Evaluate general public input and develop that input into technical",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.2",
+      "tier": 4,
+      "title": "Evaluate perspectives from local, state, or national culture or history and",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.3",
+      "tier": 4,
+      "title": "Arrange and help facilitate a meeting during which individuals with varied",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.4",
+      "tier": 4,
+      "title": "Evaluate, for a new technical development, institutional arrangements that",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.5",
+      "tier": 4,
+      "title": "Identify the potential contribution of an emerging technology to the public",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.3.6",
+      "tier": 4,
+      "title": "Compare the technical and nontechnical positive and negative features of",
+      "kind": "skill",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4",
+      "tier": 4,
+      "title": "Engineering Science",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.1",
+      "tier": 4,
+      "title": "Fluid mechanics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.2",
+      "tier": 4,
+      "title": "Statics and Dynamics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.3",
+      "tier": 4,
+      "title": "Electric circuits",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.4",
+      "tier": 4,
+      "title": "Solid mechanics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.5",
+      "tier": 4,
+      "title": "Thermodynamics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.6",
+      "tier": 4,
+      "title": "Heat transfer",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.7",
+      "tier": 4,
+      "title": "Mass transfer",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.4.8",
+      "tier": 4,
+      "title": "Materials properties",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.5",
+      "tier": 4,
+      "title": "Natural Science",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.5.1",
+      "tier": 4,
+      "title": "Physics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.5.2",
+      "tier": 4,
+      "title": "Chemistry",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.5.3",
+      "tier": 4,
+      "title": "Biology",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.5.4",
+      "tier": 4,
+      "title": "Geology",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6",
+      "tier": 4,
+      "title": "Humanities and Social Sciences",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.1",
+      "tier": 4,
+      "title": "Philosophy",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.2",
+      "tier": 4,
+      "title": "Business studies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.3",
+      "tier": 4,
+      "title": "Demography",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.4",
+      "tier": 4,
+      "title": "Ethics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.5",
+      "tier": 4,
+      "title": "History",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.6",
+      "tier": 4,
+      "title": "Literature",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.7",
+      "tier": 4,
+      "title": "Visual and Performing Arts",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.8",
+      "tier": 4,
+      "title": "Economics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.9",
+      "tier": 4,
+      "title": "Political Science",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.10",
+      "tier": 4,
+      "title": "Sociology",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.1.6.11",
+      "tier": 4,
+      "title": "Psychology",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2978&eng=Y"
+    },
+    {
+      "ref": "4.2",
+      "tier": 4,
+      "title": "Design: The process of devising a system, component, or process to meet desired needs",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1",
+      "tier": 4,
+      "title": "Design",
+      "kind": "skill",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.1",
+      "tier": 4,
+      "title": "Identify the pertinent technical, environmental, economic, regulatory, cultural",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.2",
+      "tier": 4,
+      "title": "4.2.1.2 Gather information needed to fully understand the problem to be",
+      "kind": "knowledge",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.3",
+      "tier": 4,
+      "title": "Contribute to the development of alternatives by analyzing the pros and cons",
+      "kind": "knowledge",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.4",
+      "tier": 4,
+      "title": "Identify the pertinent technical, environmental, economic, regulatory, cultural a",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.5",
+      "tier": 4,
+      "title": "Design a basic facility, structure, system, product, or process to meet well",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.6",
+      "tier": 4,
+      "title": "Apply lessons learned from other design projects",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.7",
+      "tier": 4,
+      "title": "Maintain knowledge of current types of systems, equipment, information",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.8",
+      "tier": 4,
+      "title": "Consider human factors and ergonomics for employees creating products and",
+      "kind": "knowledge",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.9",
+      "tier": 4,
+      "title": "Identify and use the appropriate strategies and processes to test design (e.g.,",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.10",
+      "tier": 4,
+      "title": "Use engineering software appropriate to one\u2019s engineering discipline",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.1.11",
+      "tier": 4,
+      "title": "Understand physical and cybersecurity and apply key concepts within the",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.2",
+      "tier": 4,
+      "title": "Technical Breadth and Depth",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.2.1",
+      "tier": 4,
+      "title": "Integrate concepts of a related science or technology into design of a project,",
+      "kind": "knowledge",
+      "parent_ref": "4.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.2.2",
+      "tier": 4,
+      "title": "Review research articles pertaining to a project component typically",
+      "kind": "skill",
+      "parent_ref": "4.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.2.3",
+      "tier": 4,
+      "title": "Choose topics most appropriate for continuing education to increase depth of",
+      "kind": "knowledge",
+      "parent_ref": "4.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.2.4",
+      "tier": 4,
+      "title": "Maintain knowledge of current types of systems, equipment, information",
+      "kind": "skill",
+      "parent_ref": "4.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3",
+      "tier": 4,
+      "title": "Risk, Reliability and Uncertainty",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.1",
+      "tier": 4,
+      "title": "Describe the meaning, importance, and significance of risk, reliability, and",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.2",
+      "tier": 4,
+      "title": "Determine the appropriate type and quantity of data required to identify",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.3",
+      "tier": 4,
+      "title": "Identify and assess risk, reliability, and/or uncertainty in the design of an",
+      "kind": "skill",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.4",
+      "tier": 4,
+      "title": "Apply concepts of risk, reliability, and/or uncertainty as an integral part of",
+      "kind": "skill",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.5",
+      "tier": 4,
+      "title": "Calculate the probability or frequency of occurrence and resulting impact of",
+      "kind": "skill",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.6",
+      "tier": 4,
+      "title": "Explain to the public issues relating to risk, reliability, and/or uncertainty in",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.3.7",
+      "tier": 4,
+      "title": "Compare the pros and cons of alternative design options and assist in the",
+      "kind": "skill",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4",
+      "tier": 4,
+      "title": "Experiments",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4.1",
+      "tier": 4,
+      "title": "Apply knowledge of various experimental and prototyping methods",
+      "kind": "skill",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4.2",
+      "tier": 4,
+      "title": "Design and conduct experiments to test a hypothesis, such as the potential",
+      "kind": "skill",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4.3",
+      "tier": 4,
+      "title": "Develop and recommend a plan of action based, in part on the experimental",
+      "kind": "skill",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4.4",
+      "tier": 4,
+      "title": "Understand and apply the difference between accuracy and precision",
+      "kind": "skill",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.4.5",
+      "tier": 4,
+      "title": "Understand and apply scale-ability or similitude",
+      "kind": "skill",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.5",
+      "tier": 4,
+      "title": "Systems Engineering",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.5.1",
+      "tier": 4,
+      "title": "Identify and gather information needed to understand a multidimensional",
+      "kind": "skill",
+      "parent_ref": "4.2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.5.2",
+      "tier": 4,
+      "title": "Contribute to the development of alternatives in complex projects",
+      "kind": "knowledge",
+      "parent_ref": "4.2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.5.3",
+      "tier": 4,
+      "title": "Analyze the pros and cons of alternative design options and assist in the",
+      "kind": "skill",
+      "parent_ref": "4.2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.5.4",
+      "tier": 4,
+      "title": "Define, specify, and/or implement effective interfaces between system",
+      "kind": "skill",
+      "parent_ref": "4.2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6",
+      "tier": 4,
+      "title": "Design",
+      "kind": "skill",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.1",
+      "tier": 4,
+      "title": "Schematics and diagrams",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.2",
+      "tier": 4,
+      "title": "Operating parameters",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.3",
+      "tier": 4,
+      "title": "Operating and non-operating environmental stimuli",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.4",
+      "tier": 4,
+      "title": "External dimensions",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.5",
+      "tier": 4,
+      "title": "Materials requirements",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.6",
+      "tier": 4,
+      "title": "Reliability requirements",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.7",
+      "tier": 4,
+      "title": "External surface treatment",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.8",
+      "tier": 4,
+      "title": "Design life",
+      "kind": "skill",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.9",
+      "tier": 4,
+      "title": "Packaging requirements",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.10",
+      "tier": 4,
+      "title": "External marking",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.11",
+      "tier": 4,
+      "title": "Computer-aided design programs",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.12",
+      "tier": 4,
+      "title": "\u201cDesign for X\u201d (design within constraints)",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.13",
+      "tier": 4,
+      "title": "Intellectual property",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.6.14",
+      "tier": 4,
+      "title": "Design, control and integration of systems",
+      "kind": "skill",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7",
+      "tier": 4,
+      "title": "Experiments",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.1",
+      "tier": 4,
+      "title": "Test requirements",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.2",
+      "tier": 4,
+      "title": "Maintenance and testability provisions",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.3",
+      "tier": 4,
+      "title": "Digital computer models",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.4",
+      "tier": 4,
+      "title": "Test protocol and procedures",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.5",
+      "tier": 4,
+      "title": "Uncertainty analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.6",
+      "tier": 4,
+      "title": "Capabilities and limitations of test",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.2.7.7",
+      "tier": 4,
+      "title": "Safety precautions",
+      "kind": "knowledge",
+      "parent_ref": "4.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2979&eng=Y"
+    },
+    {
+      "ref": "4.3",
+      "tier": 4,
+      "title": "Manufacturing and Construction",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2980&eng=Y"
+    },
+    {
+      "ref": "4.3.7",
+      "tier": 4,
+      "title": "Identify and prioritize the technical, environmental, economic, regulatory, and o",
+      "kind": "skill",
+      "parent_ref": "4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2980&eng=Y"
+    },
+    {
+      "ref": "4.4",
+      "tier": 4,
+      "title": "Operations and Maintenance",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2981&eng=Y"
+    },
+    {
+      "ref": "4.4.12",
+      "tier": 4,
+      "title": "Identify, during the planning and design of a system or works, the likely operati",
+      "kind": "skill",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2981&eng=Y"
+    },
+    {
+      "ref": "4.4.13",
+      "tier": 4,
+      "title": "Project management tools and techniques",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2981&eng=Y"
+    },
+    {
+      "ref": "4.5",
+      "tier": 4,
+      "title": "Professional Ethics: Displaying strong engineering ethics by evaluating and applying",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.1",
+      "tier": 4,
+      "title": "Practice in an ethical manner, with personal and professional integrity",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.2",
+      "tier": 4,
+      "title": "Abide by one or more applicable (e.g., employer, professional society, client) strict",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.3",
+      "tier": 4,
+      "title": "Encourage others to behave ethically",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.4",
+      "tier": 4,
+      "title": "Understand that behaving ethically goes beyond what the law requires",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.5",
+      "tier": 4,
+      "title": "Use company time and property responsibly",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.6",
+      "tier": 4,
+      "title": "Perform work-related duties according to laws, regulations, contract provisions, and",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.7",
+      "tier": 4,
+      "title": "Respect the need for confidentiality, when appropriate",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.8",
+      "tier": 4,
+      "title": "Analyze a situation involving multiple conflicting professional and ethical interests to",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.9",
+      "tier": 4,
+      "title": "Distinguish between a legal or management issue and an ethical matter",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.10",
+      "tier": 4,
+      "title": "Assemble appropriate resources to assist in the resolution of an ethical dilemma",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.11",
+      "tier": 4,
+      "title": "Formulate the solution to an ethical dilemma at the lowest management level possible,",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.12",
+      "tier": 4,
+      "title": "Select and take appropriate steps to record or to report to higher-level management or",
+      "kind": "skill",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.13",
+      "tier": 4,
+      "title": "Codes of ethics (professional and technical societies)",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.14",
+      "tier": 4,
+      "title": "Agreements and contracts and contract law",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.15",
+      "tier": 4,
+      "title": "Ethical and legal considerations",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.16",
+      "tier": 4,
+      "title": "Professional liability",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.17",
+      "tier": 4,
+      "title": "Public protection issues (e.g., licensing boards)",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.18",
+      "tier": 4,
+      "title": "NCEES Model Law and Model Rules",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.19",
+      "tier": 4,
+      "title": "Intellectual property (e.g., copyright, trade secrets, patents)",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.5.20",
+      "tier": 4,
+      "title": "Conflicts of interest",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2982&eng=Y"
+    },
+    {
+      "ref": "4.6",
+      "tier": 4,
+      "title": "Business, Legal and Public Policy: The activities associated with business",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.1",
+      "tier": 4,
+      "title": "Business",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.1.1",
+      "tier": 4,
+      "title": "Identify and distinguish among the various kinds of engineering practices,",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.1.2",
+      "tier": 4,
+      "title": "Create and maintain the policies and procedures for the planning,",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2",
+      "tier": 4,
+      "title": "Legal",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2.1",
+      "tier": 4,
+      "title": "Summarize the rationale for, and detailed requirements of, regulations",
+      "kind": "knowledge",
+      "parent_ref": "4.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2.2",
+      "tier": 4,
+      "title": "Describe and interpret applicable codes in design and in construction or",
+      "kind": "knowledge",
+      "parent_ref": "4.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2.3",
+      "tier": 4,
+      "title": "Identify applicable standards and properly use those standards in preparing",
+      "kind": "skill",
+      "parent_ref": "4.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2.4",
+      "tier": 4,
+      "title": "Prepare and interpret contract documents including coordinating plans,",
+      "kind": "skill",
+      "parent_ref": "4.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.2.5",
+      "tier": 4,
+      "title": "Recognize the ramifications of engineering decisions relative to professional",
+      "kind": "skill",
+      "parent_ref": "4.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.3",
+      "tier": 4,
+      "title": "Public Policy",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.3.1",
+      "tier": 4,
+      "title": "Identify and/or engage with the various types of policy-making bodies",
+      "kind": "skill",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.3.2",
+      "tier": 4,
+      "title": "Explain how codes and standards are set and how public policy affects their",
+      "kind": "knowledge",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.3.3",
+      "tier": 4,
+      "title": "Describe how public policy affects engineering practice in an engineering",
+      "kind": "knowledge",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4",
+      "tier": 4,
+      "title": "Business",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.1",
+      "tier": 4,
+      "title": "Private, industrial and public engineering practices",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.2",
+      "tier": 4,
+      "title": "Closely-held and publicly-held corporations, partnerships, sole practitioners",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.3",
+      "tier": 4,
+      "title": "Overhead, profit, direct and indirect labor, cost, revenue",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.4",
+      "tier": 4,
+      "title": "Contracts, costing approaches, fee structures",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.5",
+      "tier": 4,
+      "title": "Characteristics of markets",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.6",
+      "tier": 4,
+      "title": "Cost and pricing of products",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.4.7",
+      "tier": 4,
+      "title": "Fundamentals of accounting",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.5",
+      "tier": 4,
+      "title": "Legal and Public Policy",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.5.1",
+      "tier": 4,
+      "title": "Applicable construction and manufacturing laws, regulations, standards and",
+      "kind": "knowledge",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.5.2",
+      "tier": 4,
+      "title": "National, state, local, and global requirements for industrial facilities",
+      "kind": "knowledge",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.5.3",
+      "tier": 4,
+      "title": "Pollution prevention regulations",
+      "kind": "knowledge",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.6.5.4",
+      "tier": 4,
+      "title": "Plans, specifications, and construction contract provisions",
+      "kind": "knowledge",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2983&eng=Y"
+    },
+    {
+      "ref": "4.7",
+      "tier": 4,
+      "title": "Sustainability and Societal and Environmental Impact: Meeting the needs of the",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1",
+      "tier": 4,
+      "title": "Sustainability",
+      "kind": "knowledge",
+      "parent_ref": "4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.1",
+      "tier": 4,
+      "title": "Strive to minimize waste, improve efficiency, and reduce resource use",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.2",
+      "tier": 4,
+      "title": "Operate with a triple bottom line, incorporating financial profitability,",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.3",
+      "tier": 4,
+      "title": "Understand life cycle analysis \u2013 the environmental and economic effects of a",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.4",
+      "tier": 4,
+      "title": "Suggest and/or implement continuous improvement actions",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.5",
+      "tier": 4,
+      "title": "Abide by applicable international, federal, state, and local regulations and",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.6",
+      "tier": 4,
+      "title": "Safeguard the public interest",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.7",
+      "tier": 4,
+      "title": "Ensure equipment and systems are designed to minimize environmental",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.8",
+      "tier": 4,
+      "title": "Seek to upgrade processes beyond pollution control to pollution prevention",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.9",
+      "tier": 4,
+      "title": "Utilize advances in science and technology to upgrade levels of efficiency and",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.10",
+      "tier": 4,
+      "title": "Promote sustainable business practices consistent with ISA 14001 International",
+      "kind": "knowledge",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.1.11",
+      "tier": 4,
+      "title": "Identify information needed to understand and analyze the effects on the",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2",
+      "tier": 4,
+      "title": "Societal Impact",
+      "kind": "knowledge",
+      "parent_ref": "4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.1",
+      "tier": 4,
+      "title": "Analyze the impacts of a project component on diverse stakeholders",
+      "kind": "skill",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.2",
+      "tier": 4,
+      "title": "Estimate initial and life-cycle costs of a project and assess the impact of that",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.3",
+      "tier": 4,
+      "title": "Assess the intended and unintended environmental, economic, and societal",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.4",
+      "tier": 4,
+      "title": "Prepare and deliver presentations to the public regarding the impacts of a",
+      "kind": "skill",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.5",
+      "tier": 4,
+      "title": "Understand the local and global environmental, economic, and societal",
+      "kind": "skill",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.6",
+      "tier": 4,
+      "title": "Integrate the arts and humanities with engineering",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.7",
+      "tier": 4,
+      "title": "Equipment, processes, and systems that minimize environmental impact",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.8",
+      "tier": 4,
+      "title": "Pollution control and prevention",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.9",
+      "tier": 4,
+      "title": "Reuse and recycling",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.10",
+      "tier": 4,
+      "title": "Life cycle analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.11",
+      "tier": 4,
+      "title": "Sustainable business practices",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.12",
+      "tier": 4,
+      "title": "Federal, state and local laws and regulations (e.g., water, wastewater, air,",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.13",
+      "tier": 4,
+      "title": "ISO 14001 International Environmental Management Guidance",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.7.2.14",
+      "tier": 4,
+      "title": "Ecosystems",
+      "kind": "knowledge",
+      "parent_ref": "4.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2984&eng=Y"
+    },
+    {
+      "ref": "4.8",
+      "tier": 4,
+      "title": "Engineering Economics",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2985&eng=Y"
+    },
+    {
+      "ref": "4.8.18",
+      "tier": 4,
+      "title": "Prepare detailed cost estimates of capital and annual operating costs, maintenanc",
+      "kind": "skill",
+      "parent_ref": "4.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2985&eng=Y"
+    },
+    {
+      "ref": "4.9",
+      "tier": 4,
+      "title": "Quality Control and Quality Assurance",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2986&eng=Y"
+    },
+    {
+      "ref": "4.9.9",
+      "tier": 4,
+      "title": "Understand and apply basic concepts associated with measuring quality. Implement",
+      "kind": "skill",
+      "parent_ref": "4.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2986&eng=Y"
+    },
+    {
+      "ref": "4.9.15",
+      "tier": 4,
+      "title": "Analyze the impact of quality control and quality assurance on project performanc",
+      "kind": "skill",
+      "parent_ref": "4.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2986&eng=Y"
+    },
+    {
+      "ref": "4.10",
+      "tier": 4,
+      "title": "Safety, Health, Security and Environment",
+      "kind": "block",
+      "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.8",
+      "tier": 4,
+      "title": "Ensure that equipment is being used safely. Comply with local, federal and compan",
+      "kind": "skill",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.9",
+      "tier": 4,
+      "title": "Understand the key mitigations for physical and cybersecurity and apply them where",
+      "kind": "skill",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.10",
+      "tier": 4,
+      "title": "Continuous improvement in health, safety, security, and environment",
+      "kind": "knowledge",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.10.1",
+      "tier": 4,
+      "title": "Process safety and hazard analysis (e.g., layer or protection analysis, hazard",
+      "kind": "knowledge",
+      "parent_ref": "4.10.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.10.2",
+      "tier": 4,
+      "title": "Analysis of health/safety/environmental data",
+      "kind": "knowledge",
+      "parent_ref": "4.10.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.10.3",
+      "tier": 4,
+      "title": "Identification of projects and priorities",
+      "kind": "knowledge",
+      "parent_ref": "4.10.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.10.4",
+      "tier": 4,
+      "title": "Root cause analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.10.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.11",
+      "tier": 4,
+      "title": "Environmental protection/waste management",
+      "kind": "knowledge",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.11.1",
+      "tier": 4,
+      "title": "Chemical hazard assessment",
+      "kind": "knowledge",
+      "parent_ref": "4.10.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.11.2",
+      "tier": 4,
+      "title": "Design to minimize environmental impact",
+      "kind": "skill",
+      "parent_ref": "4.10.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12",
+      "tier": 4,
+      "title": "Investigations for health, safety, security or environmental incidences/hazards",
+      "kind": "knowledge",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.1",
+      "tier": 4,
+      "title": "Developing corrective actions",
+      "kind": "knowledge",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.2",
+      "tier": 4,
+      "title": "Documentation of findings",
+      "kind": "knowledge",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.3",
+      "tier": 4,
+      "title": "Follow-up investigation",
+      "kind": "skill",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.4",
+      "tier": 4,
+      "title": "Insurance (property)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.5",
+      "tier": 4,
+      "title": "Violations reports to proper authorities",
+      "kind": "knowledge",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.12.6",
+      "tier": 4,
+      "title": "Workers\u2019 compensation",
+      "kind": "knowledge",
+      "parent_ref": "4.10.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13",
+      "tier": 4,
+      "title": "Regulations",
+      "kind": "knowledge",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.1",
+      "tier": 4,
+      "title": "Hazardous material communication (HAZCOM)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.2",
+      "tier": 4,
+      "title": "Hazardous material handling and disposal (HAZMAT)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.3",
+      "tier": 4,
+      "title": "Hazardous material information system labeling and storage (HMS)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.4",
+      "tier": 4,
+      "title": "Regulations governing safe use of equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.5",
+      "tier": 4,
+      "title": "Role of the Occupation Safety and Health Administration (OSHA), the",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.6",
+      "tier": 4,
+      "title": "Trade compliance Department of Commerce",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.7",
+      "tier": 4,
+      "title": "National Environmental Policy Act (NEPA)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.8",
+      "tier": 4,
+      "title": "Comprehensive Environmental Response, Compensation, and Liability Act",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.13.9",
+      "tier": 4,
+      "title": "Superfund Amendments and Reauthorization Act (SARA)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14",
+      "tier": 4,
+      "title": "Safety procedures",
+      "kind": "knowledge",
+      "parent_ref": "4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.1",
+      "tier": 4,
+      "title": "Safe operation in confined spaces",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.2",
+      "tier": 4,
+      "title": "First aid or first response procedures",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.3",
+      "tier": 4,
+      "title": "Assessing material, equipment and fixtures for hazards",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.4",
+      "tier": 4,
+      "title": "Lock/tag out practices",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.5",
+      "tier": 4,
+      "title": "Material Safety Data Sheets (MSDS)",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.6",
+      "tier": 4,
+      "title": "Response to shop emergencies",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.7",
+      "tier": 4,
+      "title": "Safe evacuation of facility",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.8",
+      "tier": 4,
+      "title": "Safe moving of materials",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    },
+    {
+      "ref": "4.10.14.9",
+      "tier": 4,
+      "title": "Safe, prescribed operation of equipment and tools",
+      "kind": "knowledge",
+      "parent_ref": "4.10.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/blockModel.aspx?tier_id=4&block_id=2987&eng=Y"
+    }
   ]
 }

@@ -65,6 +65,7 @@
     done: document.getElementById("done"),
     start: document.getElementById("start"),
     raterId: document.getElementById("rater-id"),
+    passBanner: document.getElementById("pass-banner"),
     progressText: document.getElementById("progress-text"),
     progressFill: document.getElementById("progress-fill"),
     coverageText: document.getElementById("coverage-text"),
@@ -80,8 +81,11 @@
     setupStatus: document.getElementById("setup-status"),
     save: document.getElementById("save"),
     skip: document.getElementById("skip"),
+    switchPass: document.getElementById("switch-pass"),
     download: document.getElementById("download"),
     downloadDone: document.getElementById("download-done"),
+    startOptionalPass: document.getElementById("start-optional-pass"),
+    backToSetup: document.getElementById("back-to-setup"),
     reset: document.getElementById("reset"),
     roundBadge: document.getElementById("round-badge"),
     sheetWarn: document.getElementById("sheet-warn"),
@@ -100,6 +104,8 @@
   /** @type {any|null} */
   let current = null;
   let raterId = "";
+  /** @type {"cmc"|"optional"} */
+  let passMode = "cmc";
   let activeFw = "engineering";
   /** @type {Record<string, any>} */
   let draft = {};
@@ -126,8 +132,95 @@
     return bank.frameworks.filter((f) => f.required).map((f) => f.id);
   }
 
+  function optionalIds() {
+    const cfg = GROUNDING_CONFIG.optionalFrameworks || [];
+    if (cfg.length) return cfg;
+    return bank.frameworks.filter((f) => !f.required).map((f) => f.id);
+  }
+
+  function frameworksForPass() {
+    const req = new Set(requiredIds());
+    const opt = new Set(optionalIds());
+    if (passMode === "optional") {
+      return bank.frameworks.filter((f) => opt.has(f.id) || req.has(f.id));
+    }
+    return bank.frameworks.filter((f) => req.has(f.id));
+  }
+
+  function visibleFrameworkIds() {
+    if (passMode === "optional") return optionalIds();
+    return requiredIds();
+  }
+
   function storageKey() {
     return `cmc-grounding:${GROUNDING_CONFIG.roundId}:${raterId}`;
+  }
+
+  function selectedPassFromSetup() {
+    const el = document.querySelector('input[name="pass-mode"]:checked');
+    return el && el.value === "optional" ? "optional" : "cmc";
+  }
+
+  function setPassMode(mode) {
+    passMode = mode === "optional" ? "optional" : "cmc";
+    const radio = document.querySelector(
+      `input[name="pass-mode"][value="${passMode}"]`
+    );
+    if (radio) radio.checked = true;
+    activeFw = passMode === "optional" ? optionalIds()[0] || "esco" : "engineering";
+    updatePassBanner();
+    applyPassVisibility();
+    updateChecklist();
+  }
+
+  function updatePassBanner() {
+    if (!els.passBanner) return;
+    if (passMode === "optional") {
+      els.passBanner.className = "pass-banner optional";
+      els.passBanner.innerHTML =
+        "<strong>Pass 2 — ESCO / O*NET</strong> · CMC answers are kept; fill optional frameworks, then Save.";
+    } else {
+      els.passBanner.className = "pass-banner cmc";
+      els.passBanner.innerHTML =
+        "<strong>Pass 1 — CMC</strong> · Engineering + Advanced Manufacturing only. ESCO / O*NET come later.";
+    }
+  }
+
+  function applyPassVisibility() {
+    const show = new Set(visibleFrameworkIds());
+    const req = new Set(requiredIds());
+    els.fwTabs.querySelectorAll(".fw-tab").forEach((tab) => {
+      const id = tab.dataset.fw;
+      const visible =
+        passMode === "cmc" ? req.has(id) : show.has(id) || req.has(id);
+      tab.hidden = passMode === "cmc" ? !req.has(id) : !show.has(id);
+      tab.classList.toggle("readonly-tab", passMode === "optional" && req.has(id));
+      // In optional pass, CMC tabs stay available as read-only summary
+      if (passMode === "optional" && req.has(id)) {
+        tab.hidden = false;
+        tab.classList.add("secondary-tab");
+      } else {
+        tab.classList.remove("secondary-tab");
+      }
+    });
+    els.fwPanels.querySelectorAll(".fw-panel").forEach((panel) => {
+      const id = panel.dataset.fw;
+      const isReq = req.has(id);
+      const isOpt = show.has(id);
+      panel.classList.toggle("cmc-readonly", passMode === "optional" && isReq);
+      panel.querySelectorAll("input, select, textarea, button.match-btn").forEach((el) => {
+        if (el.classList.contains("copy-prompt")) return;
+        if (passMode === "optional" && isReq) {
+          el.disabled = true;
+        } else {
+          el.disabled = false;
+        }
+      });
+      // keep remove/accept buttons enabled only on optional panels
+      panel.querySelectorAll(".remove-item, .accept-facet, [data-add-select]").forEach((el) => {
+        el.disabled = passMode === "optional" && isReq;
+      });
+    });
   }
 
   function loadAnswers() {
@@ -296,8 +389,42 @@
     return coverage.get(atomId) || new Set();
   }
 
+  function optionalDone(fwId) {
+    const st = draft.frameworks[fwId];
+    if (!st) return false;
+    // In pass 2, empty is allowed (skip this framework); marked done if match set
+    return Boolean(st.match);
+  }
+
+  function atomHasCmcAnswer(atomId) {
+    const a = answers[atomId];
+    if (!a) return false;
+    const fws = a.frameworks || {};
+    return requiredIds().every((id) => {
+      const st = fws[id];
+      if (!st || !st.match) return false;
+      if (st.match === "none") return true;
+      const items = id === "onet" ? st.elements || [] : st.items || [];
+      return items.length >= 1;
+    });
+  }
+
+  function atomNeedsOptional(atomId) {
+    if (!atomHasCmcAnswer(atomId)) return false;
+    const a = answers[atomId];
+    const fws = a.frameworks || {};
+    return optionalIds().some((id) => {
+      const st = fws[id];
+      return !st || !st.match;
+    });
+  }
+
   function eligibleAtoms() {
     const t = TARGET();
+    if (passMode === "optional") {
+      // Atoms this rater already finished in CMC and still missing ESCO/O*NET match
+      return bank.atoms.filter((a) => atomNeedsOptional(a.atom_id));
+    }
     return bank.atoms.filter((a) => {
       const set = ratersFor(a.atom_id);
       return set.size < t && !set.has(raterId);
@@ -314,9 +441,18 @@
     const full = atomsFullyCovered();
     const total = bank.atoms.length;
     const left = eligibleAtoms().length;
-    els.progressText.textContent = `You: ${mine} · Queue left: ${left} · Bank: ${total}`;
-    els.coverageText.textContent = `Fully covered (≥${TARGET()}): ${full}/${total}`;
-    els.progressFill.style.width = `${total ? Math.round((100 * full) / total) : 0}%`;
+    if (passMode === "optional") {
+      const needOpt = bank.atoms.filter((a) => atomNeedsOptional(a.atom_id)).length;
+      els.progressText.textContent = `Pass 2 · You (CMC): ${mine} · Optional left: ${needOpt}`;
+      els.coverageText.textContent = `Queue: ${left} · Bank: ${total}`;
+      els.progressFill.style.width = `${
+        mine ? Math.round((100 * (mine - needOpt)) / mine) : 0
+      }%`;
+    } else {
+      els.progressText.textContent = `Pass 1 · You: ${mine} · Queue left: ${left} · Bank: ${total}`;
+      els.coverageText.textContent = `Fully covered (≥${TARGET()}): ${full}/${total}`;
+      els.progressFill.style.width = `${total ? Math.round((100 * full) / total) : 0}%`;
+    }
   }
 
   // ---------------------------------------------------------------------
@@ -329,15 +465,23 @@
 
   function updateChecklist() {
     const req = new Set(requiredIds());
+    const opt = new Set(optionalIds());
     els.fwChecklist.innerHTML = "";
     for (const fw of bank.frameworks) {
+      const isReq = req.has(fw.id);
+      const isOpt = opt.has(fw.id);
+      if (passMode === "cmc" && !isReq) continue;
+      if (passMode === "optional" && !(isOpt || isReq)) continue;
       const span = document.createElement("span");
       const done = fwDone(fw.id);
-      const need = req.has(fw.id);
-      span.className = done ? "ok" : need ? "miss" : "";
-      span.textContent = `${fw.label.split("(")[0].trim()}: ${
-        done ? stLabel(draft.frameworks[fw.id].match) : need ? "needed" : "optional"
-      }`;
+      span.className = done ? "ok" : isReq && passMode === "cmc" ? "miss" : "";
+      let suffix;
+      if (done) suffix = stLabel(draft.frameworks[fw.id].match);
+      else if (passMode === "cmc" && isReq) suffix = "needed";
+      else if (passMode === "optional" && isOpt) suffix = "optional";
+      else if (passMode === "optional" && isReq) suffix = "locked";
+      else suffix = "optional";
+      span.textContent = `${fw.label.split("(")[0].trim()}: ${suffix}`;
       els.fwChecklist.appendChild(span);
       const tab = els.fwTabs.querySelector(`[data-fw="${fw.id}"]`);
       if (tab) tab.classList.toggle("done", done);
@@ -424,10 +568,15 @@
         ? " Tier 4 industry-technical is especially useful."
         : "";
     return `${commonHead(fw)}
-      <p class="fw-desc-sub muted">Add up to ${MAX_ITEMS()} related blocks; copy the block URL from the address bar.${tierHint}</p>
+      <p class="fw-desc-sub muted">Prefer the <strong>most specific</strong> Knowledge or Skill
+        leaf (e.g. <code>4.1.4.8 Materials properties</code>), not only the parent block
+        (<code>4.1</code>). Add up to ${MAX_ITEMS()} items.${tierHint}</p>
       <div class="item-list" data-item-list></div>
+      <label class="field">Filter catalog
+        <input type="search" data-catalog-filter placeholder="Type to filter: materials, GD&amp;T, 4.1.4…" />
+      </label>
       <label class="field">Add from catalog
-        <select data-add-select><option value="">+ Select a block…</option></select>
+        <select data-add-select size="8"><option value="">+ Select a block / knowledge / skill…</option></select>
       </label>
       <datalist id="datalist-${fw.id}"></datalist>
       <label class="field wide">Framework notes<textarea data-f="notes" rows="2" placeholder="Optional"></textarea></label>
@@ -497,6 +646,13 @@
     } else {
       renderDatalist(panel, fw);
       renderCatalogAddSelect(panel, fw);
+      const filter = panel.querySelector("[data-catalog-filter]");
+      if (filter) {
+        filter.addEventListener("input", () => {
+          panel._catalogFilter = filter.value;
+          renderCatalogAddSelect(panel, fw, filter.value);
+        });
+      }
       const addSel = panel.querySelector("[data-add-select]");
       addSel.addEventListener("change", () => {
         const idx = addSel.value;
@@ -523,6 +679,8 @@
             ref: it.ref || "",
             title: it.title || "",
             tier: it.tier != null ? String(it.tier) : "",
+            kind: it.kind || "",
+            parent_ref: it.parent_ref || "",
             url: it.url || "",
             match: "",
           });
@@ -551,19 +709,59 @@
     if (fwId === "esco") {
       return `${it.preferred_label || ""}${it.broader_label ? " — " + it.broader_label : ""}`;
     }
-    return `${it.ref || ""} — ${it.title || ""}${it.tier != null ? ` (T${it.tier})` : ""}`;
+    const kind = it.kind ? `[${it.kind}] ` : "";
+    const tier = it.tier != null ? ` (T${it.tier})` : "";
+    const depth = typeof it.ref === "string" ? it.ref.split(".").length - 1 : 0;
+    const indent = depth > 0 ? `${"·".repeat(Math.min(3, depth))} ` : "";
+    return `${indent}${kind}${it.ref || ""} — ${it.title || ""}${tier}`;
   }
 
-  function renderCatalogAddSelect(panel, fw) {
+  function itemMatchesFilter(it, q) {
+    if (!q) return true;
+    const hay = `${it.ref || ""} ${it.title || ""} ${it.kind || ""} ${
+      it.parent_ref || ""
+    }`.toLowerCase();
+    return q.split(/\s+/).every((tok) => tok && hay.includes(tok));
+  }
+
+  function renderCatalogAddSelect(panel, fw, filterText) {
     const sel = panel.querySelector("[data-add-select]");
     if (!sel) return;
     const items = catalogFor(fw.id).items || [];
+    const q = (filterText != null ? filterText : panel._catalogFilter || "")
+      .trim()
+      .toLowerCase();
+    const list = items.filter((it) => itemMatchesFilter(it, q));
+    // When filtering, prefer deeper (more specific) hits first
+    const ordered = q
+      ? [...list].sort(
+          (a, b) =>
+            String(b.ref || "").split(".").length -
+              String(a.ref || "").split(".").length ||
+            String(a.ref).localeCompare(String(b.ref), undefined, {
+              numeric: true,
+            })
+        )
+      : list;
+    const maxShow = 400;
+    const slice = ordered.slice(0, maxShow);
     const placeholder =
-      fw.id === "esco" ? "+ Select a seed concept…" : "+ Select a block…";
+      fw.id === "esco"
+        ? "+ Select a seed concept…"
+        : "+ Select a block / knowledge / skill…";
+    const countNote =
+      ordered.length > maxShow
+        ? ` (showing ${maxShow}/${ordered.length} — refine filter)`
+        : ` (${ordered.length})`;
     sel.innerHTML =
-      `<option value="">${placeholder}</option>` +
-      items
-        .map((it, i) => `<option value="${i}">${escapeHtml(catalogOptionLabel(fw.id, it))}</option>`)
+      `<option value="">${placeholder}${countNote}</option>` +
+      slice
+        .map((it) => {
+          const idx = items.indexOf(it);
+          return `<option value="${idx}" data-kind="${escapeHtml(
+            it.kind || ""
+          )}">${escapeHtml(catalogOptionLabel(fw.id, it))}</option>`;
+        })
         .join("");
   }
 
@@ -590,8 +788,20 @@
           <button type="button" class="secondary remove-item" title="Remove">✕</button>`;
       } else {
         row.innerHTML = `
-          <input list="datalist-${fw.id}" data-item-f="ref" placeholder="Ref" value="${escapeHtml(item.ref)}">
+          <div class="item-head">
+            <span class="pill kind-${escapeHtml(item.kind || "block")}">${escapeHtml(
+              item.kind || "block"
+            )}</span>
+            ${item.parent_ref ? `<span class="muted">under ${escapeHtml(item.parent_ref)}</span>` : ""}
+          </div>
+          <input list="datalist-${fw.id}" data-item-f="ref" placeholder="Ref (e.g. 4.1.4.8)" value="${escapeHtml(item.ref)}">
           <input type="text" data-item-f="title" placeholder="Title" value="${escapeHtml(item.title)}">
+          <select data-item-f="kind">
+            <option value="knowledge">knowledge</option>
+            <option value="skill">skill</option>
+            <option value="block">block</option>
+            <option value="critical_work_function">critical_work_function</option>
+          </select>
           <select data-item-f="match">${matchOptions(item.match)}</select>
           <input type="url" data-item-f="url" placeholder="Block URL" value="${escapeHtml(item.url)}">
           <button type="button" class="secondary remove-item" title="Remove">✕</button>`;
@@ -601,11 +811,36 @@
       row.querySelectorAll("[data-item-f]").forEach((inp) => {
         const key = inp.getAttribute("data-item-f");
         if (inp.tagName === "SELECT") {
-          inp.value = item[key] || (key === "skill_type" ? "skill" : "");
+          inp.value =
+            item[key] ||
+            (key === "skill_type" ? "skill" : key === "kind" ? "knowledge" : "");
         }
         const evt = inp.tagName === "SELECT" ? "change" : "input";
         inp.addEventListener(evt, () => {
           item[key] = inp.value;
+          if (key === "ref" && fw.id !== "esco") {
+            const hit = (catalogFor(fw.id).items || []).find(
+              (c) => c.ref === inp.value
+            );
+            if (hit) {
+              item.title = hit.title || item.title;
+              item.kind = hit.kind || item.kind;
+              item.tier = hit.tier != null ? String(hit.tier) : item.tier;
+              item.parent_ref = hit.parent_ref || item.parent_ref;
+              item.url = hit.url || item.url;
+              const titleInp = row.querySelector('[data-item-f="title"]');
+              const kindSel = row.querySelector('[data-item-f="kind"]');
+              const urlInp = row.querySelector('[data-item-f="url"]');
+              if (titleInp) titleInp.value = item.title || "";
+              if (kindSel) kindSel.value = item.kind || "knowledge";
+              if (urlInp) urlInp.value = item.url || "";
+              const head = row.querySelector(".item-head .pill");
+              if (head) {
+                head.className = `pill kind-${item.kind || "block"}`;
+                head.textContent = item.kind || "block";
+              }
+            }
+          }
           onDraftChanged(fw.id);
         });
       });
@@ -926,6 +1161,20 @@
     refreshPrompt(id);
   }
 
+  function hydrateDraftFromAnswer(saved) {
+    draft = blankDraft();
+    if (!saved) return;
+    draft.confidence_1to3 = String(saved.confidence_1to3 || "2");
+    draft.notes = saved.notes || "";
+    const fws = saved.frameworks || {};
+    for (const fw of bank.frameworks) {
+      if (fws[fw.id]) {
+        draft.frameworks[fw.id] = JSON.parse(JSON.stringify(fws[fw.id]));
+        if (fw.id === "onet") recomputeOnetDerived(draft.frameworks.onet);
+      }
+    }
+  }
+
   function paintDraftToForm() {
     els.confidence.value = draft.confidence_1to3 || "2";
     els.globalNotes.value = draft.notes || "";
@@ -942,13 +1191,18 @@
         renderItemList(panel, fw);
       }
     }
+    applyPassVisibility();
     updateChecklist();
     refreshAllPrompts();
   }
 
   function showAtom(atom) {
     current = atom;
-    draft = blankDraft();
+    if (passMode === "optional" && answers[atom.atom_id]) {
+      hydrateDraftFromAnswer(answers[atom.atom_id]);
+    } else {
+      draft = blankDraft();
+    }
     els.metaType.textContent = atom.atom_type || "?";
     els.metaType.className = `pill ${atom.atom_type || ""}`;
     els.metaComp.textContent = atom.source_competency_title
@@ -956,7 +1210,11 @@
       : "";
     els.atomText.textContent = atom.atom_text || "";
     paintDraftToForm();
-    showFw(activeFw || "engineering");
+    const prefer =
+      passMode === "optional"
+        ? optionalIds().find((id) => !optionalDone(id)) || optionalIds()[0] || "esco"
+        : "engineering";
+    showFw(prefer);
     updateProgress();
     if (els.how) els.how.open = false;
   }
@@ -966,9 +1224,17 @@
     if (!queue.length) {
       els.main.hidden = true;
       els.done.hidden = false;
-      els.doneMsg.textContent = `No atoms left for you in this round (${
-        Object.keys(answers).length
-      } saved locally). Download the CSV backup if the Sheet is offline.`;
+      if (passMode === "cmc") {
+        els.doneMsg.textContent = `Pass 1 complete for you (${
+          Object.keys(answers).length
+        } atoms with CMC). Start Pass 2 when you want ESCO / O*NET, or download a CSV backup.`;
+        if (els.startOptionalPass) els.startOptionalPass.hidden = false;
+      } else {
+        els.doneMsg.textContent = `Pass 2 queue is empty (${
+          Object.keys(answers).length
+        } local labels). You can still revisit atoms via Switch pass, or download the CSV.`;
+        if (els.startOptionalPass) els.startOptionalPass.hidden = true;
+      }
       updateProgress();
       return;
     }
@@ -978,6 +1244,10 @@
   }
 
   function validateRequired() {
+    if (passMode === "optional") {
+      // CMC already saved; optional frameworks may be left blank (skip atom)
+      return true;
+    }
     const missing = requiredIds().filter((id) => !fwDone(id));
     if (missing.length) {
       const labels = bank.frameworks
@@ -989,6 +1259,20 @@
       return false;
     }
     return true;
+  }
+
+  function returnToSetup() {
+    els.main.hidden = true;
+    els.done.hidden = true;
+    els.setup.hidden = false;
+    setStatus("");
+  }
+
+  function beginPass(mode) {
+    setPassMode(mode);
+    els.setup.hidden = true;
+    els.done.hidden = true;
+    nextAtom();
   }
 
   // ---------------------------------------------------------------------
@@ -1058,6 +1342,15 @@
     draft.confidence_1to3 = els.confidence.value;
     draft.notes = els.globalNotes.value;
     if (!validateRequired()) return;
+    if (passMode === "optional") {
+      // Unset optional frameworks count as deliberate skip for this pass
+      for (const id of optionalIds()) {
+        const st = draft.frameworks[id];
+        if (st && !st.match) {
+          st.match = "none";
+        }
+      }
+    }
     const row = packRow();
     answers[current.atom_id] = {
       ...row,
@@ -1147,18 +1440,24 @@
     }
     localStorage.setItem("cmc-grounding:last-rater", raterId);
     loadAnswers();
+    setPassMode(selectedPassFromSetup());
+    if (passMode === "optional" && Object.keys(answers).length === 0) {
+      setStatus(
+        "No local CMC labels yet for these initials. Finish Pass 1 first (or load a prior browser session).",
+        "err"
+      );
+      return;
+    }
     setStatus("Loading coverage…");
     fetchCoverageJsonp()
       .then((data) => {
         rebuildCoverage(data.labels || []);
-        els.setup.hidden = true;
-        nextAtom();
+        beginPass(passMode);
         setStatus("");
       })
       .catch((err) => {
         rebuildCoverage([]);
-        els.setup.hidden = true;
-        nextAtom();
+        beginPass(passMode);
         setStatus(`Coverage offline (${err.message}); using local only.`, "err");
       });
   }
@@ -1208,6 +1507,7 @@
     if (!sheetUrl()) els.sheetWarn.hidden = false;
     const last = localStorage.getItem("cmc-grounding:last-rater");
     if (last) els.raterId.value = last;
+    updatePassBanner();
 
     els.start.addEventListener("click", startSession);
     els.save.addEventListener("click", saveCurrent);
@@ -1215,6 +1515,17 @@
       if (!current) return;
       nextAtom();
     });
+    if (els.switchPass) {
+      els.switchPass.addEventListener("click", returnToSetup);
+    }
+    if (els.startOptionalPass) {
+      els.startOptionalPass.addEventListener("click", () => {
+        beginPass("optional");
+      });
+    }
+    if (els.backToSetup) {
+      els.backToSetup.addEventListener("click", returnToSetup);
+    }
     els.download.addEventListener("click", downloadCsv);
     els.downloadDone.addEventListener("click", downloadCsv);
     els.reset.addEventListener("click", () => {
@@ -1246,6 +1557,7 @@
     Promise.all([loadAtomsBank(), loadCatalogs()])
       .then(() => {
         buildTabs();
+        setPassMode("cmc");
         showFw(activeFw || "engineering");
         setStatus(`Loaded ${bank.atoms.length} atoms.`, "ok");
       })

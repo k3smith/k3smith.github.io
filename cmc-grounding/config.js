@@ -3,9 +3,11 @@ window.GROUNDING_CONFIG = {
   roundId: "cmc_grounding_pilot",
   roundTitle: "CMC grounding pilot",
   atomsUrl: "atoms/cmc_grounding_pilot.json",
-  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbyfayNHBzoLPTgEjPvUGuTllzf-7apIT_kiNmLStXju6gkifsdYJmsdHceraX3sX3LM/exec",
+  sheetWebAppUrl: "",
   targetRatings: 1,
+  // Pass 1 (required): CMC only. Pass 2 (optional): ESCO / O*NET enrichment.
   requiredFrameworks: ["engineering", "advanced_manufacturing"],
+  optionalFrameworks: ["esco", "onet"],
   maxItemsPerFramework: 3,
   catalogs: {
     engineering: "catalogs/engineering.json",

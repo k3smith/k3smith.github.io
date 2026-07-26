@@ -50,14 +50,16 @@
             </div>
           </div>
           <p>
-            Do <strong>Engineering</strong> and
-            <strong>Advanced Manufacturing</strong> on every atom (Tier 4
-            emphasis for AM). Add up to <strong>3 related blocks</strong> with
-            separate <em>ref</em> (e.g. 4.2) and <em>title</em> from the catalog.
-            ESCO and O*NET are optional: O*NET uses a SOC + multi-facet list
-            (category presence and max importance are computed). Use
-            <strong>LLM assist prompt → Copy</strong> with an in-browser model
-            when cue suggestions are empty or weak. Use the
+            Work in <strong>two passes</strong>. Pass&nbsp;1 (required): ground
+            every atom in <strong>Engineering</strong> and
+            <strong>Advanced Manufacturing</strong> (Tier&nbsp;4 emphasis for
+            AM). Prefer the <strong>most specific Knowledge or Skill leaf</strong>
+            in the catalog (e.g. <code>4.1.4.8 Materials properties</code>), not
+            only the parent block (<code>4.1 Foundations of Engineering</code>).
+            Use the filter box to search; up to <strong>3</strong> items per
+            model. Pass&nbsp;2 (optional): come back later and enrich the same
+            atoms with <strong>ESCO</strong> and/or <strong>O*NET</strong>. Use
+            <strong>LLM assist prompt → Copy</strong> when cues are weak. Use the
             <em>same initials</em> every session.
           </p>
           <p class="links-inline">
@@ -93,8 +95,8 @@
       <section class="panel" id="setup">
         <h2>Start a session</h2>
         <p class="lead">
-          Enter initials (same every time). You only see atoms you have not
-          finished yet.
+          Enter initials (same every time). Choose a pass — CMC first; ESCO /
+          O*NET later on atoms you already finished.
         </p>
         <label class="field" for="rater-id">Your name or initials</label>
         <input
@@ -104,6 +106,27 @@
           placeholder="e.g. kls"
           maxlength="40"
         />
+        <fieldset class="pass-picker" id="pass-picker">
+          <legend>Which pass?</legend>
+          <label class="pass-option">
+            <input type="radio" name="pass-mode" value="cmc" checked />
+            <span>
+              <strong>Pass 1 — CMC only</strong>
+              <span class="muted"
+                >Engineering + Advanced Manufacturing (required)</span
+              >
+            </span>
+          </label>
+          <label class="pass-option">
+            <input type="radio" name="pass-mode" value="optional" />
+            <span>
+              <strong>Pass 2 — ESCO / O*NET</strong>
+              <span class="muted"
+                >Optional enrichment on atoms you already grounded in CMC</span
+              >
+            </span>
+          </label>
+        </fieldset>
         <div class="actions">
           <button type="button" id="start">Start grounding</button>
         </div>
@@ -111,6 +134,7 @@
       </section>
 
       <section class="panel" id="main" hidden>
+        <div class="pass-banner" id="pass-banner" aria-live="polite"></div>
         <div class="progress-row">
           <div class="progress-meta">
             <span id="progress-text">…</span>
@@ -152,6 +176,9 @@
           <button type="button" id="skip" class="secondary">
             Skip for now
           </button>
+          <button type="button" id="switch-pass" class="secondary">
+            Switch pass…
+          </button>
           <button type="button" id="download" class="secondary">
             Download backup CSV
           </button>
@@ -166,13 +193,19 @@
         <h2>You're caught up</h2>
         <p id="done-msg" class="lead"></p>
         <div class="actions">
+          <button type="button" id="start-optional-pass" class="primary-next">
+            Start Pass 2 — ESCO / O*NET
+          </button>
+          <button type="button" id="back-to-setup" class="secondary">
+            Change pass / initials
+          </button>
           <button type="button" id="download-done">Download backup CSV</button>
         </div>
       </section>
     </div>
 
-    <script src="config.js?v=3"></script>
-    <script src="prompts.js?v=3"></script>
-    <script src="app.js?v=3"></script>
+    <script src="config.js?v=5"></script>
+    <script src="prompts.js?v=5"></script>
+    <script src="app.js?v=5"></script>
   </body>
 </html>
