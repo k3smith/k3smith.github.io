@@ -108,7 +108,7 @@
   let passMode = "cmc";
   let activeFw = "engineering";
   /** @type {Record<string, any>} */
-  let draft = {};
+  let draft = { confidence_1to3: "2", notes: "", frameworks: {} };
 
   // ---------------------------------------------------------------------
   // small utils
@@ -329,7 +329,7 @@
   }
 
   function fwDone(fwId) {
-    const st = draft.frameworks[fwId];
+    const st = draft.frameworks && draft.frameworks[fwId];
     if (!st || !st.match) return false;
     if (st.match === "none") return true;
     return itemsFor(fwId).length >= 1;
@@ -464,10 +464,12 @@
   }
 
   function updateChecklist() {
+    if (!els.fwChecklist) return;
+    if (!draft.frameworks) draft.frameworks = {};
     const req = new Set(requiredIds());
     const opt = new Set(optionalIds());
     els.fwChecklist.innerHTML = "";
-    for (const fw of bank.frameworks) {
+    for (const fw of bank.frameworks || []) {
       const isReq = req.has(fw.id);
       const isOpt = opt.has(fw.id);
       if (passMode === "cmc" && !isReq) continue;
@@ -476,7 +478,7 @@
       const done = fwDone(fw.id);
       span.className = done ? "ok" : isReq && passMode === "cmc" ? "miss" : "";
       let suffix;
-      if (done) suffix = stLabel(draft.frameworks[fw.id].match);
+      if (done) suffix = stLabel((draft.frameworks[fw.id] || {}).match);
       else if (passMode === "cmc" && isReq) suffix = "needed";
       else if (passMode === "optional" && isOpt) suffix = "optional";
       else if (passMode === "optional" && isReq) suffix = "locked";
@@ -1556,6 +1558,7 @@
 
     Promise.all([loadAtomsBank(), loadCatalogs()])
       .then(() => {
+        draft = blankDraft();
         buildTabs();
         setPassMode("cmc");
         showFw(activeFw || "engineering");

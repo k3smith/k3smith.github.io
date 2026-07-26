@@ -2,100 +2,348 @@
   "id": "advanced_manufacturing",
   "label": "Advanced Manufacturing (CMC)",
   "source_url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx",
-  "source_note": "Sub-competencies / KSAs from Manufacturing USA and DOL AM extracts. Prefer specific refs over block-only (4.1).",
+  "source_note": "Expanded across tiers 1\u20134 from DOL Advanced Manufacturing Competency Model (Critical Work Functions + Technical Content Areas) plus Manufacturing USA / NSF numbered sub-competencies. Prefer leaf Knowledge/Skill refs over parent blocks.",
   "max_items": 3,
   "tier_emphasis": 4,
   "items": [
     {
-      "ref": "2.1.1.4",
-      "tier": 2,
-      "title": "Infer or locate meaning of unknown or technical vocabulary",
-      "kind": "knowledge",
-      "parent_ref": "2.1.1",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.1.2.2",
-      "tier": 2,
-      "title": "Detect inconsistencies",
-      "kind": "knowledge",
-      "parent_ref": "2.1.2",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.1.4.1",
-      "tier": 2,
-      "title": "Critically evaluate and analyze information in written",
-      "kind": "knowledge",
-      "parent_ref": "2.1.4",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.1.4.3",
-      "tier": 2,
-      "title": "Distinguish fact from opinion",
-      "kind": "skill",
-      "parent_ref": "2.1.4",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.2.1.1",
-      "tier": 2,
-      "title": "Create documents such as letters, directions, manuals,",
-      "kind": "skill",
-      "parent_ref": "2.2.1",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.3",
-      "tier": 2,
-      "title": "Mathematics: Using principles of mathematics such as",
+      "ref": "1.1",
+      "tier": 1,
+      "title": "Interpersonal Skills",
       "kind": "block",
-      "parent_ref": "2",
+      "parent_ref": "1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.3.2.1",
-      "tier": 2,
-      "title": "Add, subtract, multiply, and divide with whole numbers,",
+      "ref": "1.1.1",
+      "tier": 1,
+      "title": "Details",
       "kind": "knowledge",
-      "parent_ref": "2.3.2",
+      "parent_ref": "1.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.3.3",
-      "tier": 2,
-      "title": "Measurement and estimation",
-      "kind": "knowledge",
-      "parent_ref": "2.3",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.3.3.1",
-      "tier": 2,
-      "title": "Take measurements of time, temperature, distances, length,",
-      "kind": "knowledge",
-      "parent_ref": "2.3.3",
-      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
-    },
-    {
-      "ref": "2.3.3.2",
-      "tier": 2,
-      "title": "Use and report measurements correctly",
+      "ref": "1.1.1.1",
+      "tier": 1,
+      "title": "Interact professionally and respectfully with supervisors and coworkers",
       "kind": "skill",
-      "parent_ref": "2.3.3",
+      "parent_ref": "1.1.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.3.3.3",
-      "tier": 2,
-      "title": "Correctly convert from one measurement to another (e.g.,",
+      "ref": "1.1.1.2",
+      "tier": 1,
+      "title": "Work effectively with people who have diverse personalities and backgrounds",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.1.1.3",
+      "tier": 1,
+      "title": "Respect the opinions, perspectives, customs, contributions, and individual differences of",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.1.1.4",
+      "tier": 1,
+      "title": "Use appropriate strategies and solutions for dealing with conflicts and differences to maintain",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.1.1.5",
+      "tier": 1,
+      "title": "Be flexible and open-minded when dealing with a wide range of people",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.1.1.6",
+      "tier": 1,
+      "title": "Listen to and consider others\u2019 viewpoints",
+      "kind": "skill",
+      "parent_ref": "1.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2",
+      "tier": 1,
+      "title": "Integrity",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2.1",
+      "tier": 1,
+      "title": "Details",
       "kind": "knowledge",
-      "parent_ref": "2.3.3",
+      "parent_ref": "1.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.4",
+      "ref": "1.2.1.1",
+      "tier": 1,
+      "title": "Treat others with honesty, fairness, and respect",
+      "kind": "knowledge",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2.1.2",
+      "tier": 1,
+      "title": "Comply with ethical standards for your field",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2.1.3",
+      "tier": 1,
+      "title": "Take responsibility for accomplishing work goals within accepted timeframes",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2.1.4",
+      "tier": 1,
+      "title": "Accept responsibility for one\u2019s decisions and actions",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.2.1.5",
+      "tier": 1,
+      "title": "Perform quality work",
+      "kind": "skill",
+      "parent_ref": "1.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.3",
+      "tier": 1,
+      "title": "Professionalism",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.3.1",
+      "tier": 1,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.3.1.1",
+      "tier": 1,
+      "title": "Demonstrate self-control by maintaining composure and dealing calmly with stressful",
+      "kind": "skill",
+      "parent_ref": "1.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4",
+      "tier": 1,
+      "title": "Initiative",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1",
+      "tier": 1,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1.1",
+      "tier": 1,
+      "title": "Take initiative in seeking out new responsibilities and work challenges",
+      "kind": "skill",
+      "parent_ref": "1.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1.2",
+      "tier": 1,
+      "title": "Pursue work with energy, drive, and effort to accomplish tasks",
+      "kind": "knowledge",
+      "parent_ref": "1.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1.3",
+      "tier": 1,
+      "title": "Persist at a task until completion, despite interruptions, obstacles, or setbacks",
+      "kind": "knowledge",
+      "parent_ref": "1.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1.4",
+      "tier": 1,
+      "title": "Establish and maintain personally challenging, but realistic work goals",
+      "kind": "skill",
+      "parent_ref": "1.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.4.1.5",
+      "tier": 1,
+      "title": "Strive to exceed standards and expectations",
+      "kind": "knowledge",
+      "parent_ref": "1.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5",
+      "tier": 1,
+      "title": "Dependability & Reliability",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5.1",
+      "tier": 1,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5.1.1",
+      "tier": 1,
+      "title": "Behave consistently, predictably, and reliably",
+      "kind": "knowledge",
+      "parent_ref": "1.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5.1.2",
+      "tier": 1,
+      "title": "Fulfill obligations, complete assignments, and meet deadlines",
+      "kind": "knowledge",
+      "parent_ref": "1.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5.1.3",
+      "tier": 1,
+      "title": "Follow written and verbal directions",
+      "kind": "skill",
+      "parent_ref": "1.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.5.1.4",
+      "tier": 1,
+      "title": "Comply with organizational rules, policies, and procedures",
+      "kind": "skill",
+      "parent_ref": "1.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6",
+      "tier": 1,
+      "title": "Lifelong Learning",
+      "kind": "block",
+      "parent_ref": "1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1",
+      "tier": 1,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.1",
+      "tier": 1,
+      "title": "Demonstrate an interest in personal and professional lifelong learning and development",
+      "kind": "skill",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.2",
+      "tier": 1,
+      "title": "Treat unexpected circumstances as opportunities to learn and adopt new techniques",
+      "kind": "knowledge",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.3",
+      "tier": 1,
+      "title": "Seek feedback, and modify behavior for improvement",
+      "kind": "knowledge",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.4",
+      "tier": 1,
+      "title": "Broaden knowledge and skills through job shadowing and continuing education",
+      "kind": "knowledge",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.5",
+      "tier": 1,
+      "title": "Use newly learned knowledge and skills to complete specific tasks and improve work",
+      "kind": "skill",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.6",
+      "tier": 1,
+      "title": "Take charge of personal career development by identifying personal interests and career",
+      "kind": "skill",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.7",
+      "tier": 1,
+      "title": "Seek and maintain membership in professional associations",
+      "kind": "knowledge",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.8",
+      "tier": 1,
+      "title": "Read technical publications to stay abreast of new developments in the industry",
+      "kind": "skill",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "1.6.1.9",
+      "tier": 1,
+      "title": "Maintain certifications and continuing education credits",
+      "kind": "skill",
+      "parent_ref": "1.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1",
       "tier": 2,
       "title": "Science",
       "kind": "block",
@@ -103,11 +351,443 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.4.3.3",
+      "ref": "2.1.1",
       "tier": 2,
-      "title": "Evaluate scientific constructs including conclusions, conflicting",
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1.1.1",
+      "tier": 2,
+      "title": "Know and apply the Scientific Method - the systematic pursuit of knowledge involving the",
       "kind": "skill",
-      "parent_ref": "2.4.3",
+      "parent_ref": "2.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1.1.2",
+      "tier": 2,
+      "title": "Apply basic science principles to work-related problems and production processes",
+      "kind": "skill",
+      "parent_ref": "2.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1.1.3",
+      "tier": 2,
+      "title": "Understand the scientific principles involved in industry-specific production processes",
+      "kind": "skill",
+      "parent_ref": "2.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1.1.4",
+      "tier": 2,
+      "title": "Evaluate scientific constructs including: conclusions, conflicting data, controls, data, inferences,",
+      "kind": "skill",
+      "parent_ref": "2.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.1.1.5",
+      "tier": 2,
+      "title": "Apply scientific methods in qualitative and quantitative analysis, data gathering, direct and",
+      "kind": "skill",
+      "parent_ref": "2.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2",
+      "tier": 2,
+      "title": "Basic Computer Skills",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.1",
+      "tier": 2,
+      "title": "Navigation and File Management",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.1.1",
+      "tier": 2,
+      "title": "Use scroll bars, a mouse, and dialog boxes to work within the computer's operating system",
+      "kind": "skill",
+      "parent_ref": "2.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.1.2",
+      "tier": 2,
+      "title": "Access and switch between applications and files of interest",
+      "kind": "knowledge",
+      "parent_ref": "2.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2",
+      "tier": 2,
+      "title": "Internet and E-mail",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.1",
+      "tier": 2,
+      "title": "Navigate the Internet to find information",
+      "kind": "knowledge",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.2",
+      "tier": 2,
+      "title": "Open and configure standard browsers",
+      "kind": "knowledge",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.3",
+      "tier": 2,
+      "title": "Use searches, hypertext references, and transfer protocols",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.4",
+      "tier": 2,
+      "title": "Send and retrieve electronic mail (e-mail)",
+      "kind": "knowledge",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.5",
+      "tier": 2,
+      "title": "Manage personal schedule and contact information",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.6",
+      "tier": 2,
+      "title": "Navigate the internet to find and attend online training, web conferences, webinars, self-paced",
+      "kind": "knowledge",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.2.7",
+      "tier": 2,
+      "title": "Employ collaborative/groupware applications to facilitate group work",
+      "kind": "skill",
+      "parent_ref": "2.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.3",
+      "tier": 2,
+      "title": "Writing and Publishing Applications",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.3.1",
+      "tier": 2,
+      "title": "Use a computer application to type text and insert pictures",
+      "kind": "skill",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.3.2",
+      "tier": 2,
+      "title": "Format, edit, and print text",
+      "kind": "knowledge",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.3.3",
+      "tier": 2,
+      "title": "Save and retrieve word processing documents",
+      "kind": "knowledge",
+      "parent_ref": "2.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.4",
+      "tier": 2,
+      "title": "Spreadsheets",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.4.1",
+      "tier": 2,
+      "title": "Use a computer application to enter, manipulate, and format text and numerical data",
+      "kind": "skill",
+      "parent_ref": "2.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.4.2",
+      "tier": 2,
+      "title": "Insert, delete, and manipulate cells, rows, and columns",
+      "kind": "knowledge",
+      "parent_ref": "2.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.4.3",
+      "tier": 2,
+      "title": "Create and save worksheets, charts, and graphs",
+      "kind": "skill",
+      "parent_ref": "2.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.5",
+      "tier": 2,
+      "title": "Presentations",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.5.1",
+      "tier": 2,
+      "title": "Use a computer application to create, manipulate, edit, and show virtual slide presentations",
+      "kind": "skill",
+      "parent_ref": "2.2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6",
+      "tier": 2,
+      "title": "Databases",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6.1",
+      "tier": 2,
+      "title": "Use a computer application to manage large amounts of information",
+      "kind": "skill",
+      "parent_ref": "2.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6.2",
+      "tier": 2,
+      "title": "Create and edit simple databases",
+      "kind": "skill",
+      "parent_ref": "2.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6.3",
+      "tier": 2,
+      "title": "Input data",
+      "kind": "knowledge",
+      "parent_ref": "2.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6.4",
+      "tier": 2,
+      "title": "Retrieve detailed records",
+      "kind": "knowledge",
+      "parent_ref": "2.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.6.5",
+      "tier": 2,
+      "title": "Create reports to communicate the information",
+      "kind": "skill",
+      "parent_ref": "2.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.7",
+      "tier": 2,
+      "title": "Graphics",
+      "kind": "knowledge",
+      "parent_ref": "2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.7.1",
+      "tier": 2,
+      "title": "Work with pictures in graphics programs or other applications",
+      "kind": "skill",
+      "parent_ref": "2.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.7.2",
+      "tier": 2,
+      "title": "Create simple graphics",
+      "kind": "skill",
+      "parent_ref": "2.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.7.3",
+      "tier": 2,
+      "title": "Manipulate the appearance of graphics",
+      "kind": "knowledge",
+      "parent_ref": "2.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.2.7.4",
+      "tier": 2,
+      "title": "Insert graphics into other files/programs",
+      "kind": "knowledge",
+      "parent_ref": "2.2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3",
+      "tier": 2,
+      "title": "Mathematics",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1",
+      "tier": 2,
+      "title": "Know and apply mathematical principles",
+      "kind": "knowledge",
+      "parent_ref": "2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.1",
+      "tier": 2,
+      "title": "Number Systems and Relationships - whole numbers, decimals, fractions, alternate base",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.2",
+      "tier": 2,
+      "title": "Arithmetic \u2013 arithmetic operations on numbers, percentages, square root, exponentiation, and",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.3",
+      "tier": 2,
+      "title": "Plane and Solid Geometry \u2013 distance, perimeter, area, and volume, spatial coordinates,",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.4",
+      "tier": 2,
+      "title": "Measurement \u2013 measurement of length, mass, time, systems of measurement, units, and",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.5",
+      "tier": 2,
+      "title": "Estimation -- estimate sizes, distances, and quantities; or determine time, costs, resources, or",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.6",
+      "tier": 2,
+      "title": "Mathematical Notation - the language of mathematics to express mathematical ideas",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.7",
+      "tier": 2,
+      "title": "Mathematical Reasoning and Problem Solving \u2013 inductive and deductive reasoning,",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.8",
+      "tier": 2,
+      "title": "Elementary Statistics and Laws of Probability \u2013 mean, median, and standard deviation",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.3.1.9",
+      "tier": 2,
+      "title": "Algebra and Functions \u2013 equations, patterns, and functions",
+      "kind": "knowledge",
+      "parent_ref": "2.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.4",
+      "tier": 2,
+      "title": "Reading",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.4.1",
+      "tier": 2,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.4.1.1",
+      "tier": 2,
+      "title": "Read and understand work-related instructions and policies, memos, bulletins, notices, letters,",
+      "kind": "skill",
+      "parent_ref": "2.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.4.1.2",
+      "tier": 2,
+      "title": "Read documents ranging from simple and straightforward to more complex and detailed",
+      "kind": "skill",
+      "parent_ref": "2.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.4.1.3",
+      "tier": 2,
+      "title": "Read and interpret technical manuals and equipment specifications",
+      "kind": "skill",
+      "parent_ref": "2.4.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -119,17 +799,97 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "2.5.1",
+      "tier": 2,
+      "title": "Organization and Development",
+      "kind": "knowledge",
+      "parent_ref": "2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.1.1",
+      "tier": 2,
+      "title": "Create documents such as letters, directions, manuals, reports, graphs, and flow charts",
+      "kind": "skill",
+      "parent_ref": "2.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.1.2",
+      "tier": 2,
+      "title": "Communicate thoughts, ideas, information, messages, and other written information, which",
+      "kind": "skill",
+      "parent_ref": "2.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.1.3",
+      "tier": 2,
+      "title": "Develop ideas with supporting information and examples",
+      "kind": "skill",
+      "parent_ref": "2.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.2",
+      "tier": 2,
+      "title": "Mechanics",
+      "kind": "knowledge",
+      "parent_ref": "2.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.2.1",
+      "tier": 2,
+      "title": "Use standard syntax and sentence structure",
+      "kind": "skill",
+      "parent_ref": "2.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.2.2",
+      "tier": 2,
+      "title": "Use correct spelling, punctuation, and capitalization; use appropriate grammar (e.g., correct",
+      "kind": "skill",
+      "parent_ref": "2.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.5.2.3",
+      "tier": 2,
+      "title": "Write in a manner appropriate for business, using language appropriate for the target",
+      "kind": "skill",
+      "parent_ref": "2.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "2.6",
       "tier": 2,
-      "title": "Critical and Analytical Thinking: Using logical thought",
+      "title": "Critical and Analytical Thinking",
       "kind": "block",
       "parent_ref": "2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "2.6.1",
+      "tier": 2,
+      "title": "Listening",
+      "kind": "knowledge",
+      "parent_ref": "2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "2.6.1.1",
       "tier": 2,
-      "title": "Use logic and reasoning to identify strengths and weaknesses",
+      "title": "Receive, attend to, interpret, understand, and respond to verbal messages and other cues",
+      "kind": "skill",
+      "parent_ref": "2.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.6.1.2",
+      "tier": 2,
+      "title": "Apply active listening skills using reflection, restatement, questioning, and clarification",
       "kind": "skill",
       "parent_ref": "2.6.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -137,65 +897,553 @@
     {
       "ref": "2.6.1.3",
       "tier": 2,
-      "title": "Critically review, analyze, synthesize, compare, and interpret",
-      "kind": "knowledge",
+      "title": "Pick out important information in verbal messages",
+      "kind": "skill",
       "parent_ref": "2.6.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "2.6.1.4",
       "tier": 2,
-      "title": "Draw conclusions from relevant or missing information",
-      "kind": "knowledge",
+      "title": "Understand complex instructions",
+      "kind": "skill",
       "parent_ref": "2.6.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.7.2.1",
+      "ref": "2.6.2",
       "tier": 2,
-      "title": "Use word processing software to compose, organize, edit, and",
-      "kind": "skill",
-      "parent_ref": "2.7.2",
+      "title": "Speaking and Presenting",
+      "kind": "knowledge",
+      "parent_ref": "2.6",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.7.2.3",
+      "ref": "2.6.2.1",
       "tier": 2,
-      "title": "Use presentation software to create, manipulate, edit and",
+      "title": "Speak clearly and confidently using common English conventions including proper grammar,",
       "kind": "skill",
-      "parent_ref": "2.7.2",
+      "parent_ref": "2.6.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "2.7.2.5",
+      "ref": "2.6.2.2",
       "tier": 2,
-      "title": "Create and maintain a well-organized electronic file storage",
+      "title": "Express information to individuals or groups taking into account the audience and the nature",
       "kind": "skill",
-      "parent_ref": "2.7.2",
+      "parent_ref": "2.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.6.2.3",
+      "tier": 2,
+      "title": "Present ideas in a persuasive manner",
+      "kind": "skill",
+      "parent_ref": "2.6.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7",
+      "tier": 2,
+      "title": "Critical and Analytical Thinking",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7.1",
+      "tier": 2,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "2.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7.1.1",
+      "tier": 2,
+      "title": "Draw conclusions from relevant or missing information",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7.1.2",
+      "tier": 2,
+      "title": "Use logic and reasoning to identify strengths and weaknesses of alternative solutions,",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7.1.3",
+      "tier": 2,
+      "title": "Use inductive and deductive reasoning to analyze, synthesize, compare, and interpret",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.7.1.4",
+      "tier": 2,
+      "title": "Understand the underlying relationship among facts and connections between issues",
+      "kind": "skill",
+      "parent_ref": "2.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8",
+      "tier": 2,
+      "title": "Information Literacy",
+      "kind": "block",
+      "parent_ref": "2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1",
+      "tier": 2,
+      "title": "Locate and Evaluate Information",
+      "kind": "knowledge",
+      "parent_ref": "2.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1.1",
+      "tier": 2,
+      "title": "Locate information efficiently (time) and effectively (sources)",
+      "kind": "skill",
+      "parent_ref": "2.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1.2",
+      "tier": 2,
+      "title": "Evaluate information critically and competently",
+      "kind": "skill",
+      "parent_ref": "2.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1.3",
+      "tier": 2,
+      "title": "Review information obtained for relevance and completeness",
+      "kind": "skill",
+      "parent_ref": "2.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1.4",
+      "tier": 2,
+      "title": "Recognize important gaps in existing information",
+      "kind": "skill",
+      "parent_ref": "2.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.1.5",
+      "tier": 2,
+      "title": "Take steps to eliminate those gaps",
+      "kind": "skill",
+      "parent_ref": "2.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.2",
+      "tier": 2,
+      "title": "Use and Manage Information",
+      "kind": "knowledge",
+      "parent_ref": "2.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.2.1",
+      "tier": 2,
+      "title": "Use information accurately and creatively for the issue or problem at hand",
+      "kind": "skill",
+      "parent_ref": "2.8.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.2.2",
+      "tier": 2,
+      "title": "Manage the flow of information from a wide variety of sources",
+      "kind": "skill",
+      "parent_ref": "2.8.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "2.8.2.3",
+      "tier": 2,
+      "title": "Organize/reorganize information as appropriate to get a better understanding of a problem",
+      "kind": "skill",
+      "parent_ref": "2.8.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.1",
       "tier": 3,
-      "title": "Teamwork",
+      "title": "Business Fundamentals",
       "kind": "block",
       "parent_ref": "3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "3.1.1",
+      "tier": 3,
+      "title": "Economic/Business/Financial Principles",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.1",
+      "tier": 3,
+      "title": "Economic Terminology",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.2",
+      "tier": 3,
+      "title": "Supply/Demand",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.3",
+      "tier": 3,
+      "title": "Characteristics of Markets",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.4",
+      "tier": 3,
+      "title": "Cost and Pricing of Products",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.5",
+      "tier": 3,
+      "title": "Profit and Loss",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.1.6",
+      "tier": 3,
+      "title": "Fundamentals of Accounting",
+      "kind": "knowledge",
+      "parent_ref": "3.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.2",
+      "tier": 3,
+      "title": "Economic System as a Framework for Decision-making",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.2.1",
+      "tier": 3,
+      "title": "Understand how one\u2019s performance can impact the success of the organization",
+      "kind": "skill",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.2.2",
+      "tier": 3,
+      "title": "Consider the relative costs and benefits of potential actions to choose the most appropriate one",
+      "kind": "knowledge",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.2.3",
+      "tier": 3,
+      "title": "Demonstrate an understanding of market trends, the company\u2019s position in the market place,",
+      "kind": "skill",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.2.4",
+      "tier": 3,
+      "title": "Understand the position of the company's product/service in relation to market demand",
+      "kind": "skill",
+      "parent_ref": "3.1.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.3",
+      "tier": 3,
+      "title": "Legal/Financial",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.3.1",
+      "tier": 3,
+      "title": "Comply with the spirit of applicable laws as well as the letter",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "3.1.3.2",
       "tier": 3,
-      "title": "Discern who the company\u2019s primary competitors are and stay",
-      "kind": "knowledge",
+      "title": "Properly use company property by minimizing loss and waste and reporting loss, waste, or",
+      "kind": "skill",
       "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.3.3",
+      "tier": 3,
+      "title": "Maintain privacy and confidentiality of company information as well as that of customers and",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.3.4",
+      "tier": 3,
+      "title": "Comply with intellectual property laws",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.3.5",
+      "tier": 3,
+      "title": "Protect trade secrets",
+      "kind": "skill",
+      "parent_ref": "3.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.4",
+      "tier": 3,
+      "title": "Environmental/Health/Safety",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.4.1",
+      "tier": 3,
+      "title": "Maintain a healthful and safe environment and report any violations/discrepancies to",
+      "kind": "skill",
+      "parent_ref": "3.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.4.2",
+      "tier": 3,
+      "title": "Ensure proper handling and disposal of toxic or hazardous materials",
+      "kind": "skill",
+      "parent_ref": "3.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.5",
+      "tier": 3,
+      "title": "Social Responsibility",
+      "kind": "knowledge",
+      "parent_ref": "3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.5.1",
+      "tier": 3,
+      "title": "Emphasize quality, customer satisfaction, and fair pricing",
+      "kind": "knowledge",
+      "parent_ref": "3.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.1.5.2",
+      "tier": 3,
+      "title": "Deal with customers and colleagues in good faith without bribes, kickbacks, or excessive",
+      "kind": "knowledge",
+      "parent_ref": "3.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2",
+      "tier": 3,
+      "title": "Adaptability/Flexibility",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.1",
+      "tier": 3,
+      "title": "Work With Others",
+      "kind": "knowledge",
+      "parent_ref": "3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.1.1",
+      "tier": 3,
+      "title": "Work as part of a team to achieve mutual goals",
+      "kind": "skill",
+      "parent_ref": "3.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.1.2",
+      "tier": 3,
+      "title": "Develop and maintain good working relationships with supervisors and co-workers",
+      "kind": "skill",
+      "parent_ref": "3.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.1.3",
+      "tier": 3,
+      "title": "Choose behaviors and/or actions that best support the team and lead toward the",
+      "kind": "skill",
+      "parent_ref": "3.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.1.4",
+      "tier": 3,
+      "title": "Recognize a team\u2019s goals and identify ways to accomplish those goals in increasingly complex",
+      "kind": "skill",
+      "parent_ref": "3.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.2",
+      "tier": 3,
+      "title": "Influence/Negotiate",
+      "kind": "knowledge",
+      "parent_ref": "3.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.2.2.1",
       "tier": 3,
-      "title": "Develop constructive and cooperative working relationships",
+      "title": "Work through conflict constructively",
       "kind": "skill",
       "parent_ref": "3.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.2.2",
+      "tier": 3,
+      "title": "Persuasively present thoughts and ideas",
+      "kind": "knowledge",
+      "parent_ref": "3.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.2.3",
+      "tier": 3,
+      "title": "Respect the views of others",
+      "kind": "skill",
+      "parent_ref": "3.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.2.4",
+      "tier": 3,
+      "title": "Build toward consensus",
+      "kind": "skill",
+      "parent_ref": "3.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.2.2.5",
+      "tier": 3,
+      "title": "Influence, motivate, and persuade others in order to achieve company and client objectives",
+      "kind": "knowledge",
+      "parent_ref": "3.2.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3",
+      "tier": 3,
+      "title": "Marketing and Customer Focus",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.1",
+      "tier": 3,
+      "title": "Entertain New Ideas",
+      "kind": "knowledge",
+      "parent_ref": "3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.1.1",
+      "tier": 3,
+      "title": "Be open to considering new ways of doing things",
+      "kind": "skill",
+      "parent_ref": "3.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.1.2",
+      "tier": 3,
+      "title": "Actively seek out and carefully consider the merits of new approaches to work",
+      "kind": "skill",
+      "parent_ref": "3.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.1.3",
+      "tier": 3,
+      "title": "Willingly embrace new approaches when appropriate and discard approaches that are no",
+      "kind": "knowledge",
+      "parent_ref": "3.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.2",
+      "tier": 3,
+      "title": "Deal With Ambiguity",
+      "kind": "knowledge",
+      "parent_ref": "3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.2.1",
+      "tier": 3,
+      "title": "Take effective action when necessary without having to have all the necessary facts in hand",
+      "kind": "skill",
+      "parent_ref": "3.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.2.2",
+      "tier": 3,
+      "title": "Respond effectively to unpredictable or unexpected events",
+      "kind": "skill",
+      "parent_ref": "3.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.3.2.3",
+      "tier": 3,
+      "title": "Effectively change plans, goals, actions, or priorities to deal with changing situations",
+      "kind": "knowledge",
+      "parent_ref": "3.3.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -207,147 +1455,667 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "3.4.1",
+      "tier": 3,
+      "title": "Understand Customer Needs",
+      "kind": "knowledge",
+      "parent_ref": "3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.1.1",
+      "tier": 3,
+      "title": "Identify internal and external customers",
+      "kind": "skill",
+      "parent_ref": "3.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.1.2",
+      "tier": 3,
+      "title": "Demonstrate a desire to understand customer needs",
+      "kind": "skill",
+      "parent_ref": "3.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.1.3",
+      "tier": 3,
+      "title": "Ask questions as appropriate",
+      "kind": "skill",
+      "parent_ref": "3.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.1.4",
+      "tier": 3,
+      "title": "Demonstrate awareness of client goals",
+      "kind": "skill",
+      "parent_ref": "3.4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.2",
+      "tier": 3,
+      "title": "Provide Personalized Service",
+      "kind": "knowledge",
+      "parent_ref": "3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.2.1",
+      "tier": 3,
+      "title": "Provide prompt and efficient responses to meet the requirements, requests, and concerns of",
+      "kind": "knowledge",
+      "parent_ref": "3.4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.2.2",
+      "tier": 3,
+      "title": "Provide thorough, accurate information to answer customers\u2019 questions and to meet",
+      "kind": "knowledge",
+      "parent_ref": "3.4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.2.3",
+      "tier": 3,
+      "title": "Actively look for ways to help customers by identifying and proposing appropriate solutions",
+      "kind": "skill",
+      "parent_ref": "3.4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.2.4",
+      "tier": 3,
+      "title": "Establish boundaries as appropriate for unreasonable customer demands",
+      "kind": "skill",
+      "parent_ref": "3.4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.3",
+      "tier": 3,
+      "title": "Act Professionally",
+      "kind": "knowledge",
+      "parent_ref": "3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.3.1",
+      "tier": 3,
+      "title": "Be pleasant, courteous, and professional when dealing with internal or external customers",
+      "kind": "skill",
+      "parent_ref": "3.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.3.2",
+      "tier": 3,
+      "title": "Develop constructive and cooperative working relationships with customers",
+      "kind": "skill",
+      "parent_ref": "3.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.3.3",
+      "tier": 3,
+      "title": "Display a good-natured, cooperative attitude; be calm and empathetic when dealing with",
+      "kind": "knowledge",
+      "parent_ref": "3.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.3.4",
+      "tier": 3,
+      "title": "Uphold the company and product brand in interactions with others",
+      "kind": "knowledge",
+      "parent_ref": "3.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.4",
+      "tier": 3,
+      "title": "Keep Customers Informed",
+      "kind": "knowledge",
+      "parent_ref": "3.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.4.1",
+      "tier": 3,
+      "title": "Follow up with customers during projects and following project completion",
+      "kind": "skill",
+      "parent_ref": "3.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "3.4.4.2",
       "tier": 3,
-      "title": "Develop contingency plans to address identified obstacles",
+      "title": "Keep clients up to date about decisions that affect them",
       "kind": "skill",
+      "parent_ref": "3.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.4.3",
+      "tier": 3,
+      "title": "Seek the comments, criticisms, and involvement of customers",
+      "kind": "knowledge",
+      "parent_ref": "3.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.4.4",
+      "tier": 3,
+      "title": "Adjust services based on customer feedback",
+      "kind": "knowledge",
+      "parent_ref": "3.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.4.4.5",
+      "tier": 3,
+      "title": "Address customer comments, questions, concerns, and objections with direct, accurate, and",
+      "kind": "knowledge",
       "parent_ref": "3.4.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.5",
       "tier": 3,
-      "title": "Creative Thinking and Problem Solving: Applying creative",
+      "title": "Working with Tools and Technology",
       "kind": "block",
       "parent_ref": "3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "3.5.1",
+      "tier": 3,
+      "title": "Plan",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "3.5.1.1",
       "tier": 3,
-      "title": "Anticipate or detect the existence of a problem",
+      "title": "Approach work in a methodical manner",
       "kind": "knowledge",
+      "parent_ref": "3.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.1.2",
+      "tier": 3,
+      "title": "Plan and schedule tasks so that work is completed on time",
+      "kind": "skill",
       "parent_ref": "3.5.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.5.1.3",
       "tier": 3,
-      "title": "Evaluate the importance and criticality of the problem",
+      "title": "Keep track of details to ensure work is performed accurately and completely",
       "kind": "skill",
       "parent_ref": "3.5.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.5.1.6",
+      "ref": "3.5.2",
       "tier": 3,
-      "title": "Use the most advanced software and tools available to",
-      "kind": "skill",
-      "parent_ref": "3.5.1",
+      "title": "Prioritize",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.5.2.1",
       "tier": 3,
-      "title": "Appreciate the pieces of a system as a whole and assess the",
+      "title": "Prioritize various competing tasks",
       "kind": "knowledge",
+      "parent_ref": "3.5.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.2.2",
+      "tier": 3,
+      "title": "Perform tasks quickly and efficiently according to their urgency",
+      "kind": "skill",
       "parent_ref": "3.5.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.5.2.3",
       "tier": 3,
-      "title": "Modify or design systems to improve performance",
+      "title": "Find new ways of organizing work area or planning work to accomplish work more efficiently",
       "kind": "knowledge",
       "parent_ref": "3.5.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.5.3.4",
+      "ref": "3.5.3",
       "tier": 3,
-      "title": "Discover new ways to add value to the efforts of a team and",
+      "title": "Allocate Resources",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.3.1",
+      "tier": 3,
+      "title": "Estimate resources needed for project completion",
       "kind": "knowledge",
       "parent_ref": "3.5.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "3.5.3.2",
+      "tier": 3,
+      "title": "Allocate time and resources effectively",
+      "kind": "knowledge",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.3.3",
+      "tier": 3,
+      "title": "Coordinate efforts with all affected parties",
+      "kind": "skill",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.3.4",
+      "tier": 3,
+      "title": "Keep all parties informed of progress and all relevant changes to project timelines",
+      "kind": "skill",
+      "parent_ref": "3.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.4",
+      "tier": 3,
+      "title": "Anticipate Obstacles",
+      "kind": "knowledge",
+      "parent_ref": "3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "3.5.4.1",
       "tier": 3,
-      "title": "Evaluate the relative merits of each possible solution and",
+      "title": "Anticipate obstacles to project completion",
+      "kind": "knowledge",
+      "parent_ref": "3.5.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.5.4.2",
+      "tier": 3,
+      "title": "Develop contingency plans to address them",
       "kind": "skill",
       "parent_ref": "3.5.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.5.5.5",
+      "ref": "3.5.4.3",
       "tier": 3,
-      "title": "Observe and evaluate the outcomes of implementing the",
-      "kind": "knowledge",
-      "parent_ref": "3.5.5",
+      "title": "Take necessary corrective action when projects go off-track",
+      "kind": "skill",
+      "parent_ref": "3.5.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "3.6",
       "tier": 3,
-      "title": "Checking, Examining and Recording",
+      "title": "Problem Solving and Decision Making",
       "kind": "block",
       "parent_ref": "3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.6.1.4",
+      "ref": "3.6.1",
       "tier": 3,
-      "title": "Compile, categorize, and verify information for data",
+      "title": "Identify the Problem",
       "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.1.1",
+      "tier": 3,
+      "title": "Recognize the existence of a problem",
+      "kind": "skill",
       "parent_ref": "3.6.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.6.2.1",
+      "ref": "3.6.1.2",
       "tier": 3,
-      "title": "Detect and correct errors or inconsistencies, even under time",
-      "kind": "knowledge",
-      "parent_ref": "3.6.2",
+      "title": "Define the problem",
+      "kind": "skill",
+      "parent_ref": "3.6.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.7.3.2",
+      "ref": "3.6.2",
       "tier": 3,
-      "title": "Adapt quickly to changes in process or technology",
+      "title": "Communicate the Problem to Appropriate Personnel",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.3",
+      "tier": 3,
+      "title": "Use Team-building Skills to Analyze the Problem",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.3.1",
+      "tier": 3,
+      "title": "Use all available reference systems to locate and obtain information relevant to the problem",
+      "kind": "skill",
+      "parent_ref": "3.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.3.2",
+      "tier": 3,
+      "title": "Recall previously learned information that is relevant to the problem",
+      "kind": "skill",
+      "parent_ref": "3.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.3.3",
+      "tier": 3,
+      "title": "Identify potential causes of the problem by analyzing its component parts",
+      "kind": "skill",
+      "parent_ref": "3.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.4",
+      "tier": 3,
+      "title": "Use Team-building Skills to Generate Possible Solutions",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.4.1",
+      "tier": 3,
+      "title": "Generate several possible solutions to the problem",
+      "kind": "knowledge",
+      "parent_ref": "3.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.4.2",
+      "tier": 3,
+      "title": "Evaluate the relative merits of the possible solutions",
+      "kind": "skill",
+      "parent_ref": "3.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.5",
+      "tier": 3,
+      "title": "Choose a Solution",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.5.1",
+      "tier": 3,
+      "title": "Decisively choose the optimal solution based on its merits using rational decision analysis",
+      "kind": "knowledge",
+      "parent_ref": "3.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.5.2",
+      "tier": 3,
+      "title": "Make difficult decisions even in highly ambiguous or ill-defined situations",
+      "kind": "knowledge",
+      "parent_ref": "3.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.5.3",
+      "tier": 3,
+      "title": "Quickly choose an effective solution without assistance when appropriate",
+      "kind": "knowledge",
+      "parent_ref": "3.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.6",
+      "tier": 3,
+      "title": "Implement the Solution",
+      "kind": "knowledge",
+      "parent_ref": "3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.6.1",
+      "tier": 3,
+      "title": "Develop a realistic and systematic approach for implementing the chosen solution",
+      "kind": "skill",
+      "parent_ref": "3.6.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.6.2",
+      "tier": 3,
+      "title": "Implement the chosen solution in a timely manner",
+      "kind": "skill",
+      "parent_ref": "3.6.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.6.3",
+      "tier": 3,
+      "title": "Solve problems of a technological nature using logic and reasoning",
+      "kind": "skill",
+      "parent_ref": "3.6.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.6.6.4",
+      "tier": 3,
+      "title": "Observe and evaluate the outcomes of implementing the solution to assess the need for",
+      "kind": "knowledge",
+      "parent_ref": "3.6.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7",
+      "tier": 3,
+      "title": "Working with Tools and Technology",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.1",
+      "tier": 3,
+      "title": "Selection and Application",
+      "kind": "knowledge",
+      "parent_ref": "3.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.1.1",
+      "tier": 3,
+      "title": "Identify, select, and apply appropriate and cost-effective tools or technological solutions",
+      "kind": "skill",
+      "parent_ref": "3.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.1.2",
+      "tier": 3,
+      "title": "Identify potential hazards related to the use of tools and equipment",
+      "kind": "skill",
+      "parent_ref": "3.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.1.3",
+      "tier": 3,
+      "title": "Operate tools and equipment in accordance with established operating procedures and safety",
+      "kind": "skill",
+      "parent_ref": "3.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.1.4",
+      "tier": 3,
+      "title": "Use information technology and computer applications to support gathering, storing,",
+      "kind": "skill",
+      "parent_ref": "3.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.2",
+      "tier": 3,
+      "title": "Keeping Current",
+      "kind": "knowledge",
+      "parent_ref": "3.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.2.1",
+      "tier": 3,
+      "title": "Demonstrate an interest in learning about new and emerging tools and technologies",
+      "kind": "skill",
+      "parent_ref": "3.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.2.2",
+      "tier": 3,
+      "title": "Identify sources of information concerning state-of-the-art tools, equipment, materials,",
+      "kind": "skill",
+      "parent_ref": "3.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.2.3",
+      "tier": 3,
+      "title": "Seek out opportunities to improve knowledge of tools and technologies that may assist in",
+      "kind": "knowledge",
+      "parent_ref": "3.7.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.3",
+      "tier": 3,
+      "title": "Maintenance and Troubleshooting",
+      "kind": "knowledge",
+      "parent_ref": "3.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.3.1",
+      "tier": 3,
+      "title": "Perform routine maintenance on tools, technology, and equipment",
       "kind": "skill",
       "parent_ref": "3.7.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.7.4.1",
+      "ref": "3.7.3.2",
       "tier": 3,
-      "title": "Develop alternatives to complete a task if desired tool or",
-      "kind": "skill",
-      "parent_ref": "3.7.4",
+      "title": "Determine causes of operating errors and take corrective action",
+      "kind": "knowledge",
+      "parent_ref": "3.7.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.8.1.2",
+      "ref": "3.7.3.3",
       "tier": 3,
-      "title": "Anticipate and prevent work-related injuries and illnesses",
+      "title": "Troubleshoot maintenance problems in accordance with established procedures",
+      "kind": "knowledge",
+      "parent_ref": "3.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.7.3.4",
+      "tier": 3,
+      "title": "Perform work functions that require engaging in hands-on activity",
+      "kind": "skill",
+      "parent_ref": "3.7.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.8",
+      "tier": 3,
+      "title": "Checking, Examining, and Recording",
+      "kind": "block",
+      "parent_ref": "3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.8.1",
+      "tier": 3,
+      "title": "Details",
+      "kind": "knowledge",
+      "parent_ref": "3.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.8.1.1",
+      "tier": 3,
+      "title": "Record data in control system documentation",
       "kind": "knowledge",
       "parent_ref": "3.8.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.9.1.1",
+      "ref": "3.8.1.2",
       "tier": 3,
-      "title": "Use equipment, processes, and systems that minimize waste,",
-      "kind": "skill",
-      "parent_ref": "3.9.1",
+      "title": "Compile, code, categorize, calculate, inspect, or verify information or data",
+      "kind": "knowledge",
+      "parent_ref": "3.8.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
-      "ref": "3.9.1.4",
+      "ref": "3.8.1.3",
       "tier": 3,
-      "title": "Suggest and/or implement continuous improvement actions",
+      "title": "Apply systematic techniques for observing and gathering data",
+      "kind": "skill",
+      "parent_ref": "3.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.8.1.4",
+      "tier": 3,
+      "title": "Detect and correct errors or inconsistencies, even under time pressure",
       "kind": "knowledge",
-      "parent_ref": "3.9.1",
+      "parent_ref": "3.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.8.1.5",
+      "tier": 3,
+      "title": "Organize records and files to maintain data",
+      "kind": "skill",
+      "parent_ref": "3.8.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "3.9",
+      "tier": 3,
+      "title": "Sustainable Practices",
+      "kind": "block",
+      "parent_ref": "3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -361,15 +2129,23 @@
     {
       "ref": "4.1.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
       "parent_ref": "4.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.1.1.1",
+      "tier": 4,
+      "title": "Support manufacturing process design and development",
+      "kind": "skill",
+      "parent_ref": "4.1.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.1.1.2",
       "tier": 4,
-      "title": "Design production and production support systems",
+      "title": "Communicate about and respond to requirements of internal and external customers",
       "kind": "skill",
       "parent_ref": "4.1.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -401,7 +2177,7 @@
     {
       "ref": "4.1.2",
       "tier": 4,
-      "title": "Technical Drawings and Schematics",
+      "title": "Entry-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -417,9 +2193,65 @@
     {
       "ref": "4.1.3",
       "tier": 4,
-      "title": "Engineering Concepts",
+      "title": "Fundamentals of Research & Development",
       "kind": "knowledge",
       "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.3.1",
+      "tier": 4,
+      "title": "Awareness of basic Product R&D",
+      "kind": "knowledge",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.3.2",
+      "tier": 4,
+      "title": "Awareness of basic Process R&D",
+      "kind": "knowledge",
+      "parent_ref": "4.1.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.4",
+      "tier": 4,
+      "title": "Technical Drawings and Schematics",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.4.1",
+      "tier": 4,
+      "title": "Print Reading",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.4.2",
+      "tier": 4,
+      "title": "Interpretation of Drawings",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.4.3",
+      "tier": 4,
+      "title": "Interpretation of Schematics",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.4.4",
+      "tier": 4,
+      "title": "Geometric Dimensions and Tolerances",
+      "kind": "knowledge",
+      "parent_ref": "4.1.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -431,6 +2263,62 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.1.5.1",
+      "tier": 4,
+      "title": "Creation of Computer Aided Design (CAD) Drawings",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.5.2",
+      "tier": 4,
+      "title": "Interpretation of CAD Drawings",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.5.3",
+      "tier": 4,
+      "title": "Updating and Editing CAD Drawings",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.5.4",
+      "tier": 4,
+      "title": "CAD/CAM/CAE Applications",
+      "kind": "knowledge",
+      "parent_ref": "4.1.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.6",
+      "tier": 4,
+      "title": "Troubleshooting Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.6.1",
+      "tier": 4,
+      "title": "Knowledge of Statistical Process Control",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.6.2",
+      "tier": 4,
+      "title": "Problem Solving Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.1.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.1.7",
       "tier": 4,
       "title": "Testing/Troubleshooting",
@@ -439,19 +2327,243 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.1.7.1",
+      "tier": 4,
+      "title": "Procedure Analysis and Verification",
+      "kind": "knowledge",
+      "parent_ref": "4.1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.7.2",
+      "tier": 4,
+      "title": "Documentation Fault Finding Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.1.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.1.8",
       "tier": 4,
-      "title": "Research and Development",
-      "kind": "skill",
+      "title": "Technician-Level Critical Work Functions",
+      "kind": "critical_work_function",
       "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.8.1",
+      "tier": 4,
+      "title": "Interpret and clarify customer expectations and product specifications",
+      "kind": "skill",
+      "parent_ref": "4.1.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.8.2",
+      "tier": 4,
+      "title": "Design manufacturing production and production support systems",
+      "kind": "skill",
+      "parent_ref": "4.1.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.8.3",
+      "tier": 4,
+      "title": "Exert maximum effort to operate and fully utilize all of the technology and tools used in the",
+      "kind": "skill",
+      "parent_ref": "4.1.8",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "4.1.9",
       "tier": 4,
-      "title": "Workflow Assessment",
+      "title": "Technician-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.10",
+      "tier": 4,
+      "title": "Research & Development",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.10.1",
+      "tier": 4,
+      "title": "Product R&D",
+      "kind": "knowledge",
+      "parent_ref": "4.1.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.10.2",
+      "tier": 4,
+      "title": "Process R&D",
+      "kind": "knowledge",
+      "parent_ref": "4.1.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.10.3",
+      "tier": 4,
+      "title": "Market/Sales/Life Cycle Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.1.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.10.4",
+      "tier": 4,
+      "title": "Intellectual Property Protection",
+      "kind": "knowledge",
+      "parent_ref": "4.1.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11",
+      "tier": 4,
+      "title": "Product Realization",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.1",
+      "tier": 4,
+      "title": "Design for Manufacturing and Design for Logistics",
+      "kind": "skill",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.2",
+      "tier": 4,
+      "title": "Production System Design and Development",
+      "kind": "knowledge",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.3",
+      "tier": 4,
+      "title": "Equipment/Tool Design and Development",
+      "kind": "knowledge",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.4",
+      "tier": 4,
+      "title": "Support Systems Design and Development",
+      "kind": "skill",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.5",
+      "tier": 4,
+      "title": "Development of Prototype Processes and Products",
+      "kind": "knowledge",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.11.6",
+      "tier": 4,
+      "title": "Production System Design, Testing, and Costing",
+      "kind": "knowledge",
+      "parent_ref": "4.1.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12",
+      "tier": 4,
+      "title": "Technology Applications",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12.1",
+      "tier": 4,
+      "title": "Integrated Graphics Technologies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12.2",
+      "tier": 4,
+      "title": "Machining and Forming Technologies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12.3",
+      "tier": 4,
+      "title": "Micro and Nano Technologies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12.4",
+      "tier": 4,
+      "title": "Alternative Energies Technologies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.12.5",
+      "tier": 4,
+      "title": "Hydraulic/Pneumatic Technologies",
+      "kind": "knowledge",
+      "parent_ref": "4.1.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.13",
+      "tier": 4,
+      "title": "Troubleshooting Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.13.1",
+      "tier": 4,
+      "title": "Advanced Fault Finding Skills on Actual Equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.1.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.13.2",
+      "tier": 4,
+      "title": "Setup of SPC",
+      "kind": "skill",
+      "parent_ref": "4.1.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.13.3",
+      "tier": 4,
+      "title": "Data Analysis and Verification",
+      "kind": "knowledge",
+      "parent_ref": "4.1.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.1.13.4",
+      "tier": 4,
+      "title": "Data Interpretation and Corrective Action Implementation",
+      "kind": "knowledge",
+      "parent_ref": "4.1.13",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -465,9 +2577,49 @@
     {
       "ref": "4.2.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
       "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.1.1",
+      "tier": 4,
+      "title": "Understand the various manufacturing types, processes, and products",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.1.2",
+      "tier": 4,
+      "title": "Understand the manufacturing business as a system that integrates multiple disciplines,",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.1.3",
+      "tier": 4,
+      "title": "Manage raw materials/consumables",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.1.4",
+      "tier": 4,
+      "title": "Operate and control production/lab equipment",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.1.5",
+      "tier": 4,
+      "title": "Perform manufacturing process applications and operations",
+      "kind": "skill",
+      "parent_ref": "4.2.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -489,7 +2641,7 @@
     {
       "ref": "4.2.2",
       "tier": 4,
-      "title": "Systems",
+      "title": "Entry-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -503,6 +2655,30 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.2.3.1",
+      "tier": 4,
+      "title": "Discrete (e.g. automotive, heavy equipment, aircraft, aerospace, consumer goods)",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.3.2",
+      "tier": 4,
+      "title": "Process (e.g. chemicals, refining, brewing, smelting, utilities, pharmaceutical manufacturing)",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.3.3",
+      "tier": 4,
+      "title": "Hybrid (e.g. food, beverage packaging, printing, consumer packaging, pharmaceutical",
+      "kind": "knowledge",
+      "parent_ref": "4.2.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.2.4",
       "tier": 4,
       "title": "Precision Measurement",
@@ -511,9 +2687,33 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.2.4.1",
+      "tier": 4,
+      "title": "Linkages among mechanical, hydraulic/pneumatic, electrical, control, computer, and other",
+      "kind": "knowledge",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.4.2",
+      "tier": 4,
+      "title": "Linkages among project, technical, and business objectives",
+      "kind": "knowledge",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.4.3",
+      "tier": 4,
+      "title": "Interdependence of teams, work units, departments, organizations, inter-organizational",
+      "kind": "knowledge",
+      "parent_ref": "4.2.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.2.5",
       "tier": 4,
-      "title": "Manufacturing Tool and",
+      "title": "Lean Manufacturing/Continuous Improvement",
       "kind": "knowledge",
       "parent_ref": "4.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -527,6 +2727,22 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.2.6.1",
+      "tier": 4,
+      "title": "Sources",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.6.2",
+      "tier": 4,
+      "title": "Types of Materials",
+      "kind": "knowledge",
+      "parent_ref": "4.2.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.2.7",
       "tier": 4,
       "title": "Manufacturing Process Applications and Operations",
@@ -537,7 +2753,7 @@
     {
       "ref": "4.2.8",
       "tier": 4,
-      "title": "Industrial Process",
+      "title": "Manual Tool & Equipment Operations",
       "kind": "knowledge",
       "parent_ref": "4.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -545,23 +2761,223 @@
     {
       "ref": "4.2.9",
       "tier": 4,
-      "title": "Industrial Productions",
+      "title": "Basic Automated Systems & Control Operations",
       "kind": "knowledge",
       "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.1",
+      "tier": 4,
+      "title": "Automated Equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.2",
+      "tier": 4,
+      "title": "Automated Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.3",
+      "tier": 4,
+      "title": "Computer Control",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.4",
+      "tier": 4,
+      "title": "Hydraulics and Pneumatics",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.5",
+      "tier": 4,
+      "title": "Robotics",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.6",
+      "tier": 4,
+      "title": "Process Control",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.9.7",
+      "tier": 4,
+      "title": "Analytical Testing",
+      "kind": "knowledge",
+      "parent_ref": "4.2.9",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "4.2.10",
       "tier": 4,
-      "title": "Manufacturing Types",
+      "title": "Basic Manufacturing Process Applications & Operations",
       "kind": "knowledge",
       "parent_ref": "4.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.2.10.1",
+      "tier": 4,
+      "title": "Assembly Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.2",
+      "tier": 4,
+      "title": "Fabrication Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.3",
+      "tier": 4,
+      "title": "Electrical/Electronics Manufacturing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.4",
+      "tier": 4,
+      "title": "Bulk/Continuous Flow/Line Balancing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.5",
+      "tier": 4,
+      "title": "Finishing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.6",
+      "tier": 4,
+      "title": "Clean Room Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.7",
+      "tier": 4,
+      "title": "Experiment Design/Implementation Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.8",
+      "tier": 4,
+      "title": "Implementation of Approved Protocols",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.9",
+      "tier": 4,
+      "title": "Material Removal Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.10",
+      "tier": 4,
+      "title": "Hot and Cold Forming Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.11",
+      "tier": 4,
+      "title": "Casting, Molding, and Stamping Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.12",
+      "tier": 4,
+      "title": "Heat Treatment Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.13",
+      "tier": 4,
+      "title": "Joining, Welding, and Assembly Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.10.14",
+      "tier": 4,
+      "title": "Direct Digital and Additive Manufacturing",
+      "kind": "knowledge",
+      "parent_ref": "4.2.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.2.11",
       "tier": 4,
-      "title": "Production/Process Monitoring",
+      "title": "Technician-Level Critical Work Functions",
+      "kind": "critical_work_function",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.11.1",
+      "tier": 4,
+      "title": "Develop manufacturing process plans and documentation",
+      "kind": "skill",
+      "parent_ref": "4.2.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.11.2",
+      "tier": 4,
+      "title": "Monitor manufacturing processes and systems",
+      "kind": "skill",
+      "parent_ref": "4.2.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.11.3",
+      "tier": 4,
+      "title": "Manage continuous improvement process",
+      "kind": "skill",
+      "parent_ref": "4.2.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.12",
+      "tier": 4,
+      "title": "Technician-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.2",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -569,9 +2985,225 @@
     {
       "ref": "4.2.13",
       "tier": 4,
-      "title": "Project Management and Execution",
+      "title": "Production Planning and Work Flow",
       "kind": "knowledge",
       "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.14",
+      "tier": 4,
+      "title": "Production Components",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.14.1",
+      "tier": 4,
+      "title": "Continuous Improvement",
+      "kind": "knowledge",
+      "parent_ref": "4.2.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.14.2",
+      "tier": 4,
+      "title": "Time, Materials, and Costs",
+      "kind": "knowledge",
+      "parent_ref": "4.2.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.14.3",
+      "tier": 4,
+      "title": "Production Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.2.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15",
+      "tier": 4,
+      "title": "Advanced Production/Process Operations",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.1",
+      "tier": 4,
+      "title": "Assembly Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.2",
+      "tier": 4,
+      "title": "Fabrication Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.3",
+      "tier": 4,
+      "title": "Electrical/Electronics Manufacturing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.4",
+      "tier": 4,
+      "title": "Process Overview Knowledge",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.5",
+      "tier": 4,
+      "title": "Finishing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.6",
+      "tier": 4,
+      "title": "Continuous Flow/Line Balancing Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.7",
+      "tier": 4,
+      "title": "Cell Culture/Fermentation/Media Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.15.8",
+      "tier": 4,
+      "title": "Recovery/Filtration Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.2.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16",
+      "tier": 4,
+      "title": "Production/Process Monitoring",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.1",
+      "tier": 4,
+      "title": "Controlling Process Flow",
+      "kind": "knowledge",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.2",
+      "tier": 4,
+      "title": "Documentation and Reporting",
+      "kind": "knowledge",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.3",
+      "tier": 4,
+      "title": "Performance of Analytical Tests",
+      "kind": "knowledge",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.4",
+      "tier": 4,
+      "title": "Calibration and Troubleshooting",
+      "kind": "knowledge",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.5",
+      "tier": 4,
+      "title": "Environmental Parameters",
+      "kind": "knowledge",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.16.6",
+      "tier": 4,
+      "title": "Write/Execute Protocols",
+      "kind": "skill",
+      "parent_ref": "4.2.16",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17",
+      "tier": 4,
+      "title": "Manufacturing Management",
+      "kind": "knowledge",
+      "parent_ref": "4.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.1",
+      "tier": 4,
+      "title": "Organizational Design and Management",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.2",
+      "tier": 4,
+      "title": "Project Management",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.3",
+      "tier": 4,
+      "title": "Personnel Management Methods",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.4",
+      "tier": 4,
+      "title": "Human Behavior/Motivation/Leadership",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.5",
+      "tier": 4,
+      "title": "Material and Resource Management",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.2.17.6",
+      "tier": 4,
+      "title": "Training Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.2.17",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -585,15 +3217,47 @@
     {
       "ref": "4.3.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
       "parent_ref": "4.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.3.1.1",
+      "tier": 4,
+      "title": "Identify, diagnose, and/or repair equipment problems",
+      "kind": "skill",
+      "parent_ref": "4.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.1.2",
+      "tier": 4,
+      "title": "Communicate with others to ensure maintenance and repairs meet operational needs",
+      "kind": "skill",
+      "parent_ref": "4.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.1.3",
+      "tier": 4,
+      "title": "Maintain hands-on knowledge of equipment operations",
+      "kind": "skill",
+      "parent_ref": "4.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.1.4",
+      "tier": 4,
+      "title": "Maintain equipment, tools, and workstations",
+      "kind": "skill",
+      "parent_ref": "4.3.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.3.2",
       "tier": 4,
-      "title": "General Skills",
+      "title": "Entry-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -604,6 +3268,62 @@
       "title": "Design and document equipment/system/process",
       "kind": "skill",
       "parent_ref": "4.3.2",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3",
+      "tier": 4,
+      "title": "General Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.1",
+      "tier": 4,
+      "title": "Use of Hand Tools",
+      "kind": "skill",
+      "parent_ref": "4.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.2",
+      "tier": 4,
+      "title": "Use of Schematic Drawings and Control Documents",
+      "kind": "skill",
+      "parent_ref": "4.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.3",
+      "tier": 4,
+      "title": "Use of Calibrated Measuring Instruments",
+      "kind": "skill",
+      "parent_ref": "4.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.4",
+      "tier": 4,
+      "title": "Knowledge of Basic Hydraulic/Pneumatic Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.5",
+      "tier": 4,
+      "title": "Knowledge of Basic AC/DC Electrical Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.3.6",
+      "tier": 4,
+      "title": "Installation of Parts for Industrial Equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.3.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -623,6 +3343,94 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.3.5.1",
+      "tier": 4,
+      "title": "Mechanical Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.2",
+      "tier": 4,
+      "title": "Electrical Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.3",
+      "tier": 4,
+      "title": "Electronic Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.4",
+      "tier": 4,
+      "title": "Hydraulic/Pneumatic Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.5",
+      "tier": 4,
+      "title": "High Vacuum Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.6",
+      "tier": 4,
+      "title": "Laser Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.7",
+      "tier": 4,
+      "title": "Computer Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.8",
+      "tier": 4,
+      "title": "Machine Automation Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.9",
+      "tier": 4,
+      "title": "Lubrication Processes",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.10",
+      "tier": 4,
+      "title": "Bearings and Couplings",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.5.11",
+      "tier": 4,
+      "title": "Belt Drives and Chain Drives",
+      "kind": "knowledge",
+      "parent_ref": "4.3.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.3.6",
       "tier": 4,
       "title": "Hydraulic Systems Maintenance, Installation, and Repair",
@@ -631,9 +3439,25 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.3.6.1",
+      "tier": 4,
+      "title": "Support the installation, customization, or upgrading of equipment",
+      "kind": "skill",
+      "parent_ref": "4.3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.6.2",
+      "tier": 4,
+      "title": "Coordinate preventive maintenance to ensure production process runs smoothly",
+      "kind": "skill",
+      "parent_ref": "4.3.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.3.7",
       "tier": 4,
-      "title": "Pneumatic Systems Maintenance,",
+      "title": "Technician-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.3",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -644,6 +3468,166 @@
       "title": "Mechanical Systems Maintenance, Installation, and Repair",
       "kind": "knowledge",
       "parent_ref": "4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.8.1",
+      "tier": 4,
+      "title": "Mechanical Power Transmissions Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.8.2",
+      "tier": 4,
+      "title": "Piping Operations",
+      "kind": "knowledge",
+      "parent_ref": "4.3.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.8.3",
+      "tier": 4,
+      "title": "Hydraulics/Pneumatics Power Transmission Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9",
+      "tier": 4,
+      "title": "Advanced Maintenance and Troubleshooting Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.1",
+      "tier": 4,
+      "title": "Process Controls",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.2",
+      "tier": 4,
+      "title": "Pump Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.3",
+      "tier": 4,
+      "title": "Thermal Systems (HVAC)",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.4",
+      "tier": 4,
+      "title": "Refrigeration Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.5",
+      "tier": 4,
+      "title": "Mechanical/Fluid Power Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.6",
+      "tier": 4,
+      "title": "Separation/Heat Exchange Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.7",
+      "tier": 4,
+      "title": "Water Treatment/Destruction Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.8",
+      "tier": 4,
+      "title": "High Voltage/Utility Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.9.9",
+      "tier": 4,
+      "title": "Programmable Logic Controlled Industrial Equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.3.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10",
+      "tier": 4,
+      "title": "Reliability and Maintainability",
+      "kind": "knowledge",
+      "parent_ref": "4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.1",
+      "tier": 4,
+      "title": "Basic Reliability Models",
+      "kind": "knowledge",
+      "parent_ref": "4.3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.2",
+      "tier": 4,
+      "title": "Reliability of Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.3",
+      "tier": 4,
+      "title": "Design for Reliability",
+      "kind": "skill",
+      "parent_ref": "4.3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.4",
+      "tier": 4,
+      "title": "Design for Maintainability",
+      "kind": "skill",
+      "parent_ref": "4.3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.5",
+      "tier": 4,
+      "title": "Investigative Techniques",
+      "kind": "knowledge",
+      "parent_ref": "4.3.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.3.10.6",
+      "tier": 4,
+      "title": "Analysis of Failure Data",
+      "kind": "knowledge",
+      "parent_ref": "4.3.10",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -697,9 +3681,17 @@
     {
       "ref": "4.4.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
       "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.1.1",
+      "tier": 4,
+      "title": "Ship and receive products and materials",
+      "kind": "skill",
+      "parent_ref": "4.4.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -711,6 +3703,38 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.4.2",
+      "tier": 4,
+      "title": "Entry-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.3",
+      "tier": 4,
+      "title": "Basics of Supply-Chain Management",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.3.1",
+      "tier": 4,
+      "title": "Elements of the Supply Chain",
+      "kind": "knowledge",
+      "parent_ref": "4.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.3.2",
+      "tier": 4,
+      "title": "Just-in-Time/Lean Manufacturing",
+      "kind": "knowledge",
+      "parent_ref": "4.4.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.4.4",
       "tier": 4,
       "title": "Detailed Scheduling and Planning",
@@ -719,11 +3743,75 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.4.4.1",
+      "tier": 4,
+      "title": "Inventory Forecasting",
+      "kind": "knowledge",
+      "parent_ref": "4.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.4.2",
+      "tier": 4,
+      "title": "Ordering Materials and Supplies",
+      "kind": "knowledge",
+      "parent_ref": "4.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.4.3",
+      "tier": 4,
+      "title": "Inventory Monitoring and Audits",
+      "kind": "knowledge",
+      "parent_ref": "4.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.4.4",
+      "tier": 4,
+      "title": "Stock Rotation Requirements",
+      "kind": "knowledge",
+      "parent_ref": "4.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.4.5",
+      "tier": 4,
+      "title": "Expediting",
+      "kind": "knowledge",
+      "parent_ref": "4.4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.4.5",
       "tier": 4,
       "title": "Executing Operations",
       "kind": "knowledge",
       "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.5.1",
+      "tier": 4,
+      "title": "Material Handling",
+      "kind": "knowledge",
+      "parent_ref": "4.4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.5.2",
+      "tier": 4,
+      "title": "Plant Facility and Capacity",
+      "kind": "knowledge",
+      "parent_ref": "4.4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.5.3",
+      "tier": 4,
+      "title": "Production Scheduling",
+      "kind": "knowledge",
+      "parent_ref": "4.4.5",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -737,9 +3825,25 @@
     {
       "ref": "4.4.6",
       "tier": 4,
-      "title": "Managing Inventory",
+      "title": "Production Systems",
       "kind": "knowledge",
       "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.6.1",
+      "tier": 4,
+      "title": "Lead and Cycle Time",
+      "kind": "knowledge",
+      "parent_ref": "4.4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.6.2",
+      "tier": 4,
+      "title": "Change Orders, Bills of Material, Work Orders, etc",
+      "kind": "knowledge",
+      "parent_ref": "4.4.6",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -751,9 +3855,81 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.4.7.1",
+      "tier": 4,
+      "title": "Packaging Product",
+      "kind": "knowledge",
+      "parent_ref": "4.4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.7.2",
+      "tier": 4,
+      "title": "Labeling Product- Inventory Tags and Bar Codes",
+      "kind": "knowledge",
+      "parent_ref": "4.4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.7.3",
+      "tier": 4,
+      "title": "Warehouse Management Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.7.4",
+      "tier": 4,
+      "title": "Transportation Methods",
+      "kind": "knowledge",
+      "parent_ref": "4.4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.7.5",
+      "tier": 4,
+      "title": "Customs and Export Control (Basic Paperwork)",
+      "kind": "knowledge",
+      "parent_ref": "4.4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.4.8",
       "tier": 4,
-      "title": "Production Systems",
+      "title": "Technician-Level Critical Work Functions",
+      "kind": "critical_work_function",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.8.1",
+      "tier": 4,
+      "title": "Manage purchasing and just-in-time materials flow, shipping and receiving, packaging, and",
+      "kind": "skill",
+      "parent_ref": "4.4.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.8.2",
+      "tier": 4,
+      "title": "Control inventory of materials and products",
+      "kind": "skill",
+      "parent_ref": "4.4.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.8.3",
+      "tier": 4,
+      "title": "Develop and maintain production/delivery schedules and supplier networks",
+      "kind": "skill",
+      "parent_ref": "4.4.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.9",
+      "tier": 4,
+      "title": "Technician-Level Technical Content Areas",
       "kind": "knowledge",
       "parent_ref": "4.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -761,17 +3937,241 @@
     {
       "ref": "4.4.10",
       "tier": 4,
-      "title": "Supply Chain Management",
+      "title": "Supply-Chain Management",
       "kind": "knowledge",
       "parent_ref": "4.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.4.10.1",
+      "tier": 4,
+      "title": "Manufacturing Resources Planning",
+      "kind": "knowledge",
+      "parent_ref": "4.4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.10.2",
+      "tier": 4,
+      "title": "Collaborative, Planning, Forecasting, and Replenishment",
+      "kind": "knowledge",
+      "parent_ref": "4.4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.10.3",
+      "tier": 4,
+      "title": "Vendor Managed Inventory Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.10.4",
+      "tier": 4,
+      "title": "Centralized versus Decentralized Control",
+      "kind": "knowledge",
+      "parent_ref": "4.4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.10.5",
+      "tier": 4,
+      "title": "E-Business and Direct Shipment",
+      "kind": "knowledge",
+      "parent_ref": "4.4.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.4.11",
       "tier": 4,
-      "title": "Workflow",
+      "title": "Automated Material Handling",
       "kind": "knowledge",
       "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.11.1",
+      "tier": 4,
+      "title": "Automated Material Handling and Distribution Systems",
+      "kind": "knowledge",
+      "parent_ref": "4.4.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.11.2",
+      "tier": 4,
+      "title": "Integrated Supply Chain Information Technology",
+      "kind": "knowledge",
+      "parent_ref": "4.4.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.12",
+      "tier": 4,
+      "title": "Resources Planning",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.12.1",
+      "tier": 4,
+      "title": "Demand Management",
+      "kind": "knowledge",
+      "parent_ref": "4.4.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.12.2",
+      "tier": 4,
+      "title": "Sales and Operations Planning",
+      "kind": "knowledge",
+      "parent_ref": "4.4.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.12.3",
+      "tier": 4,
+      "title": "Master Scheduling",
+      "kind": "knowledge",
+      "parent_ref": "4.4.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.12.4",
+      "tier": 4,
+      "title": "Measuring Business Performance",
+      "kind": "knowledge",
+      "parent_ref": "4.4.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.13",
+      "tier": 4,
+      "title": "Detailed Scheduling and Planning",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.13.1",
+      "tier": 4,
+      "title": "Techniques of Inventory Management",
+      "kind": "knowledge",
+      "parent_ref": "4.4.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.13.2",
+      "tier": 4,
+      "title": "Detailed Material Planning",
+      "kind": "knowledge",
+      "parent_ref": "4.4.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14",
+      "tier": 4,
+      "title": "Executing Operations",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.1",
+      "tier": 4,
+      "title": "Procurement and External Source of Supply",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.2",
+      "tier": 4,
+      "title": "Prioritizing and Sequencing Work",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.3",
+      "tier": 4,
+      "title": "Executing Plans and Implementing Controls",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.4",
+      "tier": 4,
+      "title": "Evaluating Performance",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.5",
+      "tier": 4,
+      "title": "Ergonomics",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.14.6",
+      "tier": 4,
+      "title": "Sharing and Collaboration across the Supply Chain",
+      "kind": "knowledge",
+      "parent_ref": "4.4.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15",
+      "tier": 4,
+      "title": "Awareness of Global Impacts",
+      "kind": "knowledge",
+      "parent_ref": "4.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15.1",
+      "tier": 4,
+      "title": "Global Supply Chain Logistics Life Cycle",
+      "kind": "knowledge",
+      "parent_ref": "4.4.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15.2",
+      "tier": 4,
+      "title": "Intellectual Property",
+      "kind": "knowledge",
+      "parent_ref": "4.4.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15.3",
+      "tier": 4,
+      "title": "Taxes and Duties",
+      "kind": "knowledge",
+      "parent_ref": "4.4.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15.4",
+      "tier": 4,
+      "title": "Shipping, Receiving, and Freight",
+      "kind": "knowledge",
+      "parent_ref": "4.4.15",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.4.15.5",
+      "tier": 4,
+      "title": "Customs and Export Control (Legal Aspects)",
+      "kind": "knowledge",
+      "parent_ref": "4.4.15",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -785,9 +4185,25 @@
     {
       "ref": "4.5.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
       "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.1.1",
+      "tier": 4,
+      "title": "Ensure materials, processes, and final product meet quality specifications",
+      "kind": "skill",
+      "parent_ref": "4.5.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.1.2",
+      "tier": 4,
+      "title": "Support and maintain quality systems",
+      "kind": "skill",
+      "parent_ref": "4.5.1",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
@@ -800,6 +4216,14 @@
     },
     {
       "ref": "4.5.2",
+      "tier": 4,
+      "title": "Entry-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.3",
       "tier": 4,
       "title": "Quality Assurance",
       "kind": "knowledge",
@@ -815,6 +4239,30 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.5.3.2",
+      "tier": 4,
+      "title": "Quality Management Systems and Tools",
+      "kind": "knowledge",
+      "parent_ref": "4.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.3.3",
+      "tier": 4,
+      "title": "Industry Standards",
+      "kind": "knowledge",
+      "parent_ref": "4.5.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.4",
+      "tier": 4,
+      "title": "Principles of Lean Manufacturing",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.5.5",
       "tier": 4,
       "title": "Quality Inspection",
@@ -823,9 +4271,145 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.5.5.1",
+      "tier": 4,
+      "title": "Introduction to Statistical Process Control",
+      "kind": "knowledge",
+      "parent_ref": "4.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.5.2",
+      "tier": 4,
+      "title": "Sampling and Charting",
+      "kind": "knowledge",
+      "parent_ref": "4.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.5.3",
+      "tier": 4,
+      "title": "Problem Solving Tools",
+      "kind": "knowledge",
+      "parent_ref": "4.5.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.6",
+      "tier": 4,
+      "title": "Inspecting for Quality",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.6.1",
+      "tier": 4,
+      "title": "Inspecting Raw/Incoming Materials",
+      "kind": "knowledge",
+      "parent_ref": "4.5.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.6.2",
+      "tier": 4,
+      "title": "Inspecting In-Process Product",
+      "kind": "knowledge",
+      "parent_ref": "4.5.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.6.3",
+      "tier": 4,
+      "title": "Inspecting Final Products",
+      "kind": "knowledge",
+      "parent_ref": "4.5.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.5.7",
       "tier": 4,
       "title": "Quality Assurance Audits",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.7.1",
+      "tier": 4,
+      "title": "Business Process Reengineering",
+      "kind": "knowledge",
+      "parent_ref": "4.5.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.7.2",
+      "tier": 4,
+      "title": "Systems Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.5.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.7.3",
+      "tier": 4,
+      "title": "Data Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.5.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.8",
+      "tier": 4,
+      "title": "Technician-Level Critical Work Functions",
+      "kind": "critical_work_function",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.8.1",
+      "tier": 4,
+      "title": "Monitor production for product and process quality",
+      "kind": "skill",
+      "parent_ref": "4.5.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.8.2",
+      "tier": 4,
+      "title": "Employ audits and inspections to maintain the quality and continuous improvement process",
+      "kind": "skill",
+      "parent_ref": "4.5.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.8.3",
+      "tier": 4,
+      "title": "Correct the product and process to meet quality standards",
+      "kind": "skill",
+      "parent_ref": "4.5.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.8.4",
+      "tier": 4,
+      "title": "Suggest and/or implement continuous improvement actions",
+      "kind": "skill",
+      "parent_ref": "4.5.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.9",
+      "tier": 4,
+      "title": "Technician-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.10",
+      "tier": 4,
+      "title": "Probability and Statistics",
       "kind": "knowledge",
       "parent_ref": "4.5",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -839,9 +4423,145 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.5.11.1",
+      "tier": 4,
+      "title": "Presentation Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.5.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.11.2",
+      "tier": 4,
+      "title": "Query-Based Intermediate Computer Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.5.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.11.3",
+      "tier": 4,
+      "title": "Facilitation Skills",
+      "kind": "knowledge",
+      "parent_ref": "4.5.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.11.4",
+      "tier": 4,
+      "title": "Business Case",
+      "kind": "knowledge",
+      "parent_ref": "4.5.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.5.12",
       "tier": 4,
-      "title": "Data Analysis and Presentation",
+      "title": "Statistical Process Control Methods",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.12.1",
+      "tier": 4,
+      "title": "Factor Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.5.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.12.2",
+      "tier": 4,
+      "title": "Capability Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.5.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.12.3",
+      "tier": 4,
+      "title": "Inspection/Test/Validation",
+      "kind": "knowledge",
+      "parent_ref": "4.5.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.12.4",
+      "tier": 4,
+      "title": "Reliability Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.5.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.12.5",
+      "tier": 4,
+      "title": "Acceptance Sampling",
+      "kind": "knowledge",
+      "parent_ref": "4.5.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.13",
+      "tier": 4,
+      "title": "Quality Assurance Audits",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.13.1",
+      "tier": 4,
+      "title": "ISO 9000",
+      "kind": "knowledge",
+      "parent_ref": "4.5.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.13.2",
+      "tier": 4,
+      "title": "Audit Procedures",
+      "kind": "knowledge",
+      "parent_ref": "4.5.13",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.14",
+      "tier": 4,
+      "title": "Corrective and Preventive Actions",
+      "kind": "knowledge",
+      "parent_ref": "4.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.14.1",
+      "tier": 4,
+      "title": "Eliminating Non-Conformities",
+      "kind": "knowledge",
+      "parent_ref": "4.5.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.14.2",
+      "tier": 4,
+      "title": "Verification and Documentation",
+      "kind": "knowledge",
+      "parent_ref": "4.5.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.14.3",
+      "tier": 4,
+      "title": "Documentation Creation",
+      "kind": "knowledge",
+      "parent_ref": "4.5.14",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.5.15",
+      "tier": 4,
+      "title": "Benchmarking and Best Practice",
       "kind": "knowledge",
       "parent_ref": "4.5",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -857,15 +4577,135 @@
     {
       "ref": "4.6.1",
       "tier": 4,
-      "title": "Critical Work Functions",
+      "title": "Entry-Level Critical Work Functions",
       "kind": "critical_work_function",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.1.1",
+      "tier": 4,
+      "title": "Understand and follow established personal safety, security, and environmental practices",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.1.2",
+      "tier": 4,
+      "title": "Ensure that equipment is being used safely",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.1.3",
+      "tier": 4,
+      "title": "Comply with local, federal, and company health, safety, security, and environmental",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.1.4",
+      "tier": 4,
+      "title": "Identify unsafe or insecure conditions and take corrective action",
+      "kind": "skill",
+      "parent_ref": "4.6.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.2",
+      "tier": 4,
+      "title": "Entry-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.3",
+      "tier": 4,
+      "title": "Personal Safety",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.3.1",
+      "tier": 4,
+      "title": "Understanding and Following Established Safety Practices",
+      "kind": "knowledge",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.3.2",
+      "tier": 4,
+      "title": "Safety Procedures for Clean and Safe Working Environment",
+      "kind": "knowledge",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.3.3",
+      "tier": 4,
+      "title": "Use of Personal Protective Equipment and Clothing",
+      "kind": "skill",
+      "parent_ref": "4.6.3",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4",
+      "tier": 4,
+      "title": "Regulations",
+      "kind": "knowledge",
       "parent_ref": "4.6",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
       "ref": "4.6.4.1",
       "tier": 4,
-      "title": "Developing corrective actions",
+      "title": "Hazardous Material Communication (HAZCOM)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4.2",
+      "tier": 4,
+      "title": "Hazardous Material Handling and Disposal (HAZMAT)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4.3",
+      "tier": 4,
+      "title": "Hazardous Material Information System Labeling and Storage (HMIS)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4.4",
+      "tier": 4,
+      "title": "Office of Homeland Security System and Physical Security Regulations (US only)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4.5",
+      "tier": 4,
+      "title": "Regulations Governing Safe Use of Equipment",
+      "kind": "knowledge",
+      "parent_ref": "4.6.4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.4.6",
+      "tier": 4,
+      "title": "Role of the Occupational Safety and Health Administration (OSHA), the Environmental Protection Administration (EPA), or Other Appropriate Regulatory Bodies in the Workplace (US only) Safety Procedures",
       "kind": "knowledge",
       "parent_ref": "4.6.4",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -879,9 +4719,489 @@
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     },
     {
+      "ref": "4.6.5.1",
+      "tier": 4,
+      "title": "Conduct health, safety, and/or environmental incident and hazard investigations",
+      "kind": "skill",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.5.2",
+      "tier": 4,
+      "title": "Conduct preventive health, safety, and/or environmental incident and hazard inspections",
+      "kind": "skill",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.5.3",
+      "tier": 4,
+      "title": "Implement continuous improvement in health, safety, security, and/or environmental",
+      "kind": "skill",
+      "parent_ref": "4.6.5",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.6",
+      "tier": 4,
+      "title": "Technician-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.7",
+      "tier": 4,
+      "title": "Continuous Improvement in Health, Safety, Security, and Environment",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.7.1",
+      "tier": 4,
+      "title": "Analysis of Health/Safety/Security/Environmental Data",
+      "kind": "knowledge",
+      "parent_ref": "4.6.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.7.2",
+      "tier": 4,
+      "title": "Identification of Projects and Priorities",
+      "kind": "knowledge",
+      "parent_ref": "4.6.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.7.3",
+      "tier": 4,
+      "title": "Root Cause Analysis",
+      "kind": "knowledge",
+      "parent_ref": "4.6.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
       "ref": "4.6.8",
       "tier": 4,
-      "title": "Safety Procedures",
+      "title": "Environmental Protection/Waste Management",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.8.1",
+      "tier": 4,
+      "title": "Chemical Hazard Assessment",
+      "kind": "knowledge",
+      "parent_ref": "4.6.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.8.2",
+      "tier": 4,
+      "title": "Design to Minimize Environmental Impact",
+      "kind": "skill",
+      "parent_ref": "4.6.8",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9",
+      "tier": 4,
+      "title": "Incident and Hazard Investigations",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.1",
+      "tier": 4,
+      "title": "Investigations for Health, Safety, Security, or Environmental Incidences/Hazards",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.2",
+      "tier": 4,
+      "title": "Developing Corrective Actions",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.3",
+      "tier": 4,
+      "title": "Documentation of Findings",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.4",
+      "tier": 4,
+      "title": "Follow-up Investigation",
+      "kind": "skill",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.5",
+      "tier": 4,
+      "title": "Insurance (Property)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.6",
+      "tier": 4,
+      "title": "Violations Reports to Proper Authorities",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.9.7",
+      "tier": 4,
+      "title": "Workers Compensation",
+      "kind": "knowledge",
+      "parent_ref": "4.6.9",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10",
+      "tier": 4,
+      "title": "Preventive Health, Safety, or Environmental Inspections",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.1",
+      "tier": 4,
+      "title": "Audit of Records and Documentation",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.2",
+      "tier": 4,
+      "title": "Conducting Inspections",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.3",
+      "tier": 4,
+      "title": "Clean Room Protocol",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.4",
+      "tier": 4,
+      "title": "Documentation of Inspection Findings",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.5",
+      "tier": 4,
+      "title": "Emergency Response Preparedness",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.10.6",
+      "tier": 4,
+      "title": "Fire Protection and Control",
+      "kind": "knowledge",
+      "parent_ref": "4.6.10",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.11",
+      "tier": 4,
+      "title": "Standards",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.11.1",
+      "tier": 4,
+      "title": "International Environmental Management Guidance (ISO14001)",
+      "kind": "knowledge",
+      "parent_ref": "4.6.11",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.12",
+      "tier": 4,
+      "title": "Additional Knowledge",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.12.1",
+      "tier": 4,
+      "title": "Life Safety Code/National Fire Protection Association 101",
+      "kind": "knowledge",
+      "parent_ref": "4.6.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.12.2",
+      "tier": 4,
+      "title": "Engineering Principles for Safety",
+      "kind": "knowledge",
+      "parent_ref": "4.6.12",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.13",
+      "tier": 4,
+      "title": "Resources Reviewed",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.14",
+      "tier": 4,
+      "title": "International Institute for Sustainable Development",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.15",
+      "tier": 4,
+      "title": "ISO 1400 Sustainable Development",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.16",
+      "tier": 4,
+      "title": "International Trade",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.17",
+      "tier": 4,
+      "title": "Administration, U.S. Department",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.18",
+      "tier": 4,
+      "title": "Definition of Sustainable Manufacturing",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.19",
+      "tier": 4,
+      "title": "Manufacturing Technical Achievement Record NA",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.20",
+      "tier": 4,
+      "title": "Job Corps",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.21",
+      "tier": 4,
+      "title": "Machining Technical Achievement Record NA",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.22",
+      "tier": 4,
+      "title": "Job Corps",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.23",
+      "tier": 4,
+      "title": "Manufacturing Skill Standards Council",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.24",
+      "tier": 4,
+      "title": "MSSC Logistics (CLA/CLT) Certification",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.25",
+      "tier": 4,
+      "title": "National Association of State Directors of Career Technical Education",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.26",
+      "tier": 4,
+      "title": "Manufacturing Career Cluster",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.27",
+      "tier": 4,
+      "title": "National Council for Advanced Manufacturing Sustainable Manufacturing",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.28",
+      "tier": 4,
+      "title": "National Institute for Certification",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.29",
+      "tier": 4,
+      "title": "National Institute for",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.30",
+      "tier": 4,
+      "title": "Metalworking Skills Standards",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.31",
+      "tier": 4,
+      "title": "Oregon Manufacturing Cluster Skill Sets",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.32",
+      "tier": 4,
+      "title": "Oregon Department of Education",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.33",
+      "tier": 4,
+      "title": "Lean Certification Body of Knowledge",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.34",
+      "tier": 4,
+      "title": "Partnership for 21st Century Skills P21 Framework Definitions",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.35",
+      "tier": 4,
+      "title": "Purdue Manufacturing Extension Partnership",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.36",
+      "tier": 4,
+      "title": "Green Enterprise Development",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.37",
+      "tier": 4,
+      "title": "Purdue University Product Life Cycle Management Center of Excellence",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.38",
+      "tier": 4,
+      "title": "Product Life Cycle Management",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.39",
+      "tier": 4,
+      "title": "Society of Manufacturing Engineers Certifications",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.40",
+      "tier": 4,
+      "title": "Technical College System of Georgia",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.41",
+      "tier": 4,
+      "title": "Manufacturing in America Report",
+      "kind": "knowledge",
+      "parent_ref": "4.6",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.6.42",
+      "tier": 4,
+      "title": "U.S. Department of Commerce",
       "kind": "knowledge",
       "parent_ref": "4.6",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
@@ -892,6 +5212,46 @@
       "title": "Sustainable and Green Manufacturing",
       "kind": "block",
       "parent_ref": "4",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.7.1",
+      "tier": 4,
+      "title": "Entry-Level Critical Work Functions",
+      "kind": "critical_work_function",
+      "parent_ref": "4.7",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.7.1.1",
+      "tier": 4,
+      "title": "Strive to minimize waste, improve efficiency, and reduce resource use",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.7.1.2",
+      "tier": 4,
+      "title": "Operate with a triple bottom line, emphasizing financial profitability, environmental integrity,",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.7.1.3",
+      "tier": 4,
+      "title": "Understand life cycle analysis: the environmental and economic effects of a product at every",
+      "kind": "skill",
+      "parent_ref": "4.7.1",
+      "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
+    },
+    {
+      "ref": "4.7.2",
+      "tier": 4,
+      "title": "Entry-Level Technical Content Areas",
+      "kind": "knowledge",
+      "parent_ref": "4.7",
       "url": "https://www.careeronestop.org/CompetencyModel/competency-models/advanced-manufacturing.aspx"
     }
   ]
