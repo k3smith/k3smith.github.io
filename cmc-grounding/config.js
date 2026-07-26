@@ -3,7 +3,7 @@ window.GROUNDING_CONFIG = {
   roundId: "cmc_grounding_pilot",
   roundTitle: "CMC grounding pilot",
   atomsUrl: "atoms/cmc_grounding_pilot.json",
-  sheetWebAppUrl: "",
+  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbyfayNHBzoLPTgEjPvUGuTllzf-7apIT_kiNmLStXju6gkifsdYJmsdHceraX3sX3LM/exec",
   targetRatings: 1,
   requiredFrameworks: ["engineering", "advanced_manufacturing"],
   maxItemsPerFramework: 3,
