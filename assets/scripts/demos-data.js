@@ -122,6 +122,8 @@ const DEMO_COURSES = [
             name: 'Engine Room Cutaway',
             description: 'Explore a labeled side-elevation cutaway of a ship engine room: main engine, control room, platforms, tanks, shaft, and propeller.',
           },
+        ]
+      }
     ]
   }
 ];
