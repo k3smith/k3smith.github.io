@@ -122,6 +122,11 @@ const DEMO_COURSES = [
             name: 'Engine Room Cutaway',
             description: 'Explore a labeled side-elevation cutaway of a ship engine room: main engine, control room, platforms, tanks, shaft, and propeller.',
           },
+          {
+            file: 'M01-03-FuelOilFlowDemo.html',
+            name: 'Fuel Oil Flow: Bunker to Engine',
+            description: 'Step through fuel oil treatment from the bunker tank to the engine: transfer, settling, purifying, service tank, boosting, and heating.',
+          },
         ]
       }
     ]
