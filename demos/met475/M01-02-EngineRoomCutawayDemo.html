@@ -6,27 +6,27 @@
 <title>Engine Room Cutaway | MET 475</title>
 <style>
   :root { --navy:#1F3A5F; --light:#E7EDF4; --hl:#D85A30; --ink:#222; }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
-  .wrap { max-width: 1000px; margin:0 auto; padding:16px; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:1100px; margin:0 auto; padding:16px; }
   h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
   p.lede { margin:0 0 12px; color:#444; }
   .stage { display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start; }
-  .figure { flex:1 1 460px; min-width:320px; }
+  .figure { flex:2 1 520px; min-width:340px; }
   svg { width:100%; height:auto; }
-  .marker circle { cursor:pointer; transition: r .1s, fill .15s; }
+  .marker circle { cursor:pointer; transition:fill .15s; }
   .marker text { pointer-events:none; }
   .marker.sel circle { fill:var(--hl); }
-  .hl { opacity:0; transition: opacity .15s; }
+  .hl { opacity:0; transition:opacity .15s; }
   .hl.on { opacity:1; }
-  .panel { flex:1 1 320px; min-width:280px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .panel { flex:1 1 300px; min-width:270px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
   .panel h2 { color:var(--navy); font-size:1.05rem; margin:0 0 6px; }
   .panel p { margin:0; font-size:.95rem; line-height:1.45; }
-  .legend { list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:4px; }
-  .legend li { font-size:.85rem; cursor:pointer; padding:4px 6px; border-radius:4px; color:var(--navy); }
+  .legend { list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+  .legend li { font-size:.82rem; cursor:pointer; padding:3px 6px; border-radius:4px; color:var(--navy); }
   .legend li:hover { background:#dfe8f3; }
   .legend li.sel { background:#cfe0f2; font-weight:bold; }
-  .legend .n { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:var(--navy); color:#fff; border-radius:50%; font-size:.75rem; margin-right:6px; }
+  .legend .n { display:inline-block; width:17px; height:17px; line-height:17px; text-align:center; background:var(--navy); color:#fff; border-radius:50%; font-size:.72rem; margin-right:5px; }
   button.reset { margin-top:12px; background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; font-size:.9rem; }
   button.reset:hover { background:#16283f; }
 </style>
@@ -34,55 +34,133 @@
 <body>
 <div class="wrap">
   <h1>Engine Room Cutaway</h1>
-  <p class="lede">A side view through a merchant ship's aft engine room. Click a numbered part, or a legend item, to learn what it is.</p>
+  <p class="lede">A side view through a merchant ship's aft engine room, looking from the port side. Click a numbered part, or a legend item, to learn what it is.</p>
   <div class="stage">
     <div class="figure">
-      <svg viewBox="0 0 640 400" role="img" aria-label="Side-elevation cutaway of a ship engine room with numbered, clickable parts.">
-        <g stroke="#9fb0c4" stroke-width="1.5" fill="none">
-          <line x1="60" y1="55" x2="600" y2="55"></line>
-          <line x1="60" y1="55" x2="60" y2="360"></line>
-          <line x1="600" y1="55" x2="600" y2="320"></line>
-          <path d="M60,360 L500,360 L600,320"></path>
-          <line x1="60" y1="140" x2="560" y2="140"></line>
-          <line x1="60" y1="220" x2="560" y2="220"></line>
-          <line x1="60" y1="310" x2="560" y2="310"></line>
-          <line x1="560" y1="55" x2="560" y2="310" stroke-dasharray="4 4"></line>
+      <svg viewBox="0 0 900 470" role="img" aria-label="Detailed side-elevation cutaway of a ship engine room with numbered, clickable parts." font-family="Arial, sans-serif">
+        <g stroke="#9fb0c4" fill="none">
+          <line x1="90" y1="100" x2="740" y2="100" stroke-width="2"/>
+          <line x1="90" y1="100" x2="90" y2="432" stroke-width="2"/>
+          <path d="M740,100 C815,120 832,235 795,300 C775,342 745,366 720,398" stroke-width="2"/>
+          <path d="M90,432 L600,432 Q672,434 706,406 L720,398" stroke-width="2"/>
+          <line x1="90" y1="168" x2="800" y2="168" stroke="#85B7EB" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <line x1="90" y1="192" x2="640" y2="192" stroke-width="1.5"/>
+          <line x1="90" y1="282" x2="640" y2="282" stroke-width="1.5"/>
+          <line x1="90" y1="382" x2="706" y2="382" stroke-width="1.5"/>
+          <line x1="640" y1="100" x2="640" y2="382" stroke-width="1.2" stroke-dasharray="4 4"/>
+          <line x1="180" y1="382" x2="180" y2="432" stroke-width="1"/>
+          <line x1="300" y1="382" x2="300" y2="432" stroke-width="1"/>
+          <line x1="420" y1="382" x2="420" y2="432" stroke-width="1"/>
+          <line x1="540" y1="382" x2="540" y2="432" stroke-width="1"/>
+          <line x1="630" y1="382" x2="630" y2="432" stroke-width="1"/>
+        </g>
+        <g fill="#7a8ba0" font-size="9" text-anchor="middle">
+          <text x="135" y="412">F.O.</text>
+          <text x="240" y="412">L.O.</text>
+          <text x="360" y="412">W.B.</text>
+          <text x="480" y="412">F.O.</text>
+          <text x="585" y="412">W.B.</text>
         </g>
         <g stroke="#9fb0c4" stroke-width="1" fill="none">
-          <line x1="180" y1="310" x2="180" y2="360"></line>
-          <line x1="300" y1="310" x2="300" y2="360"></line>
-          <line x1="420" y1="310" x2="420" y2="360"></line>
+          <path d="M96,192 L112,150"/><path d="M100,178 L108,178"/><path d="M104,166 L112,166"/>
+          <path d="M96,282 L112,200"/>
+          <path d="M96,382 L112,290"/>
         </g>
-        <rect x="418" y="18" width="64" height="37" fill="#eef2f7" stroke="#9fb0c4"></rect>
-        <rect x="428" y="55" width="30" height="85" fill="#eef2f7" stroke="#9fb0c4"></rect>
-        <rect x="240" y="140" width="150" height="170" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"></rect>
-        <text x="315" y="230" text-anchor="middle" fill="#1F3A5F" font-size="12" font-weight="bold">MAIN ENGINE</text>
-        <rect x="80" y="222" width="130" height="88" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
-        <text x="145" y="270" text-anchor="middle" fill="#1F3A5F" font-size="12">ECR</text>
-        <rect x="80" y="92" width="55" height="48" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
-        <rect x="145" y="92" width="55" height="48" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
-        <line x1="390" y1="278" x2="560" y2="312" stroke="#1F3A5F" stroke-width="4"></line>
-        <line x1="560" y1="312" x2="598" y2="326" stroke="#1F3A5F" stroke-width="4"></line>
-        <line x1="598" y1="326" x2="618" y2="312" stroke="#1F3A5F" stroke-width="5"></line>
-        <line x1="598" y1="326" x2="618" y2="340" stroke="#1F3A5F" stroke-width="5"></line>
-        <rect class="hl" id="hl-engine" x="238" y="138" width="154" height="174" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-ecr" x="78" y="220" width="134" height="92" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-platforms" x="60" y="216" width="500" height="8" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-tanktop" x="60" y="306" width="500" height="8" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-doublebottom" x="60" y="310" width="500" height="50" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-gensets" x="78" y="90" width="124" height="52" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-uptake" x="416" y="16" width="68" height="126" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-shaft" x="386" y="272" width="220" height="58" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <rect class="hl" id="hl-propeller" x="590" y="304" width="42" height="48" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
-        <g class="marker" data-key="engine"><circle cx="315" cy="185" r="12" fill="#1F3A5F"></circle><text x="315" y="189" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text></g>
-        <g class="marker" data-key="ecr"><circle cx="145" cy="248" r="12" fill="#1F3A5F"></circle><text x="145" y="252" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2</text></g>
-        <g class="marker" data-key="platforms"><circle cx="500" cy="220" r="12" fill="#1F3A5F"></circle><text x="500" y="224" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3</text></g>
-        <g class="marker" data-key="tanktop"><circle cx="230" cy="310" r="12" fill="#1F3A5F"></circle><text x="230" y="314" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">4</text></g>
-        <g class="marker" data-key="doublebottom"><circle cx="345" cy="338" r="12" fill="#1F3A5F"></circle><text x="345" y="342" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">5</text></g>
-        <g class="marker" data-key="gensets"><circle cx="112" cy="116" r="12" fill="#1F3A5F"></circle><text x="112" y="120" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">6</text></g>
-        <g class="marker" data-key="uptake"><circle cx="450" cy="40" r="12" fill="#1F3A5F"></circle><text x="450" y="44" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">7</text></g>
-        <g class="marker" data-key="shaft"><circle cx="475" cy="298" r="12" fill="#1F3A5F"></circle><text x="475" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">8</text></g>
-        <g class="marker" data-key="propeller"><circle cx="611" cy="326" r="12" fill="#1F3A5F"></circle><text x="611" y="330" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">9</text></g>
+
+        <line x1="100" y1="116" x2="620" y2="116" stroke="#9fb0c4" stroke-width="3"/>
+        <rect x="344" y="112" width="26" height="9" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <line x1="357" y1="121" x2="357" y2="150" stroke="#1F3A5F" stroke-width="1.2"/>
+        <path d="M353,150 a4,4 0 1,0 8,0" fill="none" stroke="#1F3A5F" stroke-width="1.2"/>
+
+        <rect x="452" y="26" width="84" height="74" fill="#eef2f7" stroke="#9fb0c4" stroke-width="1.5"/>
+        <line x1="500" y1="138" x2="500" y2="100" stroke="#9fb0c4" stroke-width="9"/>
+        <rect x="470" y="40" width="48" height="56" rx="3" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"/>
+
+        <rect x="100" y="286" width="112" height="96" rx="2" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"/>
+        <rect x="108" y="294" width="96" height="24" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1"/>
+        <rect x="140" y="350" width="44" height="18" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1"/>
+        <text x="156" y="340" fill="#1F3A5F" font-size="12" font-weight="bold">ECR</text>
+
+        <rect x="120" y="156" width="22" height="36" rx="2" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <path d="M120,156 L131,146 L142,156 Z" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <rect x="152" y="156" width="22" height="36" rx="2" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <path d="M152,156 L163,146 L174,156 Z" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+
+        <rect x="216" y="304" width="15" height="78" rx="7" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <rect x="234" y="304" width="15" height="78" rx="7" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+
+        <rect x="250" y="364" width="228" height="18" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>
+        <rect x="256" y="308" width="216" height="56" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>
+        <rect x="258" y="254" width="212" height="54" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>
+        <rect x="260" y="300" width="185" height="15" rx="7" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1"/>
+        <g fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2">
+          <rect x="268" y="190" width="28" height="64"/><rect x="268" y="182" width="28" height="10" rx="4" fill="#cfe0f2"/>
+          <rect x="306" y="190" width="28" height="64"/><rect x="306" y="182" width="28" height="10" rx="4" fill="#cfe0f2"/>
+          <rect x="344" y="190" width="28" height="64"/><rect x="344" y="182" width="28" height="10" rx="4" fill="#cfe0f2"/>
+          <rect x="382" y="190" width="28" height="64"/><rect x="382" y="182" width="28" height="10" rx="4" fill="#cfe0f2"/>
+          <rect x="420" y="190" width="28" height="64"/><rect x="420" y="182" width="28" height="10" rx="4" fill="#cfe0f2"/>
+        </g>
+        <rect x="300" y="172" width="176" height="15" rx="7" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <line x1="250" y1="355" x2="478" y2="355" stroke="#1F3A5F" stroke-width="1" stroke-dasharray="5 4"/>
+        <line x1="476" y1="192" x2="500" y2="192" stroke="#1F3A5F" stroke-width="2"/>
+        <circle cx="500" cy="200" r="26" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"/>
+        <circle cx="500" cy="152" r="14" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <line x1="500" y1="166" x2="500" y2="174" stroke="#1F3A5F" stroke-width="2"/>
+        <text x="500" y="204" text-anchor="middle" fill="#1F3A5F" font-size="11" font-weight="bold">TC</text>
+
+        <rect x="478" y="344" width="34" height="26" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>
+        <line x1="512" y1="357" x2="700" y2="398" stroke="#1F3A5F" stroke-width="5"/>
+
+        <g stroke="#1F3A5F" stroke-width="1.2" fill="#E7EDF4">
+          <rect x="486" y="268" width="66" height="12"/>
+          <rect x="488" y="244" width="36" height="24"/>
+          <rect x="526" y="246" width="26" height="22" rx="11"/>
+          <rect x="560" y="268" width="66" height="12"/>
+          <rect x="562" y="244" width="36" height="24"/>
+          <rect x="600" y="246" width="26" height="22" rx="11"/>
+        </g>
+
+        <rect x="228" y="424" width="46" height="10" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.2"/>
+        <line x1="238" y1="424" x2="238" y2="434" stroke="#1F3A5F" stroke-width="1"/>
+        <line x1="248" y1="424" x2="248" y2="434" stroke="#1F3A5F" stroke-width="1"/>
+        <line x1="258" y1="424" x2="258" y2="434" stroke="#1F3A5F" stroke-width="1"/>
+        <line x1="264" y1="424" x2="264" y2="404" stroke="#1F3A5F" stroke-width="1.5"/>
+
+        <rect x="688" y="390" width="26" height="16" rx="3" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.2"/>
+        <g stroke="#1F3A5F" stroke-width="4">
+          <line x1="730" y1="405" x2="714" y2="384"/>
+          <line x1="730" y1="405" x2="746" y2="384"/>
+          <line x1="730" y1="405" x2="714" y2="426"/>
+          <line x1="730" y1="405" x2="746" y2="426"/>
+        </g>
+        <circle cx="730" cy="405" r="7" fill="#1F3A5F"/>
+        <rect x="762" y="372" width="13" height="74" rx="5" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.2"/>
+
+        <rect class="hl" id="hl-engine" x="248" y="176" width="234" height="208" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-tc" x="470" y="124" width="60" height="104" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-boiler" x="450" y="24" width="88" height="78" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-ecr" x="98" y="284" width="116" height="100" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-gensets" x="482" y="240" width="150" height="44" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-purifiers" x="112" y="144" width="70" height="50" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-air" x="210" y="298" width="46" height="88" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-shaft" x="476" y="340" width="232" height="68" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-tanks" x="90" y="382" width="616" height="52" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-seachest" x="222" y="400" width="58" height="36" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-crane" x="98" y="108" width="524" height="18" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-propeller" x="684" y="368" width="104" height="86" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+
+        <g class="marker" data-key="engine"><circle cx="356" cy="234" r="12" fill="#1F3A5F"/><text x="356" y="238" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text></g>
+        <g class="marker" data-key="tc"><circle cx="500" cy="200" r="12" fill="#1F3A5F"/><text x="500" y="204" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2</text></g>
+        <g class="marker" data-key="boiler"><circle cx="494" cy="64" r="12" fill="#1F3A5F"/><text x="494" y="68" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3</text></g>
+        <g class="marker" data-key="ecr"><circle cx="156" cy="322" r="12" fill="#1F3A5F"/><text x="156" y="326" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">4</text></g>
+        <g class="marker" data-key="gensets"><circle cx="556" cy="256" r="12" fill="#1F3A5F"/><text x="556" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">5</text></g>
+        <g class="marker" data-key="purifiers"><circle cx="147" cy="168" r="12" fill="#1F3A5F"/><text x="147" y="172" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">6</text></g>
+        <g class="marker" data-key="air"><circle cx="224" cy="334" r="12" fill="#1F3A5F"/><text x="224" y="338" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">7</text></g>
+        <g class="marker" data-key="shaft"><circle cx="612" cy="386" r="12" fill="#1F3A5F"/><text x="612" y="390" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">8</text></g>
+        <g class="marker" data-key="tanks"><circle cx="330" cy="407" r="12" fill="#1F3A5F"/><text x="330" y="411" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">9</text></g>
+        <g class="marker" data-key="seachest"><circle cx="251" cy="413" r="12" fill="#1F3A5F"/><text x="251" y="417" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">10</text></g>
+        <g class="marker" data-key="crane"><circle cx="286" cy="116" r="12" fill="#1F3A5F"/><text x="286" y="120" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">11</text></g>
+        <g class="marker" data-key="propeller"><circle cx="758" cy="410" r="12" fill="#1F3A5F"/><text x="758" y="414" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">12</text></g>
       </svg>
     </div>
     <div class="panel">
@@ -95,23 +173,25 @@
 </div>
 <script>
 (function(){
-  var data = {
-    engine:{n:1,label:"Main engine",desc:"The prime mover. It stands on the tank top and rises through the platforms, driving the propeller shaft aft. On most merchant ships this is a large two-stroke diesel."},
-    ecr:{n:2,label:"Engine control room (ECR)",desc:"An enclosed, sound-insulated room on a platform, from which the crew monitor and control the whole plant."},
-    platforms:{n:3,label:"Platforms (flats)",desc:"Horizontal deck levels stacked around the engine. They organize the machinery and give the crew safe access for operation and maintenance."},
-    tanktop:{n:4,label:"Tank top",desc:"The floor of the engine room and the top of the double bottom. Most machinery is bolted down here."},
-    doublebottom:{n:5,label:"Double-bottom tanks",desc:"The space between the tank top and the hull bottom, divided into tanks for fuel oil, lubricating oil, and ballast water."},
-    gensets:{n:6,label:"Diesel generators",desc:"Engine-driven generators that produce the ship's electrical power and feed the main switchboard."},
-    uptake:{n:7,label:"Exhaust uptake and funnel",desc:"Carries exhaust gas from the engine up and out through the funnel. It often contains an exhaust-gas economizer that recovers heat to make steam."},
-    shaft:{n:8,label:"Propeller shaft",desc:"Transmits engine power aft, passing through the stern tube to the propeller."},
-    propeller:{n:9,label:"Propeller",desc:"Converts the engine's power into thrust. It is what the whole plant exists to drive."}
+  var data={
+    engine:{n:1,label:"Main engine",desc:"The low-speed two-stroke diesel that propels the ship. Fuel burns in the cylinders on top; the power turns the crankshaft at the base, which drives the propeller shaft aft."},
+    tc:{n:2,label:"Turbocharger",desc:"Driven by the engine's own exhaust gas, it compresses scavenge air and forces it into the cylinders, greatly increasing the power the engine can produce."},
+    boiler:{n:3,label:"Exhaust-gas boiler (uptake)",desc:"Set in the funnel uptake, this economizer recovers heat from the exhaust to raise steam for heating fuel and other services, saving fuel."},
+    ecr:{n:4,label:"Engine control room (ECR)",desc:"An enclosed, sound-insulated room with the consoles from which the crew monitor and control the whole plant."},
+    gensets:{n:5,label:"Diesel generators",desc:"Auxiliary diesel engines each driving an alternator. They produce the ship's electrical power and feed the main switchboard."},
+    purifiers:{n:6,label:"Purifiers",desc:"High-speed centrifuges that spin water and solids out of the fuel and lubricating oil before use."},
+    air:{n:7,label:"Air receivers",desc:"Pressure vessels that store compressed air used to start the main engine and to supply control air."},
+    shaft:{n:8,label:"Thrust block and propeller shaft",desc:"The thrust block transfers the propeller's push to the hull; the shaft carries engine power aft through the stern tube."},
+    tanks:{n:9,label:"Double-bottom tanks",desc:"Tanks between the tank top and the hull bottom that hold fuel oil, lubricating oil, and ballast water."},
+    seachest:{n:10,label:"Sea chest",desc:"An inlet in the hull bottom, fitted with a strainer, through which seawater is drawn in for cooling and other services."},
+    crane:{n:11,label:"Overhead crane",desc:"A traveling crane under the deckhead used to lift heavy components, such as a piston or cylinder cover, during maintenance."},
+    propeller:{n:12,label:"Propeller and rudder",desc:"The propeller converts the engine's power into thrust; the rudder behind it steers the ship."}
   };
-  var order=["engine","ecr","platforms","tanktop","doublebottom","gensets","uptake","shaft","propeller"];
+  var order=["engine","tc","boiler","ecr","gensets","purifiers","air","shaft","tanks","seachest","crane","propeller"];
   var markers=Array.prototype.slice.call(document.querySelectorAll('.marker'));
   var hls=Array.prototype.slice.call(document.querySelectorAll('.hl'));
   var legend=document.getElementById('legend');
   var pTitle=document.getElementById('p-title'), pDesc=document.getElementById('p-desc');
-
   order.forEach(function(k){
     var li=document.createElement('li');
     li.setAttribute('data-key',k);
@@ -120,7 +200,6 @@
     legend.appendChild(li);
   });
   var legendItems=Array.prototype.slice.call(legend.querySelectorAll('li'));
-
   function reset(){
     hls.forEach(function(h){ h.classList.remove('on'); });
     markers.forEach(function(m){ m.classList.remove('sel'); });
