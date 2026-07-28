@@ -68,7 +68,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 1.1-A: Converting shaft properties to SI",
-  statement: "A W12×14 steel beam section has cross-sectional area $= 4.12\\ \\text{in}^2$, section modulus $= 14.8\\ \\text{in}^3$, and moment of inertia $= 88.0\\ \\text{in}^4$. A motor delivers $12{,}550\\ \\text{lb·in}$ of torque. Convert all four quantities to SI."
+  statement: "A W12×14 steel beam section has cross-sectional area $= 4.12\\ \\text{in}^2$, section modulus $= 14.8\\ \\text{in}^3$, and moment of inertia $= 88.0\\ \\text{in}^4$. A motor delivers $12{,}550\\ \\text{lb}\\cdot\\text{in}$ of torque. Convert all four quantities to SI."
 };
 
 var SKETCH = '<svg viewBox="0 0 440 210" role="img" aria-label="Wide-flange cross-section with area and neutral axis, and a torque symbol.">'
@@ -97,7 +97,7 @@ var STEPS = [
       +"<li>$A = 4.12\\ \\text{in}^2$ &nbsp;(cross-sectional area)</li>"
       +"<li>$S = 14.8\\ \\text{in}^3$ &nbsp;(section modulus)</li>"
       +"<li>$I = 88.0\\ \\text{in}^4$ &nbsp;(moment of inertia)</li>"
-      +"<li>$T = 12{,}550\\ \\text{lb·in}$ &nbsp;(applied torque)</li></ul>"
+      +"<li>$T = 12{,}550\\ \\text{lb}\\cdot\\text{in}$ &nbsp;(applied torque)</li></ul>"
       +"<p><strong>Find:</strong> each quantity in SI units — $A$, $S$, and $I$ in millimetre- and metre-based units, and $T$ in newton·metres.</p>" },
 
   { label:"Sketch", title:"Assumptions and sketch",
@@ -108,20 +108,20 @@ var STEPS = [
   { label:"Equations", title:"Equations",
     html:"<p>Write each conversion symbolically before substituting numbers:</p>"
       +"$$\\begin{aligned} A_{SI} &= A \\times (25.4\\ \\text{mm/in})^2 \\\\ S_{SI} &= S \\times (25.4\\ \\text{mm/in})^3 \\\\ I_{SI} &= I \\times (25.4\\ \\text{mm/in})^4 \\\\ T_{SI} &= T \\times (4.4482\\ \\text{N/lbf})(0.0254\\ \\text{m/in}) \\end{aligned}$$"
-      +"<p>Each geometric property scales by the length ratio raised to its dimension. The torque factor is $(4.4482)(0.0254) = 0.11298\\ \\text{N·m per lb·in}$.</p>" },
+      +"<p>Each geometric property scales by the length ratio raised to its dimension. The torque factor is $(4.4482)(0.0254) = 0.11298\\ \\text{N}\\cdot\\text{m per lb}\\cdot\\text{in}$.</p>" },
 
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$\\begin{aligned} A &= 4.12\\ \\text{in}^2 \\times (25.4\\ \\text{mm/in})^2 \\\\ &= 4.12 \\times 645.16\\ \\text{mm}^2 \\\\ &= \\textcolor{#D85A30}{2.66\\times10^{3}\\ \\text{mm}^2} = 2.66\\times10^{-3}\\ \\text{m}^2 \\end{aligned}$$</div>"
       +"<div class='calc'>$$\\begin{aligned} S &= 14.8\\ \\text{in}^3 \\times (25.4\\ \\text{mm/in})^3 \\\\ &= 14.8 \\times 16{,}387\\ \\text{mm}^3 \\\\ &= \\textcolor{#D85A30}{2.43\\times10^{5}\\ \\text{mm}^3} = 2.43\\times10^{-4}\\ \\text{m}^3 \\end{aligned}$$</div>"
       +"<div class='calc'>$$\\begin{aligned} I &= 88.0\\ \\text{in}^4 \\times (25.4\\ \\text{mm/in})^4 \\\\ &= 88.0 \\times 416{,}231\\ \\text{mm}^4 \\\\ &= \\textcolor{#D85A30}{3.66\\times10^{7}\\ \\text{mm}^4} = 3.66\\times10^{-5}\\ \\text{m}^4 \\end{aligned}$$</div>"
-      +"<div class='calc'>$$\\begin{aligned} T &= 12{,}550\\ \\text{lb·in} \\times 0.11298\\ \\tfrac{\\text{N·m}}{\\text{lb·in}} \\\\ &= \\textcolor{#D85A30}{1.42\\times10^{3}\\ \\text{N·m}} = 1.42\\ \\text{kN·m} \\end{aligned}$$</div>"
-      +"<p class='note'>Units cancel at every step: $\\text{in}^2 \\times (\\text{mm/in})^2$ leaves $\\text{mm}^2$, and $\\text{lb·in} \\times \\text{N·m/(lb·in)}$ leaves $\\text{N·m}$.</p>" },
+      +"<div class='calc'>$$\\begin{aligned} T &= 12{,}550\\ \\text{lb}\\cdot\\text{in} \\times 0.11298\\ \\tfrac{\\text{N}\\cdot\\text{m}}{\\text{lb}\\cdot\\text{in}} \\\\ &= \\textcolor{#D85A30}{1.42\\times10^{3}\\ \\text{N}\\cdot\\text{m}} = 1.42\\ \\text{kN}\\cdot\\text{m} \\end{aligned}$$</div>"
+      +"<p class='note'>Units cancel at every step: $\\text{in}^2 \\times (\\text{mm/in})^2$ leaves $\\text{mm}^2$, and $\\text{lb}\\cdot\\text{in} \\times \\text{N}\\cdot\\text{m/(lb}\\cdot\\text{in)}$ leaves $\\text{N}\\cdot\\text{m}$.</p>" },
 
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Order-of-magnitude checks:</p><ul class='kv'>"
       +"<li>$1\\ \\text{in}^2 \\approx 645\\ \\text{mm}^2$, so $4.12\\ \\text{in}^2 \\approx 4 \\times 650 \\approx 2{,}600\\ \\text{mm}^2$. ✓</li>"
       +"<li>$1\\ \\text{in}^4 \\approx 4.16\\times10^{5}\\ \\text{mm}^4$, so $88\\ \\text{in}^4 \\approx 3.5\\times10^{7}\\ \\text{mm}^4$. ✓</li>"
-      +"<li>Torque cross-check: $12{,}550\\ \\text{lb·in} \\approx 1{,}046\\ \\text{lb·ft}$; at $\\approx 1.36\\ \\text{N·m/lb·ft}$ that is $\\approx 1{,}420\\ \\text{N·m}$, matching $1{,}418\\ \\text{N·m}$. ✓</li></ul>"
+      +"<li>Torque cross-check: $12{,}550\\ \\text{lb}\\cdot\\text{in} \\approx 1{,}046\\ \\text{lb}\\cdot\\text{ft}$; at $\\approx 1.36\\ \\text{N}\\cdot\\text{m/lb}\\cdot\\text{ft}$ that is $\\approx 1{,}420\\ \\text{N}\\cdot\\text{m}$, matching $1{,}418\\ \\text{N}\\cdot\\text{m}$. ✓</li></ul>"
       +"<p>All four results are the right size, so the conversions are sound.</p>" },
 
   { label:"Result", title:"Result",
@@ -129,7 +129,7 @@ var STEPS = [
       +"<tr><td>Area, $A$</td><td>$4.12\\ \\text{in}^2$</td><td>$2.66\\times10^{3}\\ \\text{mm}^2$</td><td>$2.66\\times10^{-3}\\ \\text{m}^2$</td></tr>"
       +"<tr><td>Section modulus, $S$</td><td>$14.8\\ \\text{in}^3$</td><td>$2.43\\times10^{5}\\ \\text{mm}^3$</td><td>$2.43\\times10^{-4}\\ \\text{m}^3$</td></tr>"
       +"<tr><td>Moment of inertia, $I$</td><td>$88.0\\ \\text{in}^4$</td><td>$3.66\\times10^{7}\\ \\text{mm}^4$</td><td>$3.66\\times10^{-5}\\ \\text{m}^4$</td></tr>"
-      +"<tr><td>Torque, $T$</td><td>$12{,}550\\ \\text{lb·in}$</td><td colspan='2'>$1.42\\times10^{3}\\ \\text{N·m} = 1.42\\ \\text{kN·m}$</td></tr></table>"
+      +"<tr><td>Torque, $T$</td><td>$12{,}550\\ \\text{lb}\\cdot\\text{in}$</td><td colspan='2'>$1.42\\times10^{3}\\ \\text{N}\\cdot\\text{m} = 1.42\\ \\text{kN}\\cdot\\text{m}$</td></tr></table>"
       +"<p class='note'>Because this is a conversion rather than a design decision, there is no safety factor or pass/fail verdict; the result is simply the four SI values, reported to three significant figures to match the given data.</p>" }
 ];
 
