@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Engine Room Cutaway | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --hl:#D85A30; --ink:#222; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width: 1000px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
+  p.lede { margin:0 0 12px; color:#444; }
+  .stage { display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start; }
+  .figure { flex:1 1 460px; min-width:320px; }
+  svg { width:100%; height:auto; }
+  .marker circle { cursor:pointer; transition: r .1s, fill .15s; }
+  .marker text { pointer-events:none; }
+  .marker.sel circle { fill:var(--hl); }
+  .hl { opacity:0; transition: opacity .15s; }
+  .hl.on { opacity:1; }
+  .panel { flex:1 1 320px; min-width:280px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .panel h2 { color:var(--navy); font-size:1.05rem; margin:0 0 6px; }
+  .panel p { margin:0; font-size:.95rem; line-height:1.45; }
+  .legend { list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+  .legend li { font-size:.85rem; cursor:pointer; padding:4px 6px; border-radius:4px; color:var(--navy); }
+  .legend li:hover { background:#dfe8f3; }
+  .legend li.sel { background:#cfe0f2; font-weight:bold; }
+  .legend .n { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:var(--navy); color:#fff; border-radius:50%; font-size:.75rem; margin-right:6px; }
+  button.reset { margin-top:12px; background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; font-size:.9rem; }
+  button.reset:hover { background:#16283f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Engine Room Cutaway</h1>
+  <p class="lede">A side view through a merchant ship's aft engine room. Click a numbered part, or a legend item, to learn what it is.</p>
+  <div class="stage">
+    <div class="figure">
+      <svg viewBox="0 0 640 400" role="img" aria-label="Side-elevation cutaway of a ship engine room with numbered, clickable parts.">
+        <g stroke="#9fb0c4" stroke-width="1.5" fill="none">
+          <line x1="60" y1="55" x2="600" y2="55"></line>
+          <line x1="60" y1="55" x2="60" y2="360"></line>
+          <line x1="600" y1="55" x2="600" y2="320"></line>
+          <path d="M60,360 L500,360 L600,320"></path>
+          <line x1="60" y1="140" x2="560" y2="140"></line>
+          <line x1="60" y1="220" x2="560" y2="220"></line>
+          <line x1="60" y1="310" x2="560" y2="310"></line>
+          <line x1="560" y1="55" x2="560" y2="310" stroke-dasharray="4 4"></line>
+        </g>
+        <g stroke="#9fb0c4" stroke-width="1" fill="none">
+          <line x1="180" y1="310" x2="180" y2="360"></line>
+          <line x1="300" y1="310" x2="300" y2="360"></line>
+          <line x1="420" y1="310" x2="420" y2="360"></line>
+        </g>
+        <rect x="418" y="18" width="64" height="37" fill="#eef2f7" stroke="#9fb0c4"></rect>
+        <rect x="428" y="55" width="30" height="85" fill="#eef2f7" stroke="#9fb0c4"></rect>
+        <rect x="240" y="140" width="150" height="170" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"></rect>
+        <text x="315" y="230" text-anchor="middle" fill="#1F3A5F" font-size="12" font-weight="bold">MAIN ENGINE</text>
+        <rect x="80" y="222" width="130" height="88" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+        <text x="145" y="270" text-anchor="middle" fill="#1F3A5F" font-size="12">ECR</text>
+        <rect x="80" y="92" width="55" height="48" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+        <rect x="145" y="92" width="55" height="48" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+        <line x1="390" y1="278" x2="560" y2="312" stroke="#1F3A5F" stroke-width="4"></line>
+        <line x1="560" y1="312" x2="598" y2="326" stroke="#1F3A5F" stroke-width="4"></line>
+        <line x1="598" y1="326" x2="618" y2="312" stroke="#1F3A5F" stroke-width="5"></line>
+        <line x1="598" y1="326" x2="618" y2="340" stroke="#1F3A5F" stroke-width="5"></line>
+        <rect class="hl" id="hl-engine" x="238" y="138" width="154" height="174" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-ecr" x="78" y="220" width="134" height="92" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-platforms" x="60" y="216" width="500" height="8" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-tanktop" x="60" y="306" width="500" height="8" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-doublebottom" x="60" y="310" width="500" height="50" rx="2" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-gensets" x="78" y="90" width="124" height="52" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-uptake" x="416" y="16" width="68" height="126" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-shaft" x="386" y="272" width="220" height="58" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <rect class="hl" id="hl-propeller" x="590" y="304" width="42" height="48" rx="3" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+        <g class="marker" data-key="engine"><circle cx="315" cy="185" r="12" fill="#1F3A5F"></circle><text x="315" y="189" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text></g>
+        <g class="marker" data-key="ecr"><circle cx="145" cy="248" r="12" fill="#1F3A5F"></circle><text x="145" y="252" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2</text></g>
+        <g class="marker" data-key="platforms"><circle cx="500" cy="220" r="12" fill="#1F3A5F"></circle><text x="500" y="224" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3</text></g>
+        <g class="marker" data-key="tanktop"><circle cx="230" cy="310" r="12" fill="#1F3A5F"></circle><text x="230" y="314" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">4</text></g>
+        <g class="marker" data-key="doublebottom"><circle cx="345" cy="338" r="12" fill="#1F3A5F"></circle><text x="345" y="342" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">5</text></g>
+        <g class="marker" data-key="gensets"><circle cx="112" cy="116" r="12" fill="#1F3A5F"></circle><text x="112" y="120" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">6</text></g>
+        <g class="marker" data-key="uptake"><circle cx="450" cy="40" r="12" fill="#1F3A5F"></circle><text x="450" y="44" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">7</text></g>
+        <g class="marker" data-key="shaft"><circle cx="475" cy="298" r="12" fill="#1F3A5F"></circle><text x="475" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">8</text></g>
+        <g class="marker" data-key="propeller"><circle cx="611" cy="326" r="12" fill="#1F3A5F"></circle><text x="611" y="330" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">9</text></g>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 id="p-title">Explore the engine room</h2>
+      <p id="p-desc">Click a numbered part on the drawing, or an item in the list below, to see what it is and why it sits where it does.</p>
+      <ul class="legend" id="legend"></ul>
+      <button class="reset" id="reset" type="button">Reset</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var data = {
+    engine:{n:1,label:"Main engine",desc:"The prime mover. It stands on the tank top and rises through the platforms, driving the propeller shaft aft. On most merchant ships this is a large two-stroke diesel."},
+    ecr:{n:2,label:"Engine control room (ECR)",desc:"An enclosed, sound-insulated room on a platform, from which the crew monitor and control the whole plant."},
+    platforms:{n:3,label:"Platforms (flats)",desc:"Horizontal deck levels stacked around the engine. They organize the machinery and give the crew safe access for operation and maintenance."},
+    tanktop:{n:4,label:"Tank top",desc:"The floor of the engine room and the top of the double bottom. Most machinery is bolted down here."},
+    doublebottom:{n:5,label:"Double-bottom tanks",desc:"The space between the tank top and the hull bottom, divided into tanks for fuel oil, lubricating oil, and ballast water."},
+    gensets:{n:6,label:"Diesel generators",desc:"Engine-driven generators that produce the ship's electrical power and feed the main switchboard."},
+    uptake:{n:7,label:"Exhaust uptake and funnel",desc:"Carries exhaust gas from the engine up and out through the funnel. It often contains an exhaust-gas economizer that recovers heat to make steam."},
+    shaft:{n:8,label:"Propeller shaft",desc:"Transmits engine power aft, passing through the stern tube to the propeller."},
+    propeller:{n:9,label:"Propeller",desc:"Converts the engine's power into thrust. It is what the whole plant exists to drive."}
+  };
+  var order=["engine","ecr","platforms","tanktop","doublebottom","gensets","uptake","shaft","propeller"];
+  var markers=Array.prototype.slice.call(document.querySelectorAll('.marker'));
+  var hls=Array.prototype.slice.call(document.querySelectorAll('.hl'));
+  var legend=document.getElementById('legend');
+  var pTitle=document.getElementById('p-title'), pDesc=document.getElementById('p-desc');
+
+  order.forEach(function(k){
+    var li=document.createElement('li');
+    li.setAttribute('data-key',k);
+    li.innerHTML='<span class="n">'+data[k].n+'</span>'+data[k].label;
+    li.addEventListener('click',function(){ select(k); });
+    legend.appendChild(li);
+  });
+  var legendItems=Array.prototype.slice.call(legend.querySelectorAll('li'));
+
+  function reset(){
+    hls.forEach(function(h){ h.classList.remove('on'); });
+    markers.forEach(function(m){ m.classList.remove('sel'); });
+    legendItems.forEach(function(l){ l.classList.remove('sel'); });
+    pTitle.textContent='Explore the engine room';
+    pDesc.textContent='Click a numbered part on the drawing, or an item in the list below, to see what it is and why it sits where it does.';
+  }
+  function select(k){
+    var d=data[k]; if(!d) return;
+    hls.forEach(function(h){ h.classList.toggle('on', h.id==='hl-'+k); });
+    markers.forEach(function(m){ m.classList.toggle('sel', m.getAttribute('data-key')===k); });
+    legendItems.forEach(function(l){ l.classList.toggle('sel', l.getAttribute('data-key')===k); });
+    pTitle.textContent=d.n+'. '+d.label;
+    pDesc.textContent=d.desc;
+  }
+  markers.forEach(function(m){ m.addEventListener('click',function(){ select(m.getAttribute('data-key')); }); });
+  document.getElementById('reset').addEventListener('click',reset);
+  reset();
+})();
+</script>
+</body>
+</html>
