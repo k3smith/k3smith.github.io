@@ -3,17 +3,7 @@
 (function () {
   "use strict";
 
-  const BLOCK_TYPES = new Set([
-    "requirement",
-    "definition",
-    "reference",
-    "scope",
-    "note",
-    "table",
-    "paragraph",
-    "not_section_start",
-    "skip",
-  ]);
+  const ROLES = new Set(["header", "body", "skip"]);
 
   const TARGET = () =>
     Number(LABELER_CONFIG.targetRatings) > 0
@@ -39,11 +29,9 @@
     ctxAfter: document.getElementById("ctx-after"),
     blockText: document.getElementById("block-text"),
     form: document.getElementById("label-form"),
-    blockType: document.getElementById("block-type"),
+    unitRole: document.getElementById("unit-role"),
     sectionNumber: document.getElementById("section-number"),
     parentSection: document.getElementById("parent-section"),
-    sectionPath: document.getElementById("section-path"),
-    mustNotSplit: document.getElementById("must-not-split"),
     notes: document.getElementById("notes"),
     useSuggestions: document.getElementById("use-suggestions"),
     status: document.getElementById("status"),
@@ -59,9 +47,9 @@
 
   /** @type {Array<Record<string, any>>} */
   let blocks = [];
-  /** block_id ? answer object */
+  /** block_id → answer object */
   let answers = {};
-  /** block_id ? Set of rater_ids */
+  /** block_id → Set of rater_ids */
   let coverage = new Map();
   /** @type {Record<string, any>|null} */
   let current = null;
@@ -164,13 +152,13 @@
     const full = blocksFullyCovered();
     const total = blocks.length;
     const t = TARGET();
-    els.progressText.textContent = `Your labels: ${mine} - Blocks with ${t} ratings: ${full} / ${total}`;
+    els.progressText.textContent = `Your labels: ${mine} · Units with ${t} ratings: ${full} / ${total}`;
     els.progressFill.style.width = total ? `${(100 * full) / total}%` : "0%";
     if (els.coverageText) {
       const open = eligibleBlocks().length;
       els.coverageText.textContent = open
-        ? `${open} blocks still available for you`
-        : "No blocks left for you right now";
+        ? `${open} units still available for you`
+        : "No units left for you right now";
     }
   }
 
@@ -178,21 +166,65 @@
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  function pathToDisplay(path) {
-    if (Array.isArray(path)) return path.filter(Boolean).join(" - ");
-    return String(path || "");
+  function fillParentOptions(b, selected) {
+    const sel = els.parentSection;
+    sel.innerHTML = "";
+    const candidates = Array.isArray(b.candidateParents)
+      ? b.candidateParents.slice()
+      : [];
+    const hasRoot = candidates.some(
+      (c) => String(c.sectionNumber || "").toLowerCase() === "root"
+    );
+    if (!hasRoot) {
+      candidates.unshift({
+        sectionNumber: "root",
+        label: "(document root)",
+      });
+    }
+    // Always allow typing via free option if suggested parent missing
+    const seen = new Set();
+    for (const c of candidates) {
+      const val = String(c.sectionNumber || "").trim();
+      if (!val || seen.has(val)) continue;
+      seen.add(val);
+      const opt = document.createElement("option");
+      opt.value = val;
+      const lab = (c.label || "").trim();
+      opt.textContent = lab ? `${val} — ${lab}` : val;
+      sel.appendChild(opt);
+    }
+    if (selected && !seen.has(selected)) {
+      const opt = document.createElement("option");
+      opt.value = selected;
+      opt.textContent = selected;
+      sel.appendChild(opt);
+    }
+    const want = selected || "root";
+    sel.value = seen.has(want) || selected ? want : "root";
   }
 
   function applySuggestions(b) {
-    const suggestedType = (b.suggestedBlockType || "").toLowerCase();
-    els.blockType.value = BLOCK_TYPES.has(suggestedType) ? suggestedType : "";
+    const role = (b.suggestedRole || "").toLowerCase();
+    els.unitRole.value = ROLES.has(role) ? role : "";
     els.sectionNumber.value = b.suggestedSectionNumber || "";
-    els.parentSection.value = b.suggestedParentSectionNumber || "";
-    els.sectionPath.value = pathToDisplay(b.suggestedSectionPath);
-    els.mustNotSplit.value = Array.isArray(b.suggestedMustNotSplitWith)
-      ? b.suggestedMustNotSplitWith.join(", ")
-      : b.suggestedMustNotSplitWith || "";
+    const parent =
+      b.suggestedParentSectionNumber === "" ||
+      b.suggestedParentSectionNumber == null
+        ? "root"
+        : String(b.suggestedParentSectionNumber);
+    fillParentOptions(b, parent);
     els.notes.value = "";
+    toggleFieldsForRole();
+  }
+
+  function toggleFieldsForRole() {
+    const role = els.unitRole.value;
+    const needParent = role === "header" || role === "body";
+    els.parentSection.disabled = !needParent;
+    els.sectionNumber.disabled = role === "skip";
+    if (role === "skip") {
+      els.sectionNumber.value = "";
+    }
   }
 
   function showDone(reason) {
@@ -204,8 +236,8 @@
     if (els.doneMsg) {
       els.doneMsg.innerHTML =
         reason ||
-        `You have labeled <strong>${mine}</strong> blocks. ` +
-          `Study coverage: <strong>${full}</strong> / ${blocks.length} blocks have ${t} ratings. Thank you!`;
+        `You have labeled <strong>${mine}</strong> units. ` +
+          `Study coverage: <strong>${full}</strong> / ${blocks.length} units have ${t} ratings. Thank you!`;
     }
   }
 
@@ -239,11 +271,11 @@
     els.blockText.textContent = b.text || "";
     applySuggestions(b);
     updateProgress();
-    els.blockType.focus();
+    els.unitRole.focus();
   }
 
   async function refreshAndShowNext() {
-    setStatus("Finding a block-", "pending");
+    setStatus("Finding a unit…", "pending");
     try {
       const data = await fetchCoverageJsonp();
       if (data && data.target) {
@@ -266,13 +298,13 @@
       const full = blocksFullyCovered();
       if (full >= blocks.length) {
         showDone(
-          `All ${blocks.length} blocks already have ${TARGET()} ratings. Thank you!`
+          `All ${blocks.length} units already have ${TARGET()} ratings. Thank you!`
         );
       } else {
         showDone(
-          `No more blocks available for <strong>${raterId}</strong> right now ` +
+          `No more units available for <strong>${raterId}</strong> right now ` +
             `(you may have finished your share, or remaining slots need other raters). ` +
-            `Coverage: <strong>${full}</strong> / ${blocks.length} blocks at ${TARGET()} ratings.`
+            `Coverage: <strong>${full}</strong> / ${blocks.length} units at ${TARGET()} ratings.`
         );
       }
       setStatus("", "");
@@ -309,32 +341,28 @@
     if (ev) ev.preventDefault();
     if (!current) return;
 
-    const blockType = (els.blockType.value || "").trim().toLowerCase();
-    if (!BLOCK_TYPES.has(blockType)) {
-      setStatus("Select a block type.", "err");
-      els.blockType.focus();
+    const role = (els.unitRole.value || "").trim().toLowerCase();
+    if (!ROLES.has(role)) {
+      setStatus("Select a role (header / body / skip).", "err");
+      els.unitRole.focus();
       return;
     }
-    if (
-      blockType === "not_section_start" &&
-      !(els.sectionNumber.value || "").trim()
-    ) {
-      setStatus(
-        "not_section_start needs the true continuing section number (e.g. 1.4).",
-        "err"
-      );
-      els.sectionNumber.focus();
+
+    let parent = (els.parentSection.value || "").trim();
+    if (role === "skip") {
+      parent = "";
+    } else if (!parent) {
+      setStatus("Choose a parent header (or root).", "err");
+      els.parentSection.focus();
       return;
     }
 
     const b = current;
     const ts = new Date().toISOString();
     const answer = {
-      block_type: blockType,
+      role,
       section_number: (els.sectionNumber.value || "").trim(),
-      section_path: (els.sectionPath.value || "").trim(),
-      parent_section_number: (els.parentSection.value || "").trim(),
-      must_not_split_with: (els.mustNotSplit.value || "").trim(),
+      parent_section_number: parent,
       notes: (els.notes.value || "").trim(),
       ts,
     };
@@ -347,11 +375,9 @@
       round_id: LABELER_CONFIG.roundId,
       block_id: b.block_id,
       rater_id: raterId,
-      block_type: answer.block_type,
+      role: answer.role,
       section_number: answer.section_number,
-      section_path: answer.section_path,
       parent_section_number: answer.parent_section_number,
-      must_not_split_with: answer.must_not_split_with,
       page_start: b.pageStart != null ? b.pageStart : "",
       page_end: b.pageEnd != null ? b.pageEnd : b.pageStart != null ? b.pageStart : "",
       document_name: b.documentName || "",
@@ -362,7 +388,7 @@
       client: "gh-pages-seg-labeler",
     };
 
-    setStatus("Saving-", "pending");
+    setStatus("Saving…", "pending");
     try {
       const result = await postToSheet(payload);
       if (result.skipped) {
@@ -389,11 +415,9 @@
         block_id,
         round_id: LABELER_CONFIG.roundId,
         rater_id: raterId,
-        block_type: a.block_type || "",
+        role: a.role || "",
         section_number: a.section_number || "",
-        section_path: a.section_path || "",
         parent_section_number: a.parent_section_number || "",
-        must_not_split_with: a.must_not_split_with || "",
         page_start: b.pageStart != null ? b.pageStart : "",
         page_end: b.pageEnd != null ? b.pageEnd : "",
         document_name: b.documentName || "",
@@ -413,11 +437,9 @@
       "round_id",
       "block_id",
       "rater_id",
-      "block_type",
+      "role",
       "section_number",
-      "section_path",
       "parent_section_number",
-      "must_not_split_with",
       "page_start",
       "page_end",
       "document_name",
@@ -444,7 +466,7 @@
     });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `seg_labels_${LABELER_CONFIG.roundId}_${raterId || "anon"}.csv`;
+    a.download = `section_labels_${LABELER_CONFIG.roundId}_${raterId || "anon"}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
   }
@@ -458,7 +480,7 @@
     }
     if (!sheetUrl()) {
       setStatus(
-        "No Sheet URL - saving locally only. Configure sheetWebAppUrl before recruiting raters.",
+        "No Sheet URL — saving locally only. Configure sheetWebAppUrl before recruiting raters.",
         "warn"
       );
     }
@@ -491,6 +513,7 @@
     els.form.addEventListener("submit", (e) => {
       saveLabel(e).catch((err) => setStatus(String(err.message || err), "err"));
     });
+    els.unitRole.addEventListener("change", toggleFieldsForRole);
     els.useSuggestions.addEventListener("click", () => {
       if (current) applySuggestions(current);
     });
@@ -507,6 +530,24 @@
       localStorage.setItem("seg-labeler:how-open", els.how.open ? "1" : "0");
     });
     els.how.open = localStorage.getItem("seg-labeler:how-open") !== "0";
+
+    // Shortcuts: 1 header · 2 body · 3 skip · Enter save
+    document.addEventListener("keydown", (e) => {
+      if (els.main.hidden) return;
+      if (e.target && ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) {
+        if (e.key !== "Enter" || e.target.tagName === "TEXTAREA") return;
+      }
+      if (e.key === "1") {
+        els.unitRole.value = "header";
+        toggleFieldsForRole();
+      } else if (e.key === "2") {
+        els.unitRole.value = "body";
+        toggleFieldsForRole();
+      } else if (e.key === "3") {
+        els.unitRole.value = "skip";
+        toggleFieldsForRole();
+      }
+    });
   }
 
   init().catch((err) => {

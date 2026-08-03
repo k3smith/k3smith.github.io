@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Document chunk block labeling</title>
+    <title>DocGraph section labeling</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,12 +15,12 @@
   <body>
     <div class="wrap">
       <header class="site">
-        <h1>Chunk block labeling</h1>
+        <h1>Section structure labeling</h1>
         <span class="badge" id="round-badge">round</span>
       </header>
 
       <div id="sheet-warn" class="warn-banner" hidden>
-        Google Sheet is not configured yet (<code>config.js</code> ?
+        Google Sheet is not configured yet (<code>config.js</code> →
         <code>sheetWebAppUrl</code>). Shared double-coverage needs the Sheet live
         before you recruit raters.
       </div>
@@ -29,61 +29,36 @@
         <summary>Instructions (about 2 minutes)</summary>
         <div class="body">
           <p>
-            You will see one <strong>text block</strong> from a Navy / regulatory
-            PDF (with a little context above and below). Decide what kind of chunk
-            unit it is and which section it belongs to - so an automated system can
-            cite document, section, page, and quote correctly.
+            You will see one <strong>text unit</strong> from a Navy / regulatory
+            PDF (with a little context). Decide whether it is a
+            <strong>section header</strong> or <strong>body</strong> under a
+            header — the product graph model used by DocGraph.
           </p>
           <div class="defs">
             <div>
-              <strong>requirement</strong>
-              Obligation language (<em>shall</em>, <em>must</em>, numbered
-              requirement). Prefer this for nested sub-requirements.
+              <strong>header</strong>
+              A section / subsection title, usually numbered
+              (<code>3.2.1</code>, <code>2. REFERENCES</code>, lettered chapter
+              heads). The <em>title</em> of a section, not its body prose.
             </div>
             <div>
-              <strong>definition</strong>
-              Defines a term ("means", "DEFINITION", glossary-style).
-            </div>
-            <div>
-              <strong>reference</strong>
-              Citation to another standard, CFR, NSI, or document list entry.
-            </div>
-            <div>
-              <strong>scope</strong>
-              Title / purpose / applicability of an item or chapter.
-            </div>
-            <div>
-              <strong>note</strong>
-              NOTES section, guidance, or non-binding commentary.
-            </div>
-            <div>
-              <strong>table</strong>
-              Tabular content (or a clear table caption/row blob).
-            </div>
-            <div>
-              <strong>paragraph</strong>
-              Ordinary body prose that is still a citeable unit.
-            </div>
-            <div>
-              <strong>not_section_start</strong>
-              This block is <em>not</em> a new section header. Merge it with the
-              previous section. Example: <em>3M 301 Personnel Qualification
-              Standard...</em> is a training name in body text, not section 3/301.
-              Set section path to the true continuing section from context (e.g.
-              <code>1 &gt; 1.4</code>).
+              <strong>body</strong>
+              Paragraph or text chunk that belongs under a header. Parent is the
+              open section header — never another body line.
             </div>
             <div>
               <strong>skip</strong>
-              Running header/footer, TOC noise, blank/junk, or not a chunk unit.
+              Running header/footer, page date (<code>07 Nov 2023</code>), TOC
+              noise, blank/junk — not a graph unit.
             </div>
           </div>
           <p>
-            Prefill fields are <em>suggestions only</em> - correct them when wrong.
-            Section path should be numbers only (e.g. <code>2 &gt; 2.6 &gt; 2.6.2</code>),
-            not chapter titles. For nested requirements, set
-            <strong>parent section</strong> and <strong>must not split with</strong>
-            to the immediate parent. Use the same name/initials when you return.
-            Each block is labeled by up to two people.
+            If <strong>header</strong>: set its section number (if any) and choose
+            its <strong>parent header</strong> from the list (or
+            <code>root</code>). Prefills are model suggestions — correct them when
+            wrong. If <strong>body</strong>: pick the section header it belongs
+            under. Use the same initials when you return. Each unit is labeled by
+            up to two people.
           </p>
         </div>
       </details>
@@ -92,7 +67,7 @@
         <h2>Start a session</h2>
         <p class="lead">
           Enter a short name or initials (same every time you return). The site
-          will only offer blocks that still need a rating and that you have not
+          will only offer units that still need a rating and that you have not
           already labeled.
         </p>
         <label class="field" for="rater-id">Your name or initials</label>
@@ -113,7 +88,7 @@
         <div class="progress">
           <div class="progress-text" id="progress-text">Your labels: 0</div>
           <div class="progress-text" id="coverage-text" style="margin-top: 0.15rem">
-            Checking coverage?
+            Checking coverage…
           </div>
           <div class="bar" aria-hidden="true">
             <span id="progress-fill"></span>
@@ -133,7 +108,7 @@
             <p id="ctx-before"></p>
           </article>
           <article class="ctx-card focal">
-            <h3>Block to label</h3>
+            <h3>Unit to label</h3>
             <p id="block-text"></p>
           </article>
           <article class="ctx-card muted-card" id="ctx-after-wrap" hidden>
@@ -143,49 +118,38 @@
         </div>
 
         <form id="label-form" class="label-form" autocomplete="off">
-          <label class="field" for="block-type">Block type</label>
-          <select id="block-type" required>
-            <option value="">Select?</option>
-            <option value="requirement">requirement</option>
-            <option value="definition">definition</option>
-            <option value="reference">reference</option>
-            <option value="scope">scope</option>
-            <option value="note">note</option>
-            <option value="table">table</option>
-            <option value="paragraph">paragraph</option>
-            <option value="not_section_start">not_section_start</option>
+          <label class="field" for="unit-role">Role</label>
+          <select id="unit-role" required>
+            <option value="">Select…</option>
+            <option value="header">header</option>
+            <option value="body">body</option>
             <option value="skip">skip</option>
           </select>
 
-          <div class="form-grid">
+          <div class="form-grid" id="header-fields">
             <div>
-              <label class="field" for="section-number">Section number</label>
-              <input id="section-number" type="text" placeholder="e.g. 3.3.1.1" />
+              <label class="field" for="section-number"
+                >Section number (headers; optional for unnumbered)</label
+              >
+              <input id="section-number" type="text" placeholder="e.g. 3.2.1" />
             </div>
             <div>
               <label class="field" for="parent-section"
-                >Parent section (optional)</label
+                >Parent header</label
               >
-              <input id="parent-section" type="text" placeholder="e.g. 3.3.1" />
+              <select id="parent-section">
+                <option value="root">root (top-level)</option>
+              </select>
             </div>
           </div>
 
-          <label class="field" for="section-path"
-            >Section path (breadcrumb, use > or |)</label
-          >
-          <input
-            id="section-path"
-            type="text"
-            placeholder="ITEM 009-003 > 3. REQUIREMENTS > 3.3 > 3.3.1 > 3.3.1.1"
-          />
-
-          <label class="field" for="must-not-split"
-            >Must not split with (comma-separated section numbers)</label
-          >
-          <input id="must-not-split" type="text" placeholder="e.g. 3.3.1" />
+          <p class="lead" id="parent-hint" style="margin-top: 0; font-size: 0.9rem">
+            For <strong>body</strong>, parent = the section this text sits under.
+            For <strong>header</strong>, parent = the outline parent (or root).
+          </p>
 
           <label class="field" for="notes">Notes (optional)</label>
-          <input id="notes" type="text" placeholder="Ambiguity, page OCR issues?" />
+          <input id="notes" type="text" placeholder="Ambiguity, OCR, wrong candidates?" />
 
           <div class="actions">
             <button type="submit" id="save">Save &amp; next</button>
@@ -216,8 +180,9 @@
       </section>
 
       <footer class="note">
-        Research labeling for structural document chunking. Labels become gold
-        boundaries for ingestion eval (section path, block type, hierarchy).
+        DocGraph section-model gold: headers parent headers (or root); body units
+        parent to their section header. Labels feed hierarchy eval in
+        <code>supship-data-validation</code>.
       </footer>
     </div>
 

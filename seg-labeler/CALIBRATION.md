@@ -1,27 +1,32 @@
-# Pilot calibration checklist (`pilot_chunk_blocks_v1`)
+# Section-model labeling checklist (`section_model_v1`)
 
 ## Done in repo
 
-- [x] Labeler UI at `k3smith.github.io/seg-labeler/`
-- [x] Block bank `blocks/pilot_v1.json` (120 blocks, 30 per excerpt)
-- [x] Apps Script template `apps_script/Code.gs`
-- [x] Export / merge scripts in `supship-pi-research/eval/chunking/scripts/`
-- [x] Merge pipeline smoke-tested via `eval/chunking/fixtures/`
+- [x] Labeler UI retargeted to header / body / skip + parent header
+- [x] Unit bank `blocks/section_model_v1.json` (converted from pilot excerpts)
+- [x] Apps Script template `apps_script/Code.gs` (new column schema)
+- [x] `config.js` points at `section_model_v1` with **empty** `sheetWebAppUrl`
 
 ## Your steps to go live
 
-1. **Create Google Sheet** ? paste `apps_script/Code.gs` ? deploy web app (Anyone) ? put URL in `config.js` ? `sheetWebAppUrl`.
-2. **Push** `k3smith.github.io` so https://k3smith.github.io/seg-labeler/ is public.
-3. **Self-calibrate** (~10-15 blocks): confirm suggestions, adjust instructions if needed. Local-only mode works before the Sheet URL is set (backup CSV).
-4. **Recruit raters** (same as lo/ks): aim for 2 ratings/block. After enough coverage:
+1. **Create a new Google Sheet** (fresh tab `labels`) → paste `apps_script/Code.gs` → run `ensureHeader` → deploy web app (Anyone) → put URL in `config.js` → `sheetWebAppUrl`.
+2. **Push** `k3smith.github.io` so https://k3smith.github.io/seg-labeler/ updates.
+3. **Self-calibrate** (~15–20 units): confirm header vs body, fix parent on nested headers. Local-only mode works before the Sheet URL is set (backup CSV).
+4. **Recruit raters** (same as lo/ks): aim for 2 ratings/unit.
+5. Export Sheet CSV → merge in `supship-data-validation`:
 
 ```bash
-python3 eval/chunking/scripts/merge_sheet.py sheet.csv \
-  --blocks ../../k3smith.github.io/seg-labeler/blocks/pilot_v1.json \
-  --seed eval/chunking/v1.jsonl \
-  -o eval/chunking/v1.jsonl \
-  --conflicts eval/chunking/conflicts_pilot_v1.json \
+uv run python datasets/merge_section_labels.py sheet.csv \
+  --blocks ../k3smith.github.io/seg-labeler/blocks/section_model_v1.json \
+  -o data/gold/tier2_section/section_model_v1.jsonl \
+  --conflicts results/section_label_conflicts.json \
   --min-raters 2
 ```
 
-5. Stop when gold has **?30** non-skip rows across the four pilot docs (A1e).
+## What to prioritize while labeling
+
+- Header **parent** corrections (the DocGraph heading↔heading gap).
+- False headers (running titles, dates) → `skip`.
+- Body under the wrong section → fix parent.
+
+Do not spend time on fine-grained chunk types (requirement vs note); that was the old task.

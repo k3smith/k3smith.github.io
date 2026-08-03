@@ -1,18 +1,18 @@
 /**
- * Google Apps Script web app for the segmentation block labeler.
+ * Google Apps Script web app for DocGraph section-model labeling (seg-labeler).
  *
- * Setup:
+ * Setup (new Sheet for this round):
  * 1. Create a Google Sheet with a tab named "labels".
- * 2. Extensions ? Apps Script ? paste this file ? Save.
+ * 2. Extensions → Apps Script → paste this file → Save.
  * 3. Run ensureHeader once; approve permissions.
- * 4. Deploy ? New deployment ? Web app
+ * 4. Deploy → New deployment → Web app
  *    - Execute as: Me
  *    - Who has access: Anyone
- * 5. Paste the web-app URL into seg-labeler/config.js ? sheetWebAppUrl
+ * 5. Paste the web-app URL into seg-labeler/config.js → sheetWebAppUrl
  *
  * Endpoints:
- * - GET  ?callback=fn   ? JSONP coverage { target, labels:[{block_id,rater_id}] }
- * - POST text/plain JSON ? append one label row
+ * - GET  ?callback=fn   → JSONP coverage { target, labels:[{block_id,rater_id,role}] }
+ * - POST text/plain JSON → append one label row
  */
 
 var SHEET_NAME = "labels";
@@ -23,11 +23,9 @@ var HEADER = [
   "round_id",
   "block_id",
   "rater_id",
-  "block_type",
+  "role",
   "section_number",
-  "section_path",
   "parent_section_number",
-  "must_not_split_with",
   "page_start",
   "page_end",
   "document_name",
@@ -72,11 +70,9 @@ function doPost(e) {
       data.round_id || "",
       data.block_id || "",
       data.rater_id || "",
-      data.block_type || "",
+      data.role || "",
       data.section_number || "",
-      data.section_path || "",
       data.parent_section_number || "",
-      data.must_not_split_with || "",
       data.page_start || "",
       data.page_end || "",
       data.document_name || "",
@@ -103,13 +99,13 @@ function getCoverage() {
       var row = values[i];
       var blockId = String(row[2] || "").trim();
       var raterId = String(row[3] || "").trim();
-      var blockType = String(row[4] || "").trim().toLowerCase();
+      var role = String(row[4] || "").trim().toLowerCase();
       if (!blockId || !raterId) continue;
-      if (!blockType) continue;
+      if (!role) continue;
       map[blockId + "\t" + raterId] = {
         block_id: blockId,
         rater_id: raterId,
-        block_type: blockType,
+        role: role,
       };
     }
   }
