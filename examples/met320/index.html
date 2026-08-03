@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MET 320 Worked Examples | Katherine Smith</title>
+  <link rel="stylesheet" href="/assets/css/demos.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGPQ4HEBNW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EGPQ4HEBNW');
+  </script>
+</head>
+<body>
+  <script src="/assets/scripts/examples-data.js"></script>
+  <script src="/assets/scripts/examples-sidebar.js"></script>
+  <script>renderExamplesSidebar({ courseId: 'met320' });</script>
+
+  <div class="container">
+    <h1>MET 320 — Machine Elements</h1>
+    <p class="subtitle">
+      Worked examples following the 7-step engineering process: restate, given/find,
+      assumptions and sketch, equations, calculations, check, and result.
+      Open an example to step through it, or copy the iframe URL for Canvas embeds.
+    </p>
+
+    <div id="module-sections"></div>
+
+    <p style="margin-top: 40px;"><a href="/examples/index.html">← All worked examples</a></p>
+  </div>
+
+  <script>
+    const course = getExampleCourse('met320');
+    const base = 'https://k3smith.github.io/examples/met320/';
+    const container = document.getElementById('module-sections');
+
+    if (!course.modules.length) {
+      container.innerHTML = '<p>Worked examples for this course are coming soon.</p>';
+    }
+
+    course.modules.forEach((mod) => {
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = `Module ${mod.number}: ${mod.title}`;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'demo-grid';
+
+      mod.examples.forEach((example) => {
+        const url = example.file;
+        const embedUrl = base + example.file;
+        const card = document.createElement('article');
+        card.className = 'demo-card';
+        card.innerHTML = `
+          <p class="demo-meta">Module ${mod.number} · <code>${example.file}</code></p>
+          <h3><a href="${url}">${example.name}</a></h3>
+          <p>${example.description}</p>
+          <div class="demo-links">
+            <a href="${url}" target="_blank" rel="noopener">Open example</a>
+          </div>
+          <div class="embed-code" title="Canvas iframe src">${embedUrl}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+  </script>
+</body>
+</html>

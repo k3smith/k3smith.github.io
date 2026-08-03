@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Engine Room Systems Explorer | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --ink:#222; --dim:#9fb0c4; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 16px; }
+  h1 { color:var(--navy); font-size: 1.3rem; margin: 0 0 4px; }
+  p.lede { margin: 0 0 12px; color:#444; }
+  .stage { display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start; }
+  .figure { flex: 1 1 440px; min-width: 320px; }
+  svg { width:100%; height:auto; }
+  .node rect { cursor:pointer; transition: fill .15s, stroke .15s, opacity .15s; }
+  .node text { pointer-events:none; }
+  .node.dim { opacity:.35; }
+  .connector { transition: opacity .15s, stroke-width .15s; }
+  .connector.dim { opacity:.2; }
+  .connector.active { stroke-width:4; }
+  .panel { flex: 1 1 320px; min-width: 280px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .panel h2 { color:var(--navy); font-size:1.05rem; margin:0 0 8px; }
+  .panel .role { font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; color:#5a6b80; margin:0 0 10px; }
+  .panel h3 { font-size:.85rem; margin:12px 0 4px; color:var(--navy); }
+  .panel p { margin:0; font-size:.95rem; line-height:1.4; }
+  .fail { background:#fbeaea; border-left:3px solid #b23b3b; padding:8px 10px; border-radius:3px; }
+  .hint { font-size:.85rem; color:#5a6b80; margin-top:10px; }
+  button.reset { margin-top:12px; background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; font-size:.9rem; }
+  button.reset:hover { background:#16283f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Engine Room Systems Explorer</h1>
+  <p class="lede">The main engine cannot run alone. Select any supporting system to see what it provides and what happens if it fails.</p>
+  <div class="stage">
+    <div class="figure">
+      <svg viewBox="0 0 620 460" role="img" aria-label="Interactive diagram of the main engine and its supporting systems.">
+        <defs>
+          <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L8,3 L0,6 z" fill="#1F3A5F"></path>
+          </marker>
+        </defs>
+        <line class="connector" data-for="fuel" x1="180" y1="96" x2="242" y2="196" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="lube" x1="180" y1="214" x2="238" y2="214" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="air" x1="180" y1="332" x2="242" y2="242" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="fw" x1="398" y1="196" x2="440" y2="120" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="sw" x1="510" y1="120" x2="510" y2="188" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="elec" x1="440" y1="332" x2="398" y2="242" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+        <line class="connector" data-for="prop" x1="320" y1="252" x2="320" y2="360" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ah)"></line>
+
+        <g class="node engine"><rect x="240" y="182" width="160" height="72" rx="4" fill="#1F3A5F"></rect>
+          <text x="320" y="212" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">MAIN ENGINE</text>
+          <text x="320" y="231" text-anchor="middle" fill="#fff" font-size="11">(Prime Mover)</text></g>
+
+        <g class="node" data-key="fuel"><rect x="20" y="72" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="100" y="101" text-anchor="middle" fill="#1F3A5F" font-size="13">Fuel Oil System</text></g>
+        <g class="node" data-key="lube"><rect x="20" y="190" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="100" y="219" text-anchor="middle" fill="#1F3A5F" font-size="13">Lubricating Oil</text></g>
+        <g class="node" data-key="air"><rect x="20" y="308" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="100" y="337" text-anchor="middle" fill="#1F3A5F" font-size="13">Compressed Air</text></g>
+        <g class="node" data-key="fw"><rect x="440" y="72" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="520" y="101" text-anchor="middle" fill="#1F3A5F" font-size="13">Fresh Water Cooling</text></g>
+        <g class="node" data-key="sw"><rect x="440" y="190" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="520" y="219" text-anchor="middle" fill="#1F3A5F" font-size="13">Seawater Cooling</text></g>
+        <g class="node" data-key="elec"><rect x="440" y="308" width="160" height="48" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="520" y="337" text-anchor="middle" fill="#1F3A5F" font-size="13">Electrical Plant</text></g>
+        <g class="node" data-key="prop"><rect x="262" y="360" width="116" height="44" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect>
+          <text x="320" y="387" text-anchor="middle" fill="#1F3A5F" font-size="13">Propeller</text></g>
+      </svg>
+    </div>
+    <div class="panel" id="panel">
+      <h2 id="p-title">Start exploring</h2>
+      <p class="role" id="p-role">Overview</p>
+      <p id="p-desc">Each arrow in the diagram is a dependency. Click a system to learn what it supplies to the main engine and the consequence if it stops working.</p>
+      <div id="p-extra"></div>
+      <button class="reset" id="reset" type="button">Show overview</button>
+    </div>
+  </div>
+  <p class="hint">Tip: the propeller is an output of the engine, not a support system. Notice how a failure in one system quickly affects the others.</p>
+</div>
+<script>
+(function(){
+  var data = {
+    fuel: { title:"Fuel Oil System", role:"Supplies the engine", supplies:"Stores, heats, and cleans fuel, then delivers it to the engine at the right temperature and pressure for combustion.", fail:"No fuel reaches the cylinders and the engine stops." },
+    lube: { title:"Lubricating Oil System", role:"Supplies the engine", supplies:"Circulates oil to lubricate and cool bearings, the crankshaft, and other moving parts.", fail:"Bearings overheat and can seize. A low lube-oil pressure trip shuts the engine down to protect it." },
+    air:  { title:"Compressed Air System", role:"Supplies the engine", supplies:"Provides high-pressure starting air to turn the engine over, and control air for pneumatic systems.", fail:"The engine cannot be started, and pneumatic controls may be lost." },
+    fw:   { title:"Fresh Water (Jacket) Cooling", role:"Removes heat", supplies:"Circulates treated fresh water in a closed loop around the cylinder jackets to carry away combustion heat.", fail:"The engine overheats; a high-temperature trip shuts it down." },
+    sw:   { title:"Seawater Cooling System", role:"Removes heat", supplies:"Draws seawater through heat exchangers to cool the closed fresh-water loop and other coolers.", fail:"The fresh-water loop cannot reject its heat, so the engine overheats even though its own loop is intact." },
+    elec: { title:"Electrical Plant", role:"Powers everything", supplies:"Diesel generators feed the switchboard that powers the pumps and fans running every system above.", fail:"A blackout stops the supporting pumps, cascading into loss of cooling and fuel supply. The emergency generator restores essential loads." },
+    prop: { title:"Propeller", role:"Engine output", supplies:"Converts the engine's mechanical power into thrust through the shaft line. It is what the whole plant exists to drive.", fail:"This is an output, not a support system, so it does not feed the engine. Damage here is a propulsion loss rather than an engine-support failure." }
+  };
+  var nodes = Array.prototype.slice.call(document.querySelectorAll('.node[data-key]'));
+  var connectors = Array.prototype.slice.call(document.querySelectorAll('.connector'));
+  var pTitle=document.getElementById('p-title'), pRole=document.getElementById('p-role'), pDesc=document.getElementById('p-desc'), pExtra=document.getElementById('p-extra');
+
+  function clear(){
+    nodes.forEach(function(n){ n.classList.remove('dim'); n.querySelector('rect').setAttribute('fill', n.getAttribute('data-key')==='sel'?'#E7EDF4':'#E7EDF4'); });
+    connectors.forEach(function(c){ c.classList.remove('dim','active'); });
+  }
+  function overview(){
+    clear();
+    pTitle.textContent='Start exploring';
+    pRole.textContent='Overview';
+    pDesc.textContent='Each arrow in the diagram is a dependency. Click a system to learn what it supplies to the main engine and the consequence if it stops working.';
+    pExtra.innerHTML='';
+  }
+  function select(key){
+    var d=data[key]; if(!d) return;
+    nodes.forEach(function(n){
+      var isSel = n.getAttribute('data-key')===key;
+      n.classList.toggle('dim', !isSel && key!=='engine');
+      n.querySelector('rect').setAttribute('fill', isSel ? '#cfe0f2' : '#E7EDF4');
+    });
+    connectors.forEach(function(c){
+      var on = c.getAttribute('data-for')===key;
+      c.classList.toggle('active', on);
+      c.classList.toggle('dim', !on);
+    });
+    pTitle.textContent=d.title;
+    pRole.textContent=d.role;
+    pDesc.textContent=d.supplies;
+    pExtra.innerHTML='<h3>If this fails</h3><p class="fail">'+d.fail+'</p>';
+  }
+  nodes.forEach(function(n){
+    n.addEventListener('click', function(){ select(n.getAttribute('data-key')); });
+    n.style.cursor='pointer';
+  });
+  document.getElementById('reset').addEventListener('click', overview);
+  overview();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fuel Oil Flow | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --hl:#D85A30; --ink:#222; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:900px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
+  p.lede { margin:0 0 12px; color:#444; }
+  svg { width:100%; height:auto; }
+  .stage rect { cursor:pointer; }
+  .controls { display:flex; gap:8px; align-items:center; margin:12px 0; flex-wrap:wrap; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  .step { font-size:.85rem; color:#5a6b80; }
+  .panel { background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .panel h2 { color:var(--navy); font-size:1.05rem; margin:0 0 6px; }
+  .panel p { margin:0; font-size:.95rem; line-height:1.45; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Fuel Oil Flow: Bunker to Engine</h1>
+  <p class="lede">Follow heavy fuel oil on its journey from storage to the engine. Step through with the buttons, press Play, or click any stage.</p>
+  <svg viewBox="0 0 840 150" role="img" aria-label="Fuel oil flow from bunker tank through treatment to the main engine.">
+    <line x1="20" y1="60" x2="820" y2="60" stroke="#9fb0c4" stroke-width="3"></line>
+    <g class="stage" data-i="0"><rect x="14" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="60" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Bunker</text><text x="60" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">tank</text></g>
+    <g class="stage" data-i="1"><rect x="118" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="164" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Transfer</text><text x="164" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">pump</text></g>
+    <g class="stage" data-i="2"><rect x="222" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="268" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Settling</text><text x="268" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">tank</text></g>
+    <g class="stage" data-i="3"><rect x="326" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="372" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Purifier</text><text x="372" y="70" text-anchor="middle" fill="#1F3A5F" font-size="10">(centrifuge)</text></g>
+    <g class="stage" data-i="4"><rect x="430" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="476" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Service</text><text x="476" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">tank</text></g>
+    <g class="stage" data-i="5"><rect x="534" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="580" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Booster</text><text x="580" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">pump</text></g>
+    <g class="stage" data-i="6"><rect x="638" y="30" width="92" height="60" rx="4" fill="#E7EDF4" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="684" y="56" text-anchor="middle" fill="#1F3A5F" font-size="11">Heater</text><text x="684" y="70" text-anchor="middle" fill="#1F3A5F" font-size="11">&amp; VC</text></g>
+    <g class="stage" data-i="7"><rect x="742" y="30" width="92" height="60" rx="4" fill="#1F3A5F" stroke="#1F3A5F" stroke-width="1.5"></rect><text x="788" y="56" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">Main</text><text x="788" y="70" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">engine</text></g>
+    <rect class="hl" id="hl" x="10" y="26" width="100" height="68" rx="5" fill="none" stroke="#D85A30" stroke-width="3"></rect>
+    <circle id="drop" cx="60" cy="112" r="7" fill="#D85A30"></circle>
+  </svg>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="step" id="step">Step 1 of 8</span>
+  </div>
+  <div class="panel">
+    <h2 id="p-title">1. Bunker (storage) tank</h2>
+    <p id="p-desc">After bunkering, the ship's fuel is stored here in large tanks. Heavy fuel oil is thick and must be treated before the engine can burn it.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var stages=[
+    {t:"Bunker (storage) tank", d:"After bunkering, the ship's fuel is stored here in large tanks. Heavy fuel oil is thick and must be treated before the engine can burn it."},
+    {t:"Transfer pump", d:"Moves fuel from the bunker tank up to the settling tank so treatment can begin."},
+    {t:"Settling tank", d:"Fuel is warmed and left to stand so water and heavy sediment settle to the bottom, where they are drained off."},
+    {t:"Purifier (centrifuge)", d:"Spins the fuel at high speed to separate out remaining water and solids, cleaning it before use."},
+    {t:"Service (day) tank", d:"Holds cleaned, ready-to-use fuel, typically enough for about a day of running."},
+    {t:"Booster pump", d:"Raises the fuel pressure and circulates it toward the engine."},
+    {t:"Final heater and viscosity controller", d:"Heats the heavy fuel to the exact viscosity the injectors need. A viscosity controller adjusts the heater automatically."},
+    {t:"Main engine", d:"Burns the treated, correctly heated fuel to produce power. Everything upstream exists to deliver clean fuel at the right condition here."}
+  ];
+  var centers=[60,164,268,372,476,580,684,788];
+  var xs=[10,114,218,322,426,530,634,738];
+  var i=0, timer=null;
+  var hl=document.getElementById('hl'), drop=document.getElementById('drop');
+  var pTitle=document.getElementById('p-title'), pDesc=document.getElementById('p-desc'), stepEl=document.getElementById('step');
+  function render(){
+    hl.setAttribute('x', xs[i]);
+    drop.setAttribute('cx', centers[i]);
+    pTitle.textContent=(i+1)+". "+stages[i].t;
+    pDesc.textContent=stages[i].d;
+    stepEl.textContent="Step "+(i+1)+" of 8";
+  }
+  function go(n){ i=(n+8)%8; render(); }
+  document.getElementById('next').addEventListener('click',function(){ stop(); go(i+1); });
+  document.getElementById('prev').addEventListener('click',function(){ stop(); go(i-1); });
+  Array.prototype.forEach.call(document.querySelectorAll('.stage'),function(g){
+    g.addEventListener('click',function(){ stop(); go(parseInt(g.getAttribute('data-i'),10)); });
+  });
+  var playBtn=document.getElementById('play');
+  function stop(){ if(timer){ clearInterval(timer); timer=null; playBtn.textContent="Play"; } }
+  playBtn.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    playBtn.textContent="Pause";
+    timer=setInterval(function(){ if(i>=7){ stop(); return; } go(i+1); },1400);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

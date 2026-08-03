@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worked Examples | Katherine Smith</title>
+  <link rel="stylesheet" href="/assets/css/demos.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGPQ4HEBNW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EGPQ4HEBNW');
+  </script>
+</head>
+<body>
+  <script src="/assets/scripts/examples-data.js"></script>
+  <script src="/assets/scripts/examples-sidebar.js"></script>
+  <script>renderExamplesSidebar();</script>
+
+  <div class="container">
+    <h1>Worked Examples</h1>
+    <p class="subtitle">
+      Step-by-step worked problems that follow a consistent engineering-process format.
+      These pages are designed to be embedded in Canvas via <code>&lt;iframe&gt;</code>
+      or opened directly for self-paced study.
+    </p>
+
+    <div id="course-list"></div>
+
+    <p style="margin-top: 40px;"><a href="/index.html">← Back to Home</a></p>
+  </div>
+
+  <script>
+    const list = document.getElementById('course-list');
+    EXAMPLE_COURSES.forEach((course) => {
+      const count = course.modules.reduce((n, m) => n + m.examples.length, 0);
+      const card = document.createElement('div');
+      card.className = 'course-card';
+      card.innerHTML = `
+        <h2>${course.name}</h2>
+        <p class="demo-count">${course.term} · ${count} worked example${count === 1 ? '' : 's'}</p>
+        <a class="btn-primary" href="${course.index}">Browse ${course.id.toUpperCase()} examples →</a>
+      `;
+      list.appendChild(card);
+    });
+  </script>
+</body>
+</html>

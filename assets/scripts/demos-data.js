@@ -102,6 +102,35 @@ const DEMO_COURSES = [
       },
     ],
   },
+  {
+    id: 'met475',
+    name: 'MET 475 — Marine Engineering I',
+    term: 'ODU',
+    index: '/demos/met475/index.html',
+    modules: [
+      {
+        number: 1,
+        title: 'Marine Engineering & the Ship as a System',
+        demos: [
+          {
+            file: 'M01-01-SystemsExplorerDemo.html',
+            name: 'Engine Room Systems Explorer',
+            description: 'Click each shipboard system to see what it supplies to the main engine and what happens if it fails.',
+          },
+          {
+            file: 'M01-02-EngineRoomCutawayDemo.html',
+            name: 'Engine Room Cutaway',
+            description: 'Explore a labeled side-elevation cutaway of a ship engine room: main engine, control room, platforms, tanks, shaft, and propeller.',
+          },
+          {
+            file: 'M01-03-FuelOilFlowDemo.html',
+            name: 'Fuel Oil Flow: Bunker to Engine',
+            description: 'Step through fuel oil treatment from the bunker tank to the engine: transfer, settling, purifying, service tank, boosting, and heating.',
+          },
+        ]
+      }
+    ]
+  }
 ];
 
 /** Flat list of all demos for a course (for sidebar). */
