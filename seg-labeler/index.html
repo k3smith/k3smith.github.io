@@ -53,12 +53,15 @@
             </div>
           </div>
           <p>
-            If <strong>header</strong>: set its section number (if any) and choose
-            its <strong>parent header</strong> from the list (or
+            If <strong>header</strong>: set its section number <em>or title</em>
+            when unnumbered (e.g. <code>Introduction</code>) and choose its
+            <strong>parent header</strong> from the list (or
             <code>root</code>). Prefills are model suggestions — correct them when
-            wrong. If <strong>body</strong>: pick the section header it belongs
-            under. Use the same initials when you return. Each unit is labeled by
-            up to two people.
+            wrong. If the right parent is missing from the list, choose
+            <strong>Other…</strong> and type it (common for unnumbered headers).
+            If <strong>body</strong>: pick the section header it belongs under
+            (again use Other… if needed). Use the same initials when you return.
+            Each unit is labeled by up to two people.
           </p>
         </div>
       </details>
@@ -129,9 +132,13 @@
           <div class="form-grid" id="header-fields">
             <div>
               <label class="field" for="section-number"
-                >Section number (headers; optional for unnumbered)</label
+                >Section number / title (headers; use title if unnumbered)</label
               >
-              <input id="section-number" type="text" placeholder="e.g. 3.2.1" />
+              <input
+                id="section-number"
+                type="text"
+                placeholder="e.g. 3.2.1 or Introduction"
+              />
             </div>
             <div>
               <label class="field" for="parent-section"
@@ -139,13 +146,28 @@
               >
               <select id="parent-section">
                 <option value="root">root (top-level)</option>
+                <option value="__other__">Other… (type below)</option>
               </select>
             </div>
+          </div>
+
+          <div id="parent-other-wrap" hidden>
+            <label class="field" for="parent-other"
+              >Other parent (unnumbered title or missing number)</label
+            >
+            <input
+              id="parent-other"
+              type="text"
+              placeholder="e.g. Introduction, REFERENCES, Chapter 2"
+              autocomplete="off"
+            />
           </div>
 
           <p class="lead" id="parent-hint" style="margin-top: 0; font-size: 0.9rem">
             For <strong>body</strong>, parent = the section this text sits under.
             For <strong>header</strong>, parent = the outline parent (or root).
+            Prefill list is incomplete — use <strong>Other…</strong> for
+            unnumbered headers (e.g. Introduction) not in the dropdown.
           </p>
 
           <label class="field" for="notes">Notes (optional)</label>
@@ -186,7 +208,7 @@
       </footer>
     </div>
 
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js?v=section_model_v2"></script>
+    <script src="app.js?v=section_model_v2"></script>
   </body>
 </html>

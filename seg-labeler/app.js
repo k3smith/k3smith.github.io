@@ -32,6 +32,8 @@
     unitRole: document.getElementById("unit-role"),
     sectionNumber: document.getElementById("section-number"),
     parentSection: document.getElementById("parent-section"),
+    parentOther: document.getElementById("parent-other"),
+    parentOtherWrap: document.getElementById("parent-other-wrap"),
     notes: document.getElementById("notes"),
     useSuggestions: document.getElementById("use-suggestions"),
     status: document.getElementById("status"),
@@ -166,6 +168,24 @@
     return list[Math.floor(Math.random() * list.length)];
   }
 
+  function syncParentOtherVisibility() {
+    const other = els.parentSection && els.parentSection.value === "__other__";
+    if (els.parentOtherWrap) {
+      els.parentOtherWrap.hidden = !other;
+    }
+    if (other && els.parentOther) {
+      els.parentOther.focus();
+    }
+  }
+
+  function resolveParentValue() {
+    const sel = (els.parentSection.value || "").trim();
+    if (sel === "__other__") {
+      return (els.parentOther && els.parentOther.value || "").trim();
+    }
+    return sel;
+  }
+
   function fillParentOptions(b, selected) {
     const sel = els.parentSection;
     sel.innerHTML = "";
@@ -181,7 +201,6 @@
         label: "(document root)",
       });
     }
-    // Always allow typing via free option if suggested parent missing
     const seen = new Set();
     for (const c of candidates) {
       const val = String(c.sectionNumber || "").trim();
@@ -193,17 +212,40 @@
       opt.textContent = lab ? `${val} — ${lab}` : val;
       sel.appendChild(opt);
     }
-    if (selected && !seen.has(selected)) {
+    const want = (selected || "root").trim();
+    const wantInList = want && seen.has(want);
+    if (want && !wantInList && want !== "root") {
+      // Keep the typed value selectable if it was a prior free-text parent
       const opt = document.createElement("option");
-      opt.value = selected;
-      opt.textContent = selected;
+      opt.value = want;
+      opt.textContent = `${want} — (custom)`;
       sel.appendChild(opt);
+      seen.add(want);
     }
-    const want = selected || "root";
-    sel.value = seen.has(want) || selected ? want : "root";
+    const otherOpt = document.createElement("option");
+    otherOpt.value = "__other__";
+    otherOpt.textContent = "Other… (type unnumbered / missing parent)";
+    sel.appendChild(otherOpt);
+
+    if (wantInList || want === "root" || (want && seen.has(want))) {
+      sel.value = want || "root";
+      if (els.parentOther) els.parentOther.value = "";
+    } else if (want) {
+      sel.value = "__other__";
+      if (els.parentOther) els.parentOther.value = want;
+    } else {
+      sel.value = "root";
+      if (els.parentOther) els.parentOther.value = "";
+    }
+    syncParentOtherVisibility();
   }
 
   function applySuggestions(b) {
+    if (!els.unitRole || !els.parentSection || !els.sectionNumber) {
+      throw new Error(
+        "Label form controls missing — hard-refresh to load the latest app.js (role select id=unit-role)."
+      );
+    }
     const role = (b.suggestedRole || "").toLowerCase();
     els.unitRole.value = ROLES.has(role) ? role : "";
     els.sectionNumber.value = b.suggestedSectionNumber || "";
@@ -221,10 +263,13 @@
     const role = els.unitRole.value;
     const needParent = role === "header" || role === "body";
     els.parentSection.disabled = !needParent;
+    if (els.parentOther) els.parentOther.disabled = !needParent;
     els.sectionNumber.disabled = role === "skip";
     if (role === "skip") {
       els.sectionNumber.value = "";
+      if (els.parentOther) els.parentOther.value = "";
     }
+    syncParentOtherVisibility();
   }
 
   function showDone(reason) {
@@ -348,12 +393,19 @@
       return;
     }
 
-    let parent = (els.parentSection.value || "").trim();
+    let parent = resolveParentValue();
     if (role === "skip") {
       parent = "";
     } else if (!parent) {
-      setStatus("Choose a parent header (or root).", "err");
-      els.parentSection.focus();
+      setStatus(
+        "Choose a parent header (or Other… and type an unnumbered title like Introduction).",
+        "err"
+      );
+      if (els.parentSection.value === "__other__" && els.parentOther) {
+        els.parentOther.focus();
+      } else {
+        els.parentSection.focus();
+      }
       return;
     }
 
@@ -514,6 +566,7 @@
       saveLabel(e).catch((err) => setStatus(String(err.message || err), "err"));
     });
     els.unitRole.addEventListener("change", toggleFieldsForRole);
+    els.parentSection.addEventListener("change", syncParentOtherVisibility);
     els.useSuggestions.addEventListener("click", () => {
       if (current) applySuggestions(current);
     });
