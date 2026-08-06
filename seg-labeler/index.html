@@ -3,65 +3,60 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DocGraph section labeling</title>
+    <title>DocGraph span section labeling</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=section_model_v2" />
   </head>
   <body>
     <div class="wrap">
       <header class="site">
-        <h1>Section structure labeling</h1>
+        <h1>Section span labeling</h1>
         <span class="badge" id="round-badge">round</span>
       </header>
 
       <div id="sheet-warn" class="warn-banner" hidden>
-        Google Sheet is not configured yet (<code>config.js</code> →
-        <code>sheetWebAppUrl</code>). Shared double-coverage needs the Sheet live
-        before you recruit raters.
+        Google Sheet is not configured (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Labels still save locally + CSV backup.
+        For shared coverage, create a <strong>new</strong> Sheet for
+        <code>section_model_v2</code>, paste updated <code>apps_script/Code.gs</code>,
+        deploy, and paste the URL.
       </div>
 
       <details class="how" id="how" open>
         <summary>Instructions (about 2 minutes)</summary>
         <div class="body">
           <p>
-            You will see one <strong>text unit</strong> from a Navy / regulatory
-            PDF (with a little context). Decide whether it is a
-            <strong>section header</strong> or <strong>body</strong> under a
-            header — the product graph model used by DocGraph.
+            Mark <strong>spans</strong> inside each unit. The product graph is:
+            a <em>header</em> title node, then one or more <em>body</em> chunks
+            whose parent is that header (never another body).
           </p>
           <div class="defs">
             <div>
               <strong>header</strong>
-              A section / subsection title, usually numbered
-              (<code>3.2.1</code>, <code>2. REFERENCES</code>, lettered chapter
-              heads). The <em>title</em> of a section, not its body prose.
+              Short title / identifier (what would be underlined). Examples:
+              <code>2.3.4 Training Requirements.</code>,
+              <code>(b) OPNAVINST 3120.32</code>, <code>References</code>.
             </div>
             <div>
               <strong>body</strong>
-              Paragraph or text chunk that belongs under a header. Parent is the
-              open section header — never another body line.
+              Prose under that header — including text after a citation dash,
+              and long requirement text after a numbered title. Parent = the
+              header you marked (or its section id).
             </div>
             <div>
               <strong>skip</strong>
-              Running header/footer, page date (<code>07 Nov 2023</code>), TOC
-              noise, blank/junk — not a graph unit.
+              Chrome / junk (running headers, VerDate, SGML paths).
             </div>
           </div>
           <p>
-            If <strong>header</strong>: set its section number <em>or title</em>
-            when unnumbered (e.g. <code>Introduction</code>) and choose its
-            <strong>parent header</strong> from the list (or
-            <code>root</code>). Prefills are model suggestions — correct them when
-            wrong. If the right parent is missing from the list, choose
-            <strong>Other…</strong> and type it (common for unnumbered headers).
-            If <strong>body</strong>: pick the section header it belongs under
-            (again use Other… if needed). Use the same initials when you return.
-            Each unit is labeled by up to two people.
+            Select text in the unit, then press <kbd>H</kbd> / <kbd>B</kbd> /
+            <kbd>S</kbd> (or the buttons). Prefills are extractor suggestions —
+            fix them. Multiple body spans may share one header parent.
           </p>
         </div>
       </details>
@@ -69,9 +64,8 @@
       <section class="panel" id="setup">
         <h2>Start a session</h2>
         <p class="lead">
-          Enter a short name or initials (same every time you return). The site
-          will only offer units that still need a rating and that you have not
-          already labeled.
+          Enter initials (same every return). Only units still needing a rating
+          are offered.
         </p>
         <label class="field" for="rater-id">Your name or initials</label>
         <input
@@ -111,8 +105,25 @@
             <p id="ctx-before"></p>
           </article>
           <article class="ctx-card focal">
-            <h3>Unit to label</h3>
-            <p id="block-text"></p>
+            <h3>Unit — select text, then mark</h3>
+            <div id="block-text" class="markable" tabindex="0"></div>
+            <div class="mark-toolbar" role="toolbar" aria-label="Mark selection">
+              <button type="button" id="mark-header" class="mark-btn header">
+                Header <kbd>H</kbd>
+              </button>
+              <button type="button" id="mark-body" class="mark-btn body">
+                Body <kbd>B</kbd>
+              </button>
+              <button type="button" id="mark-skip" class="mark-btn skip">
+                Skip <kbd>S</kbd>
+              </button>
+              <button type="button" id="clear-marks" class="secondary">
+                Clear marks
+              </button>
+              <button type="button" id="use-suggestions" class="secondary">
+                Reset suggestions
+              </button>
+            </div>
           </article>
           <article class="ctx-card muted-card" id="ctx-after-wrap" hidden>
             <h3>Context after</h3>
@@ -121,63 +132,14 @@
         </div>
 
         <form id="label-form" class="label-form" autocomplete="off">
-          <label class="field" for="unit-role">Role</label>
-          <select id="unit-role" required>
-            <option value="">Select…</option>
-            <option value="header">header</option>
-            <option value="body">body</option>
-            <option value="skip">skip</option>
-          </select>
-
-          <div class="form-grid" id="header-fields">
-            <div>
-              <label class="field" for="section-number"
-                >Section number / title (headers; use title if unnumbered)</label
-              >
-              <input
-                id="section-number"
-                type="text"
-                placeholder="e.g. 3.2.1 or Introduction"
-              />
-            </div>
-            <div>
-              <label class="field" for="parent-section"
-                >Parent header</label
-              >
-              <select id="parent-section">
-                <option value="root">root (top-level)</option>
-                <option value="__other__">Other… (type below)</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="parent-other-wrap" hidden>
-            <label class="field" for="parent-other"
-              >Other parent (unnumbered title or missing number)</label
-            >
-            <input
-              id="parent-other"
-              type="text"
-              placeholder="e.g. Introduction, REFERENCES, Chapter 2"
-              autocomplete="off"
-            />
-          </div>
-
-          <p class="lead" id="parent-hint" style="margin-top: 0; font-size: 0.9rem">
-            For <strong>body</strong>, parent = the section this text sits under.
-            For <strong>header</strong>, parent = the outline parent (or root).
-            Prefill list is incomplete — use <strong>Other…</strong> for
-            unnumbered headers (e.g. Introduction) not in the dropdown.
-          </p>
+          <h3 class="marks-heading">Marks on this unit</h3>
+          <div id="marks-list" class="marks-list"></div>
 
           <label class="field" for="notes">Notes (optional)</label>
-          <input id="notes" type="text" placeholder="Ambiguity, OCR, wrong candidates?" />
+          <input id="notes" type="text" placeholder="Ambiguity, bad split, missing parent?" />
 
           <div class="actions">
             <button type="submit" id="save">Save &amp; next</button>
-            <button type="button" class="secondary" id="use-suggestions">
-              Reset to suggestions
-            </button>
           </div>
         </form>
 
@@ -202,9 +164,10 @@
       </section>
 
       <footer class="note">
-        DocGraph section-model gold: headers parent headers (or root); body units
-        parent to their section header. Labels feed hierarchy eval in
-        <code>supship-data-validation</code>.
+        Round <code>section_model_v2</code>: header spans + body spans (body →
+        header parent). OSHA GPO PDF quarantined until eCFR / verified
+        column-aware extract. See
+        <code>supship-data-validation/04-changeset-span-section-model.md</code>.
       </footer>
     </div>
 

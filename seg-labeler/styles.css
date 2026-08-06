@@ -414,3 +414,158 @@ footer.note {
 [hidden] {
   display: none !important;
 }
+
+/* ---- section_model_v2 span marking ---- */
+
+.markable {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  user-select: text;
+  cursor: text;
+  padding: 0.35rem 0;
+  outline: none;
+}
+
+.markable mark {
+  color: inherit;
+  border-radius: 2px;
+  padding: 0.05em 0;
+}
+
+.markable mark.span-header {
+  background: #cfe8de;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.markable mark.span-body {
+  background: #e8e0cf;
+}
+
+.markable mark.span-skip {
+  background: #e0d5d5;
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+.mark-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.mark-btn {
+  font: inherit;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+
+.mark-btn.header {
+  border-color: #8fbfad;
+  background: var(--accent-soft);
+}
+
+.mark-btn.body {
+  border-color: #c4b896;
+  background: #f3ebe0;
+}
+
+.mark-btn.skip {
+  border-color: #c9a8a8;
+  background: #f5ecec;
+}
+
+.mark-btn kbd {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+}
+
+.marks-heading {
+  margin: 0.5rem 0 0.4rem;
+  font-size: 1rem;
+}
+
+.marks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.mark-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--line);
+  background: #faf8f2;
+  font-size: 0.88rem;
+}
+
+.mark-row .mark-role {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.4rem;
+  background: var(--accent-soft);
+}
+
+.mark-row.role-body .mark-role {
+  background: #e8e0cf;
+}
+
+.mark-row.role-skip .mark-role {
+  background: #e0d5d5;
+}
+
+.mark-row .mark-excerpt {
+  grid-column: 2;
+  font-size: 0.82rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mark-row label {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.mark-row label input,
+.mark-row label select {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--line);
+  min-width: 8rem;
+}
+
+.mark-row .mark-remove {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+kbd {
+  font-family: var(--sans);
+  font-size: 0.85em;
+  border: 1px solid var(--line);
+  padding: 0.05em 0.35em;
+  background: #fff;
+}
+

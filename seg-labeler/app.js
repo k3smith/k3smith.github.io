@@ -3,8 +3,6 @@
 (function () {
   "use strict";
 
-  const ROLES = new Set(["header", "body", "skip"]);
-
   const TARGET = () =>
     Number(LABELER_CONFIG.targetRatings) > 0
       ? Number(LABELER_CONFIG.targetRatings)
@@ -28,13 +26,13 @@
     ctxAfterWrap: document.getElementById("ctx-after-wrap"),
     ctxAfter: document.getElementById("ctx-after"),
     blockText: document.getElementById("block-text"),
+    marksList: document.getElementById("marks-list"),
     form: document.getElementById("label-form"),
-    unitRole: document.getElementById("unit-role"),
-    sectionNumber: document.getElementById("section-number"),
-    parentSection: document.getElementById("parent-section"),
-    parentOther: document.getElementById("parent-other"),
-    parentOtherWrap: document.getElementById("parent-other-wrap"),
     notes: document.getElementById("notes"),
+    markHeader: document.getElementById("mark-header"),
+    markBody: document.getElementById("mark-body"),
+    markSkip: document.getElementById("mark-skip"),
+    clearMarks: document.getElementById("clear-marks"),
     useSuggestions: document.getElementById("use-suggestions"),
     status: document.getElementById("status"),
     setupStatus: document.getElementById("setup-status"),
@@ -49,13 +47,15 @@
 
   /** @type {Array<Record<string, any>>} */
   let blocks = [];
-  /** block_id → answer object */
+  /** block_id → answer */
   let answers = {};
   /** block_id → Set of rater_ids */
   let coverage = new Map();
   /** @type {Record<string, any>|null} */
   let current = null;
   let raterId = "";
+  /** @type {Array<Record<string, any>>} */
+  let marks = [];
 
   function storageKey() {
     return `seg-labeler:${LABELER_CONFIG.roundId}:${raterId}`;
@@ -108,7 +108,7 @@
         resolve(data);
       };
       const sep = url.includes("?") ? "&" : "?";
-      script.src = `${url}${sep}callback=${encodeURIComponent(cb)}&_=${Date.now()}`;
+      script.src = `${url}${sep}callback=${encodeURIComponent(cb)}&round_id=${encodeURIComponent(LABELER_CONFIG.roundId)}&_=${Date.now()}`;
       script.onerror = () => {
         cleanup();
         reject(new Error("Sheet coverage request failed"));
@@ -119,371 +119,411 @@
 
   function rebuildCoverage(remoteLabels) {
     coverage = new Map();
-    for (const row of remoteLabels || []) {
+    (remoteLabels || []).forEach((row) => {
       const bid = (row.block_id || "").trim();
       const rid = (row.rater_id || "").trim();
-      if (!bid || !rid) continue;
+      if (!bid || !rid) return;
       if (!coverage.has(bid)) coverage.set(bid, new Set());
       coverage.get(bid).add(rid);
-    }
-    for (const bid of Object.keys(answers)) {
+    });
+    Object.keys(answers).forEach((bid) => {
       if (!coverage.has(bid)) coverage.set(bid, new Set());
       coverage.get(bid).add(raterId);
-    }
-  }
-
-  function ratersFor(blockId) {
-    return coverage.get(blockId) || new Set();
+    });
   }
 
   function eligibleBlocks() {
     const t = TARGET();
     return blocks.filter((b) => {
-      const s = ratersFor(b.block_id);
-      return s.size < t && !s.has(raterId);
+      const raters = coverage.get(b.block_id) || new Set();
+      if (raters.has(raterId)) return false;
+      return raters.size < t;
     });
-  }
-
-  function blocksFullyCovered() {
-    const t = TARGET();
-    return blocks.filter((b) => ratersFor(b.block_id).size >= t).length;
   }
 
   function updateProgress() {
     const mine = Object.keys(answers).length;
-    const full = blocksFullyCovered();
+    const elig = eligibleBlocks().length;
     const total = blocks.length;
-    const t = TARGET();
-    els.progressText.textContent = `Your labels: ${mine} · Units with ${t} ratings: ${full} / ${total}`;
-    els.progressFill.style.width = total ? `${(100 * full) / total}%` : "0%";
-    if (els.coverageText) {
-      const open = eligibleBlocks().length;
-      els.coverageText.textContent = open
-        ? `${open} units still available for you`
-        : "No units left for you right now";
-    }
+    els.progressText.textContent = `Your labels: ${mine}`;
+    els.coverageText.textContent = `${elig} units still need you · bank ${total}`;
+    const pct = total ? Math.min(100, (mine / Math.max(1, total)) * 100) : 0;
+    els.progressFill.style.width = `${pct}%`;
   }
 
-  function pickRandom(list) {
-    return list[Math.floor(Math.random() * list.length)];
+  function cloneMarks(src) {
+    return (src || []).map((m) => ({ ...m }));
   }
 
-  function syncParentOtherVisibility() {
-    const other = els.parentSection && els.parentSection.value === "__other__";
-    if (els.parentOtherWrap) {
-      els.parentOtherWrap.hidden = !other;
+  function loadSuggestions() {
+    marks = cloneMarks(current.suggestedMarks || []);
+    if (!marks.length && current.text) {
+      marks = [
+        {
+          role: "body",
+          start: 0,
+          end: current.text.length,
+          section_number: "",
+          parent_section_number: current.suggestedParentSectionNumber || "root",
+          text: current.text,
+        },
+      ];
     }
-    if (other && els.parentOther) {
-      els.parentOther.focus();
-    }
+    renderText();
+    renderMarksList();
   }
 
-  function resolveParentValue() {
-    const sel = (els.parentSection.value || "").trim();
-    if (sel === "__other__") {
-      return (els.parentOther && els.parentOther.value || "").trim();
-    }
-    return sel;
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
-  function fillParentOptions(b, selected) {
-    const sel = els.parentSection;
-    sel.innerHTML = "";
-    const candidates = Array.isArray(b.candidateParents)
-      ? b.candidateParents.slice()
-      : [];
-    const hasRoot = candidates.some(
-      (c) => String(c.sectionNumber || "").toLowerCase() === "root"
-    );
-    if (!hasRoot) {
-      candidates.unshift({
-        sectionNumber: "root",
-        label: "(document root)",
-      });
-    }
-    const seen = new Set();
-    for (const c of candidates) {
-      const val = String(c.sectionNumber || "").trim();
-      if (!val || seen.has(val)) continue;
-      seen.add(val);
-      const opt = document.createElement("option");
-      opt.value = val;
-      const lab = (c.label || "").trim();
-      opt.textContent = lab ? `${val} — ${lab}` : val;
-      sel.appendChild(opt);
-    }
-    const want = (selected || "root").trim();
-    const wantInList = want && seen.has(want);
-    if (want && !wantInList && want !== "root") {
-      // Keep the typed value selectable if it was a prior free-text parent
-      const opt = document.createElement("option");
-      opt.value = want;
-      opt.textContent = `${want} — (custom)`;
-      sel.appendChild(opt);
-      seen.add(want);
-    }
-    const otherOpt = document.createElement("option");
-    otherOpt.value = "__other__";
-    otherOpt.textContent = "Other… (type unnumbered / missing parent)";
-    sel.appendChild(otherOpt);
+  function renderText() {
+    const text = current.text || "";
+    const sorted = marks
+      .slice()
+      .filter((m) => Number.isFinite(m.start) && Number.isFinite(m.end) && m.end > m.start)
+      .sort((a, b) => a.start - b.start || b.end - a.end);
 
-    if (wantInList || want === "root" || (want && seen.has(want))) {
-      sel.value = want || "root";
-      if (els.parentOther) els.parentOther.value = "";
-    } else if (want) {
-      sel.value = "__other__";
-      if (els.parentOther) els.parentOther.value = want;
-    } else {
-      sel.value = "root";
-      if (els.parentOther) els.parentOther.value = "";
+    // Build non-overlapping highlight layers (simple: paint in order, later wins on overlap display via nested spans avoided — use sequential segments)
+    const cuts = new Set([0, text.length]);
+    sorted.forEach((m) => {
+      cuts.add(Math.max(0, Math.min(text.length, m.start)));
+      cuts.add(Math.max(0, Math.min(text.length, m.end)));
+    });
+    const points = Array.from(cuts).sort((a, b) => a - b);
+    let html = "";
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i];
+      const b = points[i + 1];
+      if (a >= b) continue;
+      const covering = sorted.filter((m) => m.start <= a && m.end >= b);
+      const role = covering.length ? covering[covering.length - 1].role : "";
+      const chunk = escapeHtml(text.slice(a, b));
+      if (role) {
+        html += `<mark class="span-${role}" data-role="${role}">${chunk}</mark>`;
+      } else {
+        html += chunk;
+      }
     }
-    syncParentOtherVisibility();
+    els.blockText.innerHTML = html || escapeHtml(text);
   }
 
-  function applySuggestions(b) {
-    if (!els.unitRole || !els.parentSection || !els.sectionNumber) {
-      throw new Error(
-        "Label form controls missing — hard-refresh to load the latest app.js (role select id=unit-role)."
-      );
+  function getSelectionOffsets() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+    const range = sel.getRangeAt(0);
+    if (!els.blockText.contains(range.commonAncestorContainer)) return null;
+
+    const pre = document.createRange();
+    pre.selectNodeContents(els.blockText);
+    pre.setEnd(range.startContainer, range.startOffset);
+    const start = pre.toString().length;
+    const end = start + range.toString().length;
+    if (end <= start) return null;
+    return { start, end, text: (current.text || "").slice(start, end) };
+  }
+
+  function inferSectionNumber(role, selectedText) {
+    if (role !== "header") return "";
+    const t = (selectedText || "").trim();
+    const num = t.match(/^(\d+(?:\.\d+){0,5})\b/);
+    if (num) return num[1];
+    const let_ = t.match(/^(\([a-z0-9]+\))/i);
+    if (let_) return let_[1];
+    if (/^references?$/i.test(t) || /^references?\b/i.test(t)) return "References";
+    return t.slice(0, 48);
+  }
+
+  function lastHeaderSection() {
+    for (let i = marks.length - 1; i >= 0; i--) {
+      if (marks[i].role === "header" && marks[i].section_number) {
+        return marks[i].section_number;
+      }
     }
-    const role = (b.suggestedRole || "").toLowerCase();
-    els.unitRole.value = ROLES.has(role) ? role : "";
-    els.sectionNumber.value = b.suggestedSectionNumber || "";
+    return current.suggestedParentSectionNumber || "root";
+  }
+
+  function addMark(role) {
+    const sel = getSelectionOffsets();
+    if (!sel) {
+      setStatus("Select text in the unit first, then mark.", "err");
+      return;
+    }
+    // remove overlapping marks
+    marks = marks.filter((m) => m.end <= sel.start || m.start >= sel.end);
+    const section =
+      role === "header" ? inferSectionNumber(role, sel.text) : "";
     const parent =
-      b.suggestedParentSectionNumber === "" ||
-      b.suggestedParentSectionNumber == null
-        ? "root"
-        : String(b.suggestedParentSectionNumber);
-    fillParentOptions(b, parent);
+      role === "skip"
+        ? ""
+        : role === "header"
+          ? "root"
+          : lastHeaderSection();
+    marks.push({
+      role,
+      start: sel.start,
+      end: sel.end,
+      section_number: section,
+      parent_section_number: parent,
+      text: sel.text,
+    });
+    marks.sort((a, b) => a.start - b.start);
+    window.getSelection().removeAllRanges();
+    renderText();
+    renderMarksList();
+    setStatus(`Marked ${role} [${sel.start},${sel.end})`, "ok");
+  }
+
+  function renderMarksList() {
+    if (!marks.length) {
+      els.marksList.innerHTML =
+        '<p class="lead" style="margin:0">No marks yet — select text and press H / B / S.</p>';
+      return;
+    }
+    const cand = current.candidateParents || [];
+    els.marksList.innerHTML = marks
+      .map((m, idx) => {
+        const opts = [
+          `<option value="root">root</option>`,
+          ...cand
+            .filter((c) => c.sectionNumber && c.sectionNumber !== "root")
+            .map((c) => {
+              const sel =
+                (m.parent_section_number || "") === c.sectionNumber
+                  ? " selected"
+                  : "";
+              return `<option value="${escapeHtml(c.sectionNumber)}"${sel}>${escapeHtml(c.sectionNumber)} — ${escapeHtml(c.label || "")}</option>`;
+            }),
+          `<option value="__other__">Other…</option>`,
+        ].join("");
+        const parentVal = m.parent_section_number || "root";
+        const known = cand.some((c) => c.sectionNumber === parentVal) || parentVal === "root";
+        return `<div class="mark-row role-${m.role}" data-idx="${idx}">
+          <span class="mark-role">${m.role}</span>
+          <code class="mark-excerpt">${escapeHtml((m.text || "").slice(0, 72))}${(m.text || "").length > 72 ? "…" : ""}</code>
+          ${
+            m.role === "header"
+              ? `<label>section<input data-field="section_number" value="${escapeHtml(m.section_number || "")}" /></label>`
+              : ""
+          }
+          ${
+            m.role !== "skip"
+              ? `<label>parent
+                  <select data-field="parent_select">${opts}</select>
+                  <input data-field="parent_other" placeholder="Other parent" value="${known ? "" : escapeHtml(parentVal)}" ${known ? "hidden" : ""} />
+                </label>`
+              : ""
+          }
+          <button type="button" class="secondary mark-remove" data-idx="${idx}">Remove</button>
+        </div>`;
+      })
+      .join("");
+
+    // set parent selects correctly for Other
+    els.marksList.querySelectorAll(".mark-row").forEach((row) => {
+      const idx = Number(row.getAttribute("data-idx"));
+      const m = marks[idx];
+      const sel = row.querySelector('[data-field="parent_select"]');
+      const other = row.querySelector('[data-field="parent_other"]');
+      if (!sel || !m || m.role === "skip") return;
+      const parentVal = m.parent_section_number || "root";
+      const has = Array.from(sel.options).some((o) => o.value === parentVal);
+      if (has) sel.value = parentVal;
+      else {
+        sel.value = "__other__";
+        if (other) {
+          other.hidden = false;
+          other.value = parentVal;
+        }
+      }
+    });
+  }
+
+  els.marksList.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".mark-remove");
+    if (!btn) return;
+    const idx = Number(btn.getAttribute("data-idx"));
+    marks.splice(idx, 1);
+    renderText();
+    renderMarksList();
+  });
+
+  els.marksList.addEventListener("input", (ev) => {
+    const row = ev.target.closest(".mark-row");
+    if (!row) return;
+    const idx = Number(row.getAttribute("data-idx"));
+    const m = marks[idx];
+    if (!m) return;
+    const field = ev.target.getAttribute("data-field");
+    if (field === "section_number") m.section_number = ev.target.value.trim();
+    if (field === "parent_other") m.parent_section_number = ev.target.value.trim();
+  });
+
+  els.marksList.addEventListener("change", (ev) => {
+    const row = ev.target.closest(".mark-row");
+    if (!row) return;
+    const idx = Number(row.getAttribute("data-idx"));
+    const m = marks[idx];
+    if (!m) return;
+    if (ev.target.getAttribute("data-field") === "parent_select") {
+      const other = row.querySelector('[data-field="parent_other"]');
+      if (ev.target.value === "__other__") {
+        if (other) other.hidden = false;
+      } else {
+        m.parent_section_number = ev.target.value;
+        if (other) {
+          other.hidden = true;
+          other.value = "";
+        }
+      }
+    }
+  });
+
+  function showUnit(block) {
+    current = block;
+    els.metaDoc.textContent = block.documentName || "—";
+    els.metaClass.textContent = block.documentClass || "—";
+    els.metaVersion.textContent = block.versionLabel || "—";
+    els.metaPage.textContent =
+      block.pageStart === block.pageEnd
+        ? String(block.pageStart)
+        : `${block.pageStart}–${block.pageEnd}`;
+    const before = block.contextBefore || "";
+    const after = block.contextAfter || "";
+    els.ctxBeforeWrap.hidden = !before;
+    els.ctxAfterWrap.hidden = !after;
+    els.ctxBefore.textContent = before;
+    els.ctxAfter.textContent = after;
     els.notes.value = "";
-    toggleFieldsForRole();
+    loadSuggestions();
+    if (els.how) els.how.open = false;
   }
 
-  function toggleFieldsForRole() {
-    const role = els.unitRole.value;
-    const needParent = role === "header" || role === "body";
-    els.parentSection.disabled = !needParent;
-    if (els.parentOther) els.parentOther.disabled = !needParent;
-    els.sectionNumber.disabled = role === "skip";
-    if (role === "skip") {
-      els.sectionNumber.value = "";
-      if (els.parentOther) els.parentOther.value = "";
+  function nextUnit() {
+    const pool = eligibleBlocks();
+    updateProgress();
+    if (!pool.length) {
+      els.main.hidden = true;
+      els.done.hidden = false;
+      els.doneMsg.textContent = `Done for now — ${Object.keys(answers).length} labels saved locally.`;
+      return;
     }
-    syncParentOtherVisibility();
-  }
-
-  function showDone(reason) {
-    els.main.hidden = true;
-    els.done.hidden = false;
-    const mine = Object.keys(answers).length;
-    const full = blocksFullyCovered();
-    const t = TARGET();
-    if (els.doneMsg) {
-      els.doneMsg.innerHTML =
-        reason ||
-        `You have labeled <strong>${mine}</strong> units. ` +
-          `Study coverage: <strong>${full}</strong> / ${blocks.length} units have ${t} ratings. Thank you!`;
-    }
-  }
-
-  function showBlock(b) {
-    current = b;
     els.done.hidden = true;
     els.main.hidden = false;
-    els.metaDoc.textContent = b.documentName || "-";
-    els.metaClass.textContent = b.documentClass || "-";
-    els.metaVersion.textContent = b.versionLabel || "-";
-    const ps = b.pageStart != null ? b.pageStart : "-";
-    const pe = b.pageEnd != null ? b.pageEnd : ps;
-    els.metaPage.textContent = ps === pe ? String(ps) : `${ps}-${pe}`;
-
-    const before = (b.contextBefore || "").trim();
-    const after = (b.contextAfter || "").trim();
-    if (before) {
-      els.ctxBeforeWrap.hidden = false;
-      els.ctxBefore.textContent = before;
-    } else {
-      els.ctxBeforeWrap.hidden = true;
-      els.ctxBefore.textContent = "";
-    }
-    if (after) {
-      els.ctxAfterWrap.hidden = false;
-      els.ctxAfter.textContent = after;
-    } else {
-      els.ctxAfterWrap.hidden = true;
-      els.ctxAfter.textContent = "";
-    }
-    els.blockText.textContent = b.text || "";
-    applySuggestions(b);
-    updateProgress();
-    els.unitRole.focus();
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    showUnit(pick);
   }
 
-  async function refreshAndShowNext() {
-    setStatus("Finding a unit…", "pending");
-    try {
-      const data = await fetchCoverageJsonp();
-      if (data && data.target) {
-        LABELER_CONFIG.targetRatings = data.target;
-      }
-      rebuildCoverage(data && data.labels);
-    } catch (err) {
-      rebuildCoverage([]);
-      if (sheetUrl()) {
-        setStatus(
-          `Could not read Sheet (${err.message}). Showing local-only queue.`,
-          "warn"
-        );
-      }
-    }
-
-    const open = eligibleBlocks();
-    updateProgress();
-    if (!open.length) {
-      const full = blocksFullyCovered();
-      if (full >= blocks.length) {
-        showDone(
-          `All ${blocks.length} units already have ${TARGET()} ratings. Thank you!`
-        );
-      } else {
-        showDone(
-          `No more units available for <strong>${raterId}</strong> right now ` +
-            `(you may have finished your share, or remaining slots need other raters). ` +
-            `Coverage: <strong>${full}</strong> / ${blocks.length} units at ${TARGET()} ratings.`
-        );
-      }
-      setStatus("", "");
-      return;
-    }
-    showBlock(pickRandom(open));
-    if (!els.status.dataset.kind || els.status.dataset.kind === "pending") {
-      setStatus("", "");
-    }
-  }
-
-  async function postToSheet(payload) {
-    const url = sheetUrl();
-    if (!url) return { ok: false, skipped: true };
-
-    const res = await fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error(`Sheet HTTP ${res.status}`);
-    const data = await res.json().catch(() => ({}));
-    if (data && data.ok === false) throw new Error(data.error || "Sheet rejected");
-    return { ok: true };
-  }
-
-  function excerpt(text) {
-    const t = String(text || "").replace(/\s+/g, " ").trim();
-    return t.length > 200 ? t.slice(0, 200) : t;
-  }
-
-  async function saveLabel(ev) {
-    if (ev) ev.preventDefault();
-    if (!current) return;
-
-    const role = (els.unitRole.value || "").trim().toLowerCase();
-    if (!ROLES.has(role)) {
-      setStatus("Select a role (header / body / skip).", "err");
-      els.unitRole.focus();
-      return;
-    }
-
-    let parent = resolveParentValue();
-    if (role === "skip") {
-      parent = "";
-    } else if (!parent) {
-      setStatus(
-        "Choose a parent header (or Other… and type an unnumbered title like Introduction).",
-        "err"
-      );
-      if (els.parentSection.value === "__other__" && els.parentOther) {
-        els.parentOther.focus();
-      } else {
-        els.parentSection.focus();
-      }
-      return;
-    }
-
-    const b = current;
-    const ts = new Date().toISOString();
-    const answer = {
-      role,
-      section_number: (els.sectionNumber.value || "").trim(),
-      parent_section_number: parent,
-      notes: (els.notes.value || "").trim(),
-      ts,
-    };
-    answers[b.block_id] = answer;
-    saveAnswers();
-    if (!coverage.has(b.block_id)) coverage.set(b.block_id, new Set());
-    coverage.get(b.block_id).add(raterId);
-
-    const payload = {
-      round_id: LABELER_CONFIG.roundId,
-      block_id: b.block_id,
-      rater_id: raterId,
-      role: answer.role,
-      section_number: answer.section_number,
-      parent_section_number: answer.parent_section_number,
-      page_start: b.pageStart != null ? b.pageStart : "",
-      page_end: b.pageEnd != null ? b.pageEnd : b.pageStart != null ? b.pageStart : "",
-      document_name: b.documentName || "",
-      document_class: b.documentClass || "",
-      version_label: b.versionLabel || "",
-      text_excerpt: excerpt(b.text),
-      notes: answer.notes,
-      client: "gh-pages-seg-labeler",
-    };
-
-    setStatus("Saving…", "pending");
-    try {
-      const result = await postToSheet(payload);
-      if (result.skipped) {
-        setStatus(
-          "Saved in this browser only (configure Sheet URL for shared coverage).",
-          "warn"
-        );
-      } else {
-        setStatus("Saved.", "ok");
-      }
-    } catch (err) {
-      setStatus(
-        `Saved locally; Sheet send failed (${err.message}). Use Download backup.`,
-        "err"
-      );
-    }
-    await refreshAndShowNext();
-  }
-
-  function rowsForExport() {
-    return Object.entries(answers).map(([block_id, a]) => {
-      const b = blocks.find((x) => x.block_id === block_id) || {};
+  function collectMarksForSave() {
+    return marks.map((m) => {
+      const row = { ...m };
       return {
-        block_id,
-        round_id: LABELER_CONFIG.roundId,
-        rater_id: raterId,
-        role: a.role || "",
-        section_number: a.section_number || "",
-        parent_section_number: a.parent_section_number || "",
-        page_start: b.pageStart != null ? b.pageStart : "",
-        page_end: b.pageEnd != null ? b.pageEnd : "",
-        document_name: b.documentName || "",
-        document_class: b.documentClass || "",
-        version_label: b.versionLabel || "",
-        text_excerpt: excerpt(b.text),
-        notes: a.notes || "",
-        labeled_at: a.ts || "",
+        role: row.role,
+        start: row.start,
+        end: row.end,
+        section_number: row.section_number || "",
+        parent_section_number: row.parent_section_number || "",
+        text: row.text || (current.text || "").slice(row.start, row.end),
       };
     });
   }
 
+  function validateMarks(ms) {
+    if (!ms.length) return "Add at least one mark (or mark the whole unit skip).";
+    for (const m of ms) {
+      if (!["header", "body", "skip"].includes(m.role)) return "Invalid mark role.";
+      if (m.role === "header" && !m.section_number) return "Each header mark needs a section number/title.";
+      if (m.role === "body" && !m.parent_section_number) return "Each body mark needs a parent header.";
+    }
+    return "";
+  }
+
+  async function postToSheet(payload) {
+    const url = sheetUrl();
+    if (!url) return { ok: true, localOnly: true };
+    const res = await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+    return { ok: true, opaque: true, res };
+  }
+
+  els.form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    if (!current) return;
+    // sync parent_other fields
+    els.marksList.querySelectorAll(".mark-row").forEach((row) => {
+      const idx = Number(row.getAttribute("data-idx"));
+      const m = marks[idx];
+      if (!m || m.role === "skip") return;
+      const sel = row.querySelector('[data-field="parent_select"]');
+      const other = row.querySelector('[data-field="parent_other"]');
+      if (sel && sel.value === "__other__" && other) {
+        m.parent_section_number = other.value.trim();
+      }
+    });
+    const ms = collectMarksForSave();
+    const err = validateMarks(ms);
+    if (err) {
+      setStatus(err, "err");
+      return;
+    }
+    const primary = ms.find((m) => m.role === "header") || ms[0];
+    const answer = {
+      block_id: current.block_id,
+      rater_id: raterId,
+      round_id: LABELER_CONFIG.roundId,
+      marks: ms,
+      role: primary.role,
+      section_number: primary.section_number || "",
+      parent_section_number: primary.parent_section_number || "",
+      notes: (els.notes.value || "").trim(),
+      page_start: current.pageStart,
+      page_end: current.pageEnd,
+      document_name: current.documentName,
+      document_class: current.documentClass,
+      version_label: current.versionLabel,
+      text_excerpt: (current.text || "").slice(0, 180),
+      client: "gh-pages-seg-labeler-v2",
+      timestamp: new Date().toISOString(),
+    };
+    answers[current.block_id] = answer;
+    saveAnswers();
+    if (!coverage.has(current.block_id)) coverage.set(current.block_id, new Set());
+    coverage.get(current.block_id).add(raterId);
+    try {
+      await postToSheet({
+        round_id: answer.round_id,
+        block_id: answer.block_id,
+        rater_id: answer.rater_id,
+        role: answer.role,
+        section_number: answer.section_number,
+        parent_section_number: answer.parent_section_number,
+        marks_json: JSON.stringify(answer.marks),
+        page_start: answer.page_start,
+        page_end: answer.page_end,
+        document_name: answer.document_name,
+        document_class: answer.document_class,
+        version_label: answer.version_label,
+        text_excerpt: answer.text_excerpt,
+        notes: answer.notes,
+        client: answer.client,
+      });
+      setStatus("Saved.", "ok");
+    } catch (e) {
+      setStatus("Saved locally (Sheet post failed).", "err");
+    }
+    nextUnit();
+  });
+
   function downloadCsv() {
-    const rows = rowsForExport();
+    const rows = Object.values(answers);
     const cols = [
       "timestamp",
       "round_id",
@@ -492,6 +532,7 @@
       "role",
       "section_number",
       "parent_section_number",
+      "marks_json",
       "page_start",
       "page_end",
       "document_name",
@@ -501,110 +542,94 @@
       "notes",
       "client",
     ];
-    const esc = (v) => `"${String(v).replace(/"/g, '""')}"`;
-    const lines = [cols.join(",")].concat(
-      rows.map((r) =>
+    const esc = (v) => {
+      const s = String(v ?? "");
+      if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      return s;
+    };
+    const lines = [cols.join(",")];
+    rows.forEach((r) => {
+      lines.push(
         cols
           .map((c) => {
-            if (c === "timestamp") return esc(r.labeled_at || "");
-            if (c === "client") return esc("gh-pages-seg-labeler-backup");
-            return esc(r[c] ?? "");
+            if (c === "marks_json") return esc(JSON.stringify(r.marks || []));
+            return esc(r[c]);
           })
           .join(",")
-      )
-    );
-    const blob = new Blob([lines.join("\n") + "\n"], {
-      type: "text/csv;charset=utf-8",
+      );
     });
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `section_labels_${LABELER_CONFIG.roundId}_${raterId || "anon"}.csv`;
+    a.download = `seg-labeler-${LABELER_CONFIG.roundId}-${raterId || "local"}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
   }
 
-  async function start() {
-    raterId = (els.raterId.value || "").trim().toLowerCase().replace(/\s+/g, "_");
-    if (!raterId || raterId.length < 2) {
-      els.raterId.focus();
-      setStatus("Please enter your name or initials.", "err");
+  els.markHeader.addEventListener("click", () => addMark("header"));
+  els.markBody.addEventListener("click", () => addMark("body"));
+  els.markSkip.addEventListener("click", () => addMark("skip"));
+  els.clearMarks.addEventListener("click", () => {
+    marks = [];
+    renderText();
+    renderMarksList();
+  });
+  els.useSuggestions.addEventListener("click", () => loadSuggestions());
+
+  document.addEventListener("keydown", (ev) => {
+    if (els.main.hidden) return;
+    const tag = (ev.target && ev.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    const k = ev.key.toLowerCase();
+    if (k === "h") {
+      ev.preventDefault();
+      addMark("header");
+    } else if (k === "b") {
+      ev.preventDefault();
+      addMark("body");
+    } else if (k === "s") {
+      ev.preventDefault();
+      addMark("skip");
+    }
+  });
+
+  els.download.addEventListener("click", downloadCsv);
+  els.downloadDone.addEventListener("click", downloadCsv);
+  els.reset.addEventListener("click", () => {
+    if (!confirm("Clear your local labels for this round?")) return;
+    answers = {};
+    saveAnswers();
+    rebuildCoverage([]);
+    fetchCoverageJsonp()
+      .then((data) => {
+        rebuildCoverage(data.labels || []);
+        nextUnit();
+      })
+      .catch(() => nextUnit());
+  });
+
+  els.start.addEventListener("click", async () => {
+    raterId = (els.raterId.value || "").trim();
+    if (!raterId) {
+      setStatus("Enter your initials.", "err");
       return;
     }
-    if (!sheetUrl()) {
-      setStatus(
-        "No Sheet URL — saving locally only. Configure sheetWebAppUrl before recruiting raters.",
-        "warn"
-      );
-    }
     loadAnswers();
-    els.setup.hidden = true;
-    await refreshAndShowNext();
-  }
-
-  async function init() {
-    els.roundBadge.textContent = LABELER_CONFIG.roundTitle || LABELER_CONFIG.roundId;
-    if (!sheetUrl()) {
-      els.sheetWarn.hidden = false;
+    setStatus("Loading units…");
+    try {
+      const res = await fetch(LABELER_CONFIG.blocksUrl + "?_=" + Date.now());
+      blocks = await res.json();
+      const cov = await fetchCoverageJsonp();
+      rebuildCoverage(cov.labels || []);
+      els.setup.hidden = true;
+      nextUnit();
+      setStatus("");
+    } catch (e) {
+      setStatus(String(e.message || e), "err");
     }
-
-    const res = await fetch(LABELER_CONFIG.blocksUrl);
-    if (!res.ok) throw new Error(`Could not load blocks (${res.status})`);
-    blocks = await res.json();
-    if (!Array.isArray(blocks) || !blocks.length) {
-      throw new Error("Blocks file is empty");
-    }
-
-    els.start.addEventListener("click", () => {
-      start().catch((e) => setStatus(String(e.message || e), "err"));
-    });
-    els.raterId.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        start().catch((err) => setStatus(String(err.message || err), "err"));
-      }
-    });
-    els.form.addEventListener("submit", (e) => {
-      saveLabel(e).catch((err) => setStatus(String(err.message || err), "err"));
-    });
-    els.unitRole.addEventListener("change", toggleFieldsForRole);
-    els.parentSection.addEventListener("change", syncParentOtherVisibility);
-    els.useSuggestions.addEventListener("click", () => {
-      if (current) applySuggestions(current);
-    });
-    els.download.addEventListener("click", downloadCsv);
-    els.downloadDone.addEventListener("click", downloadCsv);
-    els.reset.addEventListener("click", () => {
-      if (!confirm("Clear your local backup labels for this round in this browser?"))
-        return;
-      answers = {};
-      saveAnswers();
-      refreshAndShowNext().catch((e) => setStatus(String(e.message || e), "err"));
-    });
-    els.how.addEventListener("toggle", () => {
-      localStorage.setItem("seg-labeler:how-open", els.how.open ? "1" : "0");
-    });
-    els.how.open = localStorage.getItem("seg-labeler:how-open") !== "0";
-
-    // Shortcuts: 1 header · 2 body · 3 skip · Enter save
-    document.addEventListener("keydown", (e) => {
-      if (els.main.hidden) return;
-      if (e.target && ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) {
-        if (e.key !== "Enter" || e.target.tagName === "TEXTAREA") return;
-      }
-      if (e.key === "1") {
-        els.unitRole.value = "header";
-        toggleFieldsForRole();
-      } else if (e.key === "2") {
-        els.unitRole.value = "body";
-        toggleFieldsForRole();
-      } else if (e.key === "3") {
-        els.unitRole.value = "skip";
-        toggleFieldsForRole();
-      }
-    });
-  }
-
-  init().catch((err) => {
-    setStatus(String(err.message || err), "err");
-    console.error(err);
   });
+
+  // boot
+  els.roundBadge.textContent = LABELER_CONFIG.roundId || "round";
+  if (!sheetUrl()) els.sheetWarn.hidden = false;
 })();

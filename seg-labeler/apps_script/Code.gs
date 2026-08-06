@@ -1,18 +1,13 @@
 /**
- * Google Apps Script web app for DocGraph section-model labeling (seg-labeler).
+ * Google Apps Script for DocGraph span section labeling (section_model_v2).
  *
- * Setup (new Sheet for this round):
- * 1. Create a Google Sheet with a tab named "labels".
- * 2. Extensions → Apps Script → paste this file → Save.
- * 3. Run ensureHeader once; approve permissions.
- * 4. Deploy → New deployment → Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 5. Paste the web-app URL into seg-labeler/config.js → sheetWebAppUrl
+ * Setup (NEW Sheet — do not reuse v1):
+ * 1. Create Sheet with tab "labels".
+ * 2. Paste this file → Run ensureHeader → Deploy web app (Anyone).
+ * 3. Paste URL into seg-labeler/config.js → sheetWebAppUrl.
  *
- * Endpoints:
- * - GET  ?callback=fn   → JSONP coverage { target, labels:[{block_id,rater_id,role}] }
- * - POST text/plain JSON → append one label row
+ * GET  ?callback=fn&round_id=section_model_v2 → coverage JSONP
+ * POST text/plain JSON → append row (includes marks_json)
  */
 
 var SHEET_NAME = "labels";
@@ -26,6 +21,7 @@ var HEADER = [
   "role",
   "section_number",
   "parent_section_number",
+  "marks_json",
   "page_start",
   "page_end",
   "document_name",
@@ -44,7 +40,8 @@ function ensureHeader() {
 }
 
 function doGet(e) {
-  var data = getCoverage();
+  var roundId = (e && e.parameter && e.parameter.round_id) || "";
+  var data = getCoverage(roundId);
   var body = JSON.stringify(data);
   var cb = e && e.parameter && e.parameter.callback;
   if (cb) {
@@ -73,6 +70,7 @@ function doPost(e) {
       data.role || "",
       data.section_number || "",
       data.parent_section_number || "",
+      data.marks_json || "",
       data.page_start || "",
       data.page_end || "",
       data.document_name || "",
@@ -88,8 +86,7 @@ function doPost(e) {
   }
 }
 
-/** Unique (block_id, rater_id) labels; latest row wins. */
-function getCoverage() {
+function getCoverage(roundId) {
   var sh = _sheet();
   var last = sh.getLastRow();
   var map = {};
@@ -97,15 +94,19 @@ function getCoverage() {
     var values = sh.getRange(2, 1, last, HEADER.length).getValues();
     for (var i = 0; i < values.length; i++) {
       var row = values[i];
+      var rowRound = String(row[1] || "").trim();
+      if (roundId && rowRound && rowRound !== roundId) continue;
       var blockId = String(row[2] || "").trim();
       var raterId = String(row[3] || "").trim();
       var role = String(row[4] || "").trim().toLowerCase();
+      var marksJson = String(row[7] || "").trim();
       if (!blockId || !raterId) continue;
-      if (!role) continue;
+      // Accept span labels (marks_json) or legacy role-only rows
+      if (!role && !marksJson) continue;
       map[blockId + "\t" + raterId] = {
         block_id: blockId,
         rater_id: raterId,
-        role: role,
+        role: role || "marked",
       };
     }
   }
@@ -115,19 +116,13 @@ function getCoverage() {
       labels.push(map[k]);
     }
   }
-  return {
-    ok: true,
-    target: TARGET_RATINGS,
-    labels: labels,
-  };
+  return { ok: true, target: TARGET_RATINGS, labels: labels, round_id: roundId };
 }
 
 function _sheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SpreadsheetApp.getActive();
   var sh = ss.getSheetByName(SHEET_NAME);
-  if (!sh) {
-    sh = ss.insertSheet(SHEET_NAME);
-  }
+  if (!sh) sh = ss.insertSheet(SHEET_NAME);
   return sh;
 }
 
