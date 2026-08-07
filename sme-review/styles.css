@@ -126,6 +126,30 @@ button.ghost {
   font-size: 0.85rem;
 }
 
+.chip.muted {
+  color: var(--muted);
+  border-style: dashed;
+}
+
+.chip.ok {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.chip.err {
+  border-color: #a33;
+  color: #a33;
+}
+
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

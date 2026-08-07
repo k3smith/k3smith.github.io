@@ -16,6 +16,10 @@
       </div>
       <div class="top-actions">
         <span id="rater-chip" class="chip hidden"></span>
+        <span id="sheet-status" class="chip muted"></span>
+        <button type="button" id="btn-sync" class="secondary" disabled>
+          Sync all to Sheet
+        </button>
         <button type="button" id="btn-export" class="secondary" disabled>
           Download decisions
         </button>
@@ -29,9 +33,10 @@
         <input id="rater-id" type="text" maxlength="32" placeholder="e.g. vzamponi" />
       </label>
       <p class="hint">
-        Load bank from <code>bank/sme_review.json</code> (exported via
-        <code>cf export-sme-review</code>). Decisions stay in this browser until
-        you download JSON for apply.
+        Decisions save to <strong>Google Sheets</strong> when
+        <code>sheetWebAppUrl</code> is set (see <code>apps_script/</code>), plus
+        local browser backup. Use <strong>Download decisions</strong> JSON for
+        <code>cf apply-sme-review</code>.
       </p>
       <button type="button" id="btn-start">Start</button>
       <p id="setup-status" class="status"></p>

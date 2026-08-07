@@ -7,9 +7,11 @@
     bank: null,
     rater: "",
     corpusKey: "",
-    task: "titles", // titles | concepts
+    task: "titles",
     parentsOnly: true,
     decisions: { title: {}, concept: {} },
+    sheetCoverage: { titles: new Set(), concepts: new Set() },
+    statusTimer: null,
   };
 
   const els = {
@@ -20,6 +22,8 @@
     setupStatus: document.getElementById("setup-status"),
     raterChip: document.getElementById("rater-chip"),
     btnExport: document.getElementById("btn-export"),
+    btnSync: document.getElementById("btn-sync"),
+    sheetStatus: document.getElementById("sheet-status"),
     corpusSelect: document.getElementById("corpus-select"),
     tabTitles: document.getElementById("tab-titles"),
     tabConcepts: document.getElementById("tab-concepts"),
@@ -31,8 +35,29 @@
     viewConcepts: document.getElementById("view-concepts"),
   };
 
+  function sheetUrl() {
+    const u = (SME_CONFIG.sheetWebAppUrl || "").trim();
+    return u || "";
+  }
+
   function storageKey() {
     return `${SME_CONFIG.storagePrefix}:${state.rater}`;
+  }
+
+  function setSheetStatus(msg, ok) {
+    if (!els.sheetStatus) return;
+    els.sheetStatus.textContent = msg || "";
+    els.sheetStatus.classList.toggle("ok", !!ok);
+    els.sheetStatus.classList.toggle("err", msg && !ok);
+    if (state.statusTimer) clearTimeout(state.statusTimer);
+    if (msg) {
+      state.statusTimer = setTimeout(() => {
+        els.sheetStatus.textContent = sheetUrl()
+          ? "Sheet connected"
+          : "Sheet not configured (local only)";
+        els.sheetStatus.classList.remove("ok", "err");
+      }, 2500);
+    }
   }
 
   function loadSaved() {
@@ -46,7 +71,7 @@
     }
   }
 
-  function save() {
+  function saveLocal() {
     localStorage.setItem(
       storageKey(),
       JSON.stringify({
@@ -57,6 +82,167 @@
     );
     updateProgress();
     els.btnExport.disabled = false;
+    if (els.btnSync) els.btnSync.disabled = !sheetUrl();
+  }
+
+  /** POST one row (or batch). Uses no-cors like CMC grounding when needed. */
+  function postToSheet(payload) {
+    const url = sheetUrl();
+    if (!url) return Promise.resolve({ ok: true, local_only: true });
+    return fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    }).then(() => ({ ok: true }));
+  }
+
+  function loadCoverage() {
+    const url = sheetUrl();
+    if (!url) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      const cb = `_smeCov_${Date.now()}`;
+      const timer = setTimeout(() => {
+        cleanup();
+        resolve();
+      }, 8000);
+      function cleanup() {
+        clearTimeout(timer);
+        try {
+          delete window[cb];
+        } catch (_) {
+          /* ignore */
+        }
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+      }
+      window[cb] = (data) => {
+        cleanup();
+        state.sheetCoverage.titles = new Set();
+        state.sheetCoverage.concepts = new Set();
+        const titles = (data && data.titles) || [];
+        const concepts = (data && data.concepts) || [];
+        for (const row of titles) {
+          if (row.rater_id === state.rater && row.item_id) {
+            state.sheetCoverage.titles.add(row.item_id);
+          }
+        }
+        for (const row of concepts) {
+          if (row.rater_id === state.rater && row.item_id) {
+            state.sheetCoverage.concepts.add(row.item_id);
+          }
+        }
+        resolve();
+      };
+      const script = document.createElement("script");
+      script.src = `${url}${url.includes("?") ? "&" : "?"}callback=${cb}`;
+      script.onerror = () => {
+        cleanup();
+        resolve();
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  function packTitleRow(d, extra) {
+    return {
+      kind: "title",
+      timestamp: new Date().toISOString(),
+      round_id: SME_CONFIG.roundId || "",
+      rater_id: state.rater,
+      corpus_key: extra.corpus_key || "",
+      framework_id: d.framework_id,
+      competency_id: d.competency_id,
+      depth: extra.depth == null ? "" : extra.depth,
+      title: d.title || "",
+      action: d.action,
+      new_title: d.new_title || "",
+      merge_into_id: d.merge_into_id || "",
+      notes: d.notes || "",
+      client: "sme-review",
+    };
+  }
+
+  function packConceptRow(d) {
+    return {
+      kind: "concept",
+      timestamp: new Date().toISOString(),
+      round_id: SME_CONFIG.roundId || "",
+      rater_id: state.rater,
+      corpus_key: d.corpus_key,
+      cluster_id: d.cluster_id,
+      action: d.action,
+      canonical_text: d.canonical_text || "",
+      ksa_type: d.ksa_type || "",
+      n_members: (d.statement_ids || []).length,
+      statement_ids: d.statement_ids || [],
+      notes: d.notes || "",
+      client: "sme-review",
+    };
+  }
+
+  function persistTitle(d, meta) {
+    saveLocal();
+    setSheetStatus(sheetUrl() ? "Saving to Sheet…" : "Saved locally");
+    return postToSheet(packTitleRow(d, meta))
+      .then(() => {
+        state.sheetCoverage.titles.add(d.competency_id);
+        setSheetStatus(
+          sheetUrl() ? "Saved to Sheet + local" : "Saved locally",
+          true,
+        );
+      })
+      .catch((err) => {
+        setSheetStatus(`Local ok; Sheet failed: ${err.message}`, false);
+      });
+  }
+
+  function persistConcept(d) {
+    saveLocal();
+    setSheetStatus(sheetUrl() ? "Saving to Sheet…" : "Saved locally");
+    return postToSheet(packConceptRow(d))
+      .then(() => {
+        state.sheetCoverage.concepts.add(d.cluster_id);
+        setSheetStatus(
+          sheetUrl() ? "Saved to Sheet + local" : "Saved locally",
+          true,
+        );
+      })
+      .catch((err) => {
+        setSheetStatus(`Local ok; Sheet failed: ${err.message}`, false);
+      });
+  }
+
+  function syncAllToSheet() {
+    if (!sheetUrl()) {
+      setSheetStatus("Configure sheetWebAppUrl in config.js first", false);
+      return;
+    }
+    const rows = [];
+    for (const d of Object.values(state.decisions.title)) {
+      if (!d.action) continue;
+      rows.push(packTitleRow(d, { corpus_key: "", depth: "" }));
+    }
+    for (const d of Object.values(state.decisions.concept)) {
+      if (!d.action) continue;
+      rows.push(packConceptRow(d));
+    }
+    if (!rows.length) {
+      setSheetStatus("Nothing to sync", true);
+      return;
+    }
+    setSheetStatus(`Syncing ${rows.length} rows…`);
+    // Chunk to avoid Apps Script payload limits
+    const chunk = 40;
+    let chain = Promise.resolve();
+    for (let i = 0; i < rows.length; i += chunk) {
+      const part = rows.slice(i, i + chunk);
+      chain = chain.then(() => postToSheet({ kind: "batch", rows: part }));
+    }
+    chain
+      .then(() => setSheetStatus(`Synced ${rows.length} rows to Sheet`, true))
+      .catch((err) => setSheetStatus(`Sync failed: ${err.message}`, false));
   }
 
   function corpus() {
@@ -71,10 +257,10 @@
     const c = corpus();
     if (!c) {
       els.progress.textContent = "";
-      els.corpusNotes.textContent = "";
+      if (els.corpusNotes) els.corpusNotes.textContent = "";
       return;
     }
-    els.corpusNotes.textContent = c.notes || "";
+    if (els.corpusNotes) els.corpusNotes.textContent = c.notes || "";
     const titlesDone = (c.titles || []).filter(
       (t) => state.decisions.title[titleKey(c.framework_id, t.competency_id)],
     ).length;
@@ -96,6 +282,18 @@
     render();
   }
 
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/'/g, "&#39;");
+  }
+
   function renderTitles() {
     const c = corpus();
     if (!c) return;
@@ -113,6 +311,7 @@
     for (const t of ordered) {
       const key = titleKey(c.framework_id, t.competency_id);
       const d = state.decisions.title[key] || { action: "" };
+      const onSheet = state.sheetCoverage.titles.has(t.competency_id);
       const card = document.createElement("article");
       card.className = "card" + (d.action ? " done" : "");
       card.innerHTML = `
@@ -120,6 +319,7 @@
         <div class="meta">
           ${t.depth ? "subcompetency · " : "parent · "}
           ${t.n_ksa} K/S · id <code>${t.competency_id.slice(0, 8)}</code>
+          ${onSheet ? " · on Sheet" : ""}
         </div>
         <p>${escapeHtml(t.description || "")}</p>
         <p class="meta">${escapeHtml(t.ksa_sample || "")}</p>
@@ -144,7 +344,7 @@
         btn.addEventListener("click", () => {
           const newTitle = card.querySelector('[data-role="new-title"]').value.trim();
           const mergeInto = card.querySelector('[data-role="merge-into"]').value.trim();
-          state.decisions.title[key] = {
+          const decision = {
             framework_id: c.framework_id,
             competency_id: t.competency_id,
             title: t.title,
@@ -153,20 +353,23 @@
             merge_into_id: action === "merge" ? mergeInto : "",
             notes: "",
           };
-          save();
-          renderTitles();
+          state.decisions.title[key] = decision;
+          persistTitle(decision, {
+            corpus_key: c.corpus_key,
+            depth: t.depth,
+          }).then(() => renderTitles());
         });
         actions.appendChild(btn);
       }
       card.querySelector('[data-role="new-title"]').addEventListener("change", (e) => {
         if (!state.decisions.title[key]) return;
         state.decisions.title[key].new_title = e.target.value.trim();
-        save();
+        saveLocal();
       });
       card.querySelector('[data-role="merge-into"]').addEventListener("change", (e) => {
         if (!state.decisions.title[key]) return;
         state.decisions.title[key].merge_into_id = e.target.value.trim();
-        save();
+        saveLocal();
       });
       root.appendChild(card);
     }
@@ -179,11 +382,12 @@
     root.innerHTML = "";
     if (!(c.concept_clusters || []).length) {
       root.innerHTML =
-        "<p class='hint'>No auto-proposed clusters (need ≥2 equivalent phrasings). Induce first, then re-export the bank.</p>";
+        "<p class='hint'>No auto-proposed clusters (need ≥2 equivalent phrasings).</p>";
       return;
     }
     for (const cl of c.concept_clusters) {
       const d = state.decisions.concept[cl.cluster_id] || { action: "" };
+      const onSheet = state.sheetCoverage.concepts.has(cl.cluster_id);
       const card = document.createElement("article");
       card.className = "card" + (d.action ? " done" : "");
       const membersHtml = cl.members
@@ -193,7 +397,7 @@
         )
         .join("");
       card.innerHTML = `
-        <h3>${escapeHtml(cl.ksa_type)} · ${cl.n_members} variants · ${cl.n_courses} courses</h3>
+        <h3>${escapeHtml(cl.ksa_type)} · ${cl.n_members} variants · ${cl.n_courses} courses${onSheet ? " · on Sheet" : ""}</h3>
         <div class="meta">key: <code>${escapeHtml(cl.norm_key)}</code></div>
         <div class="canonical-row">
           <label>Canonical label
@@ -211,7 +415,7 @@
         btn.className = "ghost" + (d.action === action ? " active" : "");
         btn.addEventListener("click", () => {
           const canonical = card.querySelector('[data-role="canonical"]').value.trim();
-          state.decisions.concept[cl.cluster_id] = {
+          const decision = {
             corpus_key: c.corpus_key,
             cluster_id: cl.cluster_id,
             action,
@@ -219,15 +423,15 @@
             ksa_type: cl.ksa_type,
             statement_ids: cl.members.map((m) => m.statement_id),
           };
-          save();
-          renderConcepts();
+          state.decisions.concept[cl.cluster_id] = decision;
+          persistConcept(decision).then(() => renderConcepts());
         });
         actions.appendChild(btn);
       }
       card.querySelector('[data-role="canonical"]').addEventListener("change", (e) => {
         if (!state.decisions.concept[cl.cluster_id]) return;
         state.decisions.concept[cl.cluster_id].canonical_text = e.target.value.trim();
-        save();
+        saveLocal();
       });
       root.appendChild(card);
     }
@@ -249,18 +453,6 @@
     };
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function escapeAttr(s) {
-    return escapeHtml(s).replace(/'/g, "&#39;");
-  }
-
   els.btnStart.addEventListener("click", async () => {
     const rater = (els.raterId.value || "").trim();
     if (!rater) {
@@ -277,6 +469,10 @@
       }
       state.rater = rater;
       loadSaved();
+      els.setupStatus.textContent = sheetUrl()
+        ? "Loading Sheet coverage…"
+        : "Sheet not configured — local + download only.";
+      await loadCoverage();
       state.corpusKey = state.bank.corpora[0].corpus_key;
       els.corpusSelect.innerHTML = state.bank.corpora
         .map(
@@ -290,6 +486,11 @@
       els.raterChip.textContent = rater;
       els.raterChip.classList.remove("hidden");
       els.btnExport.disabled = false;
+      if (els.btnSync) els.btnSync.disabled = !sheetUrl();
+      setSheetStatus(
+        sheetUrl() ? "Sheet connected" : "Sheet not configured (local only)",
+        !!sheetUrl(),
+      );
       setTask("titles");
       els.setupStatus.textContent = "";
     } catch (err) {
@@ -302,10 +503,12 @@
     render();
   });
 
-  els.parentsOnly.addEventListener("change", () => {
-    state.parentsOnly = !!els.parentsOnly.checked;
-    render();
-  });
+  if (els.parentsOnly) {
+    els.parentsOnly.addEventListener("change", () => {
+      state.parentsOnly = !!els.parentsOnly.checked;
+      render();
+    });
+  }
 
   els.tabTitles.addEventListener("click", () => setTask("titles"));
   els.tabConcepts.addEventListener("click", () => setTask("concepts"));
@@ -321,4 +524,8 @@
     a.click();
     URL.revokeObjectURL(a.href);
   });
+
+  if (els.btnSync) {
+    els.btnSync.addEventListener("click", () => syncAllToSheet());
+  }
 })();
