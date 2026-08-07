@@ -247,7 +247,10 @@
       return !!(d.new_title || "").trim() && (d.new_title || "").trim() !== (d.title || "").trim();
     }
     if (d.action === "merge") {
-      return !!(d.merge_into_id || "").trim() && d.merge_into_id !== d.competency_id;
+      const into = (d.merge_into_id || "").trim();
+      if (!into || into === d.competency_id) return false;
+      const survivor = state.decisions.title[titleKey(d.framework_id, into)];
+      return !!(survivor && survivor.action === "keep");
     }
     return false;
   }
@@ -338,7 +341,8 @@
       (cl) => state.decisions.concept[cl.cluster_id],
     ).length;
     const nParents = (c.titles || []).filter((t) => Number(t.depth) === 0).length;
-    els.progress.textContent = `${c.label}: titles ${titlesDone}/${c.titles.length} (${nParents} parents) · concepts ${conceptsDone}/${c.concept_clusters.length}`;
+    const nKept = keptTitles(c).length;
+    els.progress.textContent = `${c.label}: titles ${titlesDone}/${c.titles.length} (${nParents} parents, ${nKept} kept) · concepts ${conceptsDone}/${c.concept_clusters.length}`;
   }
 
   function setTask(task) {
@@ -349,8 +353,8 @@
     els.viewConcepts.classList.toggle("hidden", task !== "concepts");
     const inst = (state.bank && state.bank.instructions) || {};
     const fallbackTitles =
-      "Keep / Drop: one click. Rewrite: edit the new title, then Confirm. " +
-      "Merge: this title is absorbed into another — pick the survivor from the list, then Confirm.";
+      "Suggested order: (1) Keep the good titles first. (2) Merge duplicates into a Kept title. " +
+      "(3) Rewrite or Drop only what remains. Merge targets are limited to titles you marked Keep.";
     const fallbackConcepts =
       "Same concept: keep one canonical label for all variants. Distinct: leave them separate.";
     els.taskHelp.textContent =
@@ -358,6 +362,20 @@
         ? inst.titles || fallbackTitles
         : inst.concepts || fallbackConcepts;
     render();
+  }
+
+  /** Titles in this corpus the SME has marked Keep (valid merge survivors). */
+  function keptTitles(c) {
+    return (c.titles || []).filter((t) => {
+      const d = state.decisions.title[titleKey(c.framework_id, t.competency_id)];
+      return d && d.action === "keep" && titleDecisionComplete(d);
+    });
+  }
+
+  function isKeptTitle(c, competencyId) {
+    if (!competencyId) return false;
+    const d = state.decisions.title[titleKey(c.framework_id, competencyId)];
+    return !!(d && d.action === "keep" && titleDecisionComplete(d));
   }
 
   function escapeHtml(s) {
@@ -372,9 +390,13 @@
     return escapeHtml(s).replace(/'/g, "&#39;");
   }
 
-  function mergeOptionsHtml(titles, selfId, selectedId) {
-    const opts = ['<option value="">— choose survivor title —</option>'];
-    for (const t of titles) {
+  function mergeOptionsHtml(kept, selfId, selectedId) {
+    const opts = [
+      kept.length
+        ? '<option value="">— merge into a Kept title —</option>'
+        : '<option value="">— mark some titles Keep first —</option>',
+    ];
+    for (const t of kept) {
       if (t.competency_id === selfId) continue;
       const sel = t.competency_id === selectedId ? " selected" : "";
       const depth = Number(t.depth) === 0 ? "parent" : "sub";
@@ -404,6 +426,14 @@
       const d = state.decisions.title[key] || { action: "" };
       const complete = titleDecisionComplete(d);
       const onSheet = state.sheetCoverage.titles.has(t.competency_id);
+      const kept = keptTitles(c);
+      let mergeInto = d.merge_into_id || "";
+      if (d.action === "merge" && mergeInto && !isKeptTitle(c, mergeInto)) {
+        mergeInto = "";
+        if (state.decisions.title[key]) {
+          state.decisions.title[key].merge_into_id = "";
+        }
+      }
       const card = document.createElement("article");
       card.className =
         "card" + (complete ? " done" : "") + (d.action && !complete ? " draft" : "");
@@ -411,6 +441,7 @@
       if (d.action && !complete) statusBits.push("needs confirm");
       else if (complete) statusBits.push("recorded");
       if (onSheet) statusBits.push("on Sheet");
+      const mergeChoices = kept.filter((k) => k.competency_id !== t.competency_id);
 
       card.innerHTML = `
         <h3>${escapeHtml(t.title)}</h3>
@@ -428,11 +459,11 @@
           <button type="button" class="primary" data-role="confirm-rewrite">Confirm rewrite</button>
         </div>
         <div class="canonical-row merge-row ${d.action === "merge" ? "" : "hidden"}">
-          <p class="hint">This competency will be absorbed into the one you pick (survivor keeps its title).</p>
+          <p class="hint">Absorbed into a title you already marked <strong>Keep</strong> (${mergeChoices.length} available). Mark Keep first if the list is empty.</p>
           <label>Merge into
-            <select data-role="merge-into">${mergeOptionsHtml(c.titles || [], t.competency_id, d.merge_into_id || "")}</select>
+            <select data-role="merge-into">${mergeOptionsHtml(kept, t.competency_id, mergeInto)}</select>
           </label>
-          <button type="button" class="primary" data-role="confirm-merge">Confirm merge</button>
+          <button type="button" class="primary" data-role="confirm-merge"${mergeChoices.length ? "" : " disabled"}>Confirm merge</button>
         </div>
         <div class="actions"></div>
       `;
@@ -441,32 +472,42 @@
 
       function setAction(action) {
         const prev = state.decisions.title[key] || {};
+        let mergeTarget = action === "merge" ? prev.merge_into_id || "" : "";
+        if (action === "merge" && mergeTarget && !isKeptTitle(c, mergeTarget)) {
+          mergeTarget = "";
+        }
         const decision = {
           framework_id: c.framework_id,
           competency_id: t.competency_id,
           title: t.title,
           action,
           new_title: action === "rewrite" ? prev.new_title || "" : "",
-          merge_into_id: action === "merge" ? prev.merge_into_id || "" : "",
+          merge_into_id: mergeTarget,
           notes: "",
         };
         state.decisions.title[key] = decision;
-        // Immediate UI feedback — do not wait on Sheet
         renderTitles();
         if (action === "keep" || action === "drop") {
           persistTitleIfReady(decision, meta);
         } else {
           saveLocal();
-          setSheetStatus(
-            action === "rewrite"
-              ? "Type the rewritten title, then Confirm"
-              : "Choose the survivor title, then Confirm",
-            true,
-          );
+          if (
+            action === "merge" &&
+            keptTitles(c).filter((k) => k.competency_id !== t.competency_id).length === 0
+          ) {
+            setSheetStatus("Keep at least one other title before merging", false);
+          } else {
+            setSheetStatus(
+              action === "rewrite"
+                ? "Type the rewritten title, then Confirm"
+                : "Choose a Kept survivor, then Confirm",
+              true,
+            );
+          }
         }
       }
 
-      for (const action of ["keep", "rewrite", "merge", "drop"]) {
+      for (const action of ["keep", "merge", "rewrite", "drop"]) {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.textContent = action;
@@ -513,8 +554,12 @@
           if (!decision) return;
           decision.merge_into_id = (mergeSelect.value || "").trim();
           decision.action = "merge";
+          if (!isKeptTitle(c, decision.merge_into_id)) {
+            setSheetStatus("Merge target must be a title you marked Keep", false);
+            return;
+          }
           if (!titleDecisionComplete(decision)) {
-            setSheetStatus("Pick which competency this one merges into", false);
+            setSheetStatus("Pick which Kept competency this one merges into", false);
             return;
           }
           persistTitleIfReady(decision, meta);
@@ -522,9 +567,7 @@
         });
       }
 
-      // Keep focus in rewrite field when drafting
       if (d.action === "rewrite" && !complete && newTitleInput) {
-        // defer so DOM is attached
         requestAnimationFrame(() => {
           if (document.activeElement !== newTitleInput) {
             newTitleInput.focus();

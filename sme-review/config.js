@@ -1,5 +1,6 @@
 // Paste Apps Script web-app URL after deploy (shared Sheet coverage + save).
 // Setup: eval/sme/web/apps_script/README.md
+// Live Pages config keeps the deployed URL; this copy may stay empty for local-only.
 window.SME_CONFIG = {
   roundId: "sme_review_2026_08",
   bankUrl: "bank/sme_review.json",
