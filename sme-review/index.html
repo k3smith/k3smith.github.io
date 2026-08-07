@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SME review — titles &amp; K/S concepts</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div>
+        <h1>SME review</h1>
+        <p class="sub">
+          Competency titles + shared Knowledge/Skill concepts across corpora
+        </p>
+      </div>
+      <div class="top-actions">
+        <span id="rater-chip" class="chip hidden"></span>
+        <button type="button" id="btn-export" class="secondary" disabled>
+          Download decisions
+        </button>
+      </div>
+    </header>
+
+    <section id="setup" class="panel">
+      <h2>Start session</h2>
+      <label>
+        Your initials
+        <input id="rater-id" type="text" maxlength="32" placeholder="e.g. vzamponi" />
+      </label>
+      <p class="hint">
+        Load bank from <code>bank/sme_review.json</code> (exported via
+        <code>cf export-sme-review</code>). Decisions stay in this browser until
+        you download JSON for apply.
+      </p>
+      <button type="button" id="btn-start">Start</button>
+      <p id="setup-status" class="status"></p>
+    </section>
+
+    <section id="main" class="hidden">
+      <div class="toolbar">
+        <label>
+          Corpus
+          <select id="corpus-select"></select>
+        </label>
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab active" data-task="titles" id="tab-titles">
+            Titles
+          </button>
+          <button type="button" class="tab" data-task="concepts" id="tab-concepts">
+            Concepts
+          </button>
+        </div>
+        <label class="inline" id="parents-only-wrap">
+          <input type="checkbox" id="parents-only" checked />
+          Parents only
+        </label>
+        <div id="progress" class="progress"></div>
+      </div>
+
+      <p id="corpus-notes" class="hint notes"></p>
+      <p id="task-help" class="hint"></p>
+
+      <div id="view-titles" class="task-view"></div>
+      <div id="view-concepts" class="task-view hidden"></div>
+    </section>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
