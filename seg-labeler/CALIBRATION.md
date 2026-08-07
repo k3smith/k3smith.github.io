@@ -2,7 +2,7 @@
 
 ## Fresh start
 
-1. Re-exported bank: `blocks/section_model_v2.json` (NSI + 8010 + TUM; **OSHA quarantined**).
+1. Re-exported bank: `blocks/section_model_v2.json` (NSI + 8010 + TUM + OSHA eCFR; Docling+char styles).
 2. Create a **new** Google Sheet (do not reuse v1).
 3. Paste `apps_script/Code.gs` → `ensureHeader` → Deploy web app → paste URL into `config.js`.
 4. Hard-refresh https://k3smith.github.io/seg-labeler/
