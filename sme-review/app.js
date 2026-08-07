@@ -11,6 +11,9 @@
     parentsOnly: true,
     decisions: { title: {}, concept: {} },
     sheetCoverage: { titles: new Set(), concepts: new Set() },
+    /** Last payload fingerprint posted per sheet key — skip identical re-posts. */
+    lastPosted: {},
+    inFlight: {},
     statusTimer: null,
   };
 
@@ -95,6 +98,60 @@
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
     }).then(() => ({ ok: true }));
+  }
+
+  function fingerprint(payload) {
+    const copy = { ...payload };
+    delete copy.timestamp;
+    return JSON.stringify(copy);
+  }
+
+  /**
+   * Fire-and-forget sheet write with dedupe. Never blocks the UI.
+   * @returns {boolean} whether a network post was started
+   */
+  function queueSheetPost(sheetKey, payload) {
+    if (!sheetUrl()) {
+      setSheetStatus("Saved locally", true);
+      return false;
+    }
+    const fp = fingerprint(payload);
+    if (state.lastPosted[sheetKey] === fp) {
+      setSheetStatus("Already saved (no change)", true);
+      return false;
+    }
+    if (state.inFlight[sheetKey]) {
+      // Replace pending intent: mark latest fingerprint; in-flight will re-check
+      state.inFlight[sheetKey] = fp;
+      setSheetStatus("Updating Sheet…");
+      return false;
+    }
+    state.inFlight[sheetKey] = fp;
+    setSheetStatus("Saving to Sheet…");
+    postToSheet(payload)
+      .then(() => {
+        const intended = state.inFlight[sheetKey];
+        delete state.inFlight[sheetKey];
+        state.lastPosted[sheetKey] = fp;
+        if (payload.kind === "title" && payload.competency_id) {
+          state.sheetCoverage.titles.add(payload.competency_id);
+        }
+        if (payload.kind === "concept" && payload.cluster_id) {
+          state.sheetCoverage.concepts.add(payload.cluster_id);
+        }
+        // If user changed decision while request was in flight, post again once
+        if (intended && intended !== fp) {
+          // Re-read from state is safer — caller should re-queue; mark stale
+          setSheetStatus("Saved; newer edit pending — click Confirm again", false);
+          return;
+        }
+        setSheetStatus("Saved to Sheet + local", true);
+      })
+      .catch((err) => {
+        delete state.inFlight[sheetKey];
+        setSheetStatus(`Local ok; Sheet failed: ${err.message}`, false);
+      });
+    return true;
   }
 
   function loadCoverage() {
@@ -182,36 +239,38 @@
     };
   }
 
-  function persistTitle(d, meta) {
+  /** True when rewrite/merge have the fields apply needs. */
+  function titleDecisionComplete(d) {
+    if (!d || !d.action) return false;
+    if (d.action === "keep" || d.action === "drop") return true;
+    if (d.action === "rewrite") {
+      return !!(d.new_title || "").trim() && (d.new_title || "").trim() !== (d.title || "").trim();
+    }
+    if (d.action === "merge") {
+      return !!(d.merge_into_id || "").trim() && d.merge_into_id !== d.competency_id;
+    }
+    return false;
+  }
+
+  function persistTitleIfReady(d, meta) {
     saveLocal();
-    setSheetStatus(sheetUrl() ? "Saving to Sheet…" : "Saved locally");
-    return postToSheet(packTitleRow(d, meta))
-      .then(() => {
-        state.sheetCoverage.titles.add(d.competency_id);
-        setSheetStatus(
-          sheetUrl() ? "Saved to Sheet + local" : "Saved locally",
-          true,
-        );
-      })
-      .catch((err) => {
-        setSheetStatus(`Local ok; Sheet failed: ${err.message}`, false);
-      });
+    if (!titleDecisionComplete(d)) {
+      setSheetStatus(
+        d.action === "rewrite"
+          ? "Edit the new title, then Confirm rewrite"
+          : d.action === "merge"
+            ? "Pick the survivor title, then Confirm merge"
+            : "Saved locally",
+        true,
+      );
+      return;
+    }
+    queueSheetPost(`title:${d.competency_id}`, packTitleRow(d, meta));
   }
 
   function persistConcept(d) {
     saveLocal();
-    setSheetStatus(sheetUrl() ? "Saving to Sheet…" : "Saved locally");
-    return postToSheet(packConceptRow(d))
-      .then(() => {
-        state.sheetCoverage.concepts.add(d.cluster_id);
-        setSheetStatus(
-          sheetUrl() ? "Saved to Sheet + local" : "Saved locally",
-          true,
-        );
-      })
-      .catch((err) => {
-        setSheetStatus(`Local ok; Sheet failed: ${err.message}`, false);
-      });
+    queueSheetPost(`concept:${d.cluster_id}`, packConceptRow(d));
   }
 
   function syncAllToSheet() {
@@ -221,7 +280,7 @@
     }
     const rows = [];
     for (const d of Object.values(state.decisions.title)) {
-      if (!d.action) continue;
+      if (!titleDecisionComplete(d)) continue;
       rows.push(packTitleRow(d, { corpus_key: "", depth: "" }));
     }
     for (const d of Object.values(state.decisions.concept)) {
@@ -229,11 +288,10 @@
       rows.push(packConceptRow(d));
     }
     if (!rows.length) {
-      setSheetStatus("Nothing to sync", true);
+      setSheetStatus("Nothing complete to sync", true);
       return;
     }
     setSheetStatus(`Syncing ${rows.length} rows…`);
-    // Chunk to avoid Apps Script payload limits
     const chunk = 40;
     let chain = Promise.resolve();
     for (let i = 0; i < rows.length; i += chunk) {
@@ -241,7 +299,18 @@
       chain = chain.then(() => postToSheet({ kind: "batch", rows: part }));
     }
     chain
-      .then(() => setSheetStatus(`Synced ${rows.length} rows to Sheet`, true))
+      .then(() => {
+        for (const row of rows) {
+          if (row.kind === "title") {
+            state.lastPosted[`title:${row.competency_id}`] = fingerprint(row);
+            state.sheetCoverage.titles.add(row.competency_id);
+          } else if (row.kind === "concept") {
+            state.lastPosted[`concept:${row.cluster_id}`] = fingerprint(row);
+            state.sheetCoverage.concepts.add(row.cluster_id);
+          }
+        }
+        setSheetStatus(`Synced ${rows.length} rows to Sheet`, true);
+      })
       .catch((err) => setSheetStatus(`Sync failed: ${err.message}`, false));
   }
 
@@ -261,9 +330,10 @@
       return;
     }
     if (els.corpusNotes) els.corpusNotes.textContent = c.notes || "";
-    const titlesDone = (c.titles || []).filter(
-      (t) => state.decisions.title[titleKey(c.framework_id, t.competency_id)],
-    ).length;
+    const titlesDone = (c.titles || []).filter((t) => {
+      const d = state.decisions.title[titleKey(c.framework_id, t.competency_id)];
+      return titleDecisionComplete(d);
+    }).length;
     const conceptsDone = (c.concept_clusters || []).filter(
       (cl) => state.decisions.concept[cl.cluster_id],
     ).length;
@@ -278,7 +348,15 @@
     els.viewTitles.classList.toggle("hidden", task !== "titles");
     els.viewConcepts.classList.toggle("hidden", task !== "concepts");
     const inst = (state.bank && state.bank.instructions) || {};
-    els.taskHelp.textContent = task === "titles" ? inst.titles || "" : inst.concepts || "";
+    const fallbackTitles =
+      "Keep / Drop: one click. Rewrite: edit the new title, then Confirm. " +
+      "Merge: this title is absorbed into another — pick the survivor from the list, then Confirm.";
+    const fallbackConcepts =
+      "Same concept: keep one canonical label for all variants. Distinct: leave them separate.";
+    els.taskHelp.textContent =
+      task === "titles"
+        ? inst.titles || fallbackTitles
+        : inst.concepts || fallbackConcepts;
     render();
   }
 
@@ -292,6 +370,19 @@
 
   function escapeAttr(s) {
     return escapeHtml(s).replace(/'/g, "&#39;");
+  }
+
+  function mergeOptionsHtml(titles, selfId, selectedId) {
+    const opts = ['<option value="">— choose survivor title —</option>'];
+    for (const t of titles) {
+      if (t.competency_id === selfId) continue;
+      const sel = t.competency_id === selectedId ? " selected" : "";
+      const depth = Number(t.depth) === 0 ? "parent" : "sub";
+      opts.push(
+        `<option value="${escapeAttr(t.competency_id)}"${sel}>${escapeHtml(t.title)} (${depth} · ${t.competency_id.slice(0, 8)})</option>`,
+      );
+    }
+    return opts.join("");
   }
 
   function renderTitles() {
@@ -311,66 +402,138 @@
     for (const t of ordered) {
       const key = titleKey(c.framework_id, t.competency_id);
       const d = state.decisions.title[key] || { action: "" };
+      const complete = titleDecisionComplete(d);
       const onSheet = state.sheetCoverage.titles.has(t.competency_id);
       const card = document.createElement("article");
-      card.className = "card" + (d.action ? " done" : "");
+      card.className =
+        "card" + (complete ? " done" : "") + (d.action && !complete ? " draft" : "");
+      const statusBits = [];
+      if (d.action && !complete) statusBits.push("needs confirm");
+      else if (complete) statusBits.push("recorded");
+      if (onSheet) statusBits.push("on Sheet");
+
       card.innerHTML = `
         <h3>${escapeHtml(t.title)}</h3>
         <div class="meta">
           ${t.depth ? "subcompetency · " : "parent · "}
           ${t.n_ksa} K/S · id <code>${t.competency_id.slice(0, 8)}</code>
-          ${onSheet ? " · on Sheet" : ""}
+          ${statusBits.length ? " · " + statusBits.join(" · ") : ""}
         </div>
         <p>${escapeHtml(t.description || "")}</p>
         <p class="meta">${escapeHtml(t.ksa_sample || "")}</p>
         <div class="canonical-row rewrite-row ${d.action === "rewrite" ? "" : "hidden"}">
-          <label>New title
-            <input type="text" data-role="new-title" value="${escapeAttr(d.new_title || t.title)}" />
+          <label>Suggested new title
+            <input type="text" data-role="new-title" value="${escapeAttr(d.new_title || "")}" placeholder="${escapeAttr(t.title)}" />
           </label>
+          <button type="button" class="primary" data-role="confirm-rewrite">Confirm rewrite</button>
         </div>
         <div class="canonical-row merge-row ${d.action === "merge" ? "" : "hidden"}">
-          <label>Merge into competency id
-            <input type="text" data-role="merge-into" value="${escapeAttr(d.merge_into_id || "")}" placeholder="full UUID of survivor" />
+          <p class="hint">This competency will be absorbed into the one you pick (survivor keeps its title).</p>
+          <label>Merge into
+            <select data-role="merge-into">${mergeOptionsHtml(c.titles || [], t.competency_id, d.merge_into_id || "")}</select>
           </label>
+          <button type="button" class="primary" data-role="confirm-merge">Confirm merge</button>
         </div>
         <div class="actions"></div>
       `;
       const actions = card.querySelector(".actions");
+      const meta = { corpus_key: c.corpus_key, depth: t.depth };
+
+      function setAction(action) {
+        const prev = state.decisions.title[key] || {};
+        const decision = {
+          framework_id: c.framework_id,
+          competency_id: t.competency_id,
+          title: t.title,
+          action,
+          new_title: action === "rewrite" ? prev.new_title || "" : "",
+          merge_into_id: action === "merge" ? prev.merge_into_id || "" : "",
+          notes: "",
+        };
+        state.decisions.title[key] = decision;
+        // Immediate UI feedback — do not wait on Sheet
+        renderTitles();
+        if (action === "keep" || action === "drop") {
+          persistTitleIfReady(decision, meta);
+        } else {
+          saveLocal();
+          setSheetStatus(
+            action === "rewrite"
+              ? "Type the rewritten title, then Confirm"
+              : "Choose the survivor title, then Confirm",
+            true,
+          );
+        }
+      }
+
       for (const action of ["keep", "rewrite", "merge", "drop"]) {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.textContent = action;
         btn.className = "ghost" + (d.action === action ? " active" : "");
-        btn.addEventListener("click", () => {
-          const newTitle = card.querySelector('[data-role="new-title"]').value.trim();
-          const mergeInto = card.querySelector('[data-role="merge-into"]').value.trim();
-          const decision = {
-            framework_id: c.framework_id,
-            competency_id: t.competency_id,
-            title: t.title,
-            action,
-            new_title: action === "rewrite" ? newTitle : "",
-            merge_into_id: action === "merge" ? mergeInto : "",
-            notes: "",
-          };
-          state.decisions.title[key] = decision;
-          persistTitle(decision, {
-            corpus_key: c.corpus_key,
-            depth: t.depth,
-          }).then(() => renderTitles());
-        });
+        btn.addEventListener("click", () => setAction(action));
         actions.appendChild(btn);
       }
-      card.querySelector('[data-role="new-title"]').addEventListener("change", (e) => {
-        if (!state.decisions.title[key]) return;
-        state.decisions.title[key].new_title = e.target.value.trim();
-        saveLocal();
-      });
-      card.querySelector('[data-role="merge-into"]').addEventListener("change", (e) => {
-        if (!state.decisions.title[key]) return;
-        state.decisions.title[key].merge_into_id = e.target.value.trim();
-        saveLocal();
-      });
+
+      const newTitleInput = card.querySelector('[data-role="new-title"]');
+      if (newTitleInput) {
+        newTitleInput.addEventListener("input", (e) => {
+          if (!state.decisions.title[key]) return;
+          state.decisions.title[key].new_title = e.target.value;
+          saveLocal();
+        });
+      }
+      const mergeSelect = card.querySelector('[data-role="merge-into"]');
+      if (mergeSelect) {
+        mergeSelect.addEventListener("change", (e) => {
+          if (!state.decisions.title[key]) return;
+          state.decisions.title[key].merge_into_id = e.target.value;
+          saveLocal();
+        });
+      }
+      const confirmRewrite = card.querySelector('[data-role="confirm-rewrite"]');
+      if (confirmRewrite) {
+        confirmRewrite.addEventListener("click", () => {
+          const decision = state.decisions.title[key];
+          if (!decision) return;
+          decision.new_title = (newTitleInput.value || "").trim();
+          decision.action = "rewrite";
+          if (!titleDecisionComplete(decision)) {
+            setSheetStatus("Enter a new title different from the current one", false);
+            return;
+          }
+          persistTitleIfReady(decision, meta);
+          renderTitles();
+        });
+      }
+      const confirmMerge = card.querySelector('[data-role="confirm-merge"]');
+      if (confirmMerge) {
+        confirmMerge.addEventListener("click", () => {
+          const decision = state.decisions.title[key];
+          if (!decision) return;
+          decision.merge_into_id = (mergeSelect.value || "").trim();
+          decision.action = "merge";
+          if (!titleDecisionComplete(decision)) {
+            setSheetStatus("Pick which competency this one merges into", false);
+            return;
+          }
+          persistTitleIfReady(decision, meta);
+          renderTitles();
+        });
+      }
+
+      // Keep focus in rewrite field when drafting
+      if (d.action === "rewrite" && !complete && newTitleInput) {
+        // defer so DOM is attached
+        requestAnimationFrame(() => {
+          if (document.activeElement !== newTitleInput) {
+            newTitleInput.focus();
+            const len = newTitleInput.value.length;
+            newTitleInput.setSelectionRange(len, len);
+          }
+        });
+      }
+
       root.appendChild(card);
     }
   }
@@ -424,7 +587,8 @@
             statement_ids: cl.members.map((m) => m.statement_id),
           };
           state.decisions.concept[cl.cluster_id] = decision;
-          persistConcept(decision).then(() => renderConcepts());
+          renderConcepts();
+          persistConcept(decision);
         });
         actions.appendChild(btn);
       }
@@ -448,7 +612,7 @@
       version: 1,
       rater: state.rater,
       exported_at: new Date().toISOString(),
-      title_decisions: Object.values(state.decisions.title),
+      title_decisions: Object.values(state.decisions.title).filter(titleDecisionComplete),
       concept_decisions: Object.values(state.decisions.concept),
     };
   }

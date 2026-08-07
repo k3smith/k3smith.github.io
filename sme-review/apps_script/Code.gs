@@ -19,6 +19,9 @@
  * - POST text/plain JSON
  *   { kind: "title"|"concept"|"batch", ...fields }
  *   batch: { kind:"batch", rows:[{kind, ...}, ...] }
+ *
+ * Writes upsert by (rater_id, competency_id) or (rater_id, cluster_id)
+ * so re-clicks update the same row instead of duplicating.
  */
 
 var TITLES_SHEET = "titles";
@@ -80,11 +83,11 @@ function doPost(e) {
     var data = JSON.parse(raw);
     if (data.kind === "batch" && data.rows && data.rows.length) {
       for (var i = 0; i < data.rows.length; i++) {
-        _appendRow(data.rows[i]);
+        _upsertRow(data.rows[i]);
       }
       return _json({ ok: true, n: data.rows.length });
     }
-    _appendRow(data);
+    _upsertRow(data);
     return _json({ ok: true });
   } catch (err) {
     return _json({ ok: false, error: String(err) });
@@ -99,12 +102,11 @@ function getCoverage() {
   };
 }
 
-function _appendRow(data) {
+function _upsertRow(data) {
   var kind = String(data.kind || "").toLowerCase();
   if (kind === "title") {
     _ensure(TITLES_SHEET, TITLE_HEADER);
-    var sh = _sheet(TITLES_SHEET);
-    sh.appendRow([
+    var row = [
       data.timestamp || new Date().toISOString(),
       data.round_id || "",
       data.rater_id || "",
@@ -118,14 +120,14 @@ function _appendRow(data) {
       data.merge_into_id || "",
       data.notes || "",
       data.client || "sme-review",
-    ]);
+    ];
+    _upsertByKeys(TITLES_SHEET, TITLE_HEADER, ["rater_id", "competency_id"], row);
     return;
   }
   if (kind === "concept") {
     _ensure(CONCEPTS_SHEET, CONCEPT_HEADER);
-    var shc = _sheet(CONCEPTS_SHEET);
     var ids = data.statement_ids || [];
-    shc.appendRow([
+    var crow = [
       data.timestamp || new Date().toISOString(),
       data.round_id || "",
       data.rater_id || "",
@@ -138,10 +140,46 @@ function _appendRow(data) {
       typeof ids === "string" ? ids : JSON.stringify(ids),
       data.notes || "",
       data.client || "sme-review",
-    ]);
+    ];
+    _upsertByKeys(CONCEPTS_SHEET, CONCEPT_HEADER, ["rater_id", "cluster_id"], crow);
     return;
   }
   throw new Error("Unknown kind: " + kind + " (use title|concept|batch)");
+}
+
+/** Update existing row matching key columns, else append. */
+function _upsertByKeys(sheetName, header, keyNames, rowValues) {
+  var sh = _sheet(sheetName);
+  var keyCols = [];
+  for (var i = 0; i < keyNames.length; i++) {
+    var idx = header.indexOf(keyNames[i]);
+    if (idx < 0) {
+      sh.appendRow(rowValues);
+      return;
+    }
+    keyCols.push(idx);
+  }
+  var last = sh.getLastRow();
+  if (last < 2) {
+    sh.appendRow(rowValues);
+    return;
+  }
+  var values = sh.getRange(2, 1, last, header.length).getValues();
+  for (var r = 0; r < values.length; r++) {
+    var match = true;
+    for (var k = 0; k < keyCols.length; k++) {
+      var col = keyCols[k];
+      if (String(values[r][col] || "").trim() !== String(rowValues[col] || "").trim()) {
+        match = false;
+        break;
+      }
+    }
+    if (match) {
+      sh.getRange(r + 2, 1, r + 2, header.length).setValues([rowValues]);
+      return;
+    }
+  }
+  sh.appendRow(rowValues);
 }
 
 function _coveragePairs(sheetName, header, idKey, raterKey) {

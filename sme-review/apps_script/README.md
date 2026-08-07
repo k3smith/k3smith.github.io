@@ -12,5 +12,8 @@
 6. `make publish-sme` and push Pages.
 
 The UI posts each title/concept decision to the Sheet (and keeps a local
-backup). Use **Download decisions** JSON for `cf apply-sme-review`, or export
-the Sheet tabs as CSV for archival.
+backup). Re-saves **upsert** the same rater+item row (no duplicates after you
+redeploy this script). Use **Download decisions** JSON for
+`cf apply-sme-review`, or export the Sheet tabs as CSV for archival.
+
+After updating `Code.gs`, Deploy → Manage deployments → edit → **New version**.

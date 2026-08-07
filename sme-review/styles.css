@@ -201,6 +201,39 @@ button.ghost {
   border-color: var(--ok);
 }
 
+.card.draft {
+  border-color: var(--warn);
+  box-shadow: inset 3px 0 0 var(--warn);
+}
+
+button.primary {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+button.primary:hover {
+  filter: brightness(1.05);
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0.25rem 0 0.5rem;
+}
+
+select[data-role="merge-into"] {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.4rem;
+  font: inherit;
+}
+
 .card h3 {
   margin: 0 0 0.35rem;
   font-size: 1.05rem;
