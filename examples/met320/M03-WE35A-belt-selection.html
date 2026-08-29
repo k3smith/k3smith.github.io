@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Worked Example 2.6-A | MET 320</title>
+<title>Worked Example 3.5-A | MET 320</title>
 <!--
   REUSABLE WORKED-EXAMPLE PLAYER
   To adapt for another problem: edit the PROBLEM object (title + statement)
@@ -67,57 +67,56 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
 var PROBLEM = {
-  title: "Worked Example 2.6-A: Stepped shaft with a shoulder fillet",
-  statement: "A stepped shaft has a large diameter $D = 40\\ \\text{mm}$, a small diameter $d = 30\\ \\text{mm}$, and a fillet radius $r = 3\\ \\text{mm}$ at the shoulder. It carries a bending moment $M = 200\\ \\text{N·m}$ at the step. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Find the actual maximum stress at the fillet and the static safety factor."
+  title: "Worked Example 3.5-A: V-Belt Drive Selection",
+  statement: "A $7.5\\ \\text{kW}$, $1750\\ \\text{rpm}$ electric motor drives a centrifugal pump at $875\\ \\text{rpm}$ (light shock, $N_{sf} = 1.1$). Standard sheave diameters are 125, 150, 175, 200, 250, 300, 350 mm; the target center distance is 400 to 600 mm. A B-section belt is rated $H_{rated} = 2.8\\ \\text{kW}$ per belt after corrections. Find the design power, sheave pair, belt speed, arc of contact, and number of belts."
 };
 
-var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A stepped shaft with a large and small diameter joined by a fillet radius at the shoulder, loaded in bending.">'
-+ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
-+ '<rect x="60" y="55" width="150" height="70" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M210,55 Q222,55 222,67 L222,113 Q222,125 210,125 Z" fill="#cfe0f2" stroke="none"/>'
-+ '<rect x="222" y="67" width="178" height="46" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M210,55 Q222,55 222,67" fill="none" stroke="#D85A30" stroke-width="2.5"/>'
-+ '<path d="M210,125 Q222,125 222,113" fill="none" stroke="#D85A30" stroke-width="2.5"/>'
-+ '<text x="135" y="45" text-anchor="middle" fill="#5a6b80" font-size="11">D = 40 mm</text>'
-+ '<text x="311" y="57" text-anchor="middle" fill="#5a6b80" font-size="11">d = 30 mm</text>'
-+ '<text x="250" y="150" fill="#D85A30" font-size="11">fillet r = 3 mm (stress raiser)</text>'
-+ '<path d="M400,90 A26,26 0 0 1 388,66" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
-+ '<text x="405" y="120" fill="#1F3A5F" font-size="12" font-style="italic">M</text>'
+var SKETCH = '<svg viewBox="0 0 470 200" role="img" aria-label="A V-belt drive from a motor sheave to a larger pump sheave, 2 to 1 reduction, with three belts.">'
++ '<line x1="130" y1="62" x2="320" y2="52" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="130" y1="72" x2="320" y2="64" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="130" y1="138" x2="320" y2="148" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="130" y1="128" x2="320" y2="136" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="130" cy="100" r="40" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="320" cy="100" r="62" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<text x="130" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8321;=150</text>'
++ '<text x="320" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8322;=300</text>'
++ '<text x="130" y="46" text-anchor="middle" fill="#D85A30" font-size="10">motor 1750</text>'
++ '<text x="320" y="34" text-anchor="middle" fill="#D85A30" font-size="10">pump 875 rpm</text>'
++ '<text x="225" y="185" text-anchor="middle" fill="#5a6b80" font-size="11">3 B-section belts, C = 500 mm</text>'
 + '</svg>';
 
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>Wherever a shaft changes diameter, the geometry crowds the stress lines and the local stress rises above the nominal value. A stress-concentration factor $K_t$ captures that rise. We compute the nominal bending stress in the smaller section, read $K_t$ from the geometry, multiply to get the true peak stress at the fillet, and then take the static safety factor.</p>" },
+    html:"<p>Selecting a V-belt drive means turning a nameplate power and speed reduction into real hardware: a sheave pair that hits the ratio, a belt cross-section and length, and enough belts to carry the corrected design power. We inflate the nominal power by a service factor, pick sheaves for the 2:1 reduction, confirm belt speed and wrap, and divide the design power by the per-belt rating.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$D = 40\\ \\text{mm}$, $d = 30\\ \\text{mm}$, $r = 3\\ \\text{mm}$</li>"
-      +"<li>$M = 200\\ \\text{N·m} = 200{,}000\\ \\text{N·mm}$</li>"
-      +"<li>SAE 4140 OQT 1300, $S_y = 690\\ \\text{MPa}$</li></ul>"
-      +"<p><strong>Find:</strong> the nominal stress, the maximum stress at the fillet, and the static safety factor.</p>" },
+      +"<li>$H_{nom} = 7.5\\ \\text{kW}$, $N_{sf} = 1.1$</li>"
+      +"<li>$n_1 = 1750$, $n_2 = 875\\ \\text{rpm}$</li>"
+      +"<li>B-section, $H_{rated} = 2.8\\ \\text{kW}$ per belt; trial $C = 500\\ \\text{mm}$</li></ul>"
+      +"<p><strong>Find:</strong> design power $H_d$, sheaves $D_1$, $D_2$, belt speed $v_b$, arc of contact $\\alpha_1$, and number of belts $N_b$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: bending only at the step, the nominal section is the smaller diameter $d$, and $K_t$ is read from the standard chart using the ratios $r/d$ and $D/d$. For a static check on a ductile steel we apply $K_t$ to be conservative.</p>"
+    html:"<p>Assumptions: open drive; B-section confirmed from the Mott selection chart for $H_d \\approx 8\\ \\text{kW}$ at 1750 rpm; the minimum arc of contact is $120^\\circ$; the per-belt rating already includes the arc and length corrections.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott, Ch. 3 and Appendix 18 (stress-concentration charts). Nominal $\\sigma = M/S$, peak $\\sigma_{max} = K_t\\,\\sigma_{nom}$.</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 7 (belt drives). Design power $H_d = H_{nom}N_{sf}$; number of belts $N_b = H_d/H_{rated}$, rounded up.</p>" },
   { label:"Equations", title:"Equations",
-    html:"<p>Nominal bending stress, the geometry ratios that set $K_t$, and the peak stress:</p>"
-      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\sigma_{nom} = \\frac{M}{S} \\\\[4pt] \\frac{r}{d}&,\\ \\frac{D}{d} \\ \\Rightarrow\\ K_t \\ (\\text{chart}) \\\\[4pt] \\sigma_{max} &= K_t\\,\\sigma_{nom} \\qquad N = \\frac{S_y}{\\sigma_{max}} \\end{aligned}$$" },
+    html:"<p>Design power, ratio and sheaves, belt speed, arc of contact, and belt count:</p>"
+      +"$$\\begin{aligned} H_d &= H_{nom}\\,N_{sf} \\qquad VR = \\frac{n_2}{n_1} = \\frac{D_1}{D_2} \\\\[4pt] v_b &= \\frac{\\pi D_1 n_1}{60{,}000} \\qquad \\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C} \\\\[4pt] N_b &= \\left\\lceil \\frac{H_d}{H_{rated}} \\right\\rceil \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$S = \\frac{\\pi (30)^3}{32} = 2651\\ \\text{mm}^3, \\qquad \\sigma_{nom} = \\frac{200{,}000}{2651} = 75.4\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\frac{r}{d} = \\frac{3}{30} = 0.10, \\quad \\frac{D}{d} = \\frac{40}{30} = 1.33 \\ \\Rightarrow\\ K_t \\approx 1.75$$</div>"
-      +"<div class='calc'>$$\\sigma_{max} = 1.75 \\times 75.4 = \\textcolor{#D85A30}{131.9\\ \\text{MPa}}, \\qquad N = \\frac{690}{131.9} = \\textcolor{#D85A30}{5.23}$$</div>"
-      +"<p class='note'>If instead you take the ductile static shortcut and use $\\sigma_{nom}$ (local yielding blunts the peak): $N = 690/75.4 = 9.15$. The $K_t$-based value is the conservative choice.</p>" },
+    html:"<div class='calc'>$$H_d = 7.5(1.1) = \\textcolor{#D85A30}{8.25\\ \\text{kW}}$$</div>"
+      +"<div class='calc'>$$VR = \\frac{875}{1750} = 0.500 \\ \\Rightarrow\\ D_2/D_1 = 2.0: \\ \\text{select } D_1 = 150,\\ D_2 = 300\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$v_b = \\frac{\\pi(150)(1750)}{60{,}000} = 13.74\\ \\text{m/s}, \\qquad \\alpha_1 = 180 - 57.3\\,\\frac{150}{500} = 162.8^\\circ$$</div>"
+      +"<div class='calc'>$$N_b = \\frac{8.25}{2.8} = 2.95 \\ \\Rightarrow\\ \\textcolor{#D85A30}{3\\ \\text{belts}}; \\quad L = 2(500)+\\tfrac{\\pi(450)}{2}+\\tfrac{150^2}{2000} = 1718\\ \\text{mm (B-68)}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>$K_t \\approx 1.75$ is typical for a moderate fillet ($r/d = 0.10$); a sharper fillet would push it higher.</li>"
-      +"<li>Even with the concentration applied, $N = 5.23$ is comfortable for a static load, because the shaft is lightly stressed in pure bending here.</li>"
-      +"<li>The peak stress $131.9\\ \\text{MPa}$ stays well below $S_y = 690\\ \\text{MPa}$.</li></ul>" },
+      +"<li>3 belts $\\times\\ 2.8\\ \\text{kW} = 8.4\\ \\text{kW} \\ge H_d = 8.25\\ \\text{kW}$: the belt count carries the design power.</li>"
+      +"<li>Belt speed $13.74\\ \\text{m/s}$ is in the 5 to 25 m/s range, and the arc $162.8^\\circ$ clears the $120^\\circ$ minimum.</li>"
+      +"<li>All three acceptance criteria (power, speed, wrap) pass.</li></ul>" },
   { label:"Result", title:"Result and verdict",
-    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
-      +"<tr><td>Nominal stress</td><td>$\\sigma_{nom}$</td><td>$75.4\\ \\text{MPa}$</td></tr>"
-      +"<tr><td>Stress-concentration factor</td><td>$K_t$</td><td>$1.75$</td></tr>"
-      +"<tr><td>Peak stress at fillet</td><td>$\\sigma_{max}$</td><td>$131.9\\ \\text{MPa}$</td></tr>"
-      +"<tr><td>Static safety factor</td><td>$N$</td><td>$5.23$</td></tr></table>"
-      +"<p><strong>Verdict:</strong> safe in static bending. The practical lesson: specify a generous fillet radius on every shoulder. Under fatigue loading you would use the fatigue factor $K_f$ instead, and the margin would shrink considerably.</p>" }
+    html:"<table class='results'><tr><th>Quantity</th><th>Result</th></tr>"
+      +"<tr><td>Design power $H_d$</td><td>$8.25\\ \\text{kW}$</td></tr>"
+      +"<tr><td>Sheaves</td><td>$D_1 = 150$, $D_2 = 300\\ \\text{mm}$</td></tr>"
+      +"<tr><td>Belts</td><td>3 B-section, $C = 500\\ \\text{mm}$, B-68 (1725 mm)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the V-belt drive is complete and satisfactory. If the belt count had come out near 1.0 to 1.1, stepping up one belt section and using a single belt would simplify installation; here 3 belts is the right call.</p>" }
 ];
 
 

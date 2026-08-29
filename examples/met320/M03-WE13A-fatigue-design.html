@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 3.1-3.3 | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 3.1-3.3: Complete Fatigue Design of a Rotating Shaft",
+  statement: "A rotating shaft carries a fully reversed bending stress that cycles between $+180$ and $-180\\ \\text{MPa}$. It is $d = 30\\ \\text{mm}$, SAE 1040 HR steel ($S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$), with a shoulder fillet ($K_t = 1.8$, $q = 0.82$), machined surface, and a 99% reliability requirement. For a food-processing machine with moderate shock, $N_{min} = 2.0$. Characterize the stress, find the corrected endurance limit, and check fatigue and yielding, redesigning if needed."
+};
+
+var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A rotating shaft in reversed bending, with a stress-versus-time plot showing a fully reversed cycle between plus and minus 180 MPa about a zero mean.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<rect x="40" y="46" width="16" height="52" fill="#9aa8ba" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<rect x="56" y="62" width="150" height="20" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<ellipse cx="206" cy="72" rx="7" ry="12" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<path d="M206,50 A22,22 0 0 1 226,60" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="214" y="104" fill="#5a6b80" font-size="11">rotating shaft, d = 30 mm</text>'
++ '<text x="120" y="42" text-anchor="middle" fill="#D85A30" font-size="11">reversed bending</text>'
+// stress-time plot
++ '<line x1="270" y1="120" x2="450" y2="120" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="278" y1="60" x2="278" y2="185" stroke="#5a6b80" stroke-width="1"/>'
++ '<path d="M278,120 Q300,70 322,120 T366,120 T410,120 T454,120" fill="none" stroke="#1F3A5F" stroke-width="2"/>'
++ '<line x1="270" y1="82" x2="450" y2="82" stroke="#D85A30" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<line x1="270" y1="158" x2="450" y2="158" stroke="#D85A30" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<text x="250" y="86" fill="#D85A30" font-size="10">+180</text>'
++ '<text x="252" y="162" fill="#D85A30" font-size="10">-180</text>'
++ '<text x="284" y="116" fill="#5a6b80" font-size="10">&#963;m = 0</text>'
++ '<text x="360" y="198" text-anchor="middle" fill="#5a6b80" font-size="10">stress vs. time (R = -1)</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A rotating shaft in reversed bending is a fatigue problem: the stress swings from tension to compression every revolution, so the part can crack and fail well below the yield strength. We characterize the fluctuating stress, reduce the ideal endurance limit with the Marin modifying factors and the notch, then compare the working stress to that corrected limit with the Goodman criterion, and also check first-cycle yielding. If the safety factors miss the target, we resize.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$\\sigma_{max} = +180$, $\\sigma_{min} = -180\\ \\text{MPa}$; $d = 30\\ \\text{mm}$</li>"
+      +"<li>SAE 1040 HR: $S_u = 496$, $S_y = 290\\ \\text{MPa}$</li>"
+      +"<li>fillet $K_t = 1.8$, $q = 0.82$; machined; 99% reliability</li>"
+      +"<li>Marin: $C_m = 1.0$, $C_{st} = 1.0$, $C_R = 0.81$, $C_s = 0.85$; target $N_{min} = 2.0$</li></ul>"
+      +"<p><strong>Find:</strong> $\\sigma_m$, $\\sigma_a$, $R$, $S'_e$, corrected $S_e$, $K_f$, $\\sigma_{a,eff}$, the Goodman and yield safety factors, and a redesign if needed.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: fully reversed bending (rotating shaft), so the mean stress is zero; ductile steel with $S_u < 1400\\ \\text{MPa}$, so $S'_e \\approx 0.5\\,S_u$; machined surface and 99% reliability handled through Marin factors; the notch is handled with the fatigue factor $K_f$ applied to the alternating stress.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 5 (fatigue). $S'_e \\approx 0.5\\,S_u$ (&sect;5-6); Marin factors (&sect;5-7); modified Goodman (&sect;5-8); design factor from Page 1.3.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Stress characterization, corrected endurance limit, notch factor, and the two safety-factor checks:</p>"
+      +"$$\\begin{aligned} \\sigma_m &= \\tfrac{\\sigma_{max}+\\sigma_{min}}{2} \\quad \\sigma_a = \\tfrac{\\sigma_{max}-\\sigma_{min}}{2} \\quad R = \\tfrac{\\sigma_{min}}{\\sigma_{max}} \\\\[4pt] S'_e &= 0.5\\,S_u \\qquad S_e = C_m C_{st} C_R C_s\\, S'_e \\\\[4pt] K_f &= 1 + q(K_t - 1) \\qquad \\sigma_{a,eff} = K_f\\,\\sigma_a \\\\[4pt] N_f &= \\frac{1}{\\sigma_{a,eff}/S_e + \\sigma_m/S_u} \\qquad N_y = \\frac{S_y}{\\sigma_{a,eff}+\\sigma_m} \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<p><strong>Characterize (Page 3.1):</strong></p>"
+      +"<div class='calc'>$$\\sigma_m = \\tfrac{180+(-180)}{2} = 0, \\quad \\sigma_a = \\tfrac{180-(-180)}{2} = 180\\ \\text{MPa}, \\quad R = \\tfrac{-180}{180} = -1$$</div>"
+      +"<div class='calc'>$$S'_e = 0.5(496) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>"
+      +"<p><strong>Correct the endurance limit (Page 3.2):</strong></p>"
+      +"<div class='calc'>$$S_e = (1.0)(1.0)(0.81)(0.85)(248) = 0.6885 \\times 248 = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$K_f = 1 + 0.82(1.8-1) = 1.656, \\qquad \\sigma_{a,eff} = 1.656 \\times 180 = \\textcolor{#D85A30}{298\\ \\text{MPa}}$$</div>"
+      +"<p><strong>Safety factors, $d = 30\\ \\text{mm}$ (Page 3.3):</strong></p>"
+      +"<div class='calc'>$$N_f = \\frac{1}{298/170.8 + 0} = \\frac{170.8}{298} = \\textcolor{#D85A30}{0.57}, \\qquad N_y = \\frac{290}{298} = \\textcolor{#D85A30}{0.97}$$</div>"
+      +"<p>Both are below 1: the shaft fails. <strong>Redesign to $d = 40\\ \\text{mm}$</strong> (bending stress scales as $1/d^3$):</p>"
+      +"<div class='calc'>$$\\sigma_{a} = 180\\left(\\tfrac{30}{40}\\right)^3 = 75.9,\\ K_f = 1+0.82(1.75-1)=1.615,\\ \\sigma_{a,eff} = 122.6\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$N_f = \\frac{170.8}{122.6} = \\textcolor{#D85A30}{1.39}, \\qquad N_y = \\frac{290}{122.6} = \\textcolor{#D85A30}{2.37}$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>Marin factors and the notch cut the usable endurance limit from $S'_e = 248$ to $S_e = 171\\ \\text{MPa}$ (about a third), which is why fatigue governs on rotating machinery.</li>"
+      +"<li>At $d = 30\\ \\text{mm}$ both safety factors are below 1, so failure is expected. Upsizing to $40\\ \\text{mm}$ (33% larger) raises $N_y$ past 2 and $N_f$ from 0.57 to 1.39, consistent with stress scaling as $1/d^3$.</li>"
+      +"<li>$N_f < N_y$ throughout: fatigue, not yielding, is the governing mode, exactly as expected for reversed loading.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Design</th><th>$N_f$ (Goodman)</th><th>$N_y$ (yield)</th></tr>"
+      +"<tr><td>$d = 30\\ \\text{mm}$</td><td>0.57 (fail)</td><td>0.97 (fail)</td></tr>"
+      +"<tr><td>$d = 40\\ \\text{mm}$</td><td>1.39</td><td>2.37 (ok)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 30 mm shaft fails both checks. At 40 mm yielding is safe but fatigue ($N_f = 1.39$) still falls short of $N_{min} = 2.0$. Because diameter alone is not enough, the efficient next move is a stronger material: SAE 4140 OQT 1000 ($S_u = 1160 \\Rightarrow S'_e = 580\\ \\text{MPa}$) would raise $S_e$ sharply. Improving surface finish or the fillet radius also helps. For reversed loading ($\\sigma_m = 0$) the Goodman check reduces to $N_f = S_e/\\sigma_{a,eff}$, so every fix either raises $S_e$ or lowers $\\sigma_{a,eff}$.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

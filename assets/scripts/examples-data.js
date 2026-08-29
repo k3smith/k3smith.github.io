@@ -86,6 +86,37 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 3,
+        title: 'Fatigue & Power Transmission',
+        examples: [
+          {
+            file: 'M03-WE13A-fatigue-design.html',
+            name: 'Worked Example 3.1-3.3: Complete Fatigue Design of a Rotating Shaft',
+            description: 'Full fatigue workflow: characterize the reversed stress, apply Marin factors and Kf, run the Goodman and yield checks, and redesign.',
+          },
+          {
+            file: 'M03-WE34A-belt-kinematics.html',
+            name: 'Worked Example 3.4-A: V-Belt Drive Kinematics',
+            description: 'Finds output speed, belt speed, belt length, and arc of contact for an open V-belt drive.',
+          },
+          {
+            file: 'M03-WE35A-belt-selection.html',
+            name: 'Worked Example 3.5-A: V-Belt Drive Selection',
+            description: 'Sizes a V-belt drive: design power, sheave pair, belt speed, arc of contact, and number of belts.',
+          },
+          {
+            file: 'M03-WE36A-chain-drive.html',
+            name: 'Worked Example 3.6-A: Roller Chain Drive Design',
+            description: 'Designs an ANSI #50 roller chain drive: tooth counts, sprocket diameters, chain length, speed, and lubrication type.',
+          },
+          {
+            file: 'M03-WE37A-wire-rope.html',
+            name: 'Worked Example 3.7-A: Hoist Wire Rope Selection',
+            description: 'Selects a 6x19 wire rope for a hoist and checks both rope strength and the minimum sheave diameter.',
+          },
+        ],
+      },
     ],
   },
   {

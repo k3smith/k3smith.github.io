@@ -71,20 +71,30 @@ var PROBLEM = {
   statement: "A clevis joint uses a $12\\ \\text{mm}$ steel pin to connect two parts under a $16\\ \\text{kN}$ tensile load. The clevis has two legs, each $8\\ \\text{mm}$ thick, so the pin is in double shear. The pin is SAE 1020 HR steel ($S_y = 207\\ \\text{MPa}$, $S_{sy} \\approx 0.5\\,S_y = 103\\ \\text{MPa}$). Check the pin in shear and the leg in bearing, and identify which governs."
 };
 
-var SKETCH = '<svg viewBox="0 0 470 190" role="img" aria-label="A clevis joint: a pin passes through two outer legs and a central tongue, creating two shear planes.">'
+var SKETCH = '<svg viewBox="0 0 470 200" role="img" aria-label="A clevis joint in double shear, edge view. The center tongue is pulled left by the full load F. The two clevis legs, one above and one below the tongue, are each pulled right by half the load. A vertical pin passes through the top leg, the tongue, and the bottom leg, so it is cut on two shear planes, one at each tongue-to-leg interface.">'
 + '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
-+ '<rect x="150" y="55" width="26" height="80" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<rect x="294" y="55" width="26" height="80" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<rect x="205" y="70" width="60" height="50" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<rect x="150" y="86" width="170" height="18" fill="#b9cfe8" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<line x1="176" y1="50" x2="176" y2="140" stroke="#D85A30" stroke-width="1.4" stroke-dasharray="4 3"/>'
-+ '<line x1="294" y1="50" x2="294" y2="140" stroke="#D85A30" stroke-width="1.4" stroke-dasharray="4 3"/>'
-+ '<line x1="235" y1="70" x2="235" y2="20" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
-+ '<line x1="235" y1="120" x2="235" y2="170" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
-+ '<text x="243" y="30" fill="#1F3A5F" font-size="13" font-style="italic">F</text>'
-+ '<text x="243" y="165" fill="#1F3A5F" font-size="13" font-style="italic">F</text>'
-+ '<text x="235" y="150" text-anchor="middle" fill="#5a6b80" font-size="11">pin d = 12 mm</text>'
-+ '<text x="235" y="45" text-anchor="middle" fill="#D85A30" font-size="11">two shear planes</text>'
+// two clevis legs (right) joined by the clevis back
++ '<rect x="228" y="60" width="158" height="27" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<rect x="228" y="113" width="158" height="27" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<rect x="386" y="60" width="15" height="80" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
+// tongue (center) extends to the left
++ '<rect x="58" y="87" width="184" height="26" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
+// pin (vertical) through top leg, tongue, bottom leg
++ '<rect x="229" y="52" width="12" height="96" rx="4" fill="#b9cfe8" stroke="#1F3A5F" stroke-width="1.5"/>'
+// two shear planes at the tongue-leg interfaces
++ '<line x1="223" y1="87" x2="247" y2="87" stroke="#D85A30" stroke-width="1.8" stroke-dasharray="4 2"/>'
++ '<line x1="223" y1="113" x2="247" y2="113" stroke="#D85A30" stroke-width="1.8" stroke-dasharray="4 2"/>'
+// full load F on the tongue (pull left)
++ '<line x1="58" y1="100" x2="18" y2="100" stroke="#1F3A5F" stroke-width="2.5" marker-end="url(#ar)"/>'
++ '<text x="30" y="93" fill="#1F3A5F" font-size="13" font-style="italic">F</text>'
+// half load on each leg (pull right)
++ '<line x1="401" y1="73" x2="447" y2="73" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<line x1="401" y1="127" x2="447" y2="127" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="449" y="69" fill="#1F3A5F" font-size="11" font-style="italic">F/2</text>'
++ '<text x="449" y="132" fill="#1F3A5F" font-size="11" font-style="italic">F/2</text>'
++ '<text x="120" y="82" text-anchor="middle" fill="#5a6b80" font-size="10">tongue carries full F</text>'
++ '<text x="318" y="54" text-anchor="middle" fill="#5a6b80" font-size="10">clevis legs, F/2 each</text>'
++ '<text x="235" y="170" text-anchor="middle" fill="#D85A30" font-size="10">pin d = 12 mm: two shear planes</text>'
 + '</svg>';
 
 var STEPS = [
@@ -103,11 +113,14 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, direct shear $\\tau = F/A_s$ and bearing stress $\\sigma_b = F/(t\\,d)$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Shear on the pin (two planes) and bearing on one leg:</p>"
-      +"$$\\begin{aligned} A_s &= 2\\cdot\\frac{\\pi d^2}{4} \\qquad \\tau = \\frac{F}{A_s} \\qquad N_{shear} = \\frac{S_{sy}}{\\tau} \\\\[4pt] \\sigma_b &= \\frac{F/2}{t\\,d} \\qquad N_{bearing} = \\frac{S_y}{\\sigma_b} \\end{aligned}$$" },
+      +"$$\\begin{aligned} A_s &= 2\\cdot\\frac{\\pi d^2}{4} = \\frac{\\pi d^2}{2} \\\\[4pt] \\tau &= \\frac{F}{A_s} = \\frac{F}{\\pi d^2/2} = \\frac{2F}{\\pi d^2} \\\\[4pt] N_{shear} &= \\frac{S_{sy}}{\\tau} = \\frac{S_{sy}}{2F/(\\pi d^2)} = \\frac{\\pi d^2 S_{sy}}{2F} \\\\[4pt] \\sigma_b &= \\frac{F/2}{t\\,d} = \\frac{F}{2t\\,d} \\\\[4pt] N_{bearing} &= \\frac{S_y}{\\sigma_b} = \\frac{S_y}{F/(2t\\,d)} = \\frac{2t\\,d\\,S_y}{F} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$A_s = 2\\cdot\\frac{\\pi (12)^2}{4} = 2(113.1) = 226.2\\ \\text{mm}^2, \\qquad \\tau = \\frac{16{,}000}{226.2} = \\textcolor{#D85A30}{70.7\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$N_{shear} = \\frac{S_{sy}}{\\tau} = \\frac{103}{70.7} = \\textcolor{#D85A30}{1.46}$$</div>"
-      +"<div class='calc'>$$\\sigma_b = \\frac{F/2}{t\\,d} = \\frac{8{,}000}{8 \\times 12} = 83.3\\ \\text{MPa}, \\qquad N_{bearing} = \\frac{207}{83.3} = \\textcolor{#D85A30}{2.49}$$</div>" },
+    html:"<div class='calc'>$$A_s = \\frac{\\pi d^2}{2} = \\frac{\\pi(12\\ \\text{mm})^2}{2} = 226.2\\ \\text{mm}^2$$</div>"
+      +"<div class='calc'>$$\\tau = \\frac{2F}{\\pi d^2} = \\frac{2(16{,}000\\ \\text{N})}{\\pi(12\\ \\text{mm})^2} = \\textcolor{#D85A30}{70.7\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N_{shear} = \\frac{\\pi d^2 S_{sy}}{2F} = \\frac{\\pi(12\\ \\text{mm})^2(103\\ \\text{MPa})}{2(16{,}000\\ \\text{N})} = \\textcolor{#D85A30}{1.46}$$</div>"
+      +"<div class='calc'>$$\\sigma_b = \\frac{F}{2t\\,d} = \\frac{16{,}000\\ \\text{N}}{2(8\\ \\text{mm})(12\\ \\text{mm})} = 83.3\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$N_{bearing} = \\frac{2t\\,d\\,S_y}{F} = \\frac{2(8\\ \\text{mm})(12\\ \\text{mm})(207\\ \\text{MPa})}{16{,}000\\ \\text{N}} = \\textcolor{#D85A30}{2.49}$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}/\\text{mm}^2 = \\text{MPa}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>Shear stress is well under the tensile stress you would get in the same pin loaded axially, as expected for a stubby pin.</li>"

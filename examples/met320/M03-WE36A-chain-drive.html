@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Worked Example 2.6-A | MET 320</title>
+<title>Worked Example 3.6-A | MET 320</title>
 <!--
   REUSABLE WORKED-EXAMPLE PLAYER
   To adapt for another problem: edit the PROBLEM object (title + statement)
@@ -67,57 +67,55 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
 var PROBLEM = {
-  title: "Worked Example 2.6-A: Stepped shaft with a shoulder fillet",
-  statement: "A stepped shaft has a large diameter $D = 40\\ \\text{mm}$, a small diameter $d = 30\\ \\text{mm}$, and a fillet radius $r = 3\\ \\text{mm}$ at the shoulder. It carries a bending moment $M = 200\\ \\text{N·m}$ at the step. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Find the actual maximum stress at the fillet and the static safety factor."
+  title: "Worked Example 3.6-A: Roller Chain Drive Design",
+  statement: "Design a roller chain drive to transmit $5\\ \\text{kW}$ from a $1200\\ \\text{rpm}$ shaft to a conveyor at $300\\ \\text{rpm}$ (moderate shock, $N_{sf} = 1.25$). Use ANSI #50 chain (pitch $p = 15.875\\ \\text{mm}$) with a driver sprocket of $N_1 = 19$ teeth and a center distance $C \\approx 500\\ \\text{mm}$. Find the driven tooth count, the pitch diameters, the chain length, the chain speed, and the lubrication type."
 };
 
-var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A stepped shaft with a large and small diameter joined by a fillet radius at the shoulder, loaded in bending.">'
-+ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
-+ '<rect x="60" y="55" width="150" height="70" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M210,55 Q222,55 222,67 L222,113 Q222,125 210,125 Z" fill="#cfe0f2" stroke="none"/>'
-+ '<rect x="222" y="67" width="178" height="46" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M210,55 Q222,55 222,67" fill="none" stroke="#D85A30" stroke-width="2.5"/>'
-+ '<path d="M210,125 Q222,125 222,113" fill="none" stroke="#D85A30" stroke-width="2.5"/>'
-+ '<text x="135" y="45" text-anchor="middle" fill="#5a6b80" font-size="11">D = 40 mm</text>'
-+ '<text x="311" y="57" text-anchor="middle" fill="#5a6b80" font-size="11">d = 30 mm</text>'
-+ '<text x="250" y="150" fill="#D85A30" font-size="11">fillet r = 3 mm (stress raiser)</text>'
-+ '<path d="M400,90 A26,26 0 0 1 388,66" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
-+ '<text x="405" y="120" fill="#1F3A5F" font-size="12" font-style="italic">M</text>'
+var SKETCH = '<svg viewBox="0 0 470 200" role="img" aria-label="A roller chain drive: a small 19-tooth driver sprocket and a large 76-tooth driven sprocket linked by a chain.">'
++ '<line x1="120" y1="66" x2="330" y2="48" stroke="#1F3A5F" stroke-width="2.5" stroke-dasharray="5 3"/>'
++ '<line x1="120" y1="134" x2="330" y2="152" stroke="#1F3A5F" stroke-width="2.5" stroke-dasharray="5 3"/>'
++ '<circle cx="120" cy="100" r="34" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="330" cy="100" r="62" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="120" cy="100" r="3" fill="#1F3A5F"/><circle cx="330" cy="100" r="3" fill="#1F3A5F"/>'
++ '<text x="120" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">N&#8321;=19</text>'
++ '<text x="330" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">N&#8322;=76</text>'
++ '<text x="120" y="50" text-anchor="middle" fill="#D85A30" font-size="10">1200 rpm</text>'
++ '<text x="330" y="30" text-anchor="middle" fill="#D85A30" font-size="10">300 rpm</text>'
++ '<text x="225" y="188" text-anchor="middle" fill="#5a6b80" font-size="11">ANSI #50 chain, C = 500 mm</text>'
 + '</svg>';
 
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>Wherever a shaft changes diameter, the geometry crowds the stress lines and the local stress rises above the nominal value. A stress-concentration factor $K_t$ captures that rise. We compute the nominal bending stress in the smaller section, read $K_t$ from the geometry, multiply to get the true peak stress at the fillet, and then take the static safety factor.</p>" },
+    html:"<p>A roller chain gives a positive (no-slip) speed reduction. Design means choosing the driven sprocket for the ratio, sizing both sprockets, setting the chain length to a whole (preferably even) number of pitches, and confirming the chain speed so we can specify the right lubrication. We start from a corrected design power like any drive.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$D = 40\\ \\text{mm}$, $d = 30\\ \\text{mm}$, $r = 3\\ \\text{mm}$</li>"
-      +"<li>$M = 200\\ \\text{N·m} = 200{,}000\\ \\text{N·mm}$</li>"
-      +"<li>SAE 4140 OQT 1300, $S_y = 690\\ \\text{MPa}$</li></ul>"
-      +"<p><strong>Find:</strong> the nominal stress, the maximum stress at the fillet, and the static safety factor.</p>" },
+      +"<li>$H_{nom} = 5\\ \\text{kW}$, $N_{sf} = 1.25$</li>"
+      +"<li>$n_1 = 1200$, $n_2 = 300\\ \\text{rpm}$</li>"
+      +"<li>ANSI #50, $p = 15.875\\ \\text{mm}$, $N_1 = 19$, $C = 500\\ \\text{mm}$</li></ul>"
+      +"<p><strong>Find:</strong> $N_2$, pitch diameters $D_1$ and $D_2$, chain length $L_p$, chain speed $v$, and lubrication type.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: bending only at the step, the nominal section is the smaller diameter $d$, and $K_t$ is read from the standard chart using the ratios $r/d$ and $D/d$. For a static check on a ductile steel we apply $K_t$ to be conservative.</p>"
+    html:"<p>Assumptions: the 19-tooth driver clears the 17-tooth practical minimum; the chain power rating is verified for $H_d = 6.25\\ \\text{kW}$ at 1200 rpm; the length rounds to an even number of pitches so no offset link is needed.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott, Ch. 3 and Appendix 18 (stress-concentration charts). Nominal $\\sigma = M/S$, peak $\\sigma_{max} = K_t\\,\\sigma_{nom}$.</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 7 (chain drives). Pitch diameter $D = p/\\sin(180^\\circ/N_t)$; lubrication type from the roller-chain speed table.</p>" },
   { label:"Equations", title:"Equations",
-    html:"<p>Nominal bending stress, the geometry ratios that set $K_t$, and the peak stress:</p>"
-      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\sigma_{nom} = \\frac{M}{S} \\\\[4pt] \\frac{r}{d}&,\\ \\frac{D}{d} \\ \\Rightarrow\\ K_t \\ (\\text{chart}) \\\\[4pt] \\sigma_{max} &= K_t\\,\\sigma_{nom} \\qquad N = \\frac{S_y}{\\sigma_{max}} \\end{aligned}$$" },
+    html:"<p>Design power, ratio and tooth count, sprocket diameters, chain length, and speed:</p>"
+      +"$$\\begin{aligned} H_d &= H_{nom}N_{sf} \\qquad VR = \\frac{n_1}{n_2} = \\frac{N_2}{N_1} \\\\[4pt] D &= \\frac{p}{\\sin(180^\\circ/N_t)} \\qquad v = \\frac{\\pi D_1 n_1}{60{,}000} \\\\[4pt] L_p &= \\frac{2C}{p} + \\frac{N_1+N_2}{2} + \\frac{p\\,(N_2-N_1)^2}{4\\pi^2 C} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$S = \\frac{\\pi (30)^3}{32} = 2651\\ \\text{mm}^3, \\qquad \\sigma_{nom} = \\frac{200{,}000}{2651} = 75.4\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\frac{r}{d} = \\frac{3}{30} = 0.10, \\quad \\frac{D}{d} = \\frac{40}{30} = 1.33 \\ \\Rightarrow\\ K_t \\approx 1.75$$</div>"
-      +"<div class='calc'>$$\\sigma_{max} = 1.75 \\times 75.4 = \\textcolor{#D85A30}{131.9\\ \\text{MPa}}, \\qquad N = \\frac{690}{131.9} = \\textcolor{#D85A30}{5.23}$$</div>"
-      +"<p class='note'>If instead you take the ductile static shortcut and use $\\sigma_{nom}$ (local yielding blunts the peak): $N = 690/75.4 = 9.15$. The $K_t$-based value is the conservative choice.</p>" },
+    html:"<div class='calc'>$$H_d = 5(1.25) = 6.25\\ \\text{kW}, \\qquad VR = \\frac{1200}{300} = 4.0 \\ \\Rightarrow\\ N_2 = 4(19) = \\textcolor{#D85A30}{76\\ \\text{teeth}}$$</div>"
+      +"<div class='calc'>$$D_1 = \\frac{15.875}{\\sin(9.474^\\circ)} = 96.4\\ \\text{mm}, \\qquad D_2 = \\frac{15.875}{\\sin(2.368^\\circ)} = 384.1\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$L_p = \\frac{2(500)}{15.875} + \\frac{95}{2} + \\frac{15.875(57)^2}{4\\pi^2(500)} = 63.0 + 47.5 + 2.6 = 113.1 \\ \\Rightarrow\\ \\textcolor{#D85A30}{114\\ \\text{pitches}}$$</div>"
+      +"<div class='calc'>$$v = \\frac{\\pi(96.4)(1200)}{60{,}000} = 6.06\\ \\text{m/s} \\ \\Rightarrow\\ \\textcolor{#D85A30}{\\text{Type II lubrication}}\\ (3\\text{-}7\\ \\text{m/s})$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>$K_t \\approx 1.75$ is typical for a moderate fillet ($r/d = 0.10$); a sharper fillet would push it higher.</li>"
-      +"<li>Even with the concentration applied, $N = 5.23$ is comfortable for a static load, because the shaft is lightly stressed in pure bending here.</li>"
-      +"<li>The peak stress $131.9\\ \\text{MPa}$ stays well below $S_y = 690\\ \\text{MPa}$.</li></ul>" },
+      +"<li>$N_2 = 76$ teeth sits well inside the usual 17 to 120 range.</li>"
+      +"<li>$L_p = 114$ is even, so no weaker offset (half) link is required.</li>"
+      +"<li>Chain speed $6.06\\ \\text{m/s}$ falls in the 3 to 7 m/s band, which calls for Type II (oil-bath) lubrication.</li></ul>" },
   { label:"Result", title:"Result and verdict",
-    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
-      +"<tr><td>Nominal stress</td><td>$\\sigma_{nom}$</td><td>$75.4\\ \\text{MPa}$</td></tr>"
-      +"<tr><td>Stress-concentration factor</td><td>$K_t$</td><td>$1.75$</td></tr>"
-      +"<tr><td>Peak stress at fillet</td><td>$\\sigma_{max}$</td><td>$131.9\\ \\text{MPa}$</td></tr>"
-      +"<tr><td>Static safety factor</td><td>$N$</td><td>$5.23$</td></tr></table>"
-      +"<p><strong>Verdict:</strong> safe in static bending. The practical lesson: specify a generous fillet radius on every shoulder. Under fatigue loading you would use the fatigue factor $K_f$ instead, and the margin would shrink considerably.</p>" }
+    html:"<table class='results'><tr><th>Quantity</th><th>Result</th></tr>"
+      +"<tr><td>Sprockets</td><td>$N_1 = 19$ ($D_1 = 96.4$), $N_2 = 76$ ($D_2 = 384.1\\ \\text{mm}$)</td></tr>"
+      +"<tr><td>Chain</td><td>ANSI #50, 114 pitches, $C = 500\\ \\text{mm}$</td></tr>"
+      +"<tr><td>Lubrication</td><td>Type II (oil bath)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the chain drive is complete and satisfactory. Always aim for an even number of pitches; an odd count forces an offset link, which is weaker and costs more.</p>" }
 ];
 
 

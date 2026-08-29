@@ -97,11 +97,11 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, direct axial stress $\\sigma = F/A$; $S_y$ from Mott Appendix 3.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Write the relationships before substituting numbers:</p>"
-      +"$$\\begin{aligned} A &= \\frac{\\pi d^2}{4} \\\\[4pt] \\sigma &= \\frac{F}{A} \\\\[4pt] N &= \\frac{S_y}{\\sigma} \\end{aligned}$$" },
+      +"$$\\begin{aligned} A &= \\frac{\\pi d^2}{4} \\\\[4pt] \\sigma &= \\frac{F}{A} = \\frac{F}{\\pi d^2/4} = \\frac{4F}{\\pi d^2} \\\\[4pt] N &= \\frac{S_y}{\\sigma} = \\frac{S_y}{\\frac{4F}{\\pi d^2}} = \\frac{\\pi d^2 S_y}{4F} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$A = \\frac{\\pi (20\\ \\text{mm})^2}{4} = \\textcolor{#D85A30}{314.2\\ \\text{mm}^2}$$</div>"
-      +"<div class='calc'>$$\\sigma = \\frac{F}{A} = \\frac{25{,}000\\ \\text{N}}{314.2\\ \\text{mm}^2} = \\textcolor{#D85A30}{79.6\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{207}{79.6} = \\textcolor{#D85A30}{2.60}$$</div>"
+    html:"<div class='calc'>$$A = \\frac{\\pi d^2}{4} = \\frac{\\pi(20\\ \\text{mm})^2}{4} = 314.2\\ \\text{mm}^2$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{4F}{\\pi d^2} = \\frac{4(25{,}000\\ \\text{N})}{\\pi(20\\ \\text{mm})^2} = \\textcolor{#D85A30}{79.6\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{\\pi d^2 S_y}{4F} = \\frac{\\pi(20\\ \\text{mm})^2(207\\ \\text{MPa})}{4(25{,}000\\ \\text{N})} = \\textcolor{#D85A30}{2.60}$$</div>"
       +"<p class='note'>Units track through: $\\text{N}/\\text{mm}^2 = \\text{MPa}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
