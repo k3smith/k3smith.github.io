@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.7-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.7-A: Setting up the stress element for a shaft",
+  statement: "A $30\\ \\text{mm}$ diameter shaft carries a bending moment $M = 500\\ \\text{N·m}$ and transmits a torque $T = 800\\ \\text{N·m}$. Set up the stress element at the critical point on the shaft surface, that is, find $\\sigma_x$, $\\sigma_y$, and $\\tau_{xy}$."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 190" role="img" aria-label="A small square stress element on a shaft surface with normal stress sigma-x on the vertical faces and shear stress tau-xy on all faces.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker>'
++ '<marker id="as" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
++ '<rect x="180" y="65" width="90" height="90" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="180" y1="110" x2="140" y2="110" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<line x1="270" y1="110" x2="310" y2="110" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="128" y="105" fill="#1F3A5F" font-size="13" font-style="italic">&#963;x</text>'
++ '<text x="314" y="105" fill="#1F3A5F" font-size="13" font-style="italic">&#963;x</text>'
++ '<line x1="188" y1="60" x2="262" y2="60" stroke="#D85A30" stroke-width="2" marker-end="url(#as)"/>'
++ '<line x1="262" y1="160" x2="188" y2="160" stroke="#D85A30" stroke-width="2" marker-end="url(#as)"/>'
++ '<text x="225" y="52" text-anchor="middle" fill="#D85A30" font-size="13" font-style="italic">&#964;xy</text>'
++ '<text x="225" y="180" text-anchor="middle" fill="#5a6b80" font-size="11">element at the surface: bending &#963;x + torsional &#964;xy, &#963;y = 0</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>Before we can apply Mohr's circle or a failure theory, we need the state of stress at the worst point. A loaded shaft usually bends and twists at once. Bending gives an axial normal stress; torsion gives a shear stress. This step assembles those into a single stress element, which Pages 2.8 and 2.9 then analyze.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$d = 30\\ \\text{mm}$</li>"
+      +"<li>$M = 500\\ \\text{N·m} = 500{,}000\\ \\text{N·mm}$</li>"
+      +"<li>$T = 800\\ \\text{N·m} = 800{,}000\\ \\text{N·mm}$</li></ul>"
+      +"<p><strong>Find:</strong> the stress element $\\sigma_x$, $\\sigma_y$, $\\tau_{xy}$ at the critical surface point.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: the critical point is on the outer surface, where both bending and torsional stresses peak; bending acts along the shaft axis ($\\sigma_x$); torsion acts as shear ($\\tau_{xy}$); there is no circumferential normal stress, so $\\sigma_y = 0$ (plane stress).</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott, Ch. 3, bending $\\sigma = M/S$ with $S = \\pi d^3/32$, torsion $\\tau = T/(J/c)$ with $J/c = \\pi d^3/16$.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Section properties, then the two stress components:</p>"
+      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$S = \\frac{\\pi (30)^3}{32} = 2651\\ \\text{mm}^3, \\qquad \\frac{J}{c} = \\frac{\\pi (30)^3}{16} = 5301\\ \\text{mm}^3$$</div>"
+      +"<div class='calc'>$$\\sigma_x = \\frac{500{,}000}{2651} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{800{,}000}{5301} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>The torsion polar term $J/c$ is exactly twice the bending term $S$ for a solid circle, which the numbers confirm ($5301 = 2\\times2651$).</li>"
+      +"<li>Both stresses are in the hundreds of MPa, the right order for a 30 mm shaft under these moments, and $\\sigma_y = 0$ is correct for a shaft with no axial or hoop load.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Component</th><th>Value</th></tr>"
+      +"<tr><td>$\\sigma_x$ (bending)</td><td>$188.6\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>$\\sigma_y$</td><td>$0$</td></tr>"
+      +"<tr><td>$\\tau_{xy}$ (torsion)</td><td>$150.9\\ \\text{MPa}$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the stress element is $\\sigma_x = 188.6$, $\\sigma_y = 0$, $\\tau_{xy} = 150.9\\ \\text{MPa}$. Carry these exact values into Page 2.8 (Mohr's circle) and Page 2.9 (failure theory) to finish the analysis.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

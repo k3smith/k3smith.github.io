@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.5-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.5-A: Simply supported shaft deflection",
+  statement: "A $600\\ \\text{mm}$ long, $30\\ \\text{mm}$ diameter steel shaft ($E = 207{,}000\\ \\text{MPa}$) is simply supported at both ends. A gear at the midpoint applies a transverse load $P = 3000\\ \\text{N}$. Check the midspan deflection against a limit of $L/1000$, and if it fails, find the diameter that satisfies the limit."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 190" role="img" aria-label="A simply supported shaft deflecting downward under a central gear load, shown with an exaggerated sagging curve.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<polygon points="70,96 58,116 82,116" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<polygon points="390,96 378,116 402,116" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="70" y1="96" x2="390" y2="96" stroke="#9aa8ba" stroke-width="1" stroke-dasharray="4 3"/>'
++ '<path d="M70,96 Q230,150 390,96" fill="none" stroke="#1F3A5F" stroke-width="3"/>'
++ '<line x1="230" y1="46" x2="230" y2="120" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="238" y="58" fill="#1F3A5F" font-size="13" font-style="italic">P = 3000 N</text>'
++ '<line x1="230" y1="96" x2="230" y2="128" stroke="#D85A30" stroke-width="1"/>'
++ '<text x="238" y="140" fill="#D85A30" font-size="12" font-style="italic">&#948;</text>'
++ '<text x="230" y="172" text-anchor="middle" fill="#5a6b80" font-size="11">L = 600 mm, load at midspan</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A shaft can be strong enough yet still sag too much. Here a gear load bends a simply supported shaft, and the design has a deflection limit (a stiffness requirement) of one-thousandth of the span. We compute the midspan deflection, compare it to the limit, and if it is too large, size the diameter up until it complies. Deflection, not stress, often governs shaft sizing.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$L = 600\\ \\text{mm}$, current $d = 30\\ \\text{mm}$</li>"
+      +"<li>$E = 207{,}000\\ \\text{MPa}$, central load $P = 3000\\ \\text{N}$</li>"
+      +"<li>deflection limit $\\delta_{allow} = L/1000$</li></ul>"
+      +"<p><strong>Find:</strong> the midspan deflection $\\delta$, whether it passes, and the required diameter if it fails.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: simply supported ends, single central load, round solid section, linear-elastic bending, self-weight neglected. For a central load on a simply supported beam, the maximum deflection is at midspan.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Appendix 14 (beam-deflection formulas), central load $\\delta_{max} = PL^3/(48EI)$, with $I = \\pi d^4/64$.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Deflection and the limit, then invert for the required moment of inertia and diameter:</p>"
+      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\qquad \\delta_{max} = \\frac{P L^3}{48 E I} \\qquad \\delta_{allow} = \\frac{L}{1000} \\\\[4pt] I_{req} &= \\frac{P L^3}{48 E\\,\\delta_{allow}} \\qquad d = \\left(\\frac{64\\,I_{req}}{\\pi}\\right)^{1/4} \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$I = \\frac{\\pi (30)^4}{64} = 39{,}761\\ \\text{mm}^4$$</div>"
+      +"<div class='calc'>$$\\delta = \\frac{3000 \\times (600)^3}{48 \\times 207{,}000 \\times 39{,}761} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\delta_{allow} = \\frac{600}{1000} = 0.60\\ \\text{mm} \\ \\Rightarrow\\ 1.64 > 0.60 \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>"
+      +"<div class='calc'>$$I_{req} = \\frac{3000 \\times (600)^3}{48 \\times 207{,}000 \\times 0.60} = 108{,}700\\ \\text{mm}^4 \\ \\Rightarrow\\ d = \\left(\\frac{64 \\times 108{,}700}{\\pi}\\right)^{1/4} = 38.6\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$\\text{specify } d = 40\\ \\text{mm}: \\ I = 125{,}664\\ \\text{mm}^4, \\ \\delta = 0.519\\ \\text{mm} < 0.60 \\ \\textcolor{#D85A30}{\\checkmark}$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>Deflection is about $1.6\\ \\text{mm}$ at 30 mm, clearly over the $0.6\\ \\text{mm}$ limit, so a resize is expected.</li>"
+      +"<li>Because $I \\propto d^4$, going from 30 to 40 mm (a 33% increase) cuts deflection by about 69% (from 1.64 to 0.519 mm). Diameter is the strongest lever for stiffness.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Result</th></tr>"
+      +"<tr><td>Deflection at 30 mm</td><td>$\\delta = 1.64\\ \\text{mm}$ (fails $0.60\\ \\text{mm}$)</td></tr>"
+      +"<tr><td>Required diameter</td><td>$38.6\\ \\text{mm} \\rightarrow$ specify $40\\ \\text{mm}$</td></tr>"
+      +"<tr><td>Deflection at 40 mm</td><td>$\\delta = 0.519\\ \\text{mm}$ (passes)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 30 mm shaft is too flexible; specify 40 mm to meet the $L/1000$ limit. Remember that stiffness depends on $E$ and geometry, not strength, so a stronger alloy at the same diameter would not fix a deflection problem.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

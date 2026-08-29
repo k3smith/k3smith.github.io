@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.2-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.2-A: Round bar in tension",
+  statement: "A round bar of diameter $d = 20\\ \\text{mm}$ carries an axial tensile load $F = 25\\ \\text{kN}$. The bar is SAE 1020 hot-rolled steel with yield strength $S_y = 207\\ \\text{MPa}$. Find the tensile stress in the bar and the safety factor against yielding."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 150" role="img" aria-label="A round bar pulled in tension from both ends by axial force F.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<rect x="150" y="62" width="160" height="30" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="150" y1="77" x2="66" y2="77" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<line x1="310" y1="77" x2="394" y2="77" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="58" y="63" fill="#1F3A5F" font-size="13" font-style="italic">F</text>'
++ '<text x="398" y="63" fill="#1F3A5F" font-size="13" font-style="italic">F</text>'
++ '<text x="230" y="52" text-anchor="middle" fill="#5a6b80" font-size="11">round bar, d = 20 mm</text>'
++ '<text x="230" y="114" text-anchor="middle" fill="#D85A30" font-size="11">uniform axial stress &#963; = F/A</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A straight round bar is pulled in tension by a known axial force. We need the tensile (normal) stress on the cross-section and the safety factor comparing that stress to the material yield strength. The load is steady, so this is a static strength check.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$d = 20\\ \\text{mm}$ &nbsp;(bar diameter)</li>"
+      +"<li>$F = 25\\ \\text{kN} = 25{,}000\\ \\text{N}$ &nbsp;(axial tensile load)</li>"
+      +"<li>SAE 1020 HR steel, $S_y = 207\\ \\text{MPa}$</li></ul>"
+      +"<p><strong>Find:</strong> the axial stress $\\sigma$ and the safety factor $N$ against yielding.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: the load acts through the centroid so there is no bending; the stress is uniform across the section; the bar is prismatic. The direct axial stress acts uniformly over the full cross-sectional area.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott, Ch. 3, direct axial stress $\\sigma = F/A$; $S_y$ from Mott Appendix 3.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Write the relationships before substituting numbers:</p>"
+      +"$$\\begin{aligned} A &= \\frac{\\pi d^2}{4} \\\\[4pt] \\sigma &= \\frac{F}{A} \\\\[4pt] N &= \\frac{S_y}{\\sigma} \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$A = \\frac{\\pi (20\\ \\text{mm})^2}{4} = \\textcolor{#D85A30}{314.2\\ \\text{mm}^2}$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{F}{A} = \\frac{25{,}000\\ \\text{N}}{314.2\\ \\text{mm}^2} = \\textcolor{#D85A30}{79.6\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{207}{79.6} = \\textcolor{#D85A30}{2.60}$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}/\\text{mm}^2 = \\text{MPa}$.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>$\\sigma = 79.6\\ \\text{MPa}$ is well below $S_y = 207\\ \\text{MPa}$, so the bar is nowhere near yielding.</li>"
+      +"<li>$N = 2.60$ is a sensible margin for a static, well-characterized load. Page 1.3 lists 1.25 to 2.0 for that case, and this sits just above it.</li>"
+      +"<li>Tens of MPa is the right order of magnitude for a 20 mm bar at 25 kN.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
+      +"<tr><td>Axial stress</td><td>$\\sigma$</td><td>$79.6\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Safety factor (yield)</td><td>$N$</td><td>$2.60$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the bar is safe against yielding with reasonable margin for a static load. If the load could shock or impact, the Page 1.3 guidance would call for a higher design factor.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

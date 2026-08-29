@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.9-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.9-A: Complete static design check for a shaft",
+  statement: "A $30\\ \\text{mm}$ diameter shaft carries $M = 500\\ \\text{N·m}$ and $T = 800\\ \\text{N·m}$ with a shoulder fillet giving $K_t = 1.75$. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Apply the distortion-energy (von Mises) criterion to find the safety factor, and redesign if it is inadequate."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A shaft carrying a bending moment M and a torque T, with the critical fillet section marked.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker>'
++ '<marker id="at" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
++ '<rect x="80" y="78" width="120" height="34" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<rect x="200" y="84" width="180" height="22" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="200" y1="70" x2="200" y2="120" stroke="#D85A30" stroke-width="1.4" stroke-dasharray="3 3"/>'
++ '<text x="200" y="138" text-anchor="middle" fill="#D85A30" font-size="10">critical fillet, Kt = 1.75</text>'
++ '<path d="M110,74 A22,22 0 0 1 132,58" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="96" y="66" fill="#1F3A5F" font-size="12" font-style="italic">M</text>'
++ '<path d="M360,72 A24,24 0 0 1 336,56" fill="none" stroke="#D85A30" stroke-width="2" marker-end="url(#at)"/>'
++ '<text x="366" y="66" fill="#D85A30" font-size="12" font-style="italic">T</text>'
++ '<text x="230" y="164" text-anchor="middle" fill="#5a6b80" font-size="11">combined bending + torsion at a stress raiser</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>This pulls the whole module together: a shaft under combined bending and torsion, at a fillet that raises the stress. We build the stress element, apply the concentration factor, reduce the combined state to a single equivalent (von Mises) stress, and compare it to yield. If the safety factor is too low, we resize, which is how real shaft design actually proceeds.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$d = 30\\ \\text{mm}$, $M = 500\\ \\text{N·m}$, $T = 800\\ \\text{N·m}$</li>"
+      +"<li>$K_t = 1.75$ (shoulder fillet)</li>"
+      +"<li>SAE 4140 OQT 1300, $S_y = 690\\ \\text{MPa}$</li></ul>"
+      +"<p><strong>Find:</strong> the von Mises stress $\\sigma'$ and safety factor $N$; redesign if $N$ is inadequate.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: ductile steel (so distortion energy applies), plane stress with $\\sigma_y = 0$, static loading, and $K_t$ applied to both the bending and torsion components for conservatism. Nominal stresses come from Page 2.7 ($\\sigma_{nom} = 188.6$, $\\tau_{nom} = 150.9\\ \\text{MPa}$).</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott, Ch. 5, distortion-energy theory $\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2}$ (plane stress), $N = S_y/\\sigma'$.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Apply $K_t$, form the von Mises stress, and take the safety factor:</p>"
+      +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<p><strong>First pass, $d = 30\\ \\text{mm}$:</strong></p>"
+      +"<div class='calc'>$$\\sigma_x = 1.75 \\times 188.6 = 330.1\\ \\text{MPa}, \\qquad \\tau_{xy} = 1.75 \\times 150.9 = 264.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\sqrt{108{,}966 + 209{,}247} = \\sqrt{318{,}213} = 564.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$N = \\frac{690}{564.1} = \\textcolor{#D85A30}{1.22} \\ \\Rightarrow\\ \\text{inadequate}$$</div>"
+      +"<p><strong>Redesign, $d = 40\\ \\text{mm}$</strong> (larger $d$ improves $r/d$, so $K_t \\approx 1.65$):</p>"
+      +"<div class='calc'>$$S = \\frac{\\pi(40)^3}{32} = 6283, \\ \\frac{J}{c} = \\frac{\\pi(40)^3}{16} = 12{,}566 \\ \\Rightarrow\\ \\sigma_{nom} = 79.6, \\ \\tau_{nom} = 63.7\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma_x = 1.65 \\times 79.6 = 131.3, \\quad \\tau_{xy} = 1.65 \\times 63.7 = 105.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{(131.3)^2 + 3(105.1)^2} = \\sqrt{50{,}378} = 224.4\\ \\text{MPa}, \\quad N = \\frac{690}{224.4} = \\textcolor{#D85A30}{3.07} \\ \\checkmark$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>The first pass at $N = 1.22$ is clearly too low, as expected once $K_t$, bending, and torsion stack up.</li>"
+      +"<li>Increasing $d$ from 30 to 40 mm (33% larger) raises $N$ from 1.22 to 3.07, because section modulus scales with $d^3$.</li>"
+      +"<li>$N = 3.07$ is a reasonable static margin, though a rotating shaft is really a fatigue case that Module 3 will re-check.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Design</th><th>von Mises $\\sigma'$</th><th>Safety factor $N$</th></tr>"
+      +"<tr><td>$d = 30\\ \\text{mm}$</td><td>$564.1\\ \\text{MPa}$</td><td>$1.22$ (fail)</td></tr>"
+      +"<tr><td>$d = 40\\ \\text{mm}$</td><td>$224.4\\ \\text{MPa}$</td><td>$3.07$ (pass)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 30 mm shaft fails the static check; specify 40 mm for $N = 3.07$. Shaft design is iterative, size up, check, refine. Because a rotating shaft sees cyclic loading, confirm this in the Module 3 fatigue analysis, where the governing failure mode is fatigue rather than yielding.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

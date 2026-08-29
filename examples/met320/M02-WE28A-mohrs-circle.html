@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.8-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.8-A: Mohr's circle for the shaft",
+  statement: "Continuing from Page 2.7, the shaft surface element is $\\sigma_x = 188.6\\ \\text{MPa}$, $\\sigma_y = 0$, $\\tau_{xy} = 150.9\\ \\text{MPa}$. Construct Mohr's circle to find the principal stresses $\\sigma_1$ and $\\sigma_2$ and the maximum shear stress $\\tau_{max}$."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 230" role="img" aria-label="Mohr circle drawn on sigma-tau axes, centered on the sigma axis, with points A and B on the circle and the principal stresses at the circle edges.">'
++ '<line x1="40" y1="120" x2="430" y2="120" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="120" y1="20" x2="120" y2="215" stroke="#5a6b80" stroke-width="1"/>'
++ '<text x="424" y="112" fill="#5a6b80" font-size="11">&#963;</text>'
++ '<text x="128" y="28" fill="#5a6b80" font-size="11">&#964;</text>'
++ '<circle cx="245" cy="120" r="93" fill="none" stroke="#1F3A5F" stroke-width="2"/>'
++ '<circle cx="245" cy="120" r="2.5" fill="#1F3A5F"/>'
++ '<text x="245" y="137" text-anchor="middle" fill="#1F3A5F" font-size="10">C = 94.3</text>'
++ '<circle cx="325" cy="199" r="3" fill="#D85A30"/><text x="332" y="205" fill="#D85A30" font-size="10">A (188.6, -150.9)</text>'
++ '<circle cx="165" cy="41" r="3" fill="#D85A30"/><text x="120" y="36" fill="#D85A30" font-size="10">B (0, 150.9)</text>'
++ '<line x1="165" y1="41" x2="325" y2="199" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3"/>'
++ '<circle cx="338" cy="120" r="3" fill="#1F3A5F"/><text x="300" y="112" fill="#1F3A5F" font-size="10">&#963;1 = 272.2</text>'
++ '<circle cx="152" cy="120" r="3" fill="#1F3A5F"/><text x="120" y="150" fill="#1F3A5F" font-size="10">&#963;2 = -83.6</text>'
++ '<text x="245" y="80" text-anchor="middle" fill="#1F3A5F" font-size="10">R = &#964;max = 177.9</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>The stress element from Page 2.7 mixes a normal stress and a shear stress. Mohr's circle rotates that element to find the orientation where the normal stresses are extreme (the principal stresses) and where shear is largest. These principal values feed directly into the failure check on Page 2.9.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$\\sigma_x = 188.6\\ \\text{MPa}$</li>"
+      +"<li>$\\sigma_y = 0$</li>"
+      +"<li>$\\tau_{xy} = 150.9\\ \\text{MPa}$</li></ul>"
+      +"<p><strong>Find:</strong> the principal stresses $\\sigma_1$, $\\sigma_2$ and the maximum in-plane shear stress $\\tau_{max}$.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: plane stress. Plot point $A = (\\sigma_x, -\\tau_{xy})$ and point $B = (\\sigma_y, +\\tau_{xy})$; the line $AB$ is a diameter, so its midpoint is the center $C$ on the $\\sigma$-axis and half its length is the radius $R$.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott, Ch. 4, Mohr's circle; center $C = (\\sigma_x+\\sigma_y)/2$, radius $R = \\sqrt{((\\sigma_x-\\sigma_y)/2)^2 + \\tau_{xy}^2}$.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Center, radius, and the principal and maximum-shear values:</p>"
+      +"$$\\begin{aligned} C &= \\frac{\\sigma_x + \\sigma_y}{2} \\qquad R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2} \\\\[4pt] \\sigma_1 &= C + R \\qquad \\sigma_2 = C - R \\qquad \\tau_{max} = R \\end{aligned}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$C = \\frac{188.6 + 0}{2} = 94.3\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$R = \\sqrt{(94.3)^2 + (150.9)^2} = \\sqrt{8892 + 22{,}771} = \\sqrt{31{,}663} = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\sigma_1 = 94.3 + 177.9 = \\textcolor{#D85A30}{272.2\\ \\text{MPa}}, \\quad \\sigma_2 = 94.3 - 177.9 = \\textcolor{#D85A30}{-83.6\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\tau_{max} = R = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>The center sits on the $\\sigma$-axis at $94.3\\ \\text{MPa}$, and both $A$ and $B$ land on the circle, the mark of a correct construction.</li>"
+      +"<li>The peak normal stress $272.2\\ \\text{MPa}$ is well above the bending-only value $188.6\\ \\text{MPa}$: looking at bending alone would underestimate the true stress by about 44%.</li>"
+      +"<li>$\\sigma_2$ is negative (compressive), expected when a large shear rotates the element.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
+      +"<tr><td>Principal stress (max)</td><td>$\\sigma_1$</td><td>$272.2\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Principal stress (min)</td><td>$\\sigma_2$</td><td>$-83.6\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Maximum shear stress</td><td>$\\tau_{max}$</td><td>$177.9\\ \\text{MPa}$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> combined loading always requires Mohr's circle, since bending alone hides 44% of the peak stress here. Draw the circle every time, even roughly, to catch sign errors. These principal stresses carry into the failure-theory check on Page 2.9.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.3-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.3-A: Shaft torque and shear stress",
+  statement: "A solid circular shaft of diameter $d = 30\\ \\text{mm}$ transmits $P = 15\\ \\text{kW}$ at $n = 1450\\ \\text{rpm}$. The shaft is SAE 1040 cold-drawn steel with yield strength $S_y = 490\\ \\text{MPa}$. Find the transmitted torque, the maximum torsional shear stress, and the safety factor against shear yielding."
+};
+
+var SKETCH = '<svg viewBox="0 0 460 200" role="img" aria-label="A solid shaft under torque, with a cross-section showing shear stress zero at the center and maximum at the outer surface.">'
++ '<defs><marker id="ta" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<rect x="60" y="80" width="150" height="40" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<ellipse cx="60" cy="100" rx="10" ry="20" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<ellipse cx="210" cy="100" rx="10" ry="20" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<path d="M210,74 A26,26 0 1 1 184,66" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ta)"/>'
++ '<text x="210" y="150" text-anchor="middle" fill="#1F3A5F" font-size="13" font-style="italic">T</text>'
++ '<text x="135" y="70" text-anchor="middle" fill="#5a6b80" font-size="11">solid shaft, d = 30 mm</text>'
++ '<circle cx="360" cy="100" r="46" fill="#f5f8fc" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="360" cy="100" r="2.5" fill="#1F3A5F"/>'
++ '<line x1="360" y1="100" x2="360" y2="54" stroke="#1F3A5F" stroke-width="1.2"/>'
++ '<line x1="360" y1="100" x2="404" y2="100" stroke="#D85A30" stroke-width="1.2" stroke-dasharray="4 3"/>'
++ '<text x="410" y="104" fill="#D85A30" font-size="12">c</text>'
++ '<text x="360" y="164" text-anchor="middle" fill="#5a6b80" font-size="11">cross-section</text>'
++ '<text x="360" y="46" text-anchor="middle" fill="#D85A30" font-size="11">&#964; max at surface</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A rotating solid shaft transmits a known amount of power at a known speed. We need three things: the torque the shaft carries, the maximum shear stress that torque produces at the shaft surface, and how that stress compares to the material's shear strength (the safety factor).</p><p>This is a static, pure-torsion check: the load is steady and the only stress we are analyzing is the torsional shear stress. We still follow the full 7-step engineering-process format.</p>" },
+
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$P = 15\\ \\text{kW}$ &nbsp;(transmitted power)</li>"
+      +"<li>$n = 1450\\ \\text{rpm}$ &nbsp;(rotational speed)</li>"
+      +"<li>$d = 30\\ \\text{mm}$ &nbsp;(solid shaft diameter)</li>"
+      +"<li>SAE 1040 CD steel, $S_y = 490\\ \\text{MPa}$</li></ul>"
+      +"<p><strong>Find:</strong> the torque $T$, the maximum torsional shear stress $\\tau_{max}$, and the safety factor $N$ against shear yielding.</p>" },
+
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: solid circular cross-section; pure torsion only (no bending or axial load at this section); steady (static) load. For a ductile steel the shear yield strength is estimated as $S_{sy} \\approx 0.5\\,S_y$. The torsional shear stress is zero at the center of the shaft and largest at the outer surface, where $c = d/2$.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott, Ch. 3, torsional shear stress $\\tau = Tc/J$; shear strength estimate $S_{sy}\\approx 0.5\\,S_y$.</p>" },
+
+  { label:"Equations", title:"Equations",
+    html:"<p>Write the relationships symbolically before substituting numbers:</p>"
+      +"$$\\begin{aligned} T &= \\frac{9549\\,P}{n} \\quad (P\\ \\text{in kW},\\ n\\ \\text{in rpm},\\ T\\ \\text{in N·m}) \\\\[4pt] J &= \\frac{\\pi d^4}{32} \\qquad c = \\frac{d}{2} \\\\[4pt] \\tau_{max} &= \\frac{T c}{J} \\\\[4pt] N &= \\frac{S_{sy}}{\\tau_{max}}, \\qquad S_{sy} \\approx 0.5\\,S_y \\end{aligned}$$"
+      +"<p>$J$ is the polar moment of inertia of the solid circle, and $c$ is the distance from the center to the outer surface.</p>" },
+
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$\\begin{aligned} T &= \\frac{9549 \\times 15\\ \\text{kW}}{1450\\ \\text{rpm}} = \\textcolor{#D85A30}{98.8\\ \\text{N·m}} = 98{,}800\\ \\text{N·mm} \\end{aligned}$$</div>"
+      +"<div class='calc'>$$\\begin{aligned} J &= \\frac{\\pi (30\\ \\text{mm})^4}{32} = \\frac{\\pi \\times 810{,}000}{32} = 79{,}522\\ \\text{mm}^4, \\qquad c = 15\\ \\text{mm} \\end{aligned}$$</div>"
+      +"<div class='calc'>$$\\begin{aligned} \\tau_{max} &= \\frac{T c}{J} = \\frac{98{,}800\\ \\text{N·mm} \\times 15\\ \\text{mm}}{79{,}522\\ \\text{mm}^4} = \\textcolor{#D85A30}{18.6\\ \\text{MPa}} \\end{aligned}$$</div>"
+      +"<div class='calc'>$$\\begin{aligned} S_{sy} &= 0.5 \\times 490 = 245\\ \\text{MPa}, \\qquad N = \\frac{245}{18.6} = \\textcolor{#D85A30}{13.2} \\end{aligned}$$</div>"
+      +"<p class='note'>Units track through: $\\text{N·mm} \\times \\text{mm} / \\text{mm}^4 = \\text{N/mm}^2 = \\text{MPa}$.</p>" },
+
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>$\\tau_{max} = 18.6\\ \\text{MPa}$ is far below the material strength ($S_y = 490\\ \\text{MPa}$), which is expected for a 30 mm shaft carrying only 15 kW.</li>"
+      +"<li>A lightly loaded shaft in pure torsion should have a large safety factor, and $N \\approx 13$ reflects that.</li>"
+      +"<li>The stress magnitude (tens of MPa) is the right order for this size and power.</li></ul>" },
+
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
+      +"<tr><td>Transmitted torque</td><td>$T$</td><td>$98.8\\ \\text{N·m}$</td></tr>"
+      +"<tr><td>Maximum shear stress</td><td>$\\tau_{max}$</td><td>$18.6\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Safety factor (shear yield)</td><td>$N$</td><td>$13.2$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the shaft is safe in static torsion, with a large margin because it is lightly loaded.</p>"
+      +"<p class='note'>This check covers pure torsion only. A real shaft usually also carries bending (combined loading, Page 2.7) and cyclic loads that require fatigue analysis (Module 3), both of which reduce the effective safety factor. Treat this $N$ as an upper bound.</p>" }
+];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
