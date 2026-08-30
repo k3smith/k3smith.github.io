@@ -98,7 +98,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending stress $\\sigma = M/S$ with section modulus $S = \\pi d^3/32$; $M = WL/4$ for a central load.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Bending stress and safety factor, then invert for the required diameter:</p>"
-      +"$$\\begin{aligned} M &= \\frac{WL}{4} \\qquad S = \\frac{\\pi d^3}{32} \\qquad \\sigma = \\frac{M}{S} \\qquad N = \\frac{S_y}{\\sigma} \\\\[4pt] \\sigma_{allow} &= \\frac{S_y}{N} \\qquad S_{req} = \\frac{M}{\\sigma_{allow}} \\qquad d = \\left(\\frac{32\\,S_{req}}{\\pi}\\right)^{1/3} \\end{aligned}$$" },
+      +"$$\\begin{aligned} M &= \\frac{WL}{4} \\qquad S = \\frac{\\pi d^3}{32} \\qquad \\sigma = \\frac{M}{S} \\qquad N = \\frac{S_y}{\\sigma} \\\\[4pt] \\sigma_{allow} &= \\frac{S_y}{N} \\qquad S_{req} = \\frac{M}{\\sigma_{allow}} \\qquad d = \\left(\\frac{32\\,S_{req}}{\\pi}\\right)^{1/3} \\end{aligned}$$"
+      +"<p>$M=WL/4$ is the maximum bending moment for a central load $W$ on a simply supported span $L$. $S=\\pi d^3/32$ is the <em>elastic section modulus</em> of a solid round bar &mdash; a purely geometric measure of its bending resistance &mdash; so $\\sigma=M/S$ is the maximum bending stress and $N=S_y/\\sigma$ the safety factor against yielding. The second row inverts these to size the bar: $\\sigma_{allow}$ is the allowable stress at the target $N$, $S_{req}$ the section modulus it demands, and $d$ the diameter that provides it.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>Part (a): check the current 25 mm beam</strong></p>"
       +"<div class='calc'>$$M = \\frac{WL}{4} = \\frac{2000(500)}{4} = 250{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"

@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 5, distortion-energy theory $\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2}$ (plane stress), $N = S_y/\\sigma'$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Apply $K_t$, form the von Mises stress, and take the safety factor:</p>"
-      +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$" },
+      +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$"
+      +"<p>$\\sigma_{nom}$ and $\\tau_{nom}$ are the nominal bending and torsional stresses carried over from Page 2.7, each amplified by the <em>stress-concentration factor</em> $K_t$ at the fillet. $\\sigma'=\\sqrt{\\sigma_x^2+3\\tau_{xy}^2}$ is the <em>von Mises</em> (distortion-energy) equivalent stress for this plane-stress state &mdash; a single value combining the normal and shear stresses so it can be compared directly with the yield strength &mdash; and $N=S_y/\\sigma'$ is the resulting safety factor against yielding.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>First pass, $d = 30\\ \\text{mm}$:</strong></p>"
       +"<div class='calc'>$$\\sigma_x = K_t\\,\\sigma_{nom} = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000)}{\\pi(30)^3} = 330.1\\ \\text{MPa}, \\quad \\tau_{xy} = K_t\\,\\tau_{nom} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000)}{\\pi(30)^3} = 264.1\\ \\text{MPa}$$</div>"

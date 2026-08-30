@@ -108,7 +108,7 @@ var STEPS = [
   { label:"Equations", title:"Equations",
     html:"<p>Write the relationships symbolically before substituting numbers:</p>"
       +"$$\\begin{aligned} T &= \\frac{9549\\,P}{n} \\quad (P\\ \\text{in kW},\\ n\\ \\text{in rpm},\\ T\\ \\text{in N}\\cdot\\text{m}) \\\\[4pt] J &= \\frac{\\pi d^4}{32} \\qquad c = \\frac{d}{2} \\\\[4pt] \\tau_{max} &= \\frac{T c}{J} \\\\[4pt] N &= \\frac{S_{sy}}{\\tau_{max}}, \\qquad S_{sy} \\approx 0.5\\,S_y \\end{aligned}$$"
-      +"<p>$J$ is the polar moment of inertia of the solid circle, and $c$ is the distance from the center to the outer surface.</p>" },
+      +"<p>The first relation converts transmitted power to torque ($P$ in kW, $n$ in rev/min). $J=\\pi d^4/32$ is the <em>polar moment of inertia</em> of the solid circular section and $c=d/2$ is the outer-fibre radius; together $\\tau_{max}=Tc/J$ is the torsion shear-stress formula, which peaks at the surface. $N=S_{sy}/\\tau_{max}$ is the safety factor against shear yielding, with the shear yield strength estimated as $S_{sy}\\approx0.5\\,S_y$.</p>" },
 
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$T = \\frac{9549\\,P}{n} = \\frac{9549(15)}{1450} = \\textcolor{#D85A30}{98.8\\ \\text{N}\\cdot\\text{m}} = 98{,}800\\ \\text{N}\\cdot\\text{mm}$$</div>"

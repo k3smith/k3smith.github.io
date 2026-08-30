@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Appendix 14 (beam-deflection formulas). For $a \\le L/2$: $\\delta(L/2) = \\dfrac{P a (3L^2 - 4a^2)}{48 E I}$; use the table rather than deriving.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Section property, the midspan formula for each load, then superpose:</p>"
-      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\\\[4pt] \\delta_i(L/2) &= \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E I} \\quad (a_i \\le L/2,\\ \\text{measured from nearer support}) \\\\[4pt] \\delta_{total} &= \\delta_1 + \\delta_2 \\end{aligned}$$" },
+      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\\\[4pt] \\delta_i(L/2) &= \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E I} \\quad (a_i \\le L/2,\\ \\text{measured from nearer support}) \\\\[4pt] \\delta_{total} &= \\delta_1 + \\delta_2 \\end{aligned}$$"
+      +"<p>$I=\\pi d^4/64$ is the <em>area moment of inertia</em> of the shaft. The second relation is the standard midspan-deflection formula (Mott Appendix 14) for a single off-centre load $P_i$ acting at distance $a_i$ from the nearer support on a span $L$, with $E$ the elastic modulus. Because the material stays linear-elastic, the two loads' deflections simply add: $\\delta_{total}=\\delta_1+\\delta_2$.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(45)^4}{64} = 201{,}289\\ \\text{mm}^4$$</div>"
       +"<div class='calc'>$$\\delta_i = \\frac{P a (3L^2 - 4a^2)}{48 E I} = \\frac{P a (3L^2 - 4a^2)}{48 E(\\pi d^4/64)} = \\frac{4 P a (3L^2 - 4a^2)}{3\\pi E d^4}, \\qquad 3L^2 - 4a^2 = 3(1000)^2 - 4(300)^2 = 2{,}640{,}000$$</div>"

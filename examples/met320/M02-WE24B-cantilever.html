@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending stress $\\sigma = Mc/I$ with $I = bh^3/12$, $c = h/2$; $M = WL$ for a cantilever end load.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Moment at the wall, section properties, bending stress, and section modulus:</p>"
-      +"$$\\begin{aligned} M &= W L \\qquad I = \\frac{b h^3}{12} \\qquad c = \\frac{h}{2} \\\\[4pt] \\sigma &= \\frac{M c}{I} \\qquad N = \\frac{S_y}{\\sigma} \\qquad S = \\frac{I}{c} \\end{aligned}$$" },
+      +"$$\\begin{aligned} M &= W L \\qquad I = \\frac{b h^3}{12} \\qquad c = \\frac{h}{2} \\\\[4pt] \\sigma &= \\frac{M c}{I} \\qquad N = \\frac{S_y}{\\sigma} \\qquad S = \\frac{I}{c} \\end{aligned}$$"
+      +"<p>$M=WL$ is the bending moment at the wall of the cantilever. $I=bh^3/12$ is the <em>area moment of inertia</em> of the rectangular section about its neutral axis and $c=h/2$ is the distance from that axis to the outer fibre, so $\\sigma=Mc/I$ is the maximum bending stress and $N=S_y/\\sigma$ the safety factor. $S=I/c$ is the section modulus, used here to compare with an equivalent round bar; $b$ and $h$ are the section width and height.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$M = WL = 5000(200) = 1{,}000{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"
       +"<div class='calc'>$$\\sigma = \\frac{Mc}{I} = \\frac{M(h/2)}{b h^3/12} = \\frac{6M}{b h^2} = \\frac{6(1{,}000{,}000)}{(30)(50)^2} = \\textcolor{#D85A30}{80\\ \\text{MPa}}$$</div>"

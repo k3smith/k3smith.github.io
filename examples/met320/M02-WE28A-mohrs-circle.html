@@ -102,7 +102,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 4, Mohr's circle; center $C = (\\sigma_x+\\sigma_y)/2$, radius $R = \\sqrt{((\\sigma_x-\\sigma_y)/2)^2 + \\tau_{xy}^2}$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Center, radius, and the principal and maximum-shear values:</p>"
-      +"$$\\begin{aligned} C &= \\frac{\\sigma_x + \\sigma_y}{2} \\qquad R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2} \\\\[4pt] \\sigma_1 &= C + R \\qquad \\sigma_2 = C - R \\qquad \\tau_{max} = R \\end{aligned}$$" },
+      +"$$\\begin{aligned} C &= \\frac{\\sigma_x + \\sigma_y}{2} \\qquad R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2} \\\\[4pt] \\sigma_1 &= C + R \\qquad \\sigma_2 = C - R \\qquad \\tau_{max} = R \\end{aligned}$$"
+      +"<p>$C$ is the <em>centre</em> of Mohr's circle (the average normal stress) and $R$ is its <em>radius</em>; $\\sigma_x$, $\\sigma_y$, and $\\tau_{xy}$ are the normal and shear stresses on the element from Page 2.7. The principal stresses are $\\sigma_1=C+R$ and $\\sigma_2=C-R$ (the largest and smallest normal stresses, where shear vanishes), and $\\tau_{max}=R$ is the maximum shear stress.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$C = \\frac{188.6 + 0}{2} = 94.3\\ \\text{MPa}$$</div>"
       +"<div class='calc'>$$R = \\sqrt{(94.3)^2 + (150.9)^2} = \\sqrt{8892 + 22{,}771} = \\sqrt{31{,}663} = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>"

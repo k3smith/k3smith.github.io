@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3 and Appendix 18 (stress-concentration charts). Nominal $\\sigma = M/S$, peak $\\sigma_{max} = K_t\\,\\sigma_{nom}$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Nominal bending stress, the geometry ratios that set $K_t$, and the peak stress:</p>"
-      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\sigma_{nom} = \\frac{M}{S} \\\\[4pt] \\frac{r}{d}&,\\ \\frac{D}{d} \\ \\Rightarrow\\ K_t \\ (\\text{chart}) \\\\[4pt] \\sigma_{max} &= K_t\\,\\sigma_{nom} \\qquad N = \\frac{S_y}{\\sigma_{max}} \\end{aligned}$$" },
+      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\sigma_{nom} = \\frac{M}{S} \\\\[4pt] \\frac{r}{d}&,\\ \\frac{D}{d} \\ \\Rightarrow\\ K_t \\ (\\text{chart}) \\\\[4pt] \\sigma_{max} &= K_t\\,\\sigma_{nom} \\qquad N = \\frac{S_y}{\\sigma_{max}} \\end{aligned}$$"
+      +"<p>$S=\\pi d^3/32$ is the <em>elastic section modulus</em> of the smaller shaft and $\\sigma_{nom}=M/S$ is the nominal bending stress there (ignoring the step). The ratios $r/d$ (fillet radius to diameter) and $D/d$ (larger to smaller diameter) set the <em>stress-concentration factor</em> $K_t$ read from the chart; $\\sigma_{max}=K_t\\,\\sigma_{nom}$ is the actual peak stress at the fillet and $N=S_y/\\sigma_{max}$ the safety factor. $M$ is the bending moment.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$\\sigma_{nom} = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(200{,}000)}{\\pi(30)^3} = 75.4\\ \\text{MPa}$$</div>"
       +"<div class='calc'>$$\\frac{r}{d} = \\frac{3}{30} = 0.10, \\quad \\frac{D}{d} = \\frac{40}{30} = 1.33 \\ \\Rightarrow\\ K_t \\approx 1.75$$</div>"

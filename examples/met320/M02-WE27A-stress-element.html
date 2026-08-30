@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending $\\sigma = M/S$ with $S = \\pi d^3/32$, torsion $\\tau = T/(J/c)$ with $J/c = \\pi d^3/16$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Section properties, then the two stress components:</p>"
-      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$" },
+      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$"
+      +"<p>$S=\\pi d^3/32$ is the <em>section modulus</em> in bending and $J/c=\\pi d^3/16$ is the <em>polar section modulus</em> in torsion &mdash; both purely geometric properties of the solid round shaft. $\\sigma_x=M/S$ is the bending stress along the shaft axis and $\\tau_{xy}=T/(J/c)$ the torsional shear stress at the surface; there is no load in the hoop direction, so $\\sigma_y=0$ (plane stress). $M$ is the bending moment and $T$ the torque.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$\\sigma_x = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
       +"<div class='calc'>$$\\tau_{xy} = \\frac{T}{J/c} = \\frac{T}{\\pi d^3/16} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },

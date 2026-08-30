@@ -99,7 +99,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Appendix 14 (beam-deflection formulas), central load $\\delta_{max} = PL^3/(48EI)$, with $I = \\pi d^4/64$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Deflection and the limit, then invert for the required moment of inertia and diameter:</p>"
-      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\qquad \\delta_{max} = \\frac{P L^3}{48 E I} \\qquad \\delta_{allow} = \\frac{L}{1000} \\\\[4pt] I_{req} &= \\frac{P L^3}{48 E\\,\\delta_{allow}} \\qquad d = \\left(\\frac{64\\,I_{req}}{\\pi}\\right)^{1/4} \\end{aligned}$$" },
+      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\qquad \\delta_{max} = \\frac{P L^3}{48 E I} \\qquad \\delta_{allow} = \\frac{L}{1000} \\\\[4pt] I_{req} &= \\frac{P L^3}{48 E\\,\\delta_{allow}} \\qquad d = \\left(\\frac{64\\,I_{req}}{\\pi}\\right)^{1/4} \\end{aligned}$$"
+      +"<p>$I=\\pi d^4/64$ is the <em>area moment of inertia</em> of the solid round shaft. $\\delta_{max}=PL^3/(48EI)$ is the midspan deflection of a simply supported beam under a central load $P$, where $E$ is the <em>modulus of elasticity</em> (material stiffness); $\\delta_{allow}=L/1000$ is the stiffness limit. The second row inverts the deflection formula to find the required $I$ and the diameter $d$ that delivers it.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(30)^4}{64} = 39{,}761\\ \\text{mm}^4$$</div>"
       +"<div class='calc'>$$\\delta = \\frac{P L^3}{48 E I} = \\frac{P L^3}{48 E(\\pi d^4/64)} = \\frac{4 P L^3}{3\\pi E d^4} = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(30)^4} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"

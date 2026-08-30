@@ -100,7 +100,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, angle of twist $\\phi = TL/(GJ)$, with $J = \\pi d^4/32$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Twist angle, then convert to degrees and a per-meter rate:</p>"
-      +"$$\\begin{aligned} J &= \\frac{\\pi d^4}{32} \\qquad \\phi = \\frac{T L}{G J} \\\\[4pt] \\phi_{deg} &= \\phi \\cdot \\frac{180}{\\pi} \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} \\end{aligned}$$" },
+      +"$$\\begin{aligned} J &= \\frac{\\pi d^4}{32} \\qquad \\phi = \\frac{T L}{G J} \\\\[4pt] \\phi_{deg} &= \\phi \\cdot \\frac{180}{\\pi} \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} \\end{aligned}$$"
+      +"<p>$J=\\pi d^4/32$ is the <em>polar moment of inertia</em> of the solid shaft. $\\phi=TL/(GJ)$ is the angle of twist (in radians) over a shaft length $L$, where $T$ is the torque and $G$ is the material's <em>shear modulus</em> (its resistance to twisting). The remaining relations convert that angle to degrees and to a twist rate per metre of length.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$J = \\frac{\\pi d^4}{32} = \\frac{\\pi(30)^4}{32} = 79{,}522\\ \\text{mm}^4$$</div>"
       +"<div class='calc'>$$\\phi = \\frac{TL}{GJ} = \\frac{TL}{G(\\pi d^4/32)} = \\frac{32\\,T L}{\\pi G d^4} = \\frac{32(98{,}800)(500)}{\\pi(80{,}000)(30)^4} = \\textcolor{#D85A30}{0.00777\\ \\text{rad}}$$</div>"
