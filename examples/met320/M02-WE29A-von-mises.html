@@ -68,7 +68,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 2.9-A: Complete static design check for a shaft",
-  statement: "A $30\\ \\text{mm}$ diameter shaft carries $M = 500\\ \\text{N·m}$ and $T = 800\\ \\text{N·m}$ with a shoulder fillet giving $K_t = 1.75$. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Apply the distortion-energy (von Mises) criterion to find the safety factor, and redesign if it is inadequate."
+  statement: "A $30\\ \\text{mm}$ diameter shaft carries $M = 500\\ \\text{N}\\cdot\\text{m}$ and $T = 800\\ \\text{N}\\cdot\\text{m}$ with a shoulder fillet giving $K_t = 1.75$. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Apply the distortion-energy (von Mises) criterion to find the safety factor, and redesign if it is inadequate."
 };
 
 var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A shaft carrying a bending moment M and a torque T, with the critical fillet section marked.">'
@@ -90,7 +90,7 @@ var STEPS = [
     html:"<p>This pulls the whole module together: a shaft under combined bending and torsion, at a fillet that raises the stress. We build the stress element, apply the concentration factor, reduce the combined state to a single equivalent (von Mises) stress, and compare it to yield. If the safety factor is too low, we resize, which is how real shaft design actually proceeds.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$d = 30\\ \\text{mm}$, $M = 500\\ \\text{N·m}$, $T = 800\\ \\text{N·m}$</li>"
+      +"<li>$d = 30\\ \\text{mm}$, $M = 500\\ \\text{N}\\cdot\\text{m}$, $T = 800\\ \\text{N}\\cdot\\text{m}$</li>"
       +"<li>$K_t = 1.75$ (shoulder fillet)</li>"
       +"<li>SAE 4140 OQT 1300, $S_y = 690\\ \\text{MPa}$</li></ul>"
       +"<p><strong>Find:</strong> the von Mises stress $\\sigma'$ and safety factor $N$; redesign if $N$ is inadequate.</p>" },
@@ -103,7 +103,7 @@ var STEPS = [
       +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>First pass, $d = 30\\ \\text{mm}$:</strong></p>"
-      +"<div class='calc'>$$\\sigma_x = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000)}{\\pi(30)^3} = 330.1\\ \\text{MPa}, \\quad \\tau_{xy} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000)}{\\pi(30)^3} = 264.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma_x = K_t\\,\\sigma_{nom} = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000)}{\\pi(30)^3} = 330.1\\ \\text{MPa}, \\quad \\tau_{xy} = K_t\\,\\tau_{nom} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000)}{\\pi(30)^3} = 264.1\\ \\text{MPa}$$</div>"
       +"<div class='calc'>$$\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\textcolor{#D85A30}{564.1\\ \\text{MPa}}, \\quad N = \\frac{S_y}{\\sigma'} = \\frac{690}{564.1} = \\textcolor{#D85A30}{1.22}$$</div>"
       +"<p><strong>Redesign, $d = 40\\ \\text{mm}$</strong> (larger $d$ improves $r/d$, so $K_t \\approx 1.65$):</p>"
       +"<div class='calc'>$$\\sigma_x = \\frac{32(1.65)(500{,}000)}{\\pi(40)^3} = 131.3\\ \\text{MPa}, \\quad \\tau_{xy} = \\frac{16(1.65)(800{,}000)}{\\pi(40)^3} = 105.0\\ \\text{MPa}$$</div>"

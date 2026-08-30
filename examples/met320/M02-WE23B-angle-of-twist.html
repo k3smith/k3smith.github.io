@@ -68,7 +68,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 2.3-B: Angle of twist of a shaft",
-  statement: "Using the same shaft as Example 2.3-A ($d = 30\\ \\text{mm}$, torque $T = 98{,}800\\ \\text{N·mm}$), with shaft length $L = 500\\ \\text{mm}$ and shear modulus $G = 80{,}000\\ \\text{MPa}$, find the angle of twist and compare it to the common rotating-machinery guideline of $1^\\circ$ per meter of length."
+  statement: "Using the same shaft as Example 2.3-A ($d = 30\\ \\text{mm}$, torque $T = 98{,}800\\ \\text{N}\\cdot\\text{mm}$), with shaft length $L = 500\\ \\text{mm}$ and shear modulus $G = 80{,}000\\ \\text{MPa}$, find the angle of twist and compare it to the common rotating-machinery guideline of $1^\\circ$ per meter of length."
 };
 
 var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A shaft fixed at the left end and twisted through angle phi at the right end by a torque T.">'
@@ -90,7 +90,7 @@ var STEPS = [
     html:"<p>The same shaft that we checked for shear stress also twists under the applied torque. Here we find how many degrees the free end rotates relative to the fixed end, then compare that twist rate to a stiffness guideline. This is a stiffness (deflection) check, not a strength check: a shaft can be strong enough yet still twist too much for the application.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$d = 30\\ \\text{mm}$, $T = 98{,}800\\ \\text{N·mm}$</li>"
+      +"<li>$d = 30\\ \\text{mm}$, $T = 98{,}800\\ \\text{N}\\cdot\\text{mm}$</li>"
       +"<li>$L = 500\\ \\text{mm}$ &nbsp;(twisted length)</li>"
       +"<li>$G = 80{,}000\\ \\text{MPa}$ &nbsp;(shear modulus of steel)</li></ul>"
       +"<p><strong>Find:</strong> the angle of twist $\\phi$ in degrees, and the twist rate in degrees per meter.</p>" },
@@ -103,7 +103,7 @@ var STEPS = [
       +"$$\\begin{aligned} J &= \\frac{\\pi d^4}{32} \\qquad \\phi = \\frac{T L}{G J} \\\\[4pt] \\phi_{deg} &= \\phi \\cdot \\frac{180}{\\pi} \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$J = \\frac{\\pi d^4}{32} = \\frac{\\pi(30)^4}{32} = 79{,}522\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\phi = \\frac{TL}{GJ} = \\frac{32\\,T L}{\\pi G d^4} = \\frac{32(98{,}800)(500)}{\\pi(80{,}000)(30)^4} = \\textcolor{#D85A30}{0.00777\\ \\text{rad}}$$</div>"
+      +"<div class='calc'>$$\\phi = \\frac{TL}{GJ} = \\frac{TL}{G(\\pi d^4/32)} = \\frac{32\\,T L}{\\pi G d^4} = \\frac{32(98{,}800)(500)}{\\pi(80{,}000)(30)^4} = \\textcolor{#D85A30}{0.00777\\ \\text{rad}}$$</div>"
       +"<div class='calc'>$$\\phi_{deg} = \\phi\\cdot\\frac{180}{\\pi} = \\textcolor{#D85A30}{0.445^\\circ}, \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} = 0.445\\cdot\\frac{1000}{500} = \\textcolor{#D85A30}{0.89^\\circ/\\text{m}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"

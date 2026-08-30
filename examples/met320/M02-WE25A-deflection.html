@@ -102,7 +102,7 @@ var STEPS = [
       +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\qquad \\delta_{max} = \\frac{P L^3}{48 E I} \\qquad \\delta_{allow} = \\frac{L}{1000} \\\\[4pt] I_{req} &= \\frac{P L^3}{48 E\\,\\delta_{allow}} \\qquad d = \\left(\\frac{64\\,I_{req}}{\\pi}\\right)^{1/4} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(30)^4}{64} = 39{,}761\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\delta = \\frac{P L^3}{48 E I} = \\frac{4 P L^3}{3\\pi E d^4} = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(30)^4} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\delta = \\frac{P L^3}{48 E I} = \\frac{P L^3}{48 E(\\pi d^4/64)} = \\frac{4 P L^3}{3\\pi E d^4} = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(30)^4} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"
       +"<div class='calc'>$$\\delta_{allow} = \\frac{L}{1000} = 0.60\\ \\text{mm} \\ \\Rightarrow\\ 1.64 > 0.60 \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>"
       +"<div class='calc'>$$d = \\left(\\frac{4 P L^3}{3\\pi E\\,\\delta_{allow}}\\right)^{1/4} = \\left(\\frac{4(3000)(600)^3}{3\\pi(207{,}000)(0.60)}\\right)^{1/4} = \\textcolor{#D85A30}{38.6\\ \\text{mm}} \\rightarrow d = 40\\ \\text{mm}$$</div>"
       +"<div class='calc'>$$\\text{verify at } 40\\ \\text{mm}: \\ \\delta = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(40)^4} = \\textcolor{#D85A30}{0.519\\ \\text{mm}} < 0.60 \\ \\checkmark$$</div>" },

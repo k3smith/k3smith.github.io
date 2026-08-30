@@ -68,7 +68,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 2.7-A: Setting up the stress element for a shaft",
-  statement: "A $30\\ \\text{mm}$ diameter shaft carries a bending moment $M = 500\\ \\text{N·m}$ and transmits a torque $T = 800\\ \\text{N·m}$. Set up the stress element at the critical point on the shaft surface, that is, find $\\sigma_x$, $\\sigma_y$, and $\\tau_{xy}$."
+  statement: "A $30\\ \\text{mm}$ diameter shaft carries a bending moment $M = 500\\ \\text{N}\\cdot\\text{m}$ and transmits a torque $T = 800\\ \\text{N}\\cdot\\text{m}$. Set up the stress element at the critical point on the shaft surface, that is, find $\\sigma_x$, $\\sigma_y$, and $\\tau_{xy}$."
 };
 
 var SKETCH = '<svg viewBox="0 0 460 190" role="img" aria-label="A small square stress element on a shaft surface with normal stress sigma-x on the vertical faces and shear stress tau-xy on all faces.">'
@@ -91,8 +91,8 @@ var STEPS = [
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
       +"<li>$d = 30\\ \\text{mm}$</li>"
-      +"<li>$M = 500\\ \\text{N·m} = 500{,}000\\ \\text{N·mm}$</li>"
-      +"<li>$T = 800\\ \\text{N·m} = 800{,}000\\ \\text{N·mm}$</li></ul>"
+      +"<li>$M = 500\\ \\text{N}\\cdot\\text{m} = 500{,}000\\ \\text{N}\\cdot\\text{mm}$</li>"
+      +"<li>$T = 800\\ \\text{N}\\cdot\\text{m} = 800{,}000\\ \\text{N}\\cdot\\text{mm}$</li></ul>"
       +"<p><strong>Find:</strong> the stress element $\\sigma_x$, $\\sigma_y$, $\\tau_{xy}$ at the critical surface point.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
     html:"<p>Assumptions: the critical point is on the outer surface, where both bending and torsional stresses peak; bending acts along the shaft axis ($\\sigma_x$); torsion acts as shear ($\\tau_{xy}$); there is no circumferential normal stress, so $\\sigma_y = 0$ (plane stress).</p>"
@@ -102,8 +102,8 @@ var STEPS = [
     html:"<p>Section properties, then the two stress components:</p>"
       +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$\\sigma_x = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
-      +"<div class='calc'>$$\\tau_{xy} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
+    html:"<div class='calc'>$$\\sigma_x = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{T}{J/c} = \\frac{T}{\\pi d^3/16} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The torsion polar term $J/c$ is exactly twice the bending term $S$ for a solid circle, which the numbers confirm ($5301 = 2\\times2651$).</li>"

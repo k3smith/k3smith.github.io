@@ -68,7 +68,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 2.6-A: Stepped shaft with a shoulder fillet",
-  statement: "A stepped shaft has a large diameter $D = 40\\ \\text{mm}$, a small diameter $d = 30\\ \\text{mm}$, and a fillet radius $r = 3\\ \\text{mm}$ at the shoulder. It carries a bending moment $M = 200\\ \\text{N·m}$ at the step. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Find the actual maximum stress at the fillet and the static safety factor."
+  statement: "A stepped shaft has a large diameter $D = 40\\ \\text{mm}$, a small diameter $d = 30\\ \\text{mm}$, and a fillet radius $r = 3\\ \\text{mm}$ at the shoulder. It carries a bending moment $M = 200\\ \\text{N}\\cdot\\text{m}$ at the step. The material is SAE 4140 OQT 1300 ($S_y = 690\\ \\text{MPa}$). Find the actual maximum stress at the fillet and the static safety factor."
 };
 
 var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A stepped shaft with a large and small diameter joined by a fillet radius at the shoulder, loaded in bending.">'
@@ -91,7 +91,7 @@ var STEPS = [
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
       +"<li>$D = 40\\ \\text{mm}$, $d = 30\\ \\text{mm}$, $r = 3\\ \\text{mm}$</li>"
-      +"<li>$M = 200\\ \\text{N·m} = 200{,}000\\ \\text{N·mm}$</li>"
+      +"<li>$M = 200\\ \\text{N}\\cdot\\text{m} = 200{,}000\\ \\text{N}\\cdot\\text{mm}$</li>"
       +"<li>SAE 4140 OQT 1300, $S_y = 690\\ \\text{MPa}$</li></ul>"
       +"<p><strong>Find:</strong> the nominal stress, the maximum stress at the fillet, and the static safety factor.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
@@ -102,9 +102,10 @@ var STEPS = [
     html:"<p>Nominal bending stress, the geometry ratios that set $K_t$, and the peak stress:</p>"
       +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\sigma_{nom} = \\frac{M}{S} \\\\[4pt] \\frac{r}{d}&,\\ \\frac{D}{d} \\ \\Rightarrow\\ K_t \\ (\\text{chart}) \\\\[4pt] \\sigma_{max} &= K_t\\,\\sigma_{nom} \\qquad N = \\frac{S_y}{\\sigma_{max}} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$\\sigma_{nom} = \\frac{32M}{\\pi d^3} = \\frac{32(200{,}000)}{\\pi(30)^3} = 75.4\\ \\text{MPa}$$</div>"
+    html:"<div class='calc'>$$\\sigma_{nom} = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(200{,}000)}{\\pi(30)^3} = 75.4\\ \\text{MPa}$$</div>"
       +"<div class='calc'>$$\\frac{r}{d} = \\frac{3}{30} = 0.10, \\quad \\frac{D}{d} = \\frac{40}{30} = 1.33 \\ \\Rightarrow\\ K_t \\approx 1.75$$</div>"
-      +"<div class='calc'>$$\\sigma_{max} = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(200{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{132.0\\ \\text{MPa}}, \\qquad N = \\frac{\\pi d^3 S_y}{32 K_t M} = \\textcolor{#D85A30}{5.23}$$</div>"
+      +"<div class='calc'>$$\\sigma_{max} = K_t\\,\\sigma_{nom} = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(200{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{132.0\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma_{max}} = \\frac{S_y}{32 K_t M/(\\pi d^3)} = \\frac{\\pi d^3 S_y}{32 K_t M} = \\frac{\\pi(30)^3(690)}{32(1.75)(200{,}000)} = \\textcolor{#D85A30}{5.23}$$</div>"
       +"<p class='note'>If instead you take the ductile static shortcut and use $\\sigma_{nom}$ (local yielding blunts the peak): $N = \\pi d^3 S_y/(32M) = 9.15$. The $K_t$-based value is the conservative choice.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
