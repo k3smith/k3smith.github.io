@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -100,15 +101,24 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 5, distortion-energy theory $\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2}$ (plane stress), $N = S_y/\\sigma'$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Apply $K_t$, form the von Mises stress, and take the safety factor:</p>"
-      +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$"
-      +"<p>$\\sigma_{nom}$ and $\\tau_{nom}$ are the nominal bending and torsional stresses carried over from Page 2.7, each amplified by the <em>stress-concentration factor</em> $K_t$ at the fillet. $\\sigma'=\\sqrt{\\sigma_x^2+3\\tau_{xy}^2}$ is the <em>von Mises</em> (distortion-energy) equivalent stress for this plane-stress state &mdash; a single value combining the normal and shear stresses so it can be compared directly with the yield strength &mdash; and $N=S_y/\\sigma'$ is the resulting safety factor against yielding.</p>" },
+      +"<p class='eq-label'>Local bending and torsional stresses with stress concentration:</p>"
+      +"$$\\sigma_x = K_t\\,\\sigma_{nom} = \\frac{32 K_t M}{\\pi d^3}, \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} = \\frac{16 K_t T}{\\pi d^3}$$"
+      +"<p class='eq-label'>von Mises equivalent stress (plane stress, $\\sigma_y = 0$):</p>"
+      +"$$\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2}$$"
+      +"<p class='eq-label'>Safety factor against yielding:</p>"
+      +"$$N = \\frac{S_y}{\\sigma'}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>First pass, $d = 30\\ \\text{mm}$:</strong></p>"
-      +"<div class='calc'>$$\\sigma_x = K_t\\,\\sigma_{nom} = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000)}{\\pi(30)^3} = 330.1\\ \\text{MPa}, \\quad \\tau_{xy} = K_t\\,\\tau_{nom} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000)}{\\pi(30)^3} = 264.1\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\textcolor{#D85A30}{564.1\\ \\text{MPa}}, \\quad N = \\frac{S_y}{\\sigma'} = \\frac{690}{564.1} = \\textcolor{#D85A30}{1.22}$$</div>"
+      +"<div class='calc'>$$\\sigma_x = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(30\\ \\text{mm})^3} = 330.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(30\\ \\text{mm})^3} = 264.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\textcolor{#D85A30}{564.1\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma'} = \\frac{690\\ \\text{MPa}}{564.1\\ \\text{MPa}} = \\textcolor{#D85A30}{1.22}$$</div>"
       +"<p><strong>Redesign, $d = 40\\ \\text{mm}$</strong> (larger $d$ improves $r/d$, so $K_t \\approx 1.65$):</p>"
-      +"<div class='calc'>$$\\sigma_x = \\frac{32(1.65)(500{,}000)}{\\pi(40)^3} = 131.3\\ \\text{MPa}, \\quad \\tau_{xy} = \\frac{16(1.65)(800{,}000)}{\\pi(40)^3} = 105.0\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma' = \\sqrt{(131.3)^2 + 3(105.0)^2} = \\textcolor{#D85A30}{224.3\\ \\text{MPa}}, \\quad N = \\frac{690}{224.3} = \\textcolor{#D85A30}{3.08}\\ \\checkmark$$</div>" },
+      +"<div class='calc'>$$\\sigma_x = \\frac{32(1.65)(500{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(40\\ \\text{mm})^3} = 131.3\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{16(1.65)(800{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(40\\ \\text{mm})^3} = 105.0\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{(131.3)^2 + 3(105.0)^2} = \\textcolor{#D85A30}{224.3\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{690\\ \\text{MPa}}{224.3\\ \\text{MPa}} = \\textcolor{#D85A30}{3.08}\\ \\checkmark$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}/\\text{mm}^3 = \\text{N/mm}^2 = \\text{MPa}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The first pass at $N = 1.22$ is clearly too low, as expected once $K_t$, bending, and torsion stack up.</li>"

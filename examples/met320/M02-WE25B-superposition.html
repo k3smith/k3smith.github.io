@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -100,14 +101,22 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Appendix 14 (beam-deflection formulas). For $a \\le L/2$: $\\delta(L/2) = \\dfrac{P a (3L^2 - 4a^2)}{48 E I}$; use the table rather than deriving.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Section property, the midspan formula for each load, then superpose:</p>"
-      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\\\[4pt] \\delta_i(L/2) &= \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E I} \\quad (a_i \\le L/2,\\ \\text{measured from nearer support}) \\\\[4pt] \\delta_{total} &= \\delta_1 + \\delta_2 \\end{aligned}$$"
-      +"<p>$I=\\pi d^4/64$ is the <em>area moment of inertia</em> of the shaft. The second relation is the standard midspan-deflection formula (Mott Appendix 14) for a single off-centre load $P_i$ acting at distance $a_i$ from the nearer support on a span $L$, with $E$ the elastic modulus. Because the material stays linear-elastic, the two loads' deflections simply add: $\\delta_{total}=\\delta_1+\\delta_2$.</p>" },
+      +"<p class='eq-label'>Area moment of inertia:</p>"
+      +"$$I = \\frac{\\pi d^4}{64}$$"
+      +"<p class='eq-label'>Midspan deflection for one off-centre load (Mott A14; $a \\le L/2$ from nearer support):</p>"
+      +"$$\\delta_i(L/2) = \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E I}$$"
+      +"<p class='eq-label'>Substitute $I$ into $\\delta_i$:</p>"
+      +"$$\\delta_i = \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E(\\pi d^4/64)} = \\frac{4 P_i\\, a_i\\,(3L^2 - 4a_i^2)}{3\\pi E d^4}$$"
+      +"<p class='eq-label'>Superposition (linear-elastic material):</p>"
+      +"$$\\delta_{total} = \\delta_1 + \\delta_2$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(45)^4}{64} = 201{,}289\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\delta_i = \\frac{P a (3L^2 - 4a^2)}{48 E I} = \\frac{P a (3L^2 - 4a^2)}{48 E(\\pi d^4/64)} = \\frac{4 P a (3L^2 - 4a^2)}{3\\pi E d^4}, \\qquad 3L^2 - 4a^2 = 3(1000)^2 - 4(300)^2 = 2{,}640{,}000$$</div>"
-      +"<div class='calc'>$$\\delta_1 = \\frac{4(4000)(300)(2{,}640{,}000)}{3\\pi(207{,}000)(45)^4} = \\textcolor{#D85A30}{1.58\\ \\text{mm}}$$</div>"
-      +"<div class='calc'>$$\\delta_2 = \\frac{4(2000)(300)(2{,}640{,}000)}{3\\pi(207{,}000)(45)^4} = \\textcolor{#D85A30}{0.79\\ \\text{mm}} \\quad (P_2\\ \\text{is}\\ 300\\ \\text{mm from the right support})$$</div>"
-      +"<div class='calc'>$$\\delta_{total} = 1.58 + 0.79 = \\textcolor{#D85A30}{2.37\\ \\text{mm}} > \\delta_{allow} = 1.0\\ \\text{mm} \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>" },
+    html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(45\\ \\text{mm})^4}{64} = 201{,}289\\ \\text{mm}^4$$</div>"
+      +"<div class='calc'>$$3L^2 - 4a^2 = 3(1000\\ \\text{mm})^2 - 4(300\\ \\text{mm})^2 = 2{,}640{,}000\\ \\text{mm}^2$$</div>"
+      +"<div class='calc'>$$\\delta_i = \\frac{4 P a (3L^2 - 4a^2)}{3\\pi E d^4}$$</div>"
+      +"<div class='calc'>$$\\delta_1 = \\frac{4(4000\\ \\text{N})(300\\ \\text{mm})(2{,}640{,}000\\ \\text{mm}^2)}{3\\pi(207{,}000\\ \\text{MPa})(45\\ \\text{mm})^4} = \\textcolor{#D85A30}{1.58\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\delta_2 = \\frac{4(2000\\ \\text{N})(300\\ \\text{mm})(2{,}640{,}000\\ \\text{mm}^2)}{3\\pi(207{,}000\\ \\text{MPa})(45\\ \\text{mm})^4} = \\textcolor{#D85A30}{0.79\\ \\text{mm}}\\quad (P_2\\ \\text{is }300\\ \\text{mm from the right support})$$</div>"
+      +"<div class='calc'>$$\\delta_{total} = 1.58 + 0.79 = \\textcolor{#D85A30}{2.37\\ \\text{mm}} > \\delta_{allow} = 1.0\\ \\text{mm} \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}\\cdot\\text{mm}^2/(\\text{MPa}\\cdot\\text{mm}^4) = \\text{mm}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The heavier, more central load contributes about twice the deflection of the lighter, more off-center one ($1.58$ vs $0.79\\ \\text{mm}$), which matches intuition.</li>"

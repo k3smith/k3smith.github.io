@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -113,8 +114,18 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, direct shear $\\tau = F/A_s$ and bearing stress $\\sigma_b = F/(t\\,d)$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Shear on the pin (two planes) and bearing on one leg:</p>"
-      +"$$\\begin{aligned} A_s &= 2\\cdot\\frac{\\pi d^2}{4} = \\frac{\\pi d^2}{2} \\\\[4pt] \\tau &= \\frac{F}{A_s} = \\frac{F}{\\pi d^2/2} = \\frac{2F}{\\pi d^2} \\\\[4pt] N_{shear} &= \\frac{S_{sy}}{\\tau} = \\frac{S_{sy}}{2F/(\\pi d^2)} = \\frac{\\pi d^2 S_{sy}}{2F} \\\\[4pt] \\sigma_b &= \\frac{F/2}{t\\,d} = \\frac{F}{2t\\,d} \\\\[4pt] N_{bearing} &= \\frac{S_y}{\\sigma_b} = \\frac{S_y}{F/(2t\\,d)} = \\frac{2t\\,d\\,S_y}{F} \\end{aligned}$$"
-      +"<p>The pin is in <em>double shear</em>, so its total shear area is $A_s=2(\\pi d^2/4)$ (two cross-sections carry the load) and $\\tau=F/A_s$ is the average shear stress in the pin. $\\sigma_b=(F/2)/(t\\,d)$ is the bearing (contact) stress on one clevis leg: each leg carries half the load $F/2$ over its projected area $t\\,d$. $N_{shear}$ and $N_{bearing}$ are the safety factors against shear yielding (with $S_{sy}\\approx0.5\\,S_y$) and bearing yielding. $d$ is the pin diameter, $t$ the leg thickness.</p>" },
+      +"<p class='eq-label'>Shear area in double shear (two cross-sections):</p>"
+      +"$$A_s = 2\\cdot\\frac{\\pi d^2}{4} = \\frac{\\pi d^2}{2}$$"
+      +"<p class='eq-label'>Average shear stress in the pin:</p>"
+      +"$$\\tau = \\frac{F}{A_s}$$"
+      +"<p class='eq-label'>Substitute $A_s$ into $\\tau$:</p>"
+      +"$$\\tau = \\frac{F}{\\pi d^2/2} = \\frac{2F}{\\pi d^2}$$"
+      +"<p class='eq-label'>Shear safety factor (with $S_{sy} \\approx 0.5\\,S_y$):</p>"
+      +"$$N_{shear} = \\frac{S_{sy}}{\\tau} = \\frac{S_{sy}}{2F/(\\pi d^2)} = \\frac{\\pi d^2 S_{sy}}{2F}$$"
+      +"<p class='eq-label'>Bearing stress on one clevis leg (each carries $F/2$):</p>"
+      +"$$\\sigma_b = \\frac{F/2}{t\\,d} = \\frac{F}{2t\\,d}$$"
+      +"<p class='eq-label'>Bearing safety factor:</p>"
+      +"$$N_{bearing} = \\frac{S_y}{\\sigma_b} = \\frac{S_y}{F/(2t\\,d)} = \\frac{2t\\,d\\,S_y}{F}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$A_s = \\frac{\\pi d^2}{2} = \\frac{\\pi(12\\ \\text{mm})^2}{2} = 226.2\\ \\text{mm}^2$$</div>"
       +"<div class='calc'>$$\\tau = \\frac{F}{A_s} = \\frac{F}{\\pi d^2/2} = \\frac{2F}{\\pi d^2} = \\frac{2(16{,}000\\ \\text{N})}{\\pi(12\\ \\text{mm})^2} = \\textcolor{#D85A30}{70.7\\ \\text{MPa}}$$</div>"

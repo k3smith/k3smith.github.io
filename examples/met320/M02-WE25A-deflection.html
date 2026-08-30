@@ -31,6 +31,8 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .eq-label:first-of-type { margin-top:0; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -98,15 +100,24 @@ var STEPS = [
       + SKETCH
       + "<p class='cite'>Reference: Mott Appendix 14 (beam-deflection formulas), central load $\\delta_{max} = PL^3/(48EI)$, with $I = \\pi d^4/64$.</p>" },
   { label:"Equations", title:"Equations",
-    html:"<p>Deflection and the limit, then invert for the required moment of inertia and diameter:</p>"
-      +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\qquad \\delta_{max} = \\frac{P L^3}{48 E I} \\qquad \\delta_{allow} = \\frac{L}{1000} \\\\[4pt] I_{req} &= \\frac{P L^3}{48 E\\,\\delta_{allow}} \\qquad d = \\left(\\frac{64\\,I_{req}}{\\pi}\\right)^{1/4} \\end{aligned}$$"
-      +"<p>$I=\\pi d^4/64$ is the <em>area moment of inertia</em> of the solid round shaft. $\\delta_{max}=PL^3/(48EI)$ is the midspan deflection of a simply supported beam under a central load $P$, where $E$ is the <em>modulus of elasticity</em> (material stiffness); $\\delta_{allow}=L/1000$ is the stiffness limit. The second row inverts the deflection formula to find the required $I$ and the diameter $d$ that delivers it.</p>" },
+    html:"<p>Deflection and the limit, then invert for the required diameter:</p>"
+      +"<p class='eq-label'>Area moment of inertia:</p>"
+      +"$$I = \\frac{\\pi d^4}{64}$$"
+      +"<p class='eq-label'>Midspan deflection under a central load (Mott A14-1):</p>"
+      +"$$\\delta_{max} = \\frac{P L^3}{48 E I}$$"
+      +"<p class='eq-label'>Substitute $I$ into $\\delta_{max}$:</p>"
+      +"$$\\delta_{max} = \\frac{P L^3}{48 E(\\pi d^4/64)} = \\frac{4 P L^3}{3\\pi E d^4}$$"
+      +"<p class='eq-label'>Allowable deflection:</p>"
+      +"$$\\delta_{allow} = \\frac{L}{1000}$$"
+      +"<p class='eq-label'>Set $\\delta_{max} = \\delta_{allow}$ and solve for $d$:</p>"
+      +"$$d = \\left(\\frac{4 P L^3}{3\\pi E\\,\\delta_{allow}}\\right)^{1/4}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(30)^4}{64} = 39{,}761\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\delta = \\frac{P L^3}{48 E I} = \\frac{P L^3}{48 E(\\pi d^4/64)} = \\frac{4 P L^3}{3\\pi E d^4} = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(30)^4} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"
-      +"<div class='calc'>$$\\delta_{allow} = \\frac{L}{1000} = 0.60\\ \\text{mm} \\ \\Rightarrow\\ 1.64 > 0.60 \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>"
-      +"<div class='calc'>$$d = \\left(\\frac{4 P L^3}{3\\pi E\\,\\delta_{allow}}\\right)^{1/4} = \\left(\\frac{4(3000)(600)^3}{3\\pi(207{,}000)(0.60)}\\right)^{1/4} = \\textcolor{#D85A30}{38.6\\ \\text{mm}} \\rightarrow d = 40\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$\\text{verify at } 40\\ \\text{mm}: \\ \\delta = \\frac{4(3000)(600)^3}{3\\pi(207{,}000)(40)^4} = \\textcolor{#D85A30}{0.519\\ \\text{mm}} < 0.60 \\ \\checkmark$$</div>" },
+    html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(30\\ \\text{mm})^4}{64} = 39{,}761\\ \\text{mm}^4$$</div>"
+      +"<div class='calc'>$$\\delta_{max} = \\frac{P L^3}{48 E I} = \\frac{P L^3}{48 E(\\pi d^4/64)} = \\frac{4 P L^3}{3\\pi E d^4} = \\frac{4(3000\\ \\text{N})(600\\ \\text{mm})^3}{3\\pi(207{,}000\\ \\text{MPa})(30\\ \\text{mm})^4} = \\textcolor{#D85A30}{1.64\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\delta_{allow} = \\frac{L}{1000} = \\frac{600\\ \\text{mm}}{1000} = 0.60\\ \\text{mm} \\quad\\Rightarrow\\quad 1.64 > 0.60 \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>"
+      +"<div class='calc'>$$d = \\left(\\frac{4 P L^3}{3\\pi E\\,\\delta_{allow}}\\right)^{1/4} = \\left(\\frac{4(3000\\ \\text{N})(600\\ \\text{mm})^3}{3\\pi(207{,}000\\ \\text{MPa})(0.60\\ \\text{mm})}\\right)^{1/4} = \\textcolor{#D85A30}{38.6\\ \\text{mm}} \\rightarrow d = 40\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$\\text{verify at } 40\\ \\text{mm}:\\quad \\delta_{max} = \\frac{4(3000\\ \\text{N})(600\\ \\text{mm})^3}{3\\pi(207{,}000\\ \\text{MPa})(40\\ \\text{mm})^4} = \\textcolor{#D85A30}{0.519\\ \\text{mm}} < 0.60 \\ \\checkmark$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}^3/(\\text{MPa}\\cdot\\text{mm}^4) = \\text{mm}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>Deflection is about $1.6\\ \\text{mm}$ at 30 mm, clearly over the $0.6\\ \\text{mm}$ limit, so a resize is expected.</li>"

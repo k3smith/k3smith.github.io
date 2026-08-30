@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -102,12 +103,19 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 4, Mohr's circle; center $C = (\\sigma_x+\\sigma_y)/2$, radius $R = \\sqrt{((\\sigma_x-\\sigma_y)/2)^2 + \\tau_{xy}^2}$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Center, radius, and the principal and maximum-shear values:</p>"
-      +"$$\\begin{aligned} C &= \\frac{\\sigma_x + \\sigma_y}{2} \\qquad R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2} \\\\[4pt] \\sigma_1 &= C + R \\qquad \\sigma_2 = C - R \\qquad \\tau_{max} = R \\end{aligned}$$"
-      +"<p>$C$ is the <em>centre</em> of Mohr's circle (the average normal stress) and $R$ is its <em>radius</em>; $\\sigma_x$, $\\sigma_y$, and $\\tau_{xy}$ are the normal and shear stresses on the element from Page 2.7. The principal stresses are $\\sigma_1=C+R$ and $\\sigma_2=C-R$ (the largest and smallest normal stresses, where shear vanishes), and $\\tau_{max}=R$ is the maximum shear stress.</p>" },
+      +"<p class='eq-label'>Center of Mohr's circle (average normal stress):</p>"
+      +"$$C = \\frac{\\sigma_x + \\sigma_y}{2}$$"
+      +"<p class='eq-label'>Radius of Mohr's circle:</p>"
+      +"$$R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2}$$"
+      +"<p class='eq-label'>Principal stresses (normal stresses where shear vanishes):</p>"
+      +"$$\\sigma_1 = C + R, \\qquad \\sigma_2 = C - R$$"
+      +"<p class='eq-label'>Maximum shear stress:</p>"
+      +"$$\\tau_{max} = R$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$C = \\frac{188.6 + 0}{2} = 94.3\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$R = \\sqrt{(94.3)^2 + (150.9)^2} = \\sqrt{8892 + 22{,}771} = \\sqrt{31{,}663} = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$\\sigma_1 = 94.3 + 177.9 = \\textcolor{#D85A30}{272.2\\ \\text{MPa}}, \\quad \\sigma_2 = 94.3 - 177.9 = \\textcolor{#D85A30}{-83.6\\ \\text{MPa}}$$</div>"
+    html:"<div class='calc'>$$C = \\frac{\\sigma_x + \\sigma_y}{2} = \\frac{188.6\\ \\text{MPa} + 0}{2} = 94.3\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$R = \\sqrt{\\left(\\frac{\\sigma_x - \\sigma_y}{2}\\right)^2 + \\tau_{xy}^2} = \\sqrt{(94.3\\ \\text{MPa})^2 + (150.9\\ \\text{MPa})^2} = \\sqrt{8892 + 22{,}771} = \\sqrt{31{,}663} = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\sigma_1 = C + R = 94.3 + 177.9 = \\textcolor{#D85A30}{272.2\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\sigma_2 = C - R = 94.3 - 177.9 = \\textcolor{#D85A30}{-83.6\\ \\text{MPa}}$$</div>"
       +"<div class='calc'>$$\\tau_{max} = R = \\textcolor{#D85A30}{177.9\\ \\text{MPa}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"

@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -98,17 +99,26 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending stress $\\sigma = M/S$ with section modulus $S = \\pi d^3/32$; $M = WL/4$ for a central load.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Bending stress and safety factor, then invert for the required diameter:</p>"
-      +"$$\\begin{aligned} M &= \\frac{WL}{4} \\qquad S = \\frac{\\pi d^3}{32} \\qquad \\sigma = \\frac{M}{S} \\qquad N = \\frac{S_y}{\\sigma} \\\\[4pt] \\sigma_{allow} &= \\frac{S_y}{N} \\qquad S_{req} = \\frac{M}{\\sigma_{allow}} \\qquad d = \\left(\\frac{32\\,S_{req}}{\\pi}\\right)^{1/3} \\end{aligned}$$"
-      +"<p>$M=WL/4$ is the maximum bending moment for a central load $W$ on a simply supported span $L$. $S=\\pi d^3/32$ is the <em>elastic section modulus</em> of a solid round bar &mdash; a purely geometric measure of its bending resistance &mdash; so $\\sigma=M/S$ is the maximum bending stress and $N=S_y/\\sigma$ the safety factor against yielding. The second row inverts these to size the bar: $\\sigma_{allow}$ is the allowable stress at the target $N$, $S_{req}$ the section modulus it demands, and $d$ the diameter that provides it.</p>" },
+      +"<p class='eq-label'>Maximum bending moment (central load on a simply supported span):</p>"
+      +"$$M = \\frac{W L}{4}$$"
+      +"<p class='eq-label'>Elastic section modulus of a solid round bar:</p>"
+      +"$$S = \\frac{\\pi d^3}{32}$$"
+      +"<p class='eq-label'>Maximum bending stress:</p>"
+      +"$$\\sigma = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3}$$"
+      +"<p class='eq-label'>Safety factor against yielding:</p>"
+      +"$$N = \\frac{S_y}{\\sigma} = \\frac{\\pi d^3 S_y}{32M}$$"
+      +"<p class='eq-label'>Invert for the diameter that meets a target $N$:</p>"
+      +"$$d = \\left(\\frac{32 M N}{\\pi S_y}\\right)^{1/3}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>Part (a): check the current 25 mm beam</strong></p>"
-      +"<div class='calc'>$$M = \\frac{WL}{4} = \\frac{2000(500)}{4} = 250{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"
-      +"<div class='calc'>$$\\sigma = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(250{,}000)}{\\pi(25)^3} = \\textcolor{#D85A30}{163\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{S_y}{32M/(\\pi d^3)} = \\frac{\\pi d^3 S_y}{32M} = \\frac{\\pi(25)^3(207)}{32(250{,}000)} = \\textcolor{#D85A30}{1.27}$$</div>"
+      +"<div class='calc'>$$M = \\frac{W L}{4} = \\frac{(2000\\ \\text{N})(500\\ \\text{mm})}{4} = 250{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(250{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(25\\ \\text{mm})^3} = \\textcolor{#D85A30}{163\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{S_y}{32M/(\\pi d^3)} = \\frac{\\pi d^3 S_y}{32M} = \\frac{\\pi(25\\ \\text{mm})^3(207\\ \\text{MPa})}{32(250{,}000\\ \\text{N}\\cdot\\text{mm})} = \\textcolor{#D85A30}{1.27}$$</div>"
       +"<p>$N = 1.27$ is inadequate for most applications.</p>"
       +"<p><strong>Part (b): required diameter for $N = 2$</strong></p>"
-      +"<div class='calc'>$$d = \\left(\\frac{32 M N}{\\pi S_y}\\right)^{1/3} = \\left(\\frac{32(250{,}000)(2)}{\\pi(207)}\\right)^{1/3} = (24{,}604)^{1/3} = \\textcolor{#D85A30}{29.1\\ \\text{mm}} \\rightarrow \\text{specify } d = 30\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$\\text{verify at } 30\\ \\text{mm}: \\ N = \\frac{\\pi(30)^3(207)}{32(250{,}000)} = \\textcolor{#D85A30}{2.19}\\ \\checkmark$$</div>" },
+      +"<div class='calc'>$$d = \\left(\\frac{32 M N}{\\pi S_y}\\right)^{1/3} = \\left(\\frac{32(250{,}000\\ \\text{N}\\cdot\\text{mm})(2)}{\\pi(207\\ \\text{MPa})}\\right)^{1/3} = (24{,}604)^{1/3} = \\textcolor{#D85A30}{29.1\\ \\text{mm}} \\rightarrow \\text{specify } d = 30\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$\\text{verify at } 30\\ \\text{mm}:\\quad N = \\frac{\\pi(30\\ \\text{mm})^3(207\\ \\text{MPa})}{32(250{,}000\\ \\text{N}\\cdot\\text{mm})} = \\textcolor{#D85A30}{2.19}\\ \\checkmark$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}/\\text{mm}^3 = \\text{N/mm}^2 = \\text{MPa}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The current design is under $N = 2$, and a modest bump from 25 to 30 mm clears it, a believable, small design change.</li>"

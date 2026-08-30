@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -107,14 +108,23 @@ var STEPS = [
 
   { label:"Equations", title:"Equations",
     html:"<p>Write the relationships symbolically before substituting numbers:</p>"
-      +"$$\\begin{aligned} T &= \\frac{9549\\,P}{n} \\quad (P\\ \\text{in kW},\\ n\\ \\text{in rpm},\\ T\\ \\text{in N}\\cdot\\text{m}) \\\\[4pt] J &= \\frac{\\pi d^4}{32} \\qquad c = \\frac{d}{2} \\\\[4pt] \\tau_{max} &= \\frac{T c}{J} \\\\[4pt] N &= \\frac{S_{sy}}{\\tau_{max}}, \\qquad S_{sy} \\approx 0.5\\,S_y \\end{aligned}$$"
-      +"<p>The first relation converts transmitted power to torque ($P$ in kW, $n$ in rev/min). $J=\\pi d^4/32$ is the <em>polar moment of inertia</em> of the solid circular section and $c=d/2$ is the outer-fibre radius; together $\\tau_{max}=Tc/J$ is the torsion shear-stress formula, which peaks at the surface. $N=S_{sy}/\\tau_{max}$ is the safety factor against shear yielding, with the shear yield strength estimated as $S_{sy}\\approx0.5\\,S_y$.</p>" },
+      +"<p class='eq-label'>Torque from transmitted power ($P$ in kW, $n$ in rpm, $T$ in N·m):</p>"
+      +"$$T = \\frac{9549\\,P}{n}$$"
+      +"<p class='eq-label'>Polar moment of inertia and outer-fibre radius:</p>"
+      +"$$J = \\frac{\\pi d^4}{32}, \\qquad c = \\frac{d}{2}$$"
+      +"<p class='eq-label'>Maximum torsional shear stress:</p>"
+      +"$$\\tau_{max} = \\frac{T c}{J}$$"
+      +"<p class='eq-label'>Substitute $J$ and $c$ into $\\tau_{max}$:</p>"
+      +"$$\\tau_{max} = \\frac{T(d/2)}{\\pi d^4/32} = \\frac{16T}{\\pi d^3}$$"
+      +"<p class='eq-label'>Shear yield estimate and safety factor:</p>"
+      +"$$S_{sy} \\approx 0.5\\,S_y, \\qquad N = \\frac{S_{sy}}{\\tau_{max}} = \\frac{\\pi d^3 S_{sy}}{16T}$$" },
 
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$T = \\frac{9549\\,P}{n} = \\frac{9549(15)}{1450} = \\textcolor{#D85A30}{98.8\\ \\text{N}\\cdot\\text{m}} = 98{,}800\\ \\text{N}\\cdot\\text{mm}$$</div>"
-      +"<div class='calc'>$$J = \\frac{\\pi d^4}{32} = \\frac{\\pi(30)^4}{32} = 79{,}522\\ \\text{mm}^4, \\qquad c = \\frac{d}{2} = 15\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$\\tau_{max} = \\frac{Tc}{J} = \\frac{T(d/2)}{\\pi d^4/32} = \\frac{16T}{\\pi d^3} = \\frac{16(98{,}800)}{\\pi(30)^3} = \\textcolor{#D85A30}{18.6\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$S_{sy} = 0.5\\,S_y = 0.5(490) = 245\\ \\text{MPa}, \\qquad N = \\frac{S_{sy}}{\\tau_{max}} = \\frac{S_{sy}}{16T/(\\pi d^3)} = \\frac{\\pi d^3 S_{sy}}{16T} = \\frac{\\pi(30)^3(245)}{16(98{,}800)} = \\textcolor{#D85A30}{13.1}$$</div>"
+    html:"<div class='calc'>$$T = \\frac{9549\\,P}{n} = \\frac{9549(15\\ \\text{kW})}{1450\\ \\text{rpm}} = \\textcolor{#D85A30}{98.8\\ \\text{N}\\cdot\\text{m}} = 98{,}800\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$J = \\frac{\\pi d^4}{32} = \\frac{\\pi(30\\ \\text{mm})^4}{32} = 79{,}522\\ \\text{mm}^4, \\qquad c = \\frac{d}{2} = 15\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$\\tau_{max} = \\frac{T c}{J} = \\frac{T(d/2)}{\\pi d^4/32} = \\frac{16T}{\\pi d^3} = \\frac{16(98{,}800\\ \\text{N}\\cdot\\text{mm})}{\\pi(30\\ \\text{mm})^3} = \\textcolor{#D85A30}{18.6\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$S_{sy} = 0.5\\,S_y = 0.5(490\\ \\text{MPa}) = 245\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_{sy}}{\\tau_{max}} = \\frac{S_{sy}}{16T/(\\pi d^3)} = \\frac{\\pi d^3 S_{sy}}{16T} = \\frac{\\pi(30\\ \\text{mm})^3(245\\ \\text{MPa})}{16(98{,}800\\ \\text{N}\\cdot\\text{mm})} = \\textcolor{#D85A30}{13.1}$$</div>"
       +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm} \\times \\text{mm} / \\text{mm}^4 = \\text{N/mm}^2 = \\text{MPa}$.</p>" },
 
   { label:"Check", title:"Check for reasonableness",

@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -100,13 +101,25 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending stress $\\sigma = Mc/I$ with $I = bh^3/12$, $c = h/2$; $M = WL$ for a cantilever end load.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Moment at the wall, section properties, bending stress, and section modulus:</p>"
-      +"$$\\begin{aligned} M &= W L \\qquad I = \\frac{b h^3}{12} \\qquad c = \\frac{h}{2} \\\\[4pt] \\sigma &= \\frac{M c}{I} \\qquad N = \\frac{S_y}{\\sigma} \\qquad S = \\frac{I}{c} \\end{aligned}$$"
-      +"<p>$M=WL$ is the bending moment at the wall of the cantilever. $I=bh^3/12$ is the <em>area moment of inertia</em> of the rectangular section about its neutral axis and $c=h/2$ is the distance from that axis to the outer fibre, so $\\sigma=Mc/I$ is the maximum bending stress and $N=S_y/\\sigma$ the safety factor. $S=I/c$ is the section modulus, used here to compare with an equivalent round bar; $b$ and $h$ are the section width and height.</p>" },
+      +"<p class='eq-label'>Bending moment at the wall of the cantilever:</p>"
+      +"$$M = W L$$"
+      +"<p class='eq-label'>Area moment of inertia and distance to the outer fibre:</p>"
+      +"$$I = \\frac{b h^3}{12}, \\qquad c = \\frac{h}{2}$$"
+      +"<p class='eq-label'>Maximum bending stress:</p>"
+      +"$$\\sigma = \\frac{M c}{I}$$"
+      +"<p class='eq-label'>Substitute $I$ and $c$ into $\\sigma$:</p>"
+      +"$$\\sigma = \\frac{M(h/2)}{b h^3/12} = \\frac{6M}{b h^2}$$"
+      +"<p class='eq-label'>Safety factor against yielding:</p>"
+      +"$$N = \\frac{S_y}{\\sigma} = \\frac{b h^2 S_y}{6M}$$"
+      +"<p class='eq-label'>Section modulus, and an equal-$S$ round diameter:</p>"
+      +"$$S = \\frac{I}{c} = \\frac{b h^2}{6}, \\qquad d = \\left(\\frac{32 S}{\\pi}\\right)^{1/3}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$M = WL = 5000(200) = 1{,}000{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"
-      +"<div class='calc'>$$\\sigma = \\frac{Mc}{I} = \\frac{M(h/2)}{b h^3/12} = \\frac{6M}{b h^2} = \\frac{6(1{,}000{,}000)}{(30)(50)^2} = \\textcolor{#D85A30}{80\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{S_y}{6M/(b h^2)} = \\frac{b h^2 S_y}{6M} = \\frac{(30)(50)^2(490)}{6(1{,}000{,}000)} = \\textcolor{#D85A30}{6.1}$$</div>"
-      +"<div class='calc'>$$\\text{equal-}S\\ \\text{round bar}: \\ S_{rect} = \\frac{b h^2}{6} = 12{,}500\\ \\text{mm}^3 \\ \\Rightarrow\\ d = \\left(\\frac{32 S_{rect}}{\\pi}\\right)^{1/3} = \\textcolor{#D85A30}{50.3\\ \\text{mm}}$$</div>" },
+    html:"<div class='calc'>$$M = W L = (5000\\ \\text{N})(200\\ \\text{mm}) = 1{,}000{,}000\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{M c}{I} = \\frac{M(h/2)}{b h^3/12} = \\frac{6M}{b h^2} = \\frac{6(1{,}000{,}000\\ \\text{N}\\cdot\\text{mm})}{(30\\ \\text{mm})(50\\ \\text{mm})^2} = \\textcolor{#D85A30}{80\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$N = \\frac{S_y}{\\sigma} = \\frac{S_y}{6M/(b h^2)} = \\frac{b h^2 S_y}{6M} = \\frac{(30\\ \\text{mm})(50\\ \\text{mm})^2(490\\ \\text{MPa})}{6(1{,}000{,}000\\ \\text{N}\\cdot\\text{mm})} = \\textcolor{#D85A30}{6.1}$$</div>"
+      +"<div class='calc'>$$S_{rect} = \\frac{b h^2}{6} = \\frac{(30\\ \\text{mm})(50\\ \\text{mm})^2}{6} = 12{,}500\\ \\text{mm}^3$$</div>"
+      +"<div class='calc'>$$d = \\left(\\frac{32 S_{rect}}{\\pi}\\right)^{1/3} = \\left(\\frac{32(12{,}500)}{\\pi}\\right)^{1/3} = \\textcolor{#D85A30}{50.3\\ \\text{mm}}$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}/\\text{mm}^3 = \\text{N/mm}^2 = \\text{MPa}$.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>$\\sigma = 80\\ \\text{MPa}$ is far below $S_y = 490\\ \\text{MPa}$, so $N = 6.1$ is a large static margin, sensible for a stiff bracket.</li>"

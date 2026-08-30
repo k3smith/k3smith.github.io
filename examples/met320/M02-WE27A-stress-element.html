@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -100,11 +101,21 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott, Ch. 3, bending $\\sigma = M/S$ with $S = \\pi d^3/32$, torsion $\\tau = T/(J/c)$ with $J/c = \\pi d^3/16$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Section properties, then the two stress components:</p>"
-      +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$"
-      +"<p>$S=\\pi d^3/32$ is the <em>section modulus</em> in bending and $J/c=\\pi d^3/16$ is the <em>polar section modulus</em> in torsion &mdash; both purely geometric properties of the solid round shaft. $\\sigma_x=M/S$ is the bending stress along the shaft axis and $\\tau_{xy}=T/(J/c)$ the torsional shear stress at the surface; there is no load in the hoop direction, so $\\sigma_y=0$ (plane stress). $M$ is the bending moment and $T$ the torque.</p>" },
+      +"<p class='eq-label'>Section modulus in bending:</p>"
+      +"$$S = \\frac{\\pi d^3}{32}$$"
+      +"<p class='eq-label'>Polar section modulus in torsion:</p>"
+      +"$$\\frac{J}{c} = \\frac{\\pi d^3}{16}$$"
+      +"<p class='eq-label'>Bending stress along the shaft axis:</p>"
+      +"$$\\sigma_x = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3}$$"
+      +"<p class='eq-label'>Torsional shear stress at the surface:</p>"
+      +"$$\\tau_{xy} = \\frac{T}{J/c} = \\frac{T}{\\pi d^3/16} = \\frac{16T}{\\pi d^3}$$"
+      +"<p class='eq-label'>No hoop or axial load, so plane stress:</p>"
+      +"$$\\sigma_y = 0$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$\\sigma_x = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
-      +"<div class='calc'>$$\\tau_{xy} = \\frac{T}{J/c} = \\frac{T}{\\pi d^3/16} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
+    html:"<div class='calc'>$$\\sigma_x = \\frac{M}{S} = \\frac{M}{\\pi d^3/32} = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(30\\ \\text{mm})^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}}\\ (\\text{tension side})$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{T}{J/c} = \\frac{T}{\\pi d^3/16} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000\\ \\text{N}\\cdot\\text{mm})}{\\pi(30\\ \\text{mm})^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\sigma_y = 0$$</div>"
+      +"<p class='note'>Units track through: $\\text{N}\\cdot\\text{mm}/\\text{mm}^3 = \\text{N/mm}^2 = \\text{MPa}$. Note $J/c = 2S$ for a solid circle.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The torsion polar term $J/c$ is exactly twice the bending term $S$ for a solid circle, which the numbers confirm ($5301 = 2\\times2651$).</li>"
