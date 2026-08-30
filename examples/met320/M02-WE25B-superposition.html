@@ -102,10 +102,11 @@ var STEPS = [
     html:"<p>Section property, the midspan formula for each load, then superpose:</p>"
       +"$$\\begin{aligned} I &= \\frac{\\pi d^4}{64} \\\\[4pt] \\delta_i(L/2) &= \\frac{P_i\\, a_i\\,(3L^2 - 4a_i^2)}{48 E I} \\quad (a_i \\le L/2,\\ \\text{measured from nearer support}) \\\\[4pt] \\delta_{total} &= \\delta_1 + \\delta_2 \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$I = \\frac{\\pi (45)^4}{64} = 201{,}289\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\delta_1 = \\frac{4000 \\times 300\\,(3\\times1000^2 - 4\\times300^2)}{48 \\times 207{,}000 \\times 201{,}289} = \\frac{4000\\times300\\times2{,}640{,}000}{1.9996\\times10^{12}} = \\textcolor{#D85A30}{1.58\\ \\text{mm}}$$</div>"
-      +"<div class='calc'>$$\\delta_2 = \\frac{2000 \\times 300\\,(2{,}640{,}000)}{1.9996\\times10^{12}} = \\textcolor{#D85A30}{0.79\\ \\text{mm}} \\quad (P_2\\ \\text{is}\\ 300\\ \\text{mm from the right support})$$</div>"
-      +"<div class='calc'>$$\\delta_{total} = 1.58 + 0.79 = \\textcolor{#D85A30}{2.37\\ \\text{mm}}, \\qquad \\delta_{allow} = 1.0\\ \\text{mm} \\ \\Rightarrow\\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>" },
+    html:"<div class='calc'>$$I = \\frac{\\pi d^4}{64} = \\frac{\\pi(45)^4}{64} = 201{,}289\\ \\text{mm}^4$$</div>"
+      +"<div class='calc'>$$\\delta_i = \\frac{P a (3L^2 - 4a^2)}{48 E I} = \\frac{4 P a (3L^2 - 4a^2)}{3\\pi E d^4}, \\qquad 3L^2 - 4a^2 = 3(1000)^2 - 4(300)^2 = 2{,}640{,}000$$</div>"
+      +"<div class='calc'>$$\\delta_1 = \\frac{4(4000)(300)(2{,}640{,}000)}{3\\pi(207{,}000)(45)^4} = \\textcolor{#D85A30}{1.58\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\delta_2 = \\frac{4(2000)(300)(2{,}640{,}000)}{3\\pi(207{,}000)(45)^4} = \\textcolor{#D85A30}{0.79\\ \\text{mm}} \\quad (P_2\\ \\text{is}\\ 300\\ \\text{mm from the right support})$$</div>"
+      +"<div class='calc'>$$\\delta_{total} = 1.58 + 0.79 = \\textcolor{#D85A30}{2.37\\ \\text{mm}} > \\delta_{allow} = 1.0\\ \\text{mm} \\ \\textcolor{#D85A30}{\\text{FAILS}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The heavier, more central load contributes about twice the deflection of the lighter, more off-center one ($1.58$ vs $0.79\\ \\text{mm}$), which matches intuition.</li>"

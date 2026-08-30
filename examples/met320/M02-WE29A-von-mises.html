@@ -103,23 +103,21 @@ var STEPS = [
       +"$$\\begin{aligned} \\sigma_x &= K_t\\,\\sigma_{nom} \\qquad \\tau_{xy} = K_t\\,\\tau_{nom} \\\\[4pt] \\sigma' &= \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} \\qquad N = \\frac{S_y}{\\sigma'} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>First pass, $d = 30\\ \\text{mm}$:</strong></p>"
-      +"<div class='calc'>$$\\sigma_x = 1.75 \\times 188.6 = 330.1\\ \\text{MPa}, \\qquad \\tau_{xy} = 1.75 \\times 150.9 = 264.1\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma' = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\sqrt{108{,}966 + 209{,}247} = \\sqrt{318{,}213} = 564.1\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$N = \\frac{690}{564.1} = \\textcolor{#D85A30}{1.22} \\ \\Rightarrow\\ \\text{inadequate}$$</div>"
+      +"<div class='calc'>$$\\sigma_x = \\frac{32 K_t M}{\\pi d^3} = \\frac{32(1.75)(500{,}000)}{\\pi(30)^3} = 330.1\\ \\text{MPa}, \\quad \\tau_{xy} = \\frac{16 K_t T}{\\pi d^3} = \\frac{16(1.75)(800{,}000)}{\\pi(30)^3} = 264.1\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{\\sigma_x^2 + 3\\tau_{xy}^2} = \\sqrt{(330.1)^2 + 3(264.1)^2} = \\textcolor{#D85A30}{564.1\\ \\text{MPa}}, \\quad N = \\frac{S_y}{\\sigma'} = \\frac{690}{564.1} = \\textcolor{#D85A30}{1.22}$$</div>"
       +"<p><strong>Redesign, $d = 40\\ \\text{mm}$</strong> (larger $d$ improves $r/d$, so $K_t \\approx 1.65$):</p>"
-      +"<div class='calc'>$$S = \\frac{\\pi(40)^3}{32} = 6283, \\ \\frac{J}{c} = \\frac{\\pi(40)^3}{16} = 12{,}566 \\ \\Rightarrow\\ \\sigma_{nom} = 79.6, \\ \\tau_{nom} = 63.7\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma_x = 1.65 \\times 79.6 = 131.3, \\quad \\tau_{xy} = 1.65 \\times 63.7 = 105.1\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma' = \\sqrt{(131.3)^2 + 3(105.1)^2} = \\sqrt{50{,}378} = 224.4\\ \\text{MPa}, \\quad N = \\frac{690}{224.4} = \\textcolor{#D85A30}{3.07} \\ \\checkmark$$</div>" },
+      +"<div class='calc'>$$\\sigma_x = \\frac{32(1.65)(500{,}000)}{\\pi(40)^3} = 131.3\\ \\text{MPa}, \\quad \\tau_{xy} = \\frac{16(1.65)(800{,}000)}{\\pi(40)^3} = 105.0\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$\\sigma' = \\sqrt{(131.3)^2 + 3(105.0)^2} = \\textcolor{#D85A30}{224.3\\ \\text{MPa}}, \\quad N = \\frac{690}{224.3} = \\textcolor{#D85A30}{3.08}\\ \\checkmark$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The first pass at $N = 1.22$ is clearly too low, as expected once $K_t$, bending, and torsion stack up.</li>"
-      +"<li>Increasing $d$ from 30 to 40 mm (33% larger) raises $N$ from 1.22 to 3.07, because section modulus scales with $d^3$.</li>"
-      +"<li>$N = 3.07$ is a reasonable static margin, though a rotating shaft is really a fatigue case that Module 3 will re-check.</li></ul>" },
+      +"<li>Increasing $d$ from 30 to 40 mm (33% larger) raises $N$ from 1.22 to 3.08, because section modulus scales with $d^3$.</li>"
+      +"<li>$N = 3.08$ is a reasonable static margin, though a rotating shaft is really a fatigue case that Module 3 will re-check.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Design</th><th>von Mises $\\sigma'$</th><th>Safety factor $N$</th></tr>"
       +"<tr><td>$d = 30\\ \\text{mm}$</td><td>$564.1\\ \\text{MPa}$</td><td>$1.22$ (fail)</td></tr>"
-      +"<tr><td>$d = 40\\ \\text{mm}$</td><td>$224.4\\ \\text{MPa}$</td><td>$3.07$ (pass)</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the 30 mm shaft fails the static check; specify 40 mm for $N = 3.07$. Shaft design is iterative, size up, check, refine. Because a rotating shaft sees cyclic loading, confirm this in the Module 3 fatigue analysis, where the governing failure mode is fatigue rather than yielding.</p>" }
+      +"<tr><td>$d = 40\\ \\text{mm}$</td><td>$224.3\\ \\text{MPa}$</td><td>$3.08$ (pass)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 30 mm shaft fails the static check; specify 40 mm for $N = 3.08$. Shaft design is iterative, size up, check, refine. Because a rotating shaft sees cyclic loading, confirm this in the Module 3 fatigue analysis, where the governing failure mode is fatigue rather than yielding.</p>" }
 ];
 
 

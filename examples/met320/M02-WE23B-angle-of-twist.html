@@ -102,9 +102,9 @@ var STEPS = [
     html:"<p>Twist angle, then convert to degrees and a per-meter rate:</p>"
       +"$$\\begin{aligned} J &= \\frac{\\pi d^4}{32} \\qquad \\phi = \\frac{T L}{G J} \\\\[4pt] \\phi_{deg} &= \\phi \\cdot \\frac{180}{\\pi} \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$J = \\frac{\\pi (30)^4}{32} = 79{,}522\\ \\text{mm}^4$$</div>"
-      +"<div class='calc'>$$\\phi = \\frac{T L}{G J} = \\frac{98{,}800 \\times 500}{80{,}000 \\times 79{,}522} = \\frac{49{,}400{,}000}{6{,}361{,}760{,}000} = \\textcolor{#D85A30}{0.00777\\ \\text{rad}}$$</div>"
-      +"<div class='calc'>$$\\phi_{deg} = 0.00777 \\cdot \\frac{180}{\\pi} = \\textcolor{#D85A30}{0.445^\\circ}, \\qquad \\text{rate} = 0.445 \\cdot \\frac{1000}{500} = \\textcolor{#D85A30}{0.89^\\circ/\\text{m}}$$</div>" },
+    html:"<div class='calc'>$$J = \\frac{\\pi d^4}{32} = \\frac{\\pi(30)^4}{32} = 79{,}522\\ \\text{mm}^4$$</div>"
+      +"<div class='calc'>$$\\phi = \\frac{TL}{GJ} = \\frac{32\\,T L}{\\pi G d^4} = \\frac{32(98{,}800)(500)}{\\pi(80{,}000)(30)^4} = \\textcolor{#D85A30}{0.00777\\ \\text{rad}}$$</div>"
+      +"<div class='calc'>$$\\phi_{deg} = \\phi\\cdot\\frac{180}{\\pi} = \\textcolor{#D85A30}{0.445^\\circ}, \\qquad \\text{rate} = \\phi_{deg}\\cdot\\frac{1000}{L} = 0.445\\cdot\\frac{1000}{500} = \\textcolor{#D85A30}{0.89^\\circ/\\text{m}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>A fraction of a degree of twist over half a meter is physically reasonable for a lightly loaded 30 mm shaft.</li>"

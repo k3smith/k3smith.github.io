@@ -101,24 +101,23 @@ var STEPS = [
       +"$$\\begin{aligned} M &= \\frac{WL}{4} \\qquad S = \\frac{\\pi d^3}{32} \\qquad \\sigma = \\frac{M}{S} \\qquad N = \\frac{S_y}{\\sigma} \\\\[4pt] \\sigma_{allow} &= \\frac{S_y}{N} \\qquad S_{req} = \\frac{M}{\\sigma_{allow}} \\qquad d = \\left(\\frac{32\\,S_{req}}{\\pi}\\right)^{1/3} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>Part (a): check the current 25 mm beam</strong></p>"
-      +"<div class='calc'>$$M = \\frac{2000 \\times 500}{4} = 250{,}000\\ \\text{N·mm}, \\quad S = \\frac{\\pi (25)^3}{32} = 1534\\ \\text{mm}^3$$</div>"
-      +"<div class='calc'>$$\\sigma = \\frac{250{,}000}{1534} = 163\\ \\text{MPa}, \\qquad N = \\frac{207}{163} = \\textcolor{#D85A30}{1.27}$$</div>"
+      +"<div class='calc'>$$M = \\frac{WL}{4} = \\frac{2000(500)}{4} = 250{,}000\\ \\text{N·mm}$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{32M}{\\pi d^3} = \\frac{32(250{,}000)}{\\pi(25)^3} = \\textcolor{#D85A30}{163\\ \\text{MPa}}, \\qquad N = \\frac{\\pi d^3 S_y}{32M} = \\frac{\\pi(25)^3(207)}{32(250{,}000)} = \\textcolor{#D85A30}{1.27}$$</div>"
       +"<p>$N = 1.27$ is inadequate for most applications.</p>"
       +"<p><strong>Part (b): required diameter for $N = 2$</strong></p>"
-      +"<div class='calc'>$$\\sigma_{allow} = \\frac{207}{2} = 103.5\\ \\text{MPa}, \\quad S_{req} = \\frac{250{,}000}{103.5} = 2415\\ \\text{mm}^3$$</div>"
-      +"<div class='calc'>$$d = \\left(\\frac{32 \\times 2415}{\\pi}\\right)^{1/3} = (24{,}600)^{1/3} = \\textcolor{#D85A30}{29.1\\ \\text{mm}} \\rightarrow \\text{specify } d = 30\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$\\text{verify at } 30\\ \\text{mm}: \\ S = 2651\\ \\text{mm}^3, \\ \\sigma = \\frac{250{,}000}{2651} = 94.3\\ \\text{MPa}, \\ N = \\frac{207}{94.3} = \\textcolor{#D85A30}{2.20}\\ \\checkmark$$</div>" },
+      +"<div class='calc'>$$d = \\left(\\frac{32 M N}{\\pi S_y}\\right)^{1/3} = \\left(\\frac{32(250{,}000)(2)}{\\pi(207)}\\right)^{1/3} = (24{,}604)^{1/3} = \\textcolor{#D85A30}{29.1\\ \\text{mm}} \\rightarrow \\text{specify } d = 30\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$\\text{verify at } 30\\ \\text{mm}: \\ N = \\frac{\\pi(30)^3(207)}{32(250{,}000)} = \\textcolor{#D85A30}{2.19}\\ \\checkmark$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The current design is under $N = 2$, and a modest bump from 25 to 30 mm clears it, a believable, small design change.</li>"
-      +"<li>Section modulus scales with $d^3$, so a 20% larger diameter raises capacity by about $1.7\\times$, consistent with $N$ going from 1.27 to 2.20.</li>"
-      +"<li>Rounding up to the next standard size (30 mm) gives $N = 2.20 \\ge 2$, as required.</li></ul>" },
+      +"<li>Section modulus scales with $d^3$, so a 20% larger diameter raises capacity by about $1.7\\times$, consistent with $N$ going from 1.27 to 2.19.</li>"
+      +"<li>Rounding up to the next standard size (30 mm) gives $N = 2.19 \\ge 2$, as required.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Quantity</th><th>Result</th></tr>"
       +"<tr><td>Current safety factor (25 mm)</td><td>$N = 1.27$ (inadequate)</td></tr>"
       +"<tr><td>Required diameter for $N = 2$</td><td>$29.1\\ \\text{mm} \\rightarrow$ specify $30\\ \\text{mm}$</td></tr>"
-      +"<tr><td>Safety factor at 30 mm</td><td>$N = 2.20$ (acceptable)</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the 25 mm beam is undersized; specify a 30 mm diameter, which delivers $N = 2.20$. A real rotating shaft would also carry torsion and cyclic loading, so treat this bending-only result as one part of the full check.</p>" }
+      +"<tr><td>Safety factor at 30 mm</td><td>$N = 2.19$ (acceptable)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 25 mm beam is undersized; specify a 30 mm diameter, which delivers $N = 2.19$. A real rotating shaft would also carry torsion and cyclic loading, so treat this bending-only result as one part of the full check.</p>" }
 ];
 
 

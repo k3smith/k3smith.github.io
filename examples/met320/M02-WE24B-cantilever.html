@@ -102,10 +102,9 @@ var STEPS = [
     html:"<p>Moment at the wall, section properties, bending stress, and section modulus:</p>"
       +"$$\\begin{aligned} M &= W L \\qquad I = \\frac{b h^3}{12} \\qquad c = \\frac{h}{2} \\\\[4pt] \\sigma &= \\frac{M c}{I} \\qquad N = \\frac{S_y}{\\sigma} \\qquad S = \\frac{I}{c} \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$M = 5000 \\times 200 = 1{,}000{,}000\\ \\text{N·mm}$$</div>"
-      +"<div class='calc'>$$I = \\frac{30 \\times 50^3}{12} = \\frac{30 \\times 125{,}000}{12} = 312{,}500\\ \\text{mm}^4, \\qquad c = \\frac{50}{2} = 25\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$\\sigma = \\frac{1{,}000{,}000 \\times 25}{312{,}500} = \\textcolor{#D85A30}{80\\ \\text{MPa}}, \\qquad N = \\frac{490}{80} = \\textcolor{#D85A30}{6.1}$$</div>"
-      +"<div class='calc'>$$S_{rect} = \\frac{I}{c} = \\frac{312{,}500}{25} = 12{,}500\\ \\text{mm}^3 \\ \\Rightarrow\\ d = \\left(\\frac{32 \\times 12{,}500}{\\pi}\\right)^{1/3} = \\textcolor{#D85A30}{50.3\\ \\text{mm}}$$</div>" },
+    html:"<div class='calc'>$$M = WL = 5000(200) = 1{,}000{,}000\\ \\text{N·mm}$$</div>"
+      +"<div class='calc'>$$\\sigma = \\frac{Mc}{I} = \\frac{6M}{b h^2} = \\frac{6(1{,}000{,}000)}{(30)(50)^2} = \\textcolor{#D85A30}{80\\ \\text{MPa}}, \\qquad N = \\frac{b h^2 S_y}{6M} = \\frac{(30)(50)^2(490)}{6(1{,}000{,}000)} = \\textcolor{#D85A30}{6.1}$$</div>"
+      +"<div class='calc'>$$\\text{equal-}S\\ \\text{round bar}: \\ S_{rect} = \\frac{b h^2}{6} = 12{,}500\\ \\text{mm}^3 \\ \\Rightarrow\\ d = \\left(\\frac{32 S_{rect}}{\\pi}\\right)^{1/3} = \\textcolor{#D85A30}{50.3\\ \\text{mm}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>$\\sigma = 80\\ \\text{MPa}$ is far below $S_y = 490\\ \\text{MPa}$, so $N = 6.1$ is a large static margin, sensible for a stiff bracket.</li>"

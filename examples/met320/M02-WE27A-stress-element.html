@@ -102,9 +102,8 @@ var STEPS = [
     html:"<p>Section properties, then the two stress components:</p>"
       +"$$\\begin{aligned} S &= \\frac{\\pi d^3}{32} \\qquad \\frac{J}{c} = \\frac{\\pi d^3}{16} \\\\[4pt] \\sigma_x &= \\frac{M}{S} \\qquad \\tau_{xy} = \\frac{T}{J/c} \\qquad \\sigma_y = 0 \\end{aligned}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$S = \\frac{\\pi (30)^3}{32} = 2651\\ \\text{mm}^3, \\qquad \\frac{J}{c} = \\frac{\\pi (30)^3}{16} = 5301\\ \\text{mm}^3$$</div>"
-      +"<div class='calc'>$$\\sigma_x = \\frac{500{,}000}{2651} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
-      +"<div class='calc'>$$\\tau_{xy} = \\frac{800{,}000}{5301} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
+    html:"<div class='calc'>$$\\sigma_x = \\frac{32M}{\\pi d^3} = \\frac{32(500{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{188.6\\ \\text{MPa}} \\ (\\text{tension side})$$</div>"
+      +"<div class='calc'>$$\\tau_{xy} = \\frac{16T}{\\pi d^3} = \\frac{16(800{,}000)}{\\pi(30)^3} = \\textcolor{#D85A30}{150.9\\ \\text{MPa}}, \\qquad \\sigma_y = 0$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>The torsion polar term $J/c$ is exactly twice the bending term $S$ for a solid circle, which the numbers confirm ($5301 = 2\\times2651$).</li>"
