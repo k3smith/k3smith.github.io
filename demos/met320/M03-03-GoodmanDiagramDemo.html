@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Goodman Diagram — MET 320</title>
+<title>Interactive Goodman Diagram, MET 320</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -78,14 +78,14 @@ select {
 <body>
 <div class="card">
   <div class="card-header">
-    <h1>📈 Fatigue Failure Criteria — Interactive Goodman Diagram</h1>
+    <h1>📈 Fatigue Failure Criteria, Interactive Goodman Diagram</h1>
     <p>MET 320 · Module 3 &nbsp;|&nbsp; Move the operating point (σₘ, σₐ) and watch the safety factor change against each criterion</p>
   </div>
 
   <canvas id="simCanvas" width="940" height="380" aria-label="Goodman diagram with operating point"></canvas>
 
   <div class="scenario-note">
-    <strong>Design scenario:</strong> A rotating shaft sees a steady (mean) stress from a static load plus an alternating stress from rotation. Will it survive 10⁶+ cycles? Static yield strength alone can't answer that — the combination of σₘ and σₐ must fall inside the failure envelope.
+    <strong>Design scenario:</strong> A rotating shaft sees a steady (mean) stress from a static load plus an alternating stress from rotation. Will it survive 10⁶+ cycles? Static yield strength alone can't answer that, the combination of σₘ and σₐ must fall inside the failure envelope.
   </div>
 
   <div class="bottom-panel">
@@ -95,11 +95,11 @@ select {
       <div class="mat-row">
         <label>Material</label>
         <select id="sMat">
-          <option value="470,390,188">AISI 1020 CD — Su 470, Sy 390 MPa</option>
-          <option value="620,410,248" selected>AISI 1040 HR — Su 620, Sy 410 MPa</option>
-          <option value="800,660,320">AISI 1144 OQT 1000°F — Su 800, Sy 660 MPa</option>
-          <option value="1020,890,408">AISI 4140 OQT 1100°F — Su 1020, Sy 890 MPa</option>
-          <option value="1250,1100,500">AISI 4340 OQT 900°F — Su 1250, Sy 1100 MPa</option>
+          <option value="420,352,168">SAE 1020 CD, Su 420, Sy 352 MPa</option>
+          <option value="620,338,248" selected>SAE 1050 HR, Su 620, Sy 338 MPa</option>
+          <option value="662,469,265">SAE 1144 OQT 1300°F, Su 662, Sy 469 MPa</option>
+          <option value="807,690,323">SAE 4140 OQT 1300°F, Su 807, Sy 690 MPa</option>
+          <option value="1180,1090,472">SAE 4340 OQT 1000°F, Su 1180, Sy 1090 MPa</option>
         </select>
       </div>
 
@@ -120,25 +120,25 @@ select {
     <div class="outputs">
       <div class="panel-title">Safety Factors (proportional load line)</div>
       <table class="result-table">
-        <tr id="rowGood"><td>Goodman (design standard)</td><td id="rGood">—</td></tr>
-        <tr id="rowSod"><td>Soderberg (conservative)</td><td id="rSod">—</td></tr>
-        <tr id="rowYield"><td>First-cycle Yield (σ<sub>m</sub>+σ<sub>a</sub> vs S<sub>y</sub>)</td><td id="rYield">—</td></tr>
-        <tr><td>Stress Ratio R = σ<sub>min</sub>/σ<sub>max</sub></td><td id="rR">—</td></tr>
-        <tr><td>σ<sub>max</sub> / σ<sub>min</sub></td><td id="rMinMax">—</td></tr>
-        <tr id="rowVerdict"><td><strong>Verdict (Goodman, N ≥ 2 target)</strong></td><td id="rVerdict">—</td></tr>
+        <tr id="rowGood"><td>Goodman (design standard)</td><td id="rGood">: </td></tr>
+        <tr id="rowSod"><td>Soderberg (conservative)</td><td id="rSod">: </td></tr>
+        <tr id="rowYield"><td>First-cycle Yield (σ<sub>m</sub>+σ<sub>a</sub> vs S<sub>y</sub>)</td><td id="rYield">: </td></tr>
+        <tr><td>Stress Ratio R = σ<sub>min</sub>/σ<sub>max</sub></td><td id="rR">: </td></tr>
+        <tr><td>σ<sub>max</sub> / σ<sub>min</sub></td><td id="rMinMax">: </td></tr>
+        <tr id="rowVerdict"><td><strong>Verdict (Goodman, N ≥ 2 target)</strong></td><td id="rVerdict">: </td></tr>
       </table>
     </div>
   </div>
 
   <div class="cascade-bar">
     <strong>Reading the diagram:</strong> The <strong>Goodman line</strong> connects S<sub>n</sub>′ (fully reversed) to S<sub>u</sub> (static). Points below the line survive indefinitely; the ratio of the line intercept to the operating point along the load line is the safety factor N.
-    <strong>Soderberg</strong> replaces S<sub>u</sub> with S<sub>y</sub> — safer, but often overly conservative. The <strong>yield line</strong> guards against first-cycle yielding at high mean stress.
+    <strong>Soderberg</strong> replaces S<sub>u</sub> with S<sub>y</sub>, safer, but often overly conservative. The <strong>yield line</strong> guards against first-cycle yielding at high mean stress.
   </div>
 </div>
 
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
-let Su = 620, Sy = 410, Se = 248;
+let Su = 620, Sy = 338, Se = 248;
 let sm = 150, sa = 100;
 
 const canvas = document.getElementById('simCanvas');
@@ -158,7 +158,7 @@ const CH = () => canvas.getBoundingClientRect().height;
 // ── Mechanics ─────────────────────────────────────────────────────────────
 function calc() {
   // Proportional loading: point scales along the ray from origin.
-  // Goodman:   sa/Se + sm/Su = 1/N  → N = 1 / (sa/Se + sm/Su)
+  // Goodman:  sa/Se + sm/Su = 1/N  → N = 1 / (sa/Se + sm/Su)
   const nGood  = (sa / Se + sm / Su) > 0 ? 1 / (sa / Se + sm / Su) : Infinity;
   const nSod   = (sa / Se + sm / Sy) > 0 ? 1 / (sa / Se + sm / Sy) : Infinity;
   const nYield = (sm + sa) > 0 ? Sy / (sm + sa) : Infinity;
@@ -182,9 +182,9 @@ function updateOutputs() {
   const govern = Math.min(r.nGood, r.nYield);
   const vEl = document.getElementById('rVerdict');
   const vRow = document.getElementById('rowVerdict');
-  if (govern >= 2)      { vEl.textContent = 'SAFE — N = ' + fN(govern);   vRow.className = 'ok'; }
-  else if (govern >= 1) { vEl.textContent = 'MARGINAL — N = ' + fN(govern); vRow.className = 'warn'; }
-  else                  { vEl.textContent = 'FAILURE PREDICTED — N = ' + fN(govern); vRow.className = 'warn'; }
+  if (govern >= 2)      { vEl.textContent = 'SAFE, N = ' + fN(govern);   vRow.className = 'ok'; }
+  else if (govern >= 1) { vEl.textContent = 'MARGINAL, N = ' + fN(govern); vRow.className = 'warn'; }
+  else                  { vEl.textContent = 'FAILURE PREDICTED, N = ' + fN(govern); vRow.className = 'warn'; }
 }
 
 // ── Draw ──────────────────────────────────────────────────────────────────
