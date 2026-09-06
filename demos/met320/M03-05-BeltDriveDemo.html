@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V-Belt Drive Kinematics — MET 320</title>
+<title>V-Belt Drive Kinematics, MET 320</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -71,14 +71,14 @@ input[type=range]::-webkit-slider-thumb {
 <body>
 <div class="card">
   <div class="card-header">
-    <h1>🔄 V-Belt Drive Kinematics — Ratio, Belt Speed &amp; Wrap Angle</h1>
+    <h1>🔄 V-Belt Drive Kinematics, Ratio, Belt Speed &amp; Wrap Angle</h1>
     <p>MET 320 · Module 3 &nbsp;|&nbsp; Change sheave sizes and center distance; watch belt speed, wrap angle, and belt length respond</p>
   </div>
 
   <canvas id="simCanvas" width="940" height="320" aria-label="Animated V-belt drive"></canvas>
 
   <div class="scenario-note">
-    <strong>Design scenario:</strong> A 1750-rpm motor drives a fan that should run near 700 rpm. Pick sheave diameters to set the ratio — but keep belt speed in the ideal 20–25 m/s range for V-belts, and keep the small-sheave wrap angle ≥ 120° so the belt doesn't slip.
+    <strong>Design scenario:</strong> A 1750-rpm motor drives a fan that should run near 700 rpm. Pick sheave diameters to set the ratio, but keep belt speed in the ideal 20–25 m/s range for V-belts, and keep the small-sheave wrap angle ≥ 120° so the belt doesn't slip.
   </div>
 
   <div class="bottom-panel">
@@ -106,20 +106,20 @@ input[type=range]::-webkit-slider-thumb {
     <div class="outputs">
       <div class="panel-title">Calculated Results</div>
       <table class="result-table">
-        <tr><td>Velocity Ratio VR = D₂/D₁</td><td id="rVR">—</td></tr>
-        <tr><td>Driven Sheave Speed</td><td id="rN2">—</td></tr>
-        <tr id="rowVb"><td>Belt Speed v<sub>b</sub> (ideal 20–25 m/s)</td><td id="rVb">—</td></tr>
-        <tr id="rowWrap"><td>Wrap Angle θ₁ (small sheave, min 120°)</td><td id="rWrap">—</td></tr>
-        <tr><td>Wrap Angle θ₂ (large sheave)</td><td id="rWrap2">—</td></tr>
-        <tr><td>Belt Pitch Length L</td><td id="rL">—</td></tr>
+        <tr><td>Velocity Ratio VR = D₂/D₁</td><td id="rVR">: </td></tr>
+        <tr><td>Driven Sheave Speed</td><td id="rN2">: </td></tr>
+        <tr id="rowVb"><td>Belt Speed v<sub>b</sub> (ideal 20–25 m/s)</td><td id="rVb">: </td></tr>
+        <tr id="rowWrap"><td>Wrap Angle θ₁ (small sheave, min 120°)</td><td id="rWrap">: </td></tr>
+        <tr><td>Wrap Angle θ₂ (large sheave)</td><td id="rWrap2">: </td></tr>
+        <tr><td>Belt Pitch Length L</td><td id="rL">: </td></tr>
         <tr id="rowCC"><td>C in range
-D₂ &lt; C &lt; 3(D₂+D₁)?</td><td id="rCC">—</td></tr>
+D₂ &lt; C &lt; 3(D₂+D₁)?</td><td id="rCC">: </td></tr>
       </table>
     </div>
   </div>
 
   <div class="cascade-bar">
-    <strong>Watch for the trade-off:</strong> Shrinking the small sheave raises the ratio without a big sheave — but it also cuts the wrap angle and belt speed, and belt life drops sharply below ~75 mm.
+    <strong>Watch for the trade-off:</strong> Shrinking the small sheave raises the ratio without a big sheave, but it also cuts the wrap angle and belt speed, and belt life drops sharply below ~75 mm.
     Increasing C improves wrap but adds belt length and vibration. In Module 3 you'll formalize this: <strong>L = 2C + 1.57(D₂+D₁) + (D₂−D₁)²/4C</strong>, then pick a standard belt and recompute C.
   </div>
 </div>
@@ -166,13 +166,13 @@ function updateOutputs() {
   document.getElementById('rowVb').className = (r.vb >= 10 && r.vb <= 30) ? 'ok' : 'warn';
 
   const wEl = document.getElementById('rWrap');
-  wEl.textContent = r.th1.toFixed(1) + '°' + (r.th1 < 120 ? ' — slip risk!' : ' ✓');
+  wEl.textContent = r.th1.toFixed(1) + '°' + (r.th1 < 120 ? ', slip risk!' : ' ✓');
   document.getElementById('rowWrap').className = r.th1 >= 120 ? 'ok' : 'warn';
 
   document.getElementById('rWrap2').textContent = r.th2.toFixed(1) + '°';
   document.getElementById('rL').textContent = r.L.toFixed(0) + ' mm';
 
-  document.getElementById('rCC').textContent = r.cOK ? 'Yes ✓' : 'No — adjust C!';
+  document.getElementById('rCC').textContent = r.cOK ? 'Yes ✓' : 'No, adjust C!';
   document.getElementById('rowCC').className = r.cOK ? 'ok' : 'warn';
 }
 
