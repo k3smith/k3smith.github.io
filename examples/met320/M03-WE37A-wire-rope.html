@@ -69,10 +69,10 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 3.7-A: Hoist Wire Rope Selection",
-  statement: "A power-driven gantry crane hoist lifts machinery (not people) with a maximum working load $F_w = 18\\ \\text{kN}$ (dynamic effects already included). The available sheave is $D_s = 250\\ \\text{mm}$. Specify a $6\\times19$ IPS wire rope. Find the minimum required breaking force, the rope diameter, the minimum sheave diameter, and whether the 250 mm sheave is acceptable."
+  statement: "A power-driven gantry crane hoist lifts machinery (not people) with a maximum working load $F_w = 5\\ \\text{tons}$ (dynamic effects already included). The rope is a $6\\times19$ Seale IPS wire rope, and the available sheave is $D_s = 24\\ \\text{in}$. Look up the rated breaking force in Mott Table 7-25 and the minimum $D/d$ ratio in Table 7-22. Find the required breaking force, the rope diameter, the minimum sheave diameter, and whether the 24 in sheave is acceptable."
 };
 
-var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A hoist: a wire rope runs over a sheave and down to a suspended load, with the sheave diameter and rope diameter noted.">'
+var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A hoist: a wire rope runs over a sheave and down to a suspended load, with the sheave diameter and rope construction noted.">'
 + '<rect x="70" y="34" width="330" height="12" fill="#9aa8ba" stroke="#1F3A5F" stroke-width="1.5"/>'
 + '<circle cx="180" cy="78" r="26" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
 + '<circle cx="180" cy="78" r="3" fill="#1F3A5F"/>'
@@ -80,52 +80,54 @@ var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A hoist: a wire 
 + '<line x1="206" y1="78" x2="206" y2="150" stroke="#1F3A5F" stroke-width="2"/>'
 + '<line x1="154" y1="78" x2="120" y2="120" stroke="#1F3A5F" stroke-width="2"/>'
 + '<rect x="184" y="150" width="44" height="30" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<line x1="206" y1="150" x2="206" y2="150" stroke="#1F3A5F"/>'
-+ '<text x="206" y="200" text-anchor="middle" fill="#5a6b80" font-size="11">F&#x1D64; = 18 kN</text>'
-+ '<text x="180" y="118" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8347; = 250 mm</text>'
-+ '<text x="300" y="70" fill="#D85A30" font-size="11">6&#215;19 IPS rope</text>'
++ '<text x="206" y="200" text-anchor="middle" fill="#5a6b80" font-size="11">F&#x1D64; = 5 tons</text>'
++ '<text x="180" y="118" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8347; = 24 in</text>'
++ '<text x="300" y="70" fill="#D85A30" font-size="11">6&#215;19 Seale IPS rope</text>'
 + '</svg>';
 
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>Wire rope for a hoist has to pass two independent checks: it must be strong enough (a large design factor on the working load, because a rope failure drops the load), and the sheave it runs over must be large enough that bending the rope around it does not fatigue the wires. We size the rope for strength, then test the available sheave against the bending-diameter rule.</p>" },
+    html:"<p>Wire rope for a hoist has to pass two independent checks: it must be strong enough (a large design factor on the working load, because a rope failure drops the load), and the sheave it runs over must be large enough that bending the rope around it does not fatigue the wires. We size the rope for strength using the rated breaking force from Mott Table 7-25, then test the available sheave against the bending-diameter rule.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$F_w = 18\\ \\text{kN}$ (dynamic effects included)</li>"
-      +"<li>power-driven machinery hoist $\\Rightarrow N_{min} = 7$</li>"
-      +"<li>$6\\times19$ IPS rope, $F_b \\approx 0.40\\,d_r^2$ (kN, $d_r$ in mm)</li>"
-      +"<li>available sheave $D_s = 250\\ \\text{mm}$</li></ul>"
-      +"<p><strong>Find:</strong> required breaking force $F_{b,req}$, rope diameter $d_r$, minimum sheave $D_{s,min}$, and whether 250 mm is adequate.</p>" },
+      +"<li>$F_w = 5\\ \\text{tons}$ (dynamic effects included)</li>"
+      +"<li>power-driven machinery hoist $\\Rightarrow N_{min} = 7$ (Mott recommended design factor)</li>"
+      +"<li>$6\\times19$ Seale IPS rope; rated breaking force $F_b$ from Mott Table 7-25</li>"
+      +"<li>minimum $D/d$ ratio from Mott Table 7-22 (by construction)</li>"
+      +"<li>available sheave $D_s = 24\\ \\text{in}$</li></ul>"
+      +"<p><strong>Find:</strong> required breaking force $F_{b,req}$, rope diameter $d_r$, minimum sheave $D_{s,min}$, and whether 24 in is adequate.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: the dynamic load is already inside the stated 18 kN; standard $6\\times19$ IPS rope sizes; the minimum sheave-to-rope diameter multiplier for $6\\times19$ construction is 26.</p>"
+    html:"<p>Assumptions: the dynamic load is already inside the stated 5 tons; the rated minimum breaking force is read from Mott Table 7-25 for $6\\times19$ IPS rope; the minimum $D/d$ ratio is read from Mott Table 7-22 by construction (6&times;19 Seale gives a minimum of 34).</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott Ch. 7 (wire rope). $F_{b,req} = N_{min}F_w$; approximate $F_b \\approx 0.40\\,d_r^2$; $D_{s,min} = 26\\,d_r$ for $6\\times19$.</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 7, Table 7-25 (breaking force) and Table 7-22 ($D/d$ ratios). $F_{b,req} = N_{min}F_w$; $D_{s,min} = (D/d)\\,d_r$.</p>" },
   { label:"Equations", title:"Equations",
-    html:"<p>Required breaking force, rope strength, actual design factor, and minimum sheave:</p>"
+    html:"<p>Required breaking force, rope strength from the table, actual design factor, and minimum sheave:</p>"
       +"<p class='eq-label'>Minimum required breaking force:</p>"
       +"$$F_{b,req} = N_{min}\\,F_w$$"
-      +"<p class='eq-label'>Approximate breaking strength of $6\\times19$ IPS rope ($d_r$ in mm, $F_b$ in kN):</p>"
-      +"$$F_b \\approx 0.40\\,d_r^2$$"
+      +"<p class='eq-label'>Rated breaking force (from Mott Table 7-25):</p>"
+      +"$$F_b = \\text{(read from Table 7-25 for the diameter, construction, core, and grade)}$$"
       +"<p class='eq-label'>Actual design factor for the selected rope:</p>"
       +"$$N_{actual} = \\frac{F_b}{F_w}$$"
-      +"<p class='eq-label'>Minimum sheave diameter ($6\\times19$ multiplier $= 26$):</p>"
-      +"$$D_{s,min} = 26\\,d_r$$" },
+      +"<p class='eq-label'>Minimum sheave diameter ($D/d$ from Table 7-22 by construction):</p>"
+      +"$$D_{s,min} = (D/d)\\,d_r$$"
+      +"<p>$N_{min}$ is the recommended design factor for the service (7 for a power-driven machinery hoist); $F_w$ is the working load including dynamic effects; $d_r$ is the rope diameter; $F_b$ is the rope's rated minimum breaking force; $D/d$ is the minimum sheave-to-rope diameter ratio for the rope's construction (34 for 6&times;19 Seale, from Table 7-22). Select the smallest standard rope diameter whose $F_b$ meets or exceeds $F_{b,req}$.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$F_{b,req} = N_{min}\\,F_w = 7(18\\ \\text{kN}) = \\textcolor{#D85A30}{126\\ \\text{kN}}$$</div>"
-      +"<div class='calc'>$$d_r = 16\\ \\text{mm}:\\quad F_b = 0.40(16)^2 = 102\\ \\text{kN} < 126 \\quad\\text{(fails)}$$</div>"
-      +"<div class='calc'>$$d_r = 20\\ \\text{mm}:\\quad F_b = 0.40(20)^2 = 160\\ \\text{kN} \\ge 126 \\quad\\checkmark$$</div>"
-      +"<div class='calc'>$$\\text{Select } d_r = 20\\ \\text{mm}:\\quad N_{actual} = \\frac{F_b}{F_w} = \\frac{160\\ \\text{kN}}{18\\ \\text{kN}} = \\textcolor{#D85A30}{8.9} \\ge 7 \\quad\\checkmark$$</div>"
-      +"<div class='calc'>$$D_{s,min} = 26\\,d_r = 26(20\\ \\text{mm}) = 520\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$D_s = 250\\ \\text{mm} < 520\\ \\text{mm} \\quad\\Rightarrow\\quad \\textcolor{#D85A30}{\\text{sheave FAILS}}$$</div>" },
+    html:"<div class='calc'>$$F_{b,req} = N_{min}\\,F_w = 7(5\\ \\text{tons}) = \\textcolor{#D85A30}{35\\ \\text{tons}}$$</div>"
+      +"<p>From Mott Table 7-25 ($6\\times19$ IPS), take the smallest diameter with $F_b \\ge 35\\ \\text{tons}$:</p>"
+      +"<div class='calc'>$$d_r = \\tfrac{7}{8}\\ \\text{in}:\\ F_b = 32.2\\ \\text{tons} < 35 \\ (\\text{fails}); \\qquad d_r = 1\\ \\text{in}:\\ F_b = 41.8\\ \\text{tons} \\ge 35 \\ \\checkmark$$</div>"
+      +"<div class='calc'>$$\\text{Select } d_r = 1\\ \\text{in}:\\quad N_{actual} = \\frac{F_b}{F_w} = \\frac{41.8}{5} = \\textcolor{#D85A30}{8.4} \\ge 7 \\ \\checkmark$$</div>"
+      +"<p>From Mott Table 7-22, the minimum $D/d$ for $6\\times19$ Seale is 34:</p>"
+      +"<div class='calc'>$$D_{s,min} = (D/d)\\,d_r = 34(1\\ \\text{in}) = 34\\ \\text{in}$$</div>"
+      +"<div class='calc'>$$D_s = 24\\ \\text{in} < 34\\ \\text{in} \\quad\\Rightarrow\\quad \\textcolor{#D85A30}{\\text{sheave FAILS}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>Strength passes with margin ($N_{actual} = 8.9 > N_{min} = 7$), so the rope itself is fine.</li>"
-      +"<li>The bending check fails: at 250 mm the sheave is less than half the 520 mm the rope needs, which would fatigue the wires quickly. Both checks must pass, so the design is not yet acceptable.</li></ul>" },
+      +"<li>Strength passes with margin ($N_{actual} = 8.4 > N_{min} = 7$), so the rope itself is fine.</li>"
+      +"<li>The bending check fails: the 24 in sheave is smaller than the 34 in the $6\\times19$ Seale rope needs, which would fatigue the wires quickly. Both checks must pass, so the design is not yet acceptable.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Check</th><th>Result</th></tr>"
-      +"<tr><td>Rope strength</td><td>$d_r = 20\\ \\text{mm}$, $N = 8.9$ (pass)</td></tr>"
-      +"<tr><td>Sheave bending</td><td>need $520\\ \\text{mm}$, have $250\\ \\text{mm}$ (fail)</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the rope is acceptable but the sheave must be changed. Options: fit a $520\\ \\text{mm}$ sheave, or switch to $6\\times37$ rope, whose multiplier of 18 gives $D_{s,min} = 360\\ \\text{mm}$ (still an upgrade from 250, and re-verify $F_b$ for 20 mm $6\\times37$). A rope strong enough to hold the load can still fail fast if the sheave is too small.</p>" }
+      +"<tr><td>Rope strength</td><td>$d_r = 1\\ \\text{in}$, $N = 8.4$ (pass)</td></tr>"
+      +"<tr><td>Sheave bending</td><td>need $34\\ \\text{in}$, have $24\\ \\text{in}$ (fail)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the rope is acceptable but the sheave must change. Options: fit a $34\\ \\text{in}$ sheave, or switch to the more flexible $6\\times36$ Warrington Seale, whose minimum $D/d$ of 23 (Table 7-22) gives $D_{s,min} = 23\\,d_r = 23\\ \\text{in} \\le 24\\ \\text{in} \\ \\checkmark$. Table 7-25 lists the same $F_b = 41.8\\ \\text{tons}$ for the $6\\times36$ class at 1 in, so strength is unchanged ($N = 8.4$). A rope strong enough to hold the load can still fail fast if the sheave is too small.</p>" }
 ];
 
 
