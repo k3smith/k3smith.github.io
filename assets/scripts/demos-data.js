@@ -45,10 +45,15 @@ const DEMO_COURSES = [
         title: 'Fatigue & Flexible Drives',
         demos: [
           {
-            file: 'M03-03-GoodmanDiagramDemo.html',
-            name: 'Goodman Diagram',
-            description: 'Plot mean and alternating stress; check modified Goodman safety factor.',
+            file: 'M03-FE-Find-the-Errors-Fatigue-Solution.html',
+            name: 'Find the Errors: Fatigue Solution',
+            description: 'Find the errors in a fatigue calculation and solution.',
           },
+            {
+              file: 'M03-03-GoodmanDiagramDemo.html',
+              name: 'Goodman Diagram',
+              description: 'Plot mean and alternating stress; check modified Goodman safety factor.',
+            },
           {
             file: 'M03-05-BeltDriveDemo.html',
             name: 'V-Belt Drive Kinematics',
