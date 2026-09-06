@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -99,12 +100,25 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Ch. 7 (chain drives). Pitch diameter $D = p/\\sin(180^\\circ/N_t)$; lubrication type from the roller-chain speed table.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Design power, ratio and tooth count, sprocket diameters, chain length, and speed:</p>"
-      +"$$\\begin{aligned} H_d &= H_{nom}N_{sf} \\qquad VR = \\frac{n_1}{n_2} = \\frac{N_2}{N_1} \\\\[4pt] D &= \\frac{p}{\\sin(180^\\circ/N_t)} \\qquad v = \\frac{\\pi D_1 n_1}{60{,}000} \\\\[4pt] L_p &= \\frac{2C}{p} + \\frac{N_1+N_2}{2} + \\frac{p\\,(N_2-N_1)^2}{4\\pi^2 C} \\end{aligned}$$" },
+      +"<p class='eq-label'>Design power:</p>"
+      +"$$H_d = H_{nom}\\,N_{sf}$$"
+      +"<p class='eq-label'>Velocity ratio and driven tooth count:</p>"
+      +"$$VR = \\frac{n_1}{n_2} = \\frac{N_2}{N_1} \\quad\\Rightarrow\\quad N_2 = N_1\\,VR$$"
+      +"<p class='eq-label'>Pitch diameter of a sprocket:</p>"
+      +"$$D = \\frac{p}{\\sin(180^\\circ/N_t)}$$"
+      +"<p class='eq-label'>Chain length in pitches:</p>"
+      +"$$L_p = \\frac{2C}{p} + \\frac{N_1+N_2}{2} + \\frac{p\\,(N_2-N_1)^2}{4\\pi^2 C}$$"
+      +"<p class='eq-label'>Chain speed (sets lubrication type):</p>"
+      +"$$v = \\frac{\\pi D_1 n_1}{60{,}000}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$H_d = 5(1.25) = 6.25\\ \\text{kW}, \\qquad VR = \\frac{1200}{300} = 4.0 \\ \\Rightarrow\\ N_2 = 4(19) = \\textcolor{#D85A30}{76\\ \\text{teeth}}$$</div>"
-      +"<div class='calc'>$$D_1 = \\frac{15.875}{\\sin(9.474^\\circ)} = 96.4\\ \\text{mm}, \\qquad D_2 = \\frac{15.875}{\\sin(2.368^\\circ)} = 384.1\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$L_p = \\frac{2(500)}{15.875} + \\frac{95}{2} + \\frac{15.875(57)^2}{4\\pi^2(500)} = 63.0 + 47.5 + 2.6 = 113.1 \\ \\Rightarrow\\ \\textcolor{#D85A30}{114\\ \\text{pitches}}$$</div>"
-      +"<div class='calc'>$$v = \\frac{\\pi(96.4)(1200)}{60{,}000} = 6.06\\ \\text{m/s} \\ \\Rightarrow\\ \\textcolor{#D85A30}{\\text{Type II lubrication}}\\ (3\\text{-}7\\ \\text{m/s})$$</div>" },
+    html:"<div class='calc'>$$H_d = H_{nom}\\,N_{sf} = (5\\ \\text{kW})(1.25) = 6.25\\ \\text{kW}$$</div>"
+      +"<div class='calc'>$$VR = \\frac{n_1}{n_2} = \\frac{1200\\ \\text{rpm}}{300\\ \\text{rpm}} = 4.0$$</div>"
+      +"<div class='calc'>$$N_2 = N_1\\,VR = 19(4.0) = \\textcolor{#D85A30}{76\\ \\text{teeth}}$$</div>"
+      +"<div class='calc'>$$D_1 = \\frac{p}{\\sin(180^\\circ/N_1)} = \\frac{15.875\\ \\text{mm}}{\\sin(9.474^\\circ)} = 96.4\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$D_2 = \\frac{p}{\\sin(180^\\circ/N_2)} = \\frac{15.875\\ \\text{mm}}{\\sin(2.368^\\circ)} = 384.1\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$L_p = \\frac{2C}{p} + \\frac{N_1+N_2}{2} + \\frac{p\\,(N_2-N_1)^2}{4\\pi^2 C} = \\frac{2(500)}{15.875} + \\frac{95}{2} + \\frac{15.875(57)^2}{4\\pi^2(500)} = 63.0 + 47.5 + 2.6 = 113.1$$</div>"
+      +"<div class='calc'>$$\\text{Round up to even: } L_p = \\textcolor{#D85A30}{114\\ \\text{pitches}}$$</div>"
+      +"<div class='calc'>$$v = \\frac{\\pi D_1 n_1}{60{,}000} = \\frac{\\pi(96.4\\ \\text{mm})(1200\\ \\text{rpm})}{60{,}000} = 6.06\\ \\text{m/s} \\quad\\Rightarrow\\quad \\textcolor{#D85A30}{\\text{Type II lubrication}}\\ (3\\text{–}7\\ \\text{m/s})$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>$N_2 = 76$ teeth sits well inside the usual 17 to 120 range.</li>"

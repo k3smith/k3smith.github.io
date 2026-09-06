@@ -3,13 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Worked Example 3.1-3.3 | MET 320</title>
-<!--
-  REUSABLE WORKED-EXAMPLE PLAYER
-  To adapt for another problem: edit the PROBLEM object (title + statement)
-  and the STEPS array below. Keep the 7-step structure.
-  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
--->
+<title>Worked Example 3.1-A | MET 320</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
 <style>
   :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
@@ -68,8 +62,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
 var PROBLEM = {
-  title: "Worked Example 3.1-3.3: Complete Fatigue Design of a Rotating Shaft",
-  statement: "A rotating shaft carries a fully reversed bending stress that cycles between $+180$ and $-180\\ \\text{MPa}$. It is $d = 30\\ \\text{mm}$, SAE 1040 HR steel ($S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$), with a shoulder fillet ($K_t = 1.8$, $q = 0.82$), machined surface, and a 99% reliability requirement. For a food-processing machine with moderate shock, $N_{min} = 2.0$. Characterize the stress, find the corrected endurance limit, and check fatigue and yielding, redesigning if needed."
+  title: "Worked Example 3.1-A: Characterizing a Fully Reversed Stress State",
+  statement: "A rotating shaft carries a reversed bending load; its surface stress cycles between $+180$ and $-180\\ \\text{MPa}$. The shaft is SAE 1040 HR steel ($S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$). Find the mean stress $\\sigma_m$, the alternating stress $\\sigma_a$, the stress ratio $R$, and the unmodified (ideal) endurance limit $S'_e$."
 };
 
 var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A rotating shaft in reversed bending, with a stress-versus-time plot showing a fully reversed cycle between plus and minus 180 MPa about a zero mean.">'
@@ -78,9 +72,8 @@ var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A rotating shaft
 + '<rect x="56" y="62" width="150" height="20" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
 + '<ellipse cx="206" cy="72" rx="7" ry="12" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
 + '<path d="M206,50 A22,22 0 0 1 226,60" fill="none" stroke="#1F3A5F" stroke-width="2" marker-end="url(#ar)"/>'
-+ '<text x="214" y="104" fill="#5a6b80" font-size="11">rotating shaft, d = 30 mm</text>'
++ '<text x="214" y="104" fill="#5a6b80" font-size="11">rotating shaft</text>'
 + '<text x="120" y="42" text-anchor="middle" fill="#D85A30" font-size="11">reversed bending</text>'
-// stress-time plot
 + '<line x1="270" y1="120" x2="450" y2="120" stroke="#5a6b80" stroke-width="1"/>'
 + '<line x1="278" y1="60" x2="278" y2="185" stroke="#5a6b80" stroke-width="1"/>'
 + '<path d="M278,120 Q300,70 322,120 T366,120 T410,120 T454,120" fill="none" stroke="#1F3A5F" stroke-width="2"/>'
@@ -94,58 +87,41 @@ var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A rotating shaft
 
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>A rotating shaft in reversed bending is a fatigue problem: the stress swings from tension to compression every revolution, so the part can crack and fail well below the yield strength. We characterize the fluctuating stress, reduce the ideal endurance limit with the Marin modifying factors and the notch, then compare the working stress to that corrected limit with the Goodman criterion, and also check first-cycle yielding. If the safety factors miss the target, we resize.</p>" },
+    html:"<p>Before any fatigue calculation we have to describe the stress cycle itself. A rotating shaft in bending sees its surface stress swing from tension to compression once per revolution, so it can crack and fail well below the yield strength. We split that cycle into a steady (mean) part and a swinging (alternating) part, note the stress ratio, and estimate the material's ideal endurance limit. Those numbers are the starting point for the Marin corrections on Page 3.2 and the safety-factor check on Page 3.3.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$\\sigma_{max} = +180$, $\\sigma_{min} = -180\\ \\text{MPa}$; $d = 30\\ \\text{mm}$</li>"
-      +"<li>SAE 1040 HR: $S_u = 496$, $S_y = 290\\ \\text{MPa}$</li>"
-      +"<li>fillet $K_t = 1.8$, $q = 0.82$; machined; 99% reliability</li>"
-      +"<li>Marin: $C_m = 1.0$, $C_{st} = 1.0$, $C_R = 0.81$, $C_s = 0.85$; target $N_{min} = 2.0$</li></ul>"
-      +"<p><strong>Find:</strong> $\\sigma_m$, $\\sigma_a$, $R$, $S'_e$, corrected $S_e$, $K_f$, $\\sigma_{a,eff}$, the Goodman and yield safety factors, and a redesign if needed.</p>" },
+      +"<li>$\\sigma_{max} = +180\\ \\text{MPa}$, $\\sigma_{min} = -180\\ \\text{MPa}$</li>"
+      +"<li>SAE 1040 HR steel: $S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$</li></ul>"
+      +"<p><strong>Find:</strong> the mean stress $\\sigma_m$, alternating stress $\\sigma_a$, stress ratio $R$, and unmodified endurance limit $S'_e$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: fully reversed bending (rotating shaft), so the mean stress is zero; ductile steel with $S_u < 1400\\ \\text{MPa}$, so $S'_e \\approx 0.5\\,S_u$; machined surface and 99% reliability handled through Marin factors; the notch is handled with the fatigue factor $K_f$ applied to the alternating stress.</p>"
+    html:"<p>Assumptions: fully reversed bending (a rotating shaft carries the bending load first on one side, then the other, each revolution), so we expect a zero mean stress; ductile steel with $S_u < 1400\\ \\text{MPa}$, so the ideal endurance limit can be estimated as half the ultimate strength.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott Ch. 5 (fatigue). $S'_e \\approx 0.5\\,S_u$ (&sect;5-6); Marin factors (&sect;5-7); modified Goodman (&sect;5-8); design factor from Page 1.3.</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 5, mean/alternating stress and stress ratio (&sect;5-5); ideal endurance limit $S'_e \\approx 0.5\\,S_u$ for steels below 1400 MPa (&sect;5-6).</p>" },
   { label:"Equations", title:"Equations",
-    html:"<p>Stress characterization, corrected endurance limit, notch factor, and the two safety-factor checks:</p>"
-      +"<p class='eq-label'>Mean stress, alternating stress, and stress ratio:</p>"
-      +"$$\\sigma_m = \\frac{\\sigma_{max}+\\sigma_{min}}{2}, \\quad \\sigma_a = \\frac{\\sigma_{max}-\\sigma_{min}}{2}, \\quad R = \\frac{\\sigma_{min}}{\\sigma_{max}}$$"
-      +"<p class='eq-label'>Ideal endurance limit (ductile steel, $S_u < 1400\\ \\text{MPa}$):</p>"
-      +"$$S'_e = 0.5\\,S_u$$"
-      +"<p class='eq-label'>Corrected endurance limit (Marin factors):</p>"
-      +"$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e$$"
-      +"<p class='eq-label'>Fatigue stress-concentration factor and effective alternating stress:</p>"
-      +"$$K_f = 1 + q(K_t - 1), \\qquad \\sigma_{a,eff} = K_f\\,\\sigma_a$$"
-      +"<p class='eq-label'>Modified Goodman fatigue safety factor:</p>"
-      +"$$N_f = \\frac{1}{\\sigma_{a,eff}/S_e + \\sigma_m/S_u}$$"
-      +"<p class='eq-label'>First-cycle yield safety factor:</p>"
-      +"$$N_y = \\frac{S_y}{\\sigma_{a,eff}+\\sigma_m}$$" },
+    html:"<p>Split the cycle into its mean and alternating parts, form the stress ratio, then estimate the ideal endurance limit:</p>"
+      +"<p class='eq-label'>Mean stress and alternating stress:</p>"
+      +"$$\\sigma_m = \\frac{\\sigma_{max}+\\sigma_{min}}{2}, \\qquad \\sigma_a = \\frac{\\sigma_{max}-\\sigma_{min}}{2}$$"
+      +"<p class='eq-label'>Stress ratio:</p>"
+      +"$$R = \\frac{\\sigma_{min}}{\\sigma_{max}}$$"
+      +"<p class='eq-label'>Ideal (unmodified) endurance limit, ductile steel with $S_u < 1400\\ \\text{MPa}$:</p>"
+      +"$$S'_e \\approx 0.5\\,S_u$$"
+      +"<p>Here $\\sigma_m$ is the average (steady) stress and $\\sigma_a$ is the amplitude of the swing about that average; $\\sigma_{max}$ and $\\sigma_{min}$ are the highest and lowest stresses in the cycle. The stress ratio $R = \\sigma_{min}/\\sigma_{max}$ classifies the loading: $R = -1$ is fully reversed (equal tension and compression), $R = 0$ is released (zero up to a peak). $S'_e$ is the <em>ideal</em> endurance limit: the stress a polished, unnotched lab specimen survives indefinitely, approximated as half the ultimate tensile strength $S_u$ for steels below 1400 MPa.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<p><strong>Characterize (Page 3.1):</strong></p>"
-      +"<div class='calc'>$$\\sigma_m = \\frac{180 + (-180)}{2} = 0\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$\\sigma_a = \\frac{180 - (-180)}{2} = 180\\ \\text{MPa}, \\qquad R = \\frac{-180}{180} = -1$$</div>"
-      +"<div class='calc'>$$S'_e = 0.5\\,S_u = 0.5(496\\ \\text{MPa}) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>"
-      +"<p><strong>Correct the endurance limit (Page 3.2):</strong></p>"
-      +"<div class='calc'>$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e = (1.0)(1.0)(0.81)(0.85)(248\\ \\text{MPa}) = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$K_f = 1 + q(K_t - 1) = 1 + 0.82(1.8 - 1) = 1.656$$</div>"
-      +"<div class='calc'>$$\\sigma_{a,eff} = K_f\\,\\sigma_a = 1.656(180\\ \\text{MPa}) = \\textcolor{#D85A30}{298\\ \\text{MPa}}$$</div>"
-      +"<p><strong>Safety factors, $d = 30\\ \\text{mm}$ (Page 3.3):</strong></p>"
-      +"<div class='calc'>$$N_f = \\frac{1}{\\sigma_{a,eff}/S_e + \\sigma_m/S_u} = \\frac{1}{298/170.8 + 0} = \\frac{170.8}{298} = \\textcolor{#D85A30}{0.57}$$</div>"
-      +"<div class='calc'>$$N_y = \\frac{S_y}{\\sigma_{a,eff}+\\sigma_m} = \\frac{290\\ \\text{MPa}}{298\\ \\text{MPa}} = \\textcolor{#D85A30}{0.97}$$</div>"
-      +"<p>Both are below 1: the shaft fails. <strong>Redesign to $d = 40\\ \\text{mm}$</strong> (bending stress scales as $1/d^3$):</p>"
-      +"<div class='calc'>$$\\sigma_a = 180\\left(\\frac{30}{40}\\right)^3 = 75.9\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$K_f = 1 + 0.82(1.75 - 1) = 1.615, \\qquad \\sigma_{a,eff} = 1.615(75.9) = 122.6\\ \\text{MPa}$$</div>"
-      +"<div class='calc'>$$N_f = \\frac{170.8}{122.6} = \\textcolor{#D85A30}{1.39}, \\qquad N_y = \\frac{290}{122.6} = \\textcolor{#D85A30}{2.37}$$</div>" },
+    html:"<div class='calc'>$$\\sigma_m = \\frac{\\sigma_{max}+\\sigma_{min}}{2} = \\frac{180 + (-180)}{2} = \\textcolor{#D85A30}{0\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$\\sigma_a = \\frac{\\sigma_{max}-\\sigma_{min}}{2} = \\frac{180 - (-180)}{2} = \\textcolor{#D85A30}{180\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$R = \\frac{\\sigma_{min}}{\\sigma_{max}} = \\frac{-180}{180} = \\textcolor{#D85A30}{-1}$$</div>"
+      +"<div class='calc'>$$S'_e \\approx 0.5\\,S_u = 0.5(496) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>Marin factors and the notch cut the usable endurance limit from $S'_e = 248$ to $S_e = 171\\ \\text{MPa}$ (about a third), which is why fatigue governs on rotating machinery.</li>"
-      +"<li>At $d = 30\\ \\text{mm}$ both safety factors are below 1, so failure is expected. Upsizing to $40\\ \\text{mm}$ (33% larger) raises $N_y$ past 2 and $N_f$ from 0.57 to 1.39, consistent with stress scaling as $1/d^3$.</li>"
-      +"<li>$N_f < N_y$ throughout: fatigue, not yielding, is the governing mode, exactly as expected for reversed loading.</li></ul>" },
+      +"<li>$\\sigma_m = 0$ and $R = -1$ both confirm fully reversed loading, exactly what a rotating shaft in bending should give.</li>"
+      +"<li>$\\sigma_a = 180\\ \\text{MPa}$ is below $S'_e = 248\\ \\text{MPa}$, which looks promising, but the comparison is not yet meaningful: $S'_e$ is an ideal lab value that must still be reduced by the Marin factors and the notch on Page 3.2 before any safety factor can be stated.</li></ul>" },
   { label:"Result", title:"Result and verdict",
-    html:"<table class='results'><tr><th>Design</th><th>$N_f$ (Goodman)</th><th>$N_y$ (yield)</th></tr>"
-      +"<tr><td>$d = 30\\ \\text{mm}$</td><td>0.57 (fail)</td><td>0.97 (fail)</td></tr>"
-      +"<tr><td>$d = 40\\ \\text{mm}$</td><td>1.39</td><td>2.37 (ok)</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the 30 mm shaft fails both checks. At 40 mm yielding is safe but fatigue ($N_f = 1.39$) still falls short of $N_{min} = 2.0$. Because diameter alone is not enough, the efficient next move is a stronger material: SAE 4140 OQT 1000 ($S_u = 1160 \\Rightarrow S'_e = 580\\ \\text{MPa}$) would raise $S_e$ sharply. Improving surface finish or the fillet radius also helps. For reversed loading ($\\sigma_m = 0$) the Goodman check reduces to $N_f = S_e/\\sigma_{a,eff}$, so every fix either raises $S_e$ or lowers $\\sigma_{a,eff}$.</p>" }
+    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Value</th></tr>"
+      +"<tr><td>Mean stress</td><td>$\\sigma_m$</td><td>$0\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Alternating stress</td><td>$\\sigma_a$</td><td>$180\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Stress ratio</td><td>$R$</td><td>$-1$ (fully reversed)</td></tr>"
+      +"<tr><td>Ideal endurance limit</td><td>$S'_e$</td><td>$248\\ \\text{MPa}$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the stress state is characterized: a zero-mean, fully reversed cycle with a 180 MPa amplitude, against an ideal endurance limit of 248 MPa. Carry $S'_e = 248\\ \\text{MPa}$ and $\\sigma_a = 180\\ \\text{MPa}$ forward to Page 3.2, where the Marin factors and the fatigue notch factor turn $S'_e$ into the corrected endurance limit $S_e$ and the effective alternating stress $\\sigma_{a,eff}$.</p>" }
 ];
 
 

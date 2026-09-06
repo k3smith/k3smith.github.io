@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -101,12 +102,21 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Ch. 7 (wire rope). $F_{b,req} = N_{min}F_w$; approximate $F_b \\approx 0.40\\,d_r^2$; $D_{s,min} = 26\\,d_r$ for $6\\times19$.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Required breaking force, rope strength, actual design factor, and minimum sheave:</p>"
-      +"$$\\begin{aligned} F_{b,req} &= N_{min}\\,F_w \\qquad F_b \\approx 0.40\\,d_r^2 \\\\[4pt] N_{actual} &= \\frac{F_b}{F_w} \\qquad D_{s,min} = 26\\,d_r \\end{aligned}$$" },
+      +"<p class='eq-label'>Minimum required breaking force:</p>"
+      +"$$F_{b,req} = N_{min}\\,F_w$$"
+      +"<p class='eq-label'>Approximate breaking strength of $6\\times19$ IPS rope ($d_r$ in mm, $F_b$ in kN):</p>"
+      +"$$F_b \\approx 0.40\\,d_r^2$$"
+      +"<p class='eq-label'>Actual design factor for the selected rope:</p>"
+      +"$$N_{actual} = \\frac{F_b}{F_w}$$"
+      +"<p class='eq-label'>Minimum sheave diameter ($6\\times19$ multiplier $= 26$):</p>"
+      +"$$D_{s,min} = 26\\,d_r$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$F_{b,req} = 7(18) = \\textcolor{#D85A30}{126\\ \\text{kN}}$$</div>"
-      +"<div class='calc'>$$d_r = 16: F_b = 0.40(16)^2 = 102\\ \\text{kN} < 126 \\ \\text{(fails)}; \\quad d_r = 20: F_b = 0.40(20)^2 = 160\\ \\text{kN} \\ge 126 \\ \\checkmark$$</div>"
-      +"<div class='calc'>$$\\text{Select } d_r = 20\\ \\text{mm}: \\quad N_{actual} = \\frac{160}{18} = \\textcolor{#D85A30}{8.9} \\ge 7 \\ \\checkmark$$</div>"
-      +"<div class='calc'>$$D_{s,min} = 26(20) = 520\\ \\text{mm}; \\quad D_s = 250 < 520 \\ \\Rightarrow\\ \\textcolor{#D85A30}{\\text{sheave FAILS}}$$</div>" },
+    html:"<div class='calc'>$$F_{b,req} = N_{min}\\,F_w = 7(18\\ \\text{kN}) = \\textcolor{#D85A30}{126\\ \\text{kN}}$$</div>"
+      +"<div class='calc'>$$d_r = 16\\ \\text{mm}:\\quad F_b = 0.40(16)^2 = 102\\ \\text{kN} < 126 \\quad\\text{(fails)}$$</div>"
+      +"<div class='calc'>$$d_r = 20\\ \\text{mm}:\\quad F_b = 0.40(20)^2 = 160\\ \\text{kN} \\ge 126 \\quad\\checkmark$$</div>"
+      +"<div class='calc'>$$\\text{Select } d_r = 20\\ \\text{mm}:\\quad N_{actual} = \\frac{F_b}{F_w} = \\frac{160\\ \\text{kN}}{18\\ \\text{kN}} = \\textcolor{#D85A30}{8.9} \\ge 7 \\quad\\checkmark$$</div>"
+      +"<div class='calc'>$$D_{s,min} = 26\\,d_r = 26(20\\ \\text{mm}) = 520\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$D_s = 250\\ \\text{mm} < 520\\ \\text{mm} \\quad\\Rightarrow\\quad \\textcolor{#D85A30}{\\text{sheave FAILS}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>Strength passes with margin ($N_{actual} = 8.9 > N_{min} = 7$), so the rope itself is fine.</li>"

@@ -91,6 +91,16 @@ const EXAMPLE_COURSES = [
         title: 'Fatigue & Power Transmission',
         examples: [
           {
+            file: 'M03-WE31A-fluctuating-stress.html',
+            name: 'Worked Example 3.1-A: Characterizing a Fully Reversed Stress State',
+            description: 'Splits a reversed bending cycle into mean and alternating stress, finds the stress ratio, and estimates the unmodified endurance limit.',
+          },
+          {
+            file: 'M03-WE32A-marin-factors.html',
+            name: 'Worked Example 3.2-A: Applying Marin Factors and Kf',
+            description: 'Applies the Marin modifying factors and the fatigue notch factor to find the corrected endurance limit and effective alternating stress.',
+          },
+          {
             file: 'M03-WE13A-fatigue-design.html',
             name: 'Worked Example 3.1-3.3: Complete Fatigue Design of a Rotating Shaft',
             description: 'Full fatigue workflow: characterize the reversed stress, apply Marin factors and Kf, run the Goodman and yield checks, and redesign.',

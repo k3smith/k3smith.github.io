@@ -31,6 +31,7 @@
   .kv { list-style:none; margin:0 0 10px; padding:0; }
   .kv li { padding:3px 0; }
   .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
   .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
   table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
   table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
@@ -100,12 +101,26 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Ch. 7 (belt drives). Design power $H_d = H_{nom}N_{sf}$; number of belts $N_b = H_d/H_{rated}$, rounded up.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Design power, ratio and sheaves, belt speed, arc of contact, and belt count:</p>"
-      +"$$\\begin{aligned} H_d &= H_{nom}\\,N_{sf} \\qquad VR = \\frac{n_2}{n_1} = \\frac{D_1}{D_2} \\\\[4pt] v_b &= \\frac{\\pi D_1 n_1}{60{,}000} \\qquad \\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C} \\\\[4pt] N_b &= \\left\\lceil \\frac{H_d}{H_{rated}} \\right\\rceil \\end{aligned}$$" },
+      +"<p class='eq-label'>Design power (nominal power times service factor):</p>"
+      +"$$H_d = H_{nom}\\,N_{sf}$$"
+      +"<p class='eq-label'>Velocity ratio and sheave diameter ratio:</p>"
+      +"$$VR = \\frac{n_2}{n_1} = \\frac{D_1}{D_2}$$"
+      +"<p class='eq-label'>Belt speed:</p>"
+      +"$$v_b = \\frac{\\pi D_1 n_1}{60{,}000}$$"
+      +"<p class='eq-label'>Arc of contact on the smaller sheave:</p>"
+      +"$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C}$$"
+      +"<p class='eq-label'>Number of belts (round up):</p>"
+      +"$$N_b = \\left\\lceil \\frac{H_d}{H_{rated}} \\right\\rceil$$"
+      +"<p class='eq-label'>Approximate belt length (then match a standard size):</p>"
+      +"$$L = 2C + \\frac{\\pi(D_1+D_2)}{2} + \\frac{(D_2-D_1)^2}{4C}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$H_d = 7.5(1.1) = \\textcolor{#D85A30}{8.25\\ \\text{kW}}$$</div>"
-      +"<div class='calc'>$$VR = \\frac{875}{1750} = 0.500 \\ \\Rightarrow\\ D_2/D_1 = 2.0: \\ \\text{select } D_1 = 150,\\ D_2 = 300\\ \\text{mm}$$</div>"
-      +"<div class='calc'>$$v_b = \\frac{\\pi(150)(1750)}{60{,}000} = 13.74\\ \\text{m/s}, \\qquad \\alpha_1 = 180 - 57.3\\,\\frac{150}{500} = 162.8^\\circ$$</div>"
-      +"<div class='calc'>$$N_b = \\frac{8.25}{2.8} = 2.95 \\ \\Rightarrow\\ \\textcolor{#D85A30}{3\\ \\text{belts}}; \\quad L = 2(500)+\\tfrac{\\pi(450)}{2}+\\tfrac{150^2}{2000} = 1718\\ \\text{mm (B-68)}$$</div>" },
+    html:"<div class='calc'>$$H_d = H_{nom}\\,N_{sf} = (7.5\\ \\text{kW})(1.1) = \\textcolor{#D85A30}{8.25\\ \\text{kW}}$$</div>"
+      +"<div class='calc'>$$VR = \\frac{n_2}{n_1} = \\frac{875\\ \\text{rpm}}{1750\\ \\text{rpm}} = 0.500 \\quad\\Rightarrow\\quad \\frac{D_2}{D_1} = 2.0$$</div>"
+      +"<div class='calc'>$$\\text{Select } D_1 = 150\\ \\text{mm},\\ D_2 = 300\\ \\text{mm}; \\quad \\text{trial } C = 500\\ \\text{mm}$$</div>"
+      +"<div class='calc'>$$v_b = \\frac{\\pi D_1 n_1}{60{,}000} = \\frac{\\pi(150\\ \\text{mm})(1750\\ \\text{rpm})}{60{,}000} = 13.74\\ \\text{m/s}$$</div>"
+      +"<div class='calc'>$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C} = 180 - 57.3\\,\\frac{150\\ \\text{mm}}{500\\ \\text{mm}} = 162.8^\\circ$$</div>"
+      +"<div class='calc'>$$N_b = \\left\\lceil \\frac{H_d}{H_{rated}} \\right\\rceil = \\left\\lceil \\frac{8.25\\ \\text{kW}}{2.8\\ \\text{kW}} \\right\\rceil = \\left\\lceil 2.95 \\right\\rceil = \\textcolor{#D85A30}{3\\ \\text{belts}}$$</div>"
+      +"<div class='calc'>$$L = 2(500) + \\frac{\\pi(450)}{2} + \\frac{(150)^2}{2000} = 1000 + 706.9 + 11.3 = 1718\\ \\text{mm} \\rightarrow \\text{B-68}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>3 belts $\\times\\ 2.8\\ \\text{kW} = 8.4\\ \\text{kW} \\ge H_d = 8.25\\ \\text{kW}$: the belt count carries the design power.</li>"
