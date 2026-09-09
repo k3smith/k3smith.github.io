@@ -63,7 +63,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 3.1-A: Characterizing a Fully Reversed Stress State",
-  statement: "A rotating shaft carries a reversed bending load; its surface stress cycles between $+180$ and $-180\\ \\text{MPa}$. The shaft is SAE 1040 HR steel ($S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$). Find the mean stress $\\sigma_m$, the alternating stress $\\sigma_a$, the stress ratio $R$, and the unmodified (ideal) endurance limit $S'_e$."
+  statement: "A rotating shaft carries a reversed bending load; its surface stress cycles between $+180$ and $-180\\ \\text{MPa}$. The shaft is SAE 1040 HR steel ($S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$). Find the mean stress $\\sigma_m$, the alternating stress $\\sigma_a$, the stress ratio $R$, and the unmodified (ideal) endurance limit $S_n$."
 };
 
 var SKETCH = '<svg viewBox="0 0 470 210" role="img" aria-label="A rotating shaft in reversed bending, with a stress-versus-time plot showing a fully reversed cycle between plus and minus 180 MPa about a zero mean.">'
@@ -92,11 +92,11 @@ var STEPS = [
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
       +"<li>$\\sigma_{max} = +180\\ \\text{MPa}$, $\\sigma_{min} = -180\\ \\text{MPa}$</li>"
       +"<li>SAE 1040 HR steel: $S_u = 496\\ \\text{MPa}$, $S_y = 290\\ \\text{MPa}$</li></ul>"
-      +"<p><strong>Find:</strong> the mean stress $\\sigma_m$, alternating stress $\\sigma_a$, stress ratio $R$, and unmodified endurance limit $S'_e$.</p>" },
+      +"<p><strong>Find:</strong> the mean stress $\\sigma_m$, alternating stress $\\sigma_a$, stress ratio $R$, and unmodified endurance limit $S_n$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
     html:"<p>Assumptions: fully reversed bending (a rotating shaft carries the bending load first on one side, then the other, each revolution), so we expect a zero mean stress; ductile steel with $S_u < 1400\\ \\text{MPa}$, so the ideal endurance limit can be estimated as half the ultimate strength.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott Ch. 5, mean/alternating stress and stress ratio (&sect;5-5); ideal endurance limit $S'_e \\approx 0.5\\,S_u$ for steels below 1400 MPa (&sect;5-6).</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 5, mean/alternating stress and stress ratio (&sect;5-2); ideal endurance limit $S_n \\approx 0.5\\,S_u$ for steels below 1400 MPa (&sect;5-5).</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Split the cycle into its mean and alternating parts, form the stress ratio, then estimate the ideal endurance limit:</p>"
       +"<p class='eq-label'>Mean stress and alternating stress:</p>"
@@ -104,24 +104,24 @@ var STEPS = [
       +"<p class='eq-label'>Stress ratio:</p>"
       +"$$R = \\frac{\\sigma_{min}}{\\sigma_{max}}$$"
       +"<p class='eq-label'>Ideal (unmodified) endurance limit, ductile steel with $S_u < 1400\\ \\text{MPa}$:</p>"
-      +"$$S'_e \\approx 0.5\\,S_u$$"
-      +"<p>Here $\\sigma_m$ is the average (steady) stress and $\\sigma_a$ is the amplitude of the swing about that average; $\\sigma_{max}$ and $\\sigma_{min}$ are the highest and lowest stresses in the cycle. The stress ratio $R = \\sigma_{min}/\\sigma_{max}$ classifies the loading: $R = -1$ is fully reversed (equal tension and compression), $R = 0$ is released (zero up to a peak). $S'_e$ is the <em>ideal</em> endurance limit: the stress a polished, unnotched lab specimen survives indefinitely, approximated as half the ultimate tensile strength $S_u$ for steels below 1400 MPa.</p>" },
+      +"$$S_n \\approx 0.5\\,S_u$$"
+      +"<p>Here $\\sigma_m$ is the average (steady) stress and $\\sigma_a$ is the amplitude of the swing about that average; $\\sigma_{max}$ and $\\sigma_{min}$ are the highest and lowest stresses in the cycle. The stress ratio $R = \\sigma_{min}/\\sigma_{max}$ classifies the loading: $R = -1$ is fully reversed (equal tension and compression), $R = 0$ is released (zero up to a peak). $S_n$ is the <em>ideal</em> endurance limit: the stress a polished, unnotched lab specimen survives indefinitely, approximated as half the ultimate tensile strength $S_u$ for steels below 1400 MPa.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$\\sigma_m = \\frac{\\sigma_{max}+\\sigma_{min}}{2} = \\frac{180 + (-180)}{2} = \\textcolor{#D85A30}{0\\ \\text{MPa}}$$</div>"
       +"<div class='calc'>$$\\sigma_a = \\frac{\\sigma_{max}-\\sigma_{min}}{2} = \\frac{180 - (-180)}{2} = \\textcolor{#D85A30}{180\\ \\text{MPa}}$$</div>"
       +"<div class='calc'>$$R = \\frac{\\sigma_{min}}{\\sigma_{max}} = \\frac{-180}{180} = \\textcolor{#D85A30}{-1}$$</div>"
-      +"<div class='calc'>$$S'_e \\approx 0.5\\,S_u = 0.5(496) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>" },
+      +"<div class='calc'>$$S_n \\approx 0.5\\,S_u = 0.5(496) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
       +"<li>$\\sigma_m = 0$ and $R = -1$ both confirm fully reversed loading, exactly what a rotating shaft in bending should give.</li>"
-      +"<li>$\\sigma_a = 180\\ \\text{MPa}$ is below $S'_e = 248\\ \\text{MPa}$, which looks promising, but the comparison is not yet meaningful: $S'_e$ is an ideal lab value that must still be reduced by the Marin factors and the notch on Page 3.2 before any safety factor can be stated.</li></ul>" },
+      +"<li>$\\sigma_a = 180\\ \\text{MPa}$ is below $S_n = 248\\ \\text{MPa}$, which looks promising, but the comparison is not yet meaningful: $S_n$ is an ideal lab value that must still be reduced by the Marin factors and the notch on Page 3.2 before any safety factor can be stated.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Value</th></tr>"
       +"<tr><td>Mean stress</td><td>$\\sigma_m$</td><td>$0\\ \\text{MPa}$</td></tr>"
       +"<tr><td>Alternating stress</td><td>$\\sigma_a$</td><td>$180\\ \\text{MPa}$</td></tr>"
       +"<tr><td>Stress ratio</td><td>$R$</td><td>$-1$ (fully reversed)</td></tr>"
-      +"<tr><td>Ideal endurance limit</td><td>$S'_e$</td><td>$248\\ \\text{MPa}$</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the stress state is characterized: a zero-mean, fully reversed cycle with a 180 MPa amplitude, against an ideal endurance limit of 248 MPa. Carry $S'_e = 248\\ \\text{MPa}$ and $\\sigma_a = 180\\ \\text{MPa}$ forward to Page 3.2, where the Marin factors and the fatigue notch factor turn $S'_e$ into the corrected endurance limit $S_e$ and the effective alternating stress $\\sigma_{a,eff}$.</p>" }
+      +"<tr><td>Ideal endurance limit</td><td>$S_n$</td><td>$248\\ \\text{MPa}$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the stress state is characterized: a zero-mean, fully reversed cycle with a 180 MPa amplitude, against an ideal endurance limit of 248 MPa. Carry $S_n = 248\\ \\text{MPa}$ and $\\sigma_a = 180\\ \\text{MPa}$ forward to Page 3.2, where the Marin factors and the fatigue notch factor turn $S_n$ into the corrected endurance limit $S'_n$ and the effective alternating stress $\\sigma_{a,eff}$.</p>" }
 ];
 
 

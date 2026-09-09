@@ -63,7 +63,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 3.2-A: Applying Marin Factors and Kf",
-  statement: "The SAE 1040 HR shaft from Page 3.1 continues here: $S_u = 496$, $S'_e = 248$, $\\sigma_a = 180$, $\\sigma_m = 0\\ \\text{MPa}$. It is $d = 30\\ \\text{mm}$ with a machined surface and a 99% reliability requirement, and a shoulder fillet with $K_t = 1.8$, notch sensitivity $q = 0.82$. Marin factors: $C_m = 1.0$ (steel), $C_{st} = 1.0$ (bending), $C_R = 0.81$ (99% reliability), $C_s = 0.85$ (size). Find the corrected endurance limit $S_e$, the fatigue notch factor $K_f$, and the effective alternating stress $\\sigma_{a,eff}$."
+  statement: "The SAE 1040 HR shaft from Page 3.1 continues here: $S_u = 496$, $S_n = 248$, $\\sigma_a = 180$, $\\sigma_m = 0\\ \\text{MPa}$. It is $d = 30\\ \\text{mm}$ with a machined surface and a 99% reliability requirement, and a shoulder fillet with $K_t = 1.8$, notch sensitivity $q = 0.82$. Marin factors: $C_m = 1.0$ (steel), $C_{st} = 1.0$ (bending), $C_R = 0.81$ (99% reliability), $C_s = 0.85$ (size). Find the corrected endurance limit $S'_n$, the fatigue notch factor $K_f$, and the effective alternating stress $\\sigma_{a,eff}$."
 };
 
 var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A stepped shaft with a shoulder fillet where the diameter changes, marked as the critical stress-concentration location with Kt equals 1.8.">'
@@ -80,41 +80,41 @@ var SKETCH = '<svg viewBox="0 0 460 180" role="img" aria-label="A stepped shaft 
 
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>The ideal endurance limit $S'_e$ from Page 3.1 belongs to a perfect, polished lab specimen. A real shaft is larger, has a machined (not polished) surface, must meet a reliability target, and carries a stress-raising fillet. The Marin modifying factors de-rate $S'_e$ down to a realistic in-service value $S_e$, while the fatigue notch factor $K_f$ raises the working alternating stress to an effective value. Comparing those two numbers is what tells us whether fatigue is a threat, which we finish on Page 3.3.</p>" },
+    html:"<p>The ideal endurance limit $S_n$ from Page 3.1 belongs to a perfect, polished lab specimen. A real shaft is larger, has a machined (not polished) surface, must meet a reliability target, and carries a stress-raising fillet. The Marin modifying factors de-rate $S_n$ down to a realistic in-service value $S'_n$, while the fatigue notch factor $K_f$ raises the working alternating stress to an effective value. Comparing those two numbers is what tells us whether fatigue is a threat, which we finish on Page 3.3.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given</strong> (carried from Page 3.1 plus this page's data):</p><ul class='kv'>"
-      +"<li>$S'_e = 248\\ \\text{MPa}$, $\\sigma_a = 180\\ \\text{MPa}$, $\\sigma_m = 0$, $S_u = 496\\ \\text{MPa}$</li>"
+      +"<li>$S_n = 248\\ \\text{MPa}$, $\\sigma_a = 180\\ \\text{MPa}$, $\\sigma_m = 0$, $S_u = 496\\ \\text{MPa}$</li>"
       +"<li>Marin factors: $C_m = 1.0$, $C_{st} = 1.0$, $C_R = 0.81$, $C_s = 0.85$</li>"
       +"<li>shoulder fillet: $K_t = 1.8$, notch sensitivity $q = 0.82$; $d = 30\\ \\text{mm}$</li></ul>"
-      +"<p><strong>Find:</strong> the corrected endurance limit $S_e$, the fatigue stress-concentration factor $K_f$, and the effective alternating stress $\\sigma_{a,eff}$.</p>" },
+      +"<p><strong>Find:</strong> the corrected endurance limit $S'_n$, the fatigue stress-concentration factor $K_f$, and the effective alternating stress $\\sigma_{a,eff}$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
     html:"<p>Assumptions: bending loading on a machined steel shaft, $d = 30\\ \\text{mm}$, with a 99% reliability requirement; the size factor $C_s$ and the notch sensitivity $q$ are read from Mott's charts for this diameter and material. The notch is the shoulder fillet where the diameter steps down, which is where a fatigue crack would start.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott Ch. 5, corrected endurance limit and Marin factors (&sect;5-7, Eq. 5-11); fatigue stress-concentration factor $K_f = 1 + q(K_t-1)$ (Eq. 5-14).</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 5, corrected endurance limit and Marin factors (&sect;5-6, Eq. 5-21); fatigue stress-concentration factor $K_f = 1 + q(K_t-1)$ (&sect;3-23).</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>De-rate the ideal endurance limit, convert the geometric notch factor to a fatigue notch factor, and amplify the alternating stress:</p>"
       +"<p class='eq-label'>Corrected endurance limit (Marin factors):</p>"
-      +"$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e$$"
+      +"$$S'_n = C_m\\, C_{st}\\, C_R\\, C_s\\, S_n$$"
       +"<p class='eq-label'>Fatigue stress-concentration factor:</p>"
       +"$$K_f = 1 + q(K_t - 1)$$"
       +"<p class='eq-label'>Effective alternating stress:</p>"
       +"$$\\sigma_{a,eff} = K_f\\,\\sigma_a$$"
-      +"<p>Each $C$ is a Marin modifying factor and each is $\\le 1$, so together they shrink the ideal $S'_e$ to the in-service $S_e$: $C_m$ is the material factor, $C_{st}$ the stress-type factor (1.0 for bending, about 0.58 for torsion), $C_R$ the reliability factor (0.81 at 99%), and $C_s$ the size factor (larger shafts are weaker in fatigue). $K_t$ is the <em>geometric</em> stress-concentration factor of the fillet and $q$ is the material's <em>notch sensitivity</em> ($q = 0$ ignores the notch, $q = 1$ feels it fully); $K_f$ is the resulting fatigue stress-concentration factor, applied to $\\sigma_a$ to give the effective alternating stress $\\sigma_{a,eff}$.</p>" },
+      +"<p>Each $C$ is a Marin modifying factor and each is $\\le 1$, so together they shrink the ideal $S_n$ to the in-service $S'_n$: $C_m$ is the material factor, $C_{st}$ the stress-type factor (1.0 for bending, about 0.58 for torsion), $C_R$ the reliability factor (0.81 at 99%), and $C_s$ the size factor (larger shafts are weaker in fatigue). $K_t$ is the <em>geometric</em> stress-concentration factor of the fillet and $q$ is the material's <em>notch sensitivity</em> ($q = 0$ ignores the notch, $q = 1$ feels it fully); $K_f$ is the resulting fatigue stress-concentration factor, applied to $\\sigma_a$ to give the effective alternating stress $\\sigma_{a,eff}$.</p>" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e = (1.0)(1.0)(0.81)(0.85)(248) = 0.6885(248) = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
+    html:"<div class='calc'>$$S'_n = C_m\\, C_{st}\\, C_R\\, C_s\\, S_n = (1.0)(1.0)(0.81)(0.85)(248) = 0.6885(248) = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
       +"<div class='calc'>$$K_f = 1 + q(K_t - 1) = 1 + 0.82(1.8 - 1) = 1 + 0.82(0.8) = \\textcolor{#D85A30}{1.656}$$</div>"
       +"<div class='calc'>$$\\sigma_{a,eff} = K_f\\,\\sigma_a = 1.656(180) = \\textcolor{#D85A30}{298\\ \\text{MPa}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>Every Marin factor is $\\le 1$, so $S_e = 170.8\\ \\text{MPa}$ must come out below $S'_e = 248\\ \\text{MPa}$: it does, a 31% reduction driven mostly by the reliability and size factors.</li>"
+      +"<li>Every Marin factor is $\\le 1$, so $S'_n = 170.8\\ \\text{MPa}$ must come out below $S_n = 248\\ \\text{MPa}$: it does, a 31% reduction driven mostly by the reliability and size factors.</li>"
       +"<li>$K_f = 1.656$ lies between 1 and $K_t = 1.8$, as it must, since the notch sensitivity $q = 0.82$ is less than 1.</li>"
-      +"<li>The effective stress $\\sigma_{a,eff} = 298\\ \\text{MPa}$ now <em>exceeds</em> the corrected endurance limit $S_e = 171\\ \\text{MPa}$: fatigue failure is predicted, so a safety-factor check and redesign are needed on Page 3.3.</li></ul>" },
+      +"<li>The effective stress $\\sigma_{a,eff} = 298\\ \\text{MPa}$ now <em>exceeds</em> the corrected endurance limit $S'_n = 171\\ \\text{MPa}$: fatigue failure is predicted, so a safety-factor check and redesign are needed on Page 3.3.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Value</th></tr>"
-      +"<tr><td>Corrected endurance limit</td><td>$S_e$</td><td>$170.8\\ \\text{MPa}$</td></tr>"
+      +"<tr><td>Corrected endurance limit</td><td>$S'_n$</td><td>$170.8\\ \\text{MPa}$</td></tr>"
       +"<tr><td>Fatigue notch factor</td><td>$K_f$</td><td>$1.656$</td></tr>"
       +"<tr><td>Effective alternating stress</td><td>$\\sigma_{a,eff}$</td><td>$298\\ \\text{MPa}$</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the real-world corrections cut the endurance limit to $S_e = 170.8\\ \\text{MPa}$ while the notch raised the working stress to $\\sigma_{a,eff} = 298\\ \\text{MPa}$. Because $\\sigma_{a,eff} > S_e$, this shaft is predicted to fail by fatigue as designed. Carry $S_e = 170.8$ and $\\sigma_{a,eff} = 298\\ \\text{MPa}$ to Page 3.3 to compute the Goodman and yield safety factors and to size the redesign.</p>" }
+      +"<p><strong>Verdict:</strong> the real-world corrections cut the endurance limit to $S'_n = 170.8\\ \\text{MPa}$ while the notch raised the working stress to $\\sigma_{a,eff} = 298\\ \\text{MPa}$. Because $\\sigma_{a,eff} > S'_n$, this shaft is predicted to fail by fatigue as designed. Carry $S'_n = 170.8$ and $\\sigma_{a,eff} = 298\\ \\text{MPa}$ to Page 3.3 to compute the Goodman and yield safety factors and to size the redesign.</p>" }
 ];
 
 

@@ -101,36 +101,36 @@ var STEPS = [
       +"<li>SAE 1040 HR: $S_u = 496$, $S_y = 290\\ \\text{MPa}$</li>"
       +"<li>fillet $K_t = 1.8$, $q = 0.82$; machined; 99% reliability</li>"
       +"<li>Marin: $C_m = 1.0$, $C_{st} = 1.0$, $C_R = 0.81$, $C_s = 0.85$; target $N_{min} = 2.0$</li></ul>"
-      +"<p><strong>Find:</strong> $\\sigma_m$, $\\sigma_a$, $R$, $S'_e$, corrected $S_e$, $K_f$, $\\sigma_{a,eff}$, the Goodman and yield safety factors, and a redesign if needed.</p>" },
+      +"<p><strong>Find:</strong> $\\sigma_m$, $\\sigma_a$, $R$, $S_n$, corrected $S'_n$, $K_f$, $\\sigma_{a,eff}$, the Goodman and yield safety factors, and a redesign if needed.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: fully reversed bending (rotating shaft), so the mean stress is zero; ductile steel with $S_u < 1400\\ \\text{MPa}$, so $S'_e \\approx 0.5\\,S_u$; machined surface and 99% reliability handled through Marin factors; the notch is handled with the fatigue factor $K_f$ applied to the alternating stress.</p>"
+    html:"<p>Assumptions: fully reversed bending (rotating shaft), so the mean stress is zero; ductile steel with $S_u < 1400\\ \\text{MPa}$, so $S_n \\approx 0.5\\,S_u$; machined surface and 99% reliability handled through Marin factors; the notch is handled with the fatigue factor $K_f$ applied to the alternating stress.</p>"
       + SKETCH
-      + "<p class='cite'>Reference: Mott Ch. 5 (fatigue). $S'_e \\approx 0.5\\,S_u$ (&sect;5-6); Marin factors (&sect;5-7); modified Goodman (&sect;5-8); design factor from Page 1.3.</p>" },
+      + "<p class='cite'>Reference: Mott Ch. 5 (fatigue). $S_n \\approx 0.5\\,S_u$ (&sect;5-5); Marin factors (&sect;5-6); modified Goodman (&sect;5-7); design factor from Page 1.3.</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Stress characterization, corrected endurance limit, notch factor, and the two safety-factor checks:</p>"
       +"<p class='eq-label'>Mean stress, alternating stress, and stress ratio:</p>"
       +"$$\\sigma_m = \\frac{\\sigma_{max}+\\sigma_{min}}{2}, \\quad \\sigma_a = \\frac{\\sigma_{max}-\\sigma_{min}}{2}, \\quad R = \\frac{\\sigma_{min}}{\\sigma_{max}}$$"
       +"<p class='eq-label'>Ideal endurance limit (ductile steel, $S_u < 1400\\ \\text{MPa}$):</p>"
-      +"$$S'_e = 0.5\\,S_u$$"
+      +"$$S_n = 0.5\\,S_u$$"
       +"<p class='eq-label'>Corrected endurance limit (Marin factors):</p>"
-      +"$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e$$"
+      +"$$S'_n = C_m\\, C_{st}\\, C_R\\, C_s\\, S_n$$"
       +"<p class='eq-label'>Fatigue stress-concentration factor and effective alternating stress:</p>"
       +"$$K_f = 1 + q(K_t - 1), \\qquad \\sigma_{a,eff} = K_f\\,\\sigma_a$$"
       +"<p class='eq-label'>Modified Goodman fatigue safety factor:</p>"
-      +"$$N_f = \\frac{1}{\\sigma_{a,eff}/S_e + \\sigma_m/S_u}$$"
+      +"$$N_f = \\frac{1}{\\sigma_{a,eff}/S'_n + \\sigma_m/S_u}$$"
       +"<p class='eq-label'>First-cycle yield safety factor:</p>"
       +"$$N_y = \\frac{S_y}{\\sigma_{a,eff}+\\sigma_m}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<p><strong>Characterize (Page 3.1):</strong></p>"
       +"<div class='calc'>$$\\sigma_m = \\frac{180 + (-180)}{2} = 0\\ \\text{MPa}$$</div>"
       +"<div class='calc'>$$\\sigma_a = \\frac{180 - (-180)}{2} = 180\\ \\text{MPa}, \\qquad R = \\frac{-180}{180} = -1$$</div>"
-      +"<div class='calc'>$$S'_e = 0.5\\,S_u = 0.5(496\\ \\text{MPa}) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$S_n = 0.5\\,S_u = 0.5(496\\ \\text{MPa}) = \\textcolor{#D85A30}{248\\ \\text{MPa}}$$</div>"
       +"<p><strong>Correct the endurance limit (Page 3.2):</strong></p>"
-      +"<div class='calc'>$$S_e = C_m\\, C_{st}\\, C_R\\, C_s\\, S'_e = (1.0)(1.0)(0.81)(0.85)(248\\ \\text{MPa}) = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$S'_n = C_m\\, C_{st}\\, C_R\\, C_s\\, S_n = (1.0)(1.0)(0.81)(0.85)(248\\ \\text{MPa}) = \\textcolor{#D85A30}{170.8\\ \\text{MPa}}$$</div>"
       +"<div class='calc'>$$K_f = 1 + q(K_t - 1) = 1 + 0.82(1.8 - 1) = 1.656$$</div>"
       +"<div class='calc'>$$\\sigma_{a,eff} = K_f\\,\\sigma_a = 1.656(180\\ \\text{MPa}) = \\textcolor{#D85A30}{298\\ \\text{MPa}}$$</div>"
       +"<p><strong>Safety factors, $d = 30\\ \\text{mm}$ (Page 3.3):</strong></p>"
-      +"<div class='calc'>$$N_f = \\frac{1}{\\sigma_{a,eff}/S_e + \\sigma_m/S_u} = \\frac{1}{298/170.8 + 0} = \\frac{170.8}{298} = \\textcolor{#D85A30}{0.57}$$</div>"
+      +"<div class='calc'>$$N_f = \\frac{1}{\\sigma_{a,eff}/S'_n + \\sigma_m/S_u} = \\frac{1}{298/170.8 + 0} = \\frac{170.8}{298} = \\textcolor{#D85A30}{0.57}$$</div>"
       +"<div class='calc'>$$N_y = \\frac{S_y}{\\sigma_{a,eff}+\\sigma_m} = \\frac{290\\ \\text{MPa}}{298\\ \\text{MPa}} = \\textcolor{#D85A30}{0.97}$$</div>"
       +"<p>Both are below 1: the shaft fails. <strong>Redesign to $d = 40\\ \\text{mm}$</strong> (bending stress scales as $1/d^3$):</p>"
       +"<div class='calc'>$$\\sigma_a = 180\\left(\\frac{30}{40}\\right)^3 = 75.9\\ \\text{MPa}$$</div>"
@@ -138,14 +138,14 @@ var STEPS = [
       +"<div class='calc'>$$N_f = \\frac{170.8}{122.6} = \\textcolor{#D85A30}{1.39}, \\qquad N_y = \\frac{290}{122.6} = \\textcolor{#D85A30}{2.37}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Sanity checks:</p><ul class='kv'>"
-      +"<li>Marin factors and the notch cut the usable endurance limit from $S'_e = 248$ to $S_e = 171\\ \\text{MPa}$ (about a third), which is why fatigue governs on rotating machinery.</li>"
+      +"<li>Marin factors and the notch cut the usable endurance limit from $S_n = 248$ to $S'_n = 171\\ \\text{MPa}$ (about a third), which is why fatigue governs on rotating machinery.</li>"
       +"<li>At $d = 30\\ \\text{mm}$ both safety factors are below 1, so failure is expected. Upsizing to $40\\ \\text{mm}$ (33% larger) raises $N_y$ past 2 and $N_f$ from 0.57 to 1.39, consistent with stress scaling as $1/d^3$.</li>"
       +"<li>$N_f < N_y$ throughout: fatigue, not yielding, is the governing mode, exactly as expected for reversed loading.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Design</th><th>$N_f$ (Goodman)</th><th>$N_y$ (yield)</th></tr>"
       +"<tr><td>$d = 30\\ \\text{mm}$</td><td>0.57 (fail)</td><td>0.97 (fail)</td></tr>"
       +"<tr><td>$d = 40\\ \\text{mm}$</td><td>1.39</td><td>2.37 (ok)</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the 30 mm shaft fails both checks. At 40 mm yielding is safe but fatigue ($N_f = 1.39$) still falls short of $N_{min} = 2.0$. Because diameter alone is not enough, the efficient next move is a stronger material: SAE 4140 OQT 1000 ($S_u = 1160 \\Rightarrow S'_e = 580\\ \\text{MPa}$) would raise $S_e$ sharply. Improving surface finish or the fillet radius also helps. For reversed loading ($\\sigma_m = 0$) the Goodman check reduces to $N_f = S_e/\\sigma_{a,eff}$, so every fix either raises $S_e$ or lowers $\\sigma_{a,eff}$.</p>" }
+      +"<p><strong>Verdict:</strong> the 30 mm shaft fails both checks. At 40 mm yielding is safe but fatigue ($N_f = 1.39$) still falls short of $N_{min} = 2.0$. Because diameter alone is not enough, the efficient next move is a stronger material: SAE 4140 OQT 1000 ($S_u = 1160 \\Rightarrow S_n = 580\\ \\text{MPa}$) would raise $S'_n$ sharply. Improving surface finish or the fillet radius also helps. For reversed loading ($\\sigma_m = 0$) the Goodman check reduces to $N_f = S'_n/\\sigma_{a,eff}$, so every fix either raises $S'_n$ or lowers $\\sigma_{a,eff}$.</p>" }
 ];
 
 
