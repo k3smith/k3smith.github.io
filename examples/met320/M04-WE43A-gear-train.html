@@ -61,24 +61,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
-
 var PROBLEM = {
   title: "Worked Example 4.3-A: Double-Reduction Gear Train Design",
   statement: "A speed reducer takes an electric motor at $n_{in} = 1750\\ \\text{rpm}$ and must deliver about $n_{out} \\approx 109\\ \\text{rpm}$ (target ratio &asymp; 16:1). Design a two-stage compound spur gear train with $P_d = 8$ teeth/in, minimum pinion 18 teeth, and gears no larger than about 120 teeth. Find the tooth counts and the actual output speed."
 };
+var SKETCH = '<svg viewBox="0 0 460 150" role="img" aria-label="A two-stage compound gear train: motor drives stage one (20 to 80 teeth), gears B and C share the intermediate shaft, stage two (18 to 72 teeth) drives the output; total ratio 16 to 1."><defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs><text x="18" y="42" font-size="10" fill="#5a6b80">Motor</text><text x="18" y="56" font-size="10" fill="#5a6b80">1750 rpm</text><line x1="62" y1="47" x2="88" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><rect x="90" y="25" width="112" height="46" rx="4" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><text x="146" y="45" text-anchor="middle" font-size="10" fill="#1F3A5F">Stage 1</text><text x="146" y="60" text-anchor="middle" font-size="10" fill="#1F3A5F">A20 &#8594; B80 (4:1)</text><line x1="202" y1="47" x2="248" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><text x="225" y="40" text-anchor="middle" font-size="8" fill="#5a6b80">B, C on</text><text x="225" y="86" text-anchor="middle" font-size="8" fill="#5a6b80">same shaft</text><rect x="250" y="25" width="112" height="46" rx="4" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><text x="306" y="45" text-anchor="middle" font-size="10" fill="#1F3A5F">Stage 2</text><text x="306" y="60" text-anchor="middle" font-size="10" fill="#1F3A5F">C18 &#8594; D72 (4:1)</text><line x1="362" y1="47" x2="408" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><text x="410" y="44" font-size="10" fill="#5a6b80">109 rpm</text><text x="230" y="120" text-anchor="middle" font-size="11" fill="#D85A30">Total VR = 4 &#215; 4 = 16</text></svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>A single spur stage is limited to roughly 10:1, so a 16:1 reduction needs two stages. Splitting the ratio evenly between the stages keeps the largest gear as small as possible. We pick integer tooth counts for each stage, respect the 18-tooth minimum pinion, and check the delivered speed.</p>" },
+    html:"<p>A single spur stage is limited to roughly 10:1, so a 16:1 reduction needs two stages. Splitting the ratio evenly keeps the largest gear as small as possible. We pick integer tooth counts, respect the 18-tooth minimum pinion, and check the delivered speed.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
       +"<li>$n_{in} = 1750\\ \\text{rpm}$; target $n_{out} \\approx 109\\ \\text{rpm}$; $VR_{total} \\approx 16$</li>"
       +"<li>$P_d = 8$ teeth/in; $N_{P,min} = 18$; $N_{G,max} \\approx 120$</li></ul>"
       +"<p><strong>Find:</strong> tooth counts $N_A, N_B, N_C, N_D$ and the actual $n_{out}$.</p>" },
-  { label:"Equations", title:"Equations (Mott &sect;8-13)",
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: two equal stages ($VR_1 = VR_2 = \\sqrt{VR_{total}}$) to minimize the largest gear; compound train with gears B and C sharing the intermediate shaft; standard 20&deg; full-depth teeth.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 8, velocity ratio and gear trains (&sect;8-13, &sect;8-14).</p>" },
+  { label:"Equations", title:"Equations",
     html:"$$VR_{total} = VR_1 \\times VR_2, \\qquad VR_{stage} = \\frac{N_{driven}}{N_{driver}}$$"
-      +"$$n_{int} = \\frac{n_{in}}{VR_1}, \\qquad n_{out} = \\frac{n_{int}}{VR_2}$$"
-      +"<p>Equal split minimizes the largest gear: $VR_1 = VR_2 = \\sqrt{VR_{total}}$.</p>"
-      +"<p class='cite'>Reference: Mott Ch. 8, velocity ratio and gear trains (&sect;8-13, &sect;8-14).</p>" },
+      +"$$n_{int} = \\frac{n_{in}}{VR_1}, \\qquad n_{out} = \\frac{n_{int}}{VR_2}$$" },
   { label:"Calculate", title:"Calculations",
     html:"<div class='calc'>$$VR_1 = VR_2 = \\sqrt{16} = \\textcolor{#D85A30}{4.0}$$</div>"
       +"<p>Stage 1: $N_A = 20$ (driver), $N_B = 20 \\times 4 = 80$ (driven); $80 \\le 120$ &check;<br>"

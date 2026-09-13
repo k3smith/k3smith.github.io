@@ -61,24 +61,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
-
 var PROBLEM = {
   title: "Worked Example 4.2-A: Spur Gear Dimensions (US System)",
   statement: "A spur gear pair uses diametral pitch $P_d = 8$ teeth/in with a pinion $N_P = 20$ and a gear $N_G = 60$ (20&deg; full-depth involute). Find the pitch diameters, addendum and dedendum, whole depth, recommended face-width range, center distance, and velocity ratio."
 };
+var SKETCH = '<svg viewBox="0 0 460 210" role="img" aria-label="A small pinion pitch circle and a larger gear pitch circle tangent at the pitch point, with the center distance C marked between the two shaft centers."><circle cx="150" cy="105" r="50" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><circle cx="310" cy="105" r="86" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><circle cx="150" cy="105" r="3" fill="#1F3A5F"/><circle cx="310" cy="105" r="3" fill="#1F3A5F"/><line x1="150" y1="105" x2="310" y2="105" stroke="#D85A30" stroke-width="1.5"/><text x="230" y="98" text-anchor="middle" fill="#D85A30" font-size="12">C</text><line x1="150" y1="105" x2="200" y2="105" stroke="#5a6b80" stroke-width="1" stroke-dasharray="3 2"/><circle cx="200" cy="105" r="3.5" fill="#2a7a3a"/><text x="196" y="97" fill="#2a7a3a" font-size="11">P</text><text x="150" y="188" text-anchor="middle" fill="#5a6b80" font-size="11">pinion, D_P</text><text x="310" y="205" text-anchor="middle" fill="#5a6b80" font-size="11">gear, D_G</text></svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
-    html:"<p>With the diametral pitch and the tooth counts fixed, every basic gear dimension follows from the standard full-depth proportions. We compute the pitch diameters, the tooth heights, a face-width range, the center distance, and the speed ratio.</p>" },
+    html:"<p>With the diametral pitch and tooth counts fixed, every basic gear dimension follows from the standard full-depth proportions. We compute the pitch diameters, tooth heights, a face-width range, the center distance, and the speed ratio.</p>" },
   { label:"Given/Find", title:"Given and Find",
-    html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$P_d = 8\\ \\text{teeth/in}$; $N_P = 20$; $N_G = 60$; 20&deg; full-depth</li></ul>"
+    html:"<p><strong>Given:</strong></p><ul class='kv'><li>$P_d = 8\\ \\text{teeth/in}$; $N_P = 20$; $N_G = 60$; 20&deg; full-depth</li></ul>"
       +"<p><strong>Find:</strong> $D_P,\\ D_G$; addendum $a$, dedendum $b$; whole depth $h_t$; face-width range; center distance $C$; velocity ratio VR.</p>" },
-  { label:"Equations", title:"Equations (Mott &sect;8-4, Table 8-1)",
-    html:"<p class='eq-label'>Pitch diameter, tooth proportions, center distance, ratio:</p>"
-      +"$$D = \\frac{N}{P_d}, \\quad a = \\frac{1}{P_d}, \\quad b = \\frac{1.25}{P_d}, \\quad h_t = a+b = \\frac{2.25}{P_d}$$"
-      +"$$C = \\frac{N_P+N_G}{2P_d}, \\qquad VR = \\frac{N_G}{N_P}$$"
-      +"<p>Recommended face width for spur gears: $\\tfrac{8}{P_d} \\le F \\le \\tfrac{16}{P_d}$.</p>"
-      +"<p class='cite'>Reference: Mott Ch. 8, Table 8-1 gear and tooth features (&sect;8-4).</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: US diametral-pitch system; standard 20&deg; full-depth teeth; recommended spur face width $\\tfrac{8}{P_d} \\le F \\le \\tfrac{16}{P_d}$.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 8, Table 8-1 gear and tooth features (&sect;8-4).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"$$D = \\frac{N}{P_d}, \\quad a = \\frac{1}{P_d}, \\quad b = \\frac{1.25}{P_d}, \\quad h_t = a+b = \\frac{2.25}{P_d}$$"
+      +"$$C = \\frac{N_P+N_G}{2P_d}, \\qquad VR = \\frac{N_G}{N_P}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$D_P = \\tfrac{20}{8} = \\textcolor{#D85A30}{2.500\\ \\text{in}}, \\qquad D_G = \\tfrac{60}{8} = \\textcolor{#D85A30}{7.500\\ \\text{in}}$$</div>"
       +"<div class='calc'>$$a = \\tfrac{1}{8} = \\textcolor{#D85A30}{0.1250\\ \\text{in}}, \\quad b = \\tfrac{1.25}{8} = \\textcolor{#D85A30}{0.1563\\ \\text{in}}, \\quad h_t = \\textcolor{#D85A30}{0.2813\\ \\text{in}}$$</div>"
@@ -94,7 +94,7 @@ var STEPS = [
       +"<tr><td>$a$ / $b$ / $h_t$</td><td>0.1250 / 0.1563 / 0.2813 in</td></tr>"
       +"<tr><td>Face width $F$</td><td>1.00&ndash;2.00 in (use ~1.500 in)</td></tr>"
       +"<tr><td>$C$ / VR</td><td>5.000 in / 3.0</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the dimensions are consistent and the pair is free of interference. In metric ($m = 3\\ \\text{mm}$, same tooth counts): $D_P = 60$, $D_G = 180$ mm, $a = 3$, $b = 3.75$ mm, $C = 120$ mm &mdash; same proportions, metric units.</p>" }
+      +"<p><strong>Verdict:</strong> the dimensions are consistent and the pair is free of interference. In metric ($m = 3\\ \\text{mm}$, same tooth counts): $D_P = 60$, $D_G = 180$ mm, $a = 3$, $b = 3.75$ mm, $C = 120$ mm.</p>" }
 ];
 
 
