@@ -63,17 +63,43 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 4.1-A: Gear Type Selection",
-  statement: "An engineer must choose a gear type for three drives: (a) a conveyor speed reducer between two parallel shafts, 5:1 ratio, moderate noise acceptable; (b) a single-stage right-angle drive between a motor shaft and a vertical mixing shaft; (c) a 50:1 reduction from a high-speed motor to a slow conveyor in a compact package. Identify the best gear type for each and give the key reason."
+  statement: "An engineer must choose a gear type for three drives: (a) a conveyor speed reducer between two parallel shafts, 5:1 ratio, moderate noise acceptable; (b) a single-stage right-angle drive between a motor shaft and a vertical mixing shaft (intersecting axes); (c) a compact 50:1 reduction whose shafts are perpendicular and do not intersect (worm layout). Identify the best gear type for each and give the key reason."
 };
-var SKETCH = '<svg viewBox="0 0 460 150" role="img" aria-label="Three shaft arrangements: parallel shafts for spur or helical gears; 90 degree intersecting shafts for bevel gears; perpendicular non-intersecting shafts for a worm drive."><line x1="25" y1="45" x2="120" y2="45" stroke="#1F3A5F" stroke-width="3"/><line x1="25" y1="78" x2="120" y2="78" stroke="#1F3A5F" stroke-width="3"/><text x="72" y="106" text-anchor="middle" fill="#5a6b80" font-size="10">(a) parallel</text><text x="72" y="120" text-anchor="middle" fill="#5a6b80" font-size="10">spur / helical</text><line x1="185" y1="78" x2="265" y2="78" stroke="#1F3A5F" stroke-width="3"/><line x1="225" y1="78" x2="225" y2="30" stroke="#1F3A5F" stroke-width="3"/><text x="225" y="106" text-anchor="middle" fill="#5a6b80" font-size="10">(b) 90&#176; intersecting</text><text x="225" y="120" text-anchor="middle" fill="#5a6b80" font-size="10">bevel</text><line x1="330" y1="52" x2="435" y2="52" stroke="#1F3A5F" stroke-width="3"/><line x1="382" y1="70" x2="382" y2="110" stroke="#D85A30" stroke-width="3"/><text x="382" y="126" text-anchor="middle" fill="#5a6b80" font-size="10">(c) 90&#176; offset</text><text x="382" y="140" text-anchor="middle" fill="#5a6b80" font-size="10">worm</text></svg>';
+var SKETCH = '<svg viewBox="0 0 470 175" role="img" aria-label="Three shaft arrangements: (a) parallel shafts with spur gears; (b) 90 degree intersecting shafts with bevel gears; (c) perpendicular non-intersecting shafts with a worm and wormgear.">'
++ '<text x="78" y="16" text-anchor="middle" fill="#1F3A5F" font-size="11" font-weight="bold">(a) Parallel</text>'
++ '<circle cx="48" cy="70" r="22" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="108" cy="70" r="36" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="48" cy="70" r="2.5" fill="#1F3A5F"/><circle cx="108" cy="70" r="2.5" fill="#1F3A5F"/>'
++ '<line x1="20" y1="70" x2="48" y2="70" stroke="#5a6b80" stroke-width="2"/>'
++ '<line x1="108" y1="70" x2="140" y2="70" stroke="#5a6b80" stroke-width="2"/>'
++ '<text x="78" y="130" text-anchor="middle" fill="#5a6b80" font-size="10">spur / helical</text>'
++ '<text x="78" y="145" text-anchor="middle" fill="#5a6b80" font-size="10">coplanar, parallel axes</text>'
++ '<text x="235" y="16" text-anchor="middle" fill="#1F3A5F" font-size="11" font-weight="bold">(b) 90&#176; intersecting</text>'
++ '<line x1="185" y1="70" x2="255" y2="70" stroke="#5a6b80" stroke-width="2.5"/>'
++ '<line x1="220" y1="70" x2="220" y2="30" stroke="#5a6b80" stroke-width="2.5"/>'
++ '<path d="M205,70 L220,48 L235,70 Z" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.3"/>'
++ '<path d="M220,70 L238,58 L238,82 Z" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.3"/>'
++ '<text x="235" y="130" text-anchor="middle" fill="#5a6b80" font-size="10">straight bevel</text>'
++ '<text x="235" y="145" text-anchor="middle" fill="#5a6b80" font-size="10">axes meet at a point</text>'
++ '<text x="385" y="16" text-anchor="middle" fill="#1F3A5F" font-size="11" font-weight="bold">(c) 90&#176; non-intersecting</text>'
++ '<line x1="320" y1="48" x2="450" y2="48" stroke="#5a6b80" stroke-width="2.5"/>'
++ '<rect x="368" y="38" width="34" height="20" rx="3" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.3"/>'
++ '<text x="385" y="52" text-anchor="middle" fill="#1F3A5F" font-size="9">worm</text>'
++ '<line x1="385" y1="58" x2="385" y2="115" stroke="#D85A30" stroke-width="2.5"/>'
++ '<circle cx="385" cy="95" r="22" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="385" cy="95" r="2.5" fill="#1F3A5F"/>'
++ '<text x="415" y="100" fill="#5a6b80" font-size="9">wormgear</text>'
++ '<text x="385" y="145" text-anchor="middle" fill="#5a6b80" font-size="10">axes offset (skew)</text>'
++ '<text x="385" y="160" text-anchor="middle" fill="#5a6b80" font-size="10">compact high ratio</text>'
++ '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
     html:"<p>Gear selection is a design decision made before any stress analysis: the gear type must match the shaft orientation, the speed ratio, and the packaging and noise constraints. We follow the same engineering-solution steps used for calculation problems, with the selection criteria standing in for the design equations.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given &mdash; three drives:</strong></p><ul class='kv'>"
       +"<li>(a) parallel shafts, VR = 5:1, moderate noise acceptable</li>"
-      +"<li>(b) right-angle (90&deg;) intersecting shafts, single stage</li>"
-      +"<li>(c) parallel shafts, VR = 50:1, compact package</li></ul>"
+      +"<li>(b) right-angle (90&deg;) <em>intersecting</em> shafts, single stage</li>"
+      +"<li>(c) right-angle (90&deg;) <em>non-intersecting</em> (offset) shafts, VR = 50:1, compact package</li></ul>"
       +"<p><strong>Find:</strong> the most appropriate gear type for each drive, with the deciding reason.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
     html:"<p>Assumptions: single-stage configurations; adequate efficiency for each type in its intended service; standard 20&deg; full-depth teeth. Shaft orientation is the first filter, then ratio and packaging.</p>"
@@ -89,7 +115,7 @@ var STEPS = [
     html:"<ul class='kv'>"
       +"<li>(a) <strong>Spur gears</strong> &mdash; parallel shafts; 5:1 is well within single-stage range; economical; moderate noise acceptable.</li>"
       +"<li>(b) <strong>Straight bevel gears</strong> &mdash; the 90&deg; intersecting shafts are the defining condition; straight bevel is the simple, cost-effective single-stage right-angle drive.</li>"
-      +"<li>(c) <strong>Worm / wormgear</strong> &mdash; 50:1 exceeds one spur/helical stage but is well inside worm range, and a worm set is compact.</li></ul>" },
+      +"<li>(c) <strong>Worm / wormgear</strong> &mdash; 50:1 exceeds one spur/helical stage; the offset perpendicular shafts match a worm set; the package stays compact.</li></ul>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<ul class='kv'>"
       +"<li>Each choice satisfies its shaft orientation and single-stage ratio limit &check;</li>"
@@ -97,8 +123,8 @@ var STEPS = [
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Drive</th><th>Gear type</th><th>Deciding reason</th></tr>"
       +"<tr><td>(a) 5:1, parallel</td><td>Spur</td><td>Parallel shafts, economical, ratio within one stage</td></tr>"
-      +"<tr><td>(b) 90&deg; single stage</td><td>Straight bevel</td><td>Intersecting shafts at 90&deg;</td></tr>"
-      +"<tr><td>(c) 50:1, compact</td><td>Worm / wormgear</td><td>High ratio in one compact stage (check efficiency)</td></tr></table>"
+      +"<tr><td>(b) 90&deg; intersecting</td><td>Straight bevel</td><td>Axes meet at 90&deg;</td></tr>"
+      +"<tr><td>(c) 50:1, compact, offset</td><td>Worm / wormgear</td><td>High ratio in one compact stage on skew axes (check efficiency)</td></tr></table>"
       +"<p><strong>Verdict:</strong> no single gear type serves all three drives &mdash; context-specific selection is the design skill. Shaft orientation is the first filter, then ratio and packaging.</p>" }
 ];
 

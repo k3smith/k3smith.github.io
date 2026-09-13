@@ -65,39 +65,65 @@ var PROBLEM = {
   title: "Worked Example 4.7-A: Contact Stress and Material Specification",
   statement: "Same pair: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, $F = 36\\ \\text{mm}$, $D_P = 60\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $K_o = 1.50$, $K_v = 1.20$, $C_p = 191\\ \\sqrt{\\text{MPa}}$ (steel-on-steel). From Page 4.6, bending needs only $H_B \\ge 136$. Compute the contact stress and specify the governing hardness."
 };
-var SKETCH = '<svg viewBox="0 0 340 200" role="img" aria-label="A pinion tooth flank and a gear tooth flank meet at a single contact point on the pitch line, where a high localized Hertz contact stress can cause surface pitting."><path d="M125,35 Q215,95 125,155" fill="#eef3f9" stroke="#1F3A5F" stroke-width="2.5"/><path d="M215,35 Q125,95 215,155" fill="#dce8f5" stroke="#1F3A5F" stroke-width="2.5"/><line x1="60" y1="95" x2="280" y2="95" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="6" fill="#D85A30"/><text x="185" y="82" fill="#D85A30" font-size="11">contact point</text><text x="185" y="96" fill="#5a6b80" font-size="10">(pitch line, high Hertz stress)</text><text x="95" y="185" text-anchor="middle" fill="#5a6b80" font-size="10">pinion tooth</text><text x="245" y="185" text-anchor="middle" fill="#5a6b80" font-size="10">gear tooth</text></svg>';
+var SKETCH = '<svg viewBox="0 0 380 210" role="img" aria-label="Pitch circles of a pinion and gear touch at the pitch point. A zoom inset shows the two tooth flanks meeting there, where Hertz contact stress can cause surface pitting.">'
++ '<circle cx="95" cy="95" r="36" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="95" cy="95" r="2.5" fill="#1F3A5F"/>'
++ '<circle cx="215" cy="95" r="84" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5" fill-opacity="0.45"/>'
++ '<circle cx="215" cy="95" r="2.5" fill="#1F3A5F"/>'
++ '<line x1="95" y1="95" x2="215" y2="95" stroke="#5a6b80" stroke-width="0.7" stroke-dasharray="3 3"/>'
++ '<circle cx="131" cy="95" r="5" fill="#D85A30"/>'
++ '<text x="128" y="82" text-anchor="end" fill="#D85A30" font-size="11">pitch point</text>'
++ '<text x="95" y="150" text-anchor="middle" fill="#5a6b80" font-size="10">pinion</text>'
++ '<text x="230" y="150" text-anchor="middle" fill="#5a6b80" font-size="10">gear</text>'
++ '<rect x="268" y="28" width="100" height="100" fill="#fff" stroke="#1F3A5F" stroke-width="1.2"/>'
++ '<text x="318" y="44" text-anchor="middle" fill="#1F3A5F" font-size="9">flank contact</text>'
++ '<path d="M285,55 Q318,95 285,135" fill="#eef3f9" stroke="#1F3A5F" stroke-width="2"/>'
++ '<path d="M350,55 Q318,95 350,135" fill="#dce8f5" stroke="#1F3A5F" stroke-width="2"/>'
++ '<circle cx="318" cy="95" r="4" fill="#D85A30"/>'
++ '<text x="318" y="155" text-anchor="middle" fill="#5a6b80" font-size="9">high Hertz stress</text>'
++ '<text x="190" y="195" text-anchor="middle" fill="#5a6b80" font-size="10">pitting risk is highest near the pitch line</text>'
++ '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
     html:"<p>The second failure mode is surface pitting near the pitch line. The AGMA contact-stress equation uses Hertz theory and the pitting geometry factor $I$. Whichever of bending or contact needs the higher hardness governs the material &mdash; for through-hardened steel that is almost always contact.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
       +"<li>$W_t = 2729\\ \\text{N}$; $K_o = 1.50$; $K_v = 1.20$; $F = 36\\ \\text{mm}$; $D_P = 60\\ \\text{mm}$</li>"
-      +"<li>$m_G = 80/20 = 4.0$; $C_p = 191\\ \\sqrt{\\text{MPa}}$; $S_H \\ge 1.2$</li></ul>"
+      +"<li>$m_G = 80/20 = 4.0$; $C_p = 191\\ \\sqrt{\\text{MPa}}$; $S_H \\ge 1.2$; bending already requires only $H_B \\ge 136$</li></ul>"
       +"<p><strong>Find:</strong> $I$; $s_c$; required $H_B$; final material.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
     html:"<p>Assumptions: 20&deg; full-depth external spur pair; steel-on-steel ($C_p = 191\\ \\sqrt{\\text{MPa}}$); through-hardened Grade 1; minimum $S_H = 1.2$. Both mating teeth see the same contact stress.</p>"
       + SKETCH
       + "<p class='cite'>Reference: Mott &sect;9-6; $C_p$ from Table 9-7; $s_{ac}$ from Fig. 9-19 (Grade 1).</p>" },
   { label:"Equations", title:"Equations",
-    html:"$$I = 0.1607\\,\\frac{m_G}{m_G+1}, \\qquad s_c = C_p\\sqrt{\\frac{W_t\\,K_o\\,K_v}{F\\,D_P\\,I}}$$"
-      +"$$s_{ac} \\approx 2.22\\,H_B + 200.6\\ \\text{MPa}, \\qquad S_H = \\frac{s_{ac}}{s_c}$$" },
+    html:"<p>Pitting geometry factor and AGMA contact stress:</p>"
+      +"<p class='eq-label'>Geometry factor $I$ for 20&deg; full-depth external spur ($\\tfrac{1}{2}\\cos\\phi\\sin\\phi = 0.1607$):</p>"
+      +"$$I = 0.1607\\,\\frac{m_G}{m_G+1}$$"
+      +"<p class='eq-label'>Contact stress number:</p>"
+      +"$$s_c = C_p\\sqrt{\\frac{W_t\\,K_o\\,K_v}{F\\,D_P\\,I}}$$"
+      +"<p class='eq-label'>Allowable contact stress number (Grade 1 through-hardened fit) and safety factor:</p>"
+      +"$$s_{ac} \\approx 2.22\\,H_B + 200.6\\ \\text{MPa}, \\qquad S_H = \\frac{s_{ac}}{s_c}$$"
+      +"<p class='eq-label'>Required hardness for target $S_H$:</p>"
+      +"$$H_{B,req} = \\frac{S_H\\,s_c - 200.6}{2.22}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$I = 0.1607\\,\\frac{4.0}{5.0} = \\textcolor{#D85A30}{0.1286}$$</div>"
+    html:"<div class='calc'>$$I = 0.1607\\,\\frac{m_G}{m_G+1} = 0.1607\\,\\frac{4.0}{5.0} = \\textcolor{#D85A30}{0.1286}$$</div>"
       +"<div class='calc'>$$s_c = 191\\sqrt{\\frac{2729(1.50)(1.20)}{36(60)(0.1286)}} = 191\\sqrt{17.68} = \\textcolor{#D85A30}{803\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$s_{ac,req} = 803(1.2) = 964\\ \\text{MPa} \\;\\Rightarrow\\; H_B = \\frac{964-200.6}{2.22} = \\textcolor{#D85A30}{344}$$</div>"
+      +"<div class='calc'>$$s_{ac,req} = 1.2(803) = 964\\ \\text{MPa} \\;\\Rightarrow\\; H_B = \\frac{964-200.6}{2.22} = \\textcolor{#D85A30}{344}$$</div>"
       +"<p>Check hardness options:</p>"
-      +"<div class='calc'>$$250\\ \\text{HB}:\\ s_{ac}=755.6,\\ S_H=0.94 \\qquad 350\\ \\text{HB}:\\ s_{ac}=977.6,\\ S_H=1.22$$</div>"
-      +"<p>250 HB fails ($S_H < 1.2$); 350 HB passes ($S_H \\ge 1.2$).</p>" },
+      +"<div class='calc'>$$250\\ \\text{HB}:\\ s_{ac}=2.22(250)+200.6=755.6\\ \\text{MPa},\\ S_H=\\frac{755.6}{803}=0.94\\ \\text{(fails)}$$</div>"
+      +"<div class='calc'>$$350\\ \\text{HB}:\\ s_{ac}=2.22(350)+200.6=977.6\\ \\text{MPa},\\ S_H=\\frac{977.6}{803}=1.22\\ \\checkmark$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<ul class='kv'>"
       +"<li>Contact needs $H_B \\ge 344$ vs. only 136 for bending &mdash; contact governs, as expected for through-hardened steel.</li>"
-      +"<li>$344 \\le 400\\ \\text{HB}$, so through-hardening is still feasible; no case hardening required.</li></ul>" },
+      +"<li>$344 \\le 400\\ \\text{HB}$, so through-hardening is still feasible; no case hardening required.</li>"
+      +"<li>SAE 4140 can reach ~250&ndash;300 HB readily; ~350 HB favors a higher-hardenability alloy such as SAE 4340.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
       +"<tr><td>Contact stress $s_c$</td><td>803 MPa</td></tr>"
-      +"<tr><td>250 HB</td><td>$S_H = 0.94$ (fails)</td></tr>"
-      +"<tr><td>Required $H_B$ (contact)</td><td>344</td></tr></table>"
-      +"<p><strong>Verdict:</strong> the 250 HB steel that passed bending fails contact. <strong>Specify SAE 4340 Q&amp;T at $H_B \\approx 350$</strong> for both pinion and gear ($S_H = 1.22$). Contact governs over bending.</p>" }
+      +"<tr><td>250 HB (from Page 4.6)</td><td>$S_H = 0.94$ (fails contact)</td></tr>"
+      +"<tr><td>Required $H_B$ (contact)</td><td>344</td></tr>"
+      +"<tr><td>350 HB</td><td>$S_H = 1.22$ &check;</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 250 HB steel that passed bending fails contact. <strong>Specify SAE 4340 Q&amp;T at $H_B \\approx 350$</strong> for both pinion and gear ($S_H = 1.22$) &mdash; 4340 has better hardenability than 4140 at this hardness. Contact governs over bending.</p>" }
 ];
 
 

@@ -63,7 +63,7 @@
 <script>
 var PROBLEM = {
   title: "Worked Example 4.6-A: Bending Stress Check",
-  statement: "Continuing the running example: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, $F = 36\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $v_t = 5.50\\ \\text{m/s}$. Driver = electric motor (uniform); driven = moderate shock; AGMA quality $A_v = 8$. Compute the simplified AGMA bending stress on the pinion, the minimum required hardness, and evaluate SAE 4140 Q&amp;T at 250 HB."
+  statement: "Continuing the running example: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, face width $F = 12m = 36\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $v_t = 5.50\\ \\text{m/s}$. Driver = electric motor (uniform); driven = moderate shock; AGMA quality $A_v = 8$. Compute the simplified AGMA bending stress on the pinion, the minimum required hardness, and evaluate SAE 4140 Q&amp;T at 250 HB."
 };
 var SKETCH = '<svg viewBox="0 0 300 200" role="img" aria-label="A single gear tooth modeled as a cantilever: the transmitted load acts near the tip and the maximum bending stress occurs at the root fillet."><defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs><line x1="45" y1="172" x2="230" y2="172" stroke="#1F3A5F" stroke-width="3"/><path d="M95,172 L108,70 Q112,58 124,58 L150,58 Q162,58 166,70 L180,172 Z" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/><line x1="180" y1="66" x2="216" y2="66" stroke="#D85A30" stroke-width="2" marker-end="url(#ar)"/><text x="150" y="44" fill="#D85A30" font-size="11">W_t near tip</text><path d="M96,168 q6,-8 12,-2" fill="none" stroke="#D85A30" stroke-width="2"/><text x="20" y="150" fill="#D85A30" font-size="10">root fillet</text><text x="26" y="164" fill="#D85A30" font-size="10">max &#963;</text></svg>';
 var STEPS = [
@@ -71,7 +71,7 @@ var STEPS = [
     html:"<p>A gear tooth is a cantilever loaded near its tip, so a fatigue crack can start at the root fillet. The simplified AGMA bending equation scales the transmitted load by the geometry factor $J$ and by the overload and dynamic factors, and we compare the result to the material's allowable bending stress number.</p>" },
   { label:"Given/Find", title:"Given and Find",
     html:"<p><strong>Given:</strong></p><ul class='kv'>"
-      +"<li>$W_t = 2729\\ \\text{N}$; $m = 3\\ \\text{mm}$; $F = 36\\ \\text{mm}$</li>"
+      +"<li>$W_t = 2729\\ \\text{N}$ (from Page 4.5); $m = 3\\ \\text{mm}$; $F = 12m = 36\\ \\text{mm}$ (mid-range spur face width)</li>"
       +"<li>$J_P = 0.34$ (Fig. 9-10, 20/80 pair); $K_o = 1.50$ (Table 9-1, uniform / moderate shock); $K_v = 1.20$ ($A_v = 8$, 5.50 m/s)</li></ul>"
       +"<p><strong>Find:</strong> $s_t$; minimum $H_B$; is SAE 4140 Q&amp;T at 250 HB safe?</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
@@ -79,13 +79,21 @@ var STEPS = [
       + SKETCH
       + "<p class='cite'>Reference: Mott &sect;9-5 (and &sect;9-10 metric-module form); $J$ from Fig. 9-10, $K_o$ from Table 9-1, $K_v$ from Fig. 9-16, $s_{at}$ from Fig. 9-18 (Grade 1).</p>" },
   { label:"Equations", title:"Equations",
-    html:"$$s_t = \\frac{W_t}{F\\,m\\,J}\\,K_o\\,K_v$$"
-      +"$$s_{at} \\approx 0.533\\,H_B + 88.3\\ \\text{MPa}, \\qquad S_F = \\frac{s_{at}}{s_t}$$"
-      +"<p>Required hardness from a target $S_F$: $H_{B,req} = \\dfrac{S_F\\,s_t - 88.3}{0.533}$.</p>" },
+    html:"<p>Simplified AGMA bending stress and allowable hardness fit:</p>"
+      +"<p class='eq-label'>Bending stress number (metric-module form):</p>"
+      +"$$s_t = \\frac{W_t}{F\\,m\\,J}\\,K_o\\,K_v$$"
+      +"<p class='eq-label'>Allowable bending stress number (Grade 1 through-hardened, Mott Fig. 9-18 fit):</p>"
+      +"$$s_{at} \\approx 0.533\\,H_B + 88.3\\ \\text{MPa}$$"
+      +"<p class='eq-label'>Bending safety factor and required hardness for a target $S_F$:</p>"
+      +"$$S_F = \\frac{s_{at}}{s_t}, \\qquad H_{B,req} = \\frac{S_F\\,s_t - 88.3}{0.533}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$s_t = \\frac{2729}{36(3)(0.34)}(1.50)(1.20) = 74.32 \\times 1.80 = \\textcolor{#D85A30}{133.8\\ \\text{MPa}}$$</div>"
-      +"<div class='calc'>$$s_{at,req} = 133.8(1.2) = 160.5\\ \\text{MPa} \\;\\Rightarrow\\; H_{B,min} = \\frac{160.5 - 88.3}{0.533} = \\textcolor{#D85A30}{136}$$</div>"
-      +"<div class='calc'>$$\\text{4140 Q\\&T @ 250 HB: } s_{at} = 0.533(250)+88.3 = 221.6\\ \\text{MPa}, \\quad S_F = \\frac{221.6}{133.8} = \\textcolor{#D85A30}{1.66}$$</div>" },
+    html:"<div class='calc'>$$s_t = \\frac{W_t}{F\\,m\\,J}\\,K_o\\,K_v = \\frac{2729\\ \\text{N}}{(36\\ \\text{mm})(3\\ \\text{mm})(0.34)}(1.50)(1.20)$$</div>"
+      +"<div class='calc'>$$= 74.32 \\times 1.80 = \\textcolor{#D85A30}{133.8\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$s_{at,req} = S_F\\,s_t = 1.2(133.8) = 160.5\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$H_{B,min} = \\frac{160.5 - 88.3}{0.533} = \\textcolor{#D85A30}{136}$$</div>"
+      +"<div class='calc'>$$\\text{4140 Q\\&T @ 250 HB: } s_{at} = 0.533(250)+88.3 = 221.6\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$S_F = \\frac{221.6}{133.8} = \\textcolor{#D85A30}{1.66} \\ge 1.2\\ \\checkmark$$</div>"
+      +"<p class='note'>Units: N / (mm·mm) = N/mm$^2$ = MPa.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<ul class='kv'>"
       +"<li>Required $H_B = 136$ is easily met; 250 HB gives $S_F = 1.66 \\ge 1.2$ &check;</li>"

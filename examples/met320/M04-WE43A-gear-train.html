@@ -65,7 +65,32 @@ var PROBLEM = {
   title: "Worked Example 4.3-A: Double-Reduction Gear Train Design",
   statement: "A speed reducer takes an electric motor at $n_{in} = 1750\\ \\text{rpm}$ and must deliver about $n_{out} \\approx 109\\ \\text{rpm}$ (target ratio &asymp; 16:1). Design a two-stage compound spur gear train with $P_d = 8$ teeth/in, minimum pinion 18 teeth, and gears no larger than about 120 teeth. Find the tooth counts and the actual output speed."
 };
-var SKETCH = '<svg viewBox="0 0 460 150" role="img" aria-label="A two-stage compound gear train: motor drives stage one (20 to 80 teeth), gears B and C share the intermediate shaft, stage two (18 to 72 teeth) drives the output; total ratio 16 to 1."><defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs><text x="18" y="42" font-size="10" fill="#5a6b80">Motor</text><text x="18" y="56" font-size="10" fill="#5a6b80">1750 rpm</text><line x1="62" y1="47" x2="88" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><rect x="90" y="25" width="112" height="46" rx="4" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><text x="146" y="45" text-anchor="middle" font-size="10" fill="#1F3A5F">Stage 1</text><text x="146" y="60" text-anchor="middle" font-size="10" fill="#1F3A5F">A20 &#8594; B80 (4:1)</text><line x1="202" y1="47" x2="248" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><text x="225" y="40" text-anchor="middle" font-size="8" fill="#5a6b80">B, C on</text><text x="225" y="86" text-anchor="middle" font-size="8" fill="#5a6b80">same shaft</text><rect x="250" y="25" width="112" height="46" rx="4" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/><text x="306" y="45" text-anchor="middle" font-size="10" fill="#1F3A5F">Stage 2</text><text x="306" y="60" text-anchor="middle" font-size="10" fill="#1F3A5F">C18 &#8594; D72 (4:1)</text><line x1="362" y1="47" x2="408" y2="47" stroke="#5a6b80" stroke-width="1.2" marker-end="url(#ar)"/><text x="410" y="44" font-size="10" fill="#5a6b80">109 rpm</text><text x="230" y="120" text-anchor="middle" font-size="11" fill="#D85A30">Total VR = 4 &#215; 4 = 16</text></svg>';
+var SKETCH = '<svg viewBox="0 0 420 220" role="img" aria-label="Compound double-reduction train: pinion A meshes gear B; gears B and C share the intermediate shaft; pinion C meshes gear D on the output shaft. Stage ratios are each 4 to 1.">'
++ '<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
++ '<line x1="20" y1="55" x2="58" y2="55" stroke="#5a6b80" stroke-width="2"/>'
++ '<text x="18" y="42" fill="#5a6b80" font-size="10">Motor</text>'
++ '<text x="18" y="78" fill="#5a6b80" font-size="9">1750 rpm</text>'
++ '<circle cx="78" cy="55" r="16" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="78" cy="55" r="2" fill="#1F3A5F"/>'
++ '<text x="78" y="28" text-anchor="middle" fill="#1F3A5F" font-size="10">A 20</text>'
++ '<circle cx="158" cy="55" r="64" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="158" cy="55" r="2" fill="#1F3A5F"/>'
++ '<text x="158" y="50" text-anchor="middle" fill="#1F3A5F" font-size="10">B 80</text>'
++ '<line x1="158" y1="55" x2="158" y2="145" stroke="#1F3A5F" stroke-width="2" stroke-dasharray="4 3"/>'
++ '<text x="168" y="105" fill="#5a6b80" font-size="9">intermediate</text>'
++ '<text x="168" y="117" fill="#5a6b80" font-size="9">shaft (B+C)</text>'
++ '<circle cx="158" cy="145" r="14" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="158" cy="145" r="2" fill="#1F3A5F"/>'
++ '<text x="118" y="150" text-anchor="end" fill="#1F3A5F" font-size="10">C 18</text>'
++ '<circle cx="228" cy="145" r="56" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="228" cy="145" r="2" fill="#1F3A5F"/>'
++ '<text x="228" y="149" text-anchor="middle" fill="#1F3A5F" font-size="10">D 72</text>'
++ '<line x1="284" y1="145" x2="328" y2="145" stroke="#5a6b80" stroke-width="2" marker-end="url(#ar)"/>'
++ '<text x="333" y="142" fill="#5a6b80" font-size="10">109.4 rpm</text>'
++ '<text x="118" y="195" text-anchor="middle" fill="#D85A30" font-size="11">Stage 1: A20 &#8594; B80 (4:1)</text>'
++ '<text x="250" y="195" text-anchor="middle" fill="#D85A30" font-size="11">Stage 2: C18 &#8594; D72 (4:1)</text>'
++ '<text x="200" y="214" text-anchor="middle" fill="#D85A30" font-size="11">VR_total = 4 &#215; 4 = 16</text>'
++ '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
     html:"<p>A single spur stage is limited to roughly 10:1, so a 16:1 reduction needs two stages. Splitting the ratio evenly keeps the largest gear as small as possible. We pick integer tooth counts, respect the 18-tooth minimum pinion, and check the delivered speed.</p>" },
@@ -75,22 +100,31 @@ var STEPS = [
       +"<li>$P_d = 8$ teeth/in; $N_{P,min} = 18$; $N_{G,max} \\approx 120$</li></ul>"
       +"<p><strong>Find:</strong> tooth counts $N_A, N_B, N_C, N_D$ and the actual $n_{out}$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: two equal stages ($VR_1 = VR_2 = \\sqrt{VR_{total}}$) to minimize the largest gear; compound train with gears B and C sharing the intermediate shaft; standard 20&deg; full-depth teeth.</p>"
+    html:"<p>Assumptions: two equal stages ($VR_1 = VR_2 = \\sqrt{VR_{total}}$) to minimize the largest gear; compound train with gears B and C fixed on the intermediate shaft; standard 20&deg; full-depth teeth. Stage 1 uses $N_A = 20$ (slightly above the 18-tooth minimum) so $N_B = 80$ stays well under 120.</p>"
       + SKETCH
       + "<p class='cite'>Reference: Mott Ch. 8, velocity ratio and gear trains (&sect;8-13, &sect;8-14).</p>" },
   { label:"Equations", title:"Equations",
-    html:"$$VR_{total} = VR_1 \\times VR_2, \\qquad VR_{stage} = \\frac{N_{driven}}{N_{driver}}$$"
-      +"$$n_{int} = \\frac{n_{in}}{VR_1}, \\qquad n_{out} = \\frac{n_{int}}{VR_2}$$" },
-  { label:"Calculate", title:"Calculations",
+    html:"<p>Split the total ratio, then size each stage:</p>"
+      +"<p class='eq-label'>Equal stage ratios (minimizes the largest gear):</p>"
+      +"$$VR_1 = VR_2 = \\sqrt{VR_{total}}$$"
+      +"<p class='eq-label'>Stage ratio from tooth counts:</p>"
+      +"$$VR_{stage} = \\frac{N_{driven}}{N_{driver}}$$"
+      +"<p class='eq-label'>Compound train overall ratio and speeds:</p>"
+      +"$$VR_{total} = VR_1 \\times VR_2 = \\frac{N_B}{N_A}\\cdot\\frac{N_D}{N_C}$$"
+      +"$$n_{int} = \\frac{n_{in}}{VR_1}, \\qquad n_{out} = \\frac{n_{int}}{VR_2} = \\frac{n_{in}}{VR_{total}}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$VR_1 = VR_2 = \\sqrt{16} = \\textcolor{#D85A30}{4.0}$$</div>"
-      +"<p>Stage 1: $N_A = 20$ (driver), $N_B = 20 \\times 4 = 80$ (driven); $80 \\le 120$ &check;<br>"
-      +"Stage 2: $N_C = 18$ (driver), $N_D = 18 \\times 4 = 72$ (driven); $72 \\le 120$ &check;</p>"
-      +"<div class='calc'>$$VR_{total} = \\tfrac{80}{20}\\times\\tfrac{72}{18} = 4.0 \\times 4.0 = \\textcolor{#D85A30}{16.0}$$</div>"
-      +"<div class='calc'>$$n_{int} = \\tfrac{1750}{4.0} = 437.5\\ \\text{rpm}, \\qquad n_{out} = \\tfrac{437.5}{4.0} = \\textcolor{#D85A30}{109.4\\ \\text{rpm}}$$</div>" },
+      +"<p><strong>Stage 1</strong> (choose $N_A = 20 \\ge 18$):</p>"
+      +"<div class='calc'>$$N_B = N_A \\times VR_1 = 20 \\times 4 = 80 \\le 120\\ \\checkmark$$</div>"
+      +"<p><strong>Stage 2</strong> (use the minimum pinion $N_C = 18$):</p>"
+      +"<div class='calc'>$$N_D = N_C \\times VR_2 = 18 \\times 4 = 72 \\le 120\\ \\checkmark$$</div>"
+      +"<div class='calc'>$$VR_{total} = \\frac{80}{20}\\times\\frac{72}{18} = 4.0 \\times 4.0 = \\textcolor{#D85A30}{16.0}$$</div>"
+      +"<div class='calc'>$$n_{int} = \\frac{1750\\ \\text{rpm}}{4.0} = 437.5\\ \\text{rpm}, \\qquad n_{out} = \\frac{1750}{16.0} = \\textcolor{#D85A30}{109.4\\ \\text{rpm}}$$</div>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<ul class='kv'>"
       +"<li>All tooth counts are integers; $N_P \\ge 18$ and $N_G \\le 120$ &check;</li>"
-      +"<li>$n_{out} = 109.4 \\approx 109\\ \\text{rpm}$ target; $VR_{total} = 16.0$ exactly &check;</li></ul>" },
+      +"<li>$n_{out} = 109.4 \\approx 109\\ \\text{rpm}$ target; $VR_{total} = 16.0$ exactly &check;</li>"
+      +"<li>Hunting-tooth option: e.g. change $N_B$ to 79 or 81 so $N_A$ and $N_B$ share no common factor, spreading wear.</li></ul>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Stage</th><th>Driver</th><th>Driven</th><th>Ratio</th></tr>"
       +"<tr><td>1</td><td>$N_A = 20$</td><td>$N_B = 80$</td><td>4.0</td></tr>"

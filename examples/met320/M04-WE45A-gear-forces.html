@@ -65,7 +65,29 @@ var PROBLEM = {
   title: "Worked Example 4.5-A: Forces on a Spur Gear Pair",
   statement: "A spur pair uses $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, pressure angle $\\phi = 20^\\circ$. The pinion runs at $n_P = 1750\\ \\text{rpm}$ and transmits $P = 15\\ \\text{kW}$. Find the pitch diameters, pitch-line speed, pinion torque, and the tooth forces $W_t$, $W_r$, $W_N$. This running example continues on Pages 4.6 and 4.7."
 };
-var SKETCH = '<svg viewBox="0 0 380 205" role="img" aria-label="A 12-tooth spur pinion meshing a 24-tooth gear; at the pitch point P the transmitted force W_t acts tangent (perpendicular to the line of centers) and the radial separating force W_r acts along the line of centers."><defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs><defs><marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs><path d="M141.6,89.7 L158.5,92.8 L158.5,107.2 L141.6,110.3 L142.5,106.9 L155.6,118.0 L148.4,130.4 L132.2,124.7 L134.7,122.2 L140.4,138.4 L128.0,145.6 L116.9,132.5 L120.3,131.6 L117.2,148.5 L102.8,148.5 L99.7,131.6 L103.1,132.5 L92.0,145.6 L79.6,138.4 L85.3,122.2 L87.8,124.7 L71.6,130.4 L64.4,118.0 L77.5,106.9 L78.4,110.3 L61.5,107.2 L61.5,92.8 L78.4,89.7 L77.5,93.1 L64.4,82.0 L71.6,69.6 L87.8,75.3 L85.3,77.8 L79.6,61.6 L92.0,54.4 L103.1,67.5 L99.7,68.4 L102.8,51.5 L117.2,51.5 L120.3,68.4 L116.9,67.5 L128.0,54.4 L140.4,61.6 L134.7,77.8 L132.2,75.3 L148.4,69.6 L155.6,82.0 L142.5,93.1 Z" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.3"/><circle cx="110" cy="100" r="42.0" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/><circle cx="110" cy="100" r="2.5" fill="#1F3A5F"/><path d="M310.3,88.2 L326.8,93.3 L326.8,106.7 L310.3,111.8 L310.8,107.9 L325.4,117.1 L321.9,129.9 L304.7,130.6 L306.3,127.0 L317.9,139.6 L311.3,151.1 L294.5,147.4 L296.9,144.2 L304.9,159.5 L295.5,168.9 L280.2,160.9 L283.4,158.5 L287.1,175.3 L275.6,181.9 L263.0,170.3 L266.6,168.7 L265.9,185.9 L253.1,189.4 L243.9,174.8 L247.8,174.3 L242.7,190.8 L229.3,190.8 L224.2,174.3 L228.1,174.8 L218.9,189.4 L206.1,185.9 L205.4,168.7 L209.0,170.3 L196.4,181.9 L184.9,175.3 L188.6,158.5 L191.8,160.9 L176.5,168.9 L167.1,159.5 L175.1,144.2 L177.5,147.4 L160.7,151.1 L154.1,139.6 L165.7,127.0 L167.3,130.6 L150.1,129.9 L146.6,117.1 L161.2,107.9 L161.7,111.8 L145.2,106.7 L145.2,93.3 L161.7,88.2 L161.2,92.1 L146.6,82.9 L150.1,70.1 L167.3,69.4 L165.7,73.0 L154.1,60.4 L160.7,48.9 L177.5,52.6 L175.1,55.8 L167.1,40.5 L176.5,31.1 L191.8,39.1 L188.6,41.5 L184.9,24.7 L196.4,18.1 L209.0,29.7 L205.4,31.3 L206.1,14.1 L218.9,10.6 L228.1,25.2 L224.2,25.7 L229.3,9.2 L242.7,9.2 L247.8,25.7 L243.9,25.2 L253.1,10.6 L265.9,14.1 L266.6,31.3 L263.0,29.7 L275.6,18.1 L287.1,24.7 L283.4,41.5 L280.2,39.1 L295.5,31.1 L304.9,40.5 L296.9,55.8 L294.5,52.6 L311.3,48.9 L317.9,60.4 L306.3,73.0 L304.7,69.4 L321.9,70.1 L325.4,82.9 L310.8,92.1 Z" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.3"/><circle cx="236" cy="100" r="84.0" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/><circle cx="236" cy="100" r="2.5" fill="#1F3A5F"/><line x1="110" y1="100" x2="236" y2="100" stroke="#5a6b80" stroke-width="0.7" stroke-dasharray="3 3"/><circle cx="152" cy="100" r="4" fill="#2a7a3a"/><text x="150" y="90" text-anchor="end" fill="#2a7a3a" font-size="11">P</text><line x1="152" y1="100" x2="152" y2="50" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/><text x="158" y="48" fill="#D85A30" font-size="12">W_t</text><line x1="152" y1="100" x2="116" y2="100" stroke="#1F3A5F" stroke-width="2.2" marker-end="url(#arb)"/><text x="96" y="116" fill="#1F3A5F" font-size="12">W_r</text><text x="110" y="182" text-anchor="middle" fill="#5a6b80" font-size="11">pinion (N_P)</text><text x="236" y="200" text-anchor="middle" fill="#5a6b80" font-size="11">gear (N_G)</text></svg>';
+var SKETCH = '<svg viewBox="0 0 400 240" role="img" aria-label="A 20-tooth spur pinion meshing an 80-tooth gear (pitch-diameter ratio 1 to 4). At the pitch point P the transmitted force W_t acts tangent to the pitch circles and the radial separating force W_r acts along the line of centers.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
++ '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<circle cx="90" cy="120" r="28" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="90" cy="120" r="28" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<circle cx="90" cy="120" r="2.5" fill="#1F3A5F"/>'
++ '<circle cx="230" cy="120" r="112" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5" fill-opacity="0.5"/>'
++ '<circle cx="230" cy="120" r="112" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<circle cx="230" cy="120" r="2.5" fill="#1F3A5F"/>'
++ '<line x1="90" y1="120" x2="230" y2="120" stroke="#5a6b80" stroke-width="0.7" stroke-dasharray="3 3"/>'
++ '<circle cx="118" cy="120" r="4" fill="#2a7a3a"/>'
++ '<text x="116" y="108" text-anchor="end" fill="#2a7a3a" font-size="11">P</text>'
++ '<line x1="118" y1="120" x2="118" y2="68" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/>'
++ '<text x="125" y="66" fill="#D85A30" font-size="12">W_t</text>'
++ '<line x1="118" y1="120" x2="82" y2="120" stroke="#1F3A5F" stroke-width="2.2" marker-end="url(#arb)"/>'
++ '<text x="64" y="136" fill="#1F3A5F" font-size="12">W_r</text>'
++ '<text x="90" y="168" text-anchor="middle" fill="#5a6b80" font-size="11">pinion</text>'
++ '<text x="90" y="182" text-anchor="middle" fill="#5a6b80" font-size="10">N_P = 20</text>'
++ '<text x="90" y="195" text-anchor="middle" fill="#5a6b80" font-size="10">D_P = 60 mm</text>'
++ '<text x="265" y="118" text-anchor="middle" fill="#5a6b80" font-size="11">gear N_G = 80</text>'
++ '<text x="265" y="132" text-anchor="middle" fill="#5a6b80" font-size="10">D_G = 240 mm</text>'
++ '<text x="200" y="228" text-anchor="middle" fill="#5a6b80" font-size="10">pitch circles drawn to scale: D_G / D_P = 4</text>'
++ '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
     html:"<p>Stresses come later; first we need the forces. The transmitted (tangential) force $W_t$ comes from the torque and pitch radius, then the pressure angle resolves it into the radial (separating) force and the total normal force. These same forces load the shaft and bearings in Module 6.</p>" },
@@ -79,19 +101,29 @@ var STEPS = [
       + SKETCH
       + "<p class='cite'>Reference: Mott Ch. 9, forces, torque and power in gearing (&sect;9-3, &sect;9-4).</p>" },
   { label:"Equations", title:"Equations",
-    html:"$$D = mN, \\qquad v_t = \\frac{\\pi D_P n_P}{60\\,000}\\ (\\text{m/s},\\ D\\ \\text{in mm})$$"
-      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N·m}), \\qquad W_t = \\frac{2T_P}{D_P}$$"
+    html:"<p>Geometry and kinematics, then torque and tooth forces:</p>"
+      +"<p class='eq-label'>Pitch diameters (metric module):</p>"
+      +"$$D = m N$$"
+      +"<p class='eq-label'>Pitch-line speed ($D$ in mm, $n$ in rpm, $v_t$ in m/s):</p>"
+      +"$$v_t = \\frac{\\pi D_P n_P}{60\\,000}$$"
+      +"<p class='eq-label'>Pinion torque from power ($P$ in kW):</p>"
+      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N·m})$$"
+      +"<p class='eq-label'>Transmitted (tangential) force:</p>"
+      +"$$W_t = \\frac{2T_P}{D_P}$$"
+      +"<p class='eq-label'>Radial and normal forces from the pressure angle:</p>"
       +"$$W_r = W_t \\tan\\phi, \\qquad W_N = \\frac{W_t}{\\cos\\phi}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$D_P = 3(20) = \\textcolor{#D85A30}{60\\ \\text{mm}}, \\qquad D_G = 3(80) = \\textcolor{#D85A30}{240\\ \\text{mm}}$$</div>"
-      +"<div class='calc'>$$v_t = \\frac{\\pi(60)(1750)}{60\\,000} = \\textcolor{#D85A30}{5.50\\ \\text{m/s}}$$</div>"
-      +"<div class='calc'>$$T_P = \\frac{9550(15)}{1750} = 81.86\\ \\text{N·m} = 81\\,860\\ \\text{N·mm}$$</div>"
-      +"<div class='calc'>$$W_t = \\frac{2(81\\,860)}{60} = \\textcolor{#D85A30}{2729\\ \\text{N}}$$</div>"
-      +"<div class='calc'>$$W_r = 2729\\tan20^\\circ = \\textcolor{#D85A30}{993\\ \\text{N}}, \\qquad W_N = \\frac{2729}{\\cos20^\\circ} = \\textcolor{#D85A30}{2904\\ \\text{N}}$$</div>" },
+    html:"<div class='calc'>$$D_P = m N_P = 3(20) = \\textcolor{#D85A30}{60\\ \\text{mm}}, \\qquad D_G = m N_G = 3(80) = \\textcolor{#D85A30}{240\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$v_t = \\frac{\\pi D_P n_P}{60\\,000} = \\frac{\\pi(60\\ \\text{mm})(1750\\ \\text{rpm})}{60\\,000} = \\textcolor{#D85A30}{5.50\\ \\text{m/s}}$$</div>"
+      +"<div class='calc'>$$T_P = \\frac{9550\\,P}{n_P} = \\frac{9550(15\\ \\text{kW})}{1750\\ \\text{rpm}} = 81.86\\ \\text{N·m} = 81\\,860\\ \\text{N·mm}$$</div>"
+      +"<div class='calc'>$$W_t = \\frac{2T_P}{D_P} = \\frac{2(81\\,860\\ \\text{N·mm})}{60\\ \\text{mm}} = \\textcolor{#D85A30}{2729\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_r = W_t\\tan\\phi = 2729\\tan 20^\\circ = \\textcolor{#D85A30}{993\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_N = \\frac{W_t}{\\cos\\phi} = \\frac{2729}{\\cos 20^\\circ} = \\textcolor{#D85A30}{2904\\ \\text{N}}$$</div>"
+      +"<p class='note'>Units: with $T$ in N·mm and $D$ in mm, $W_t$ comes out in N.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Pythagorean check on the force triangle:</p>"
       +"<div class='calc'>$$\\sqrt{W_t^2 + W_r^2} = \\sqrt{2729^2 + 993^2} = 2904\\ \\text{N} = W_N\\ \\checkmark$$</div>"
-      +"<p>Components are consistent with the 20&deg; pressure-angle geometry.</p>" },
+      +"<p>Components are consistent with the 20&deg; pressure-angle geometry. Carry $W_t$, $D_P$, and $v_t$ to Pages 4.6&ndash;4.7; a typical face width $F \\approx 12m = 36\\ \\text{mm}$ is used there.</p>" },
   { label:"Result", title:"Result and verdict",
     html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
       +"<tr><td>$D_P$ / $D_G$</td><td>60 mm / 240 mm</td></tr>"
