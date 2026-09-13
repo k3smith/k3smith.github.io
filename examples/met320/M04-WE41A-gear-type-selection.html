@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.1-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+
+var PROBLEM = {
+  title: "Worked Example 4.1-A: Gear Type Selection",
+  statement: "An engineer must choose a gear type for three drives: (a) a conveyor speed reducer between two parallel shafts, 5:1 ratio, moderate noise acceptable; (b) a single-stage right-angle drive between a motor shaft and a vertical mixing shaft; (c) a 50:1 reduction from a high-speed motor to a slow conveyor in a compact package. Identify the best gear type for each and give the key reason."
+};
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>Gear selection is a concept-generation step: before any stress analysis, the drive type has to match the shaft geometry, the speed ratio, and the packaging and noise constraints. Here we match three drives to the four common gear families &mdash; spur, helical, bevel, and worm &mdash; and justify each choice.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given &mdash; three drives:</strong></p><ul class='kv'>"
+      +"<li>(a) parallel shafts, VR = 5:1, moderate noise acceptable</li>"
+      +"<li>(b) right-angle (90&deg;) intersecting shafts, single stage</li>"
+      +"<li>(c) parallel shafts, VR = 50:1, compact package</li></ul>"
+      +"<p><strong>Find:</strong> the most appropriate gear type for each, with the deciding reason.</p>" },
+  { label:"Criteria", title:"Selection criteria (Mott &sect;8-2, &sect;8-7 to &sect;8-10)",
+    html:"<ul class='kv'>"
+      +"<li><strong>Spur</strong> &mdash; parallel shafts; economical; some noise; single-stage ratios to ~10:1.</li>"
+      +"<li><strong>Helical</strong> &mdash; parallel shafts; quieter and stronger than spur; generates axial thrust; ratios to ~10:1.</li>"
+      +"<li><strong>Bevel</strong> &mdash; intersecting shafts (typically 90&deg;); straight bevel is simple and economical.</li>"
+      +"<li><strong>Worm / wormgear</strong> &mdash; non-intersecting perpendicular shafts; single-stage ratios 10:1 to 100:1; compact; lower efficiency (70&ndash;90%).</li></ul>"
+      +"<p class='cite'>Reference: Mott Ch. 8, gear geometry and styles (&sect;8-2, &sect;8-7 to &sect;8-10).</p>" },
+  { label:"Analysis", title:"Match each drive to a type",
+    html:"<ul class='kv'>"
+      +"<li>(a) <strong>Spur gears</strong> &mdash; parallel shafts; 5:1 is well within single-stage range; economical; moderate noise is acceptable.</li>"
+      +"<li>(b) <strong>Straight bevel gears</strong> &mdash; the 90&deg; intersecting shafts are the defining condition; straight bevel is the simple, cost-effective choice for a single-stage right-angle drive.</li>"
+      +"<li>(c) <strong>Worm / wormgear</strong> &mdash; 50:1 is at the upper limit for spur/helical in one stage but well inside worm range, and a worm set is compact; verify efficiency is acceptable because worm drives lose more power than spur/helical.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Drive</th><th>Gear type</th><th>Deciding reason</th></tr>"
+      +"<tr><td>(a) 5:1, parallel</td><td>Spur</td><td>Parallel shafts, economical, ratio within one stage</td></tr>"
+      +"<tr><td>(b) 90&deg; single stage</td><td>Straight bevel</td><td>Intersecting shafts at 90&deg;</td></tr>"
+      +"<tr><td>(c) 50:1, compact</td><td>Worm / wormgear</td><td>High ratio in one compact stage (check efficiency)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> no single gear type serves all three drives &mdash; context-specific selection is the design skill. Shaft orientation is the first filter, then ratio and packaging.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

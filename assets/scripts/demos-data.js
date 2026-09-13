@@ -70,6 +70,11 @@ const DEMO_COURSES = [
             name: 'Gear Mesh & Involute Action',
             description: 'Module, pitch diameter, center distance, and involute tooth contact.',
           },
+          {
+            file: 'M04-DS-Design-Challenge-Gear-Reducer.html',
+            name: 'Design Challenge: Compact Gear Reducer',
+            description: 'Hit the velocity ratio, avoid interference, hold the contact ratio and the simplified AGMA bending stress in bounds, and minimize center distance.',
+          },
         ],
       },
       {

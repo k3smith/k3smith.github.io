@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.7-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+
+var PROBLEM = {
+  title: "Worked Example 4.7-A: Contact Stress and Material Specification",
+  statement: "Same pair: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, $F = 36\\ \\text{mm}$, $D_P = 60\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $K_o = 1.50$, $K_v = 1.20$, $C_p = 191\\ \\sqrt{\\text{MPa}}$ (steel-on-steel). From Page 4.6, bending needs only $H_B \\ge 136$. Compute the contact stress and specify the governing hardness."
+};
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>The second failure mode is surface pitting near the pitch line. The AGMA contact-stress equation uses Hertz theory and the pitting geometry factor $I$. Whichever of bending or contact needs the higher hardness governs the material choice &mdash; for through-hardened steel that is almost always contact.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$W_t = 2729\\ \\text{N}$; $K_o = 1.50$; $K_v = 1.20$; $F = 36\\ \\text{mm}$; $D_P = 60\\ \\text{mm}$</li>"
+      +"<li>$m_G = 80/20 = 4.0$; $C_p = 191\\ \\sqrt{\\text{MPa}}$; $S_H \\ge 1.2$</li></ul>"
+      +"<p><strong>Find:</strong> $I$; $s_c$; required $H_B$; final material.</p>" },
+  { label:"Sketch", title:"Assumptions and equations",
+    html:"<p>Assumptions: 20&deg; full-depth external spur pair; steel-on-steel ($C_p = 191\\ \\sqrt{\\text{MPa}}$); through-hardened Grade 1; minimum $S_H = 1.2$.</p>"
+      +"$$I = 0.1607\\,\\frac{m_G}{m_G+1}, \\qquad s_c = C_p\\sqrt{\\frac{W_t\\,K_o\\,K_v}{F\\,D_P\\,I}}$$"
+      +"$$s_{ac} \\approx 2.22\\,H_B + 200.6\\ \\text{MPa}, \\qquad S_H = \\frac{s_{ac}}{s_c}$$"
+      +"<p class='cite'>Reference: Mott &sect;9-6; $C_p$ from Table 9-7; $s_{ac}$ from Fig. 9-19 (Grade 1).</p>" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$I = 0.1607\\,\\frac{4.0}{5.0} = \\textcolor{#D85A30}{0.1286}$$</div>"
+      +"<div class='calc'>$$s_c = 191\\sqrt{\\frac{2729(1.50)(1.20)}{36(60)(0.1286)}} = 191\\sqrt{17.68} = \\textcolor{#D85A30}{803\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$s_{ac,req} = 803(1.2) = 964\\ \\text{MPa} \\;\\Rightarrow\\; H_B = \\frac{964-200.6}{2.22} = \\textcolor{#D85A30}{344}$$</div>"
+      +"<p>Check hardness options:</p>"
+      +"<div class='calc'>$$250\\ \\text{HB}:\\ s_{ac}=755.6,\\ S_H=0.94 \\qquad 350\\ \\text{HB}:\\ s_{ac}=977.6,\\ S_H=1.22$$</div>"
+      +"<p>250 HB fails ($S_H < 1.2$); 350 HB passes ($S_H \\ge 1.2$).</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Contact needs $H_B \\ge 344$ vs. only 136 for bending &mdash; contact governs, as expected for through-hardened steel.</li>"
+      +"<li>$344 \\le 400\\ \\text{HB}$, so through-hardening is still feasible; no case hardening required.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>Contact stress $s_c$</td><td>803 MPa</td></tr>"
+      +"<tr><td>250 HB</td><td>$S_H = 0.94$ ✗</td></tr>"
+      +"<tr><td>Required $H_B$ (contact)</td><td>344</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the 250 HB steel that passed bending fails contact. <strong>Specify SAE 4340 Q&amp;T at $H_B \\approx 350$</strong> for both pinion and gear ($S_H = 1.22$). Contact governs over bending.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

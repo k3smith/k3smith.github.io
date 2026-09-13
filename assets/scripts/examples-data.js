@@ -127,6 +127,42 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 4,
+        title: 'Gears',
+        examples: [
+          {
+            file: 'M04-WE41A-gear-type-selection.html',
+            name: 'Worked Example 4.1-A: Gear Type Selection',
+            description: 'Matches three drives to the right gear family (spur, bevel, worm) by shaft orientation, speed ratio, and packaging.',
+          },
+          {
+            file: 'M04-WE42A-gear-dimensions.html',
+            name: 'Worked Example 4.2-A: Spur Gear Dimensions (US System)',
+            description: 'Finds pitch diameters, tooth proportions, face-width range, center distance, and velocity ratio for a diametral-pitch spur pair.',
+          },
+          {
+            file: 'M04-WE43A-gear-train.html',
+            name: 'Worked Example 4.3-A: Double-Reduction Gear Train Design',
+            description: 'Designs a two-stage compound spur gear train to a 16:1 target using equal ratio splits and integer tooth counts.',
+          },
+          {
+            file: 'M04-WE45A-gear-forces.html',
+            name: 'Worked Example 4.5-A: Forces on a Spur Gear Pair',
+            description: 'Computes pitch-line speed, torque, and the transmitted, radial, and normal tooth forces for the running design example.',
+          },
+          {
+            file: 'M04-WE46A-bending-stress.html',
+            name: 'Worked Example 4.6-A: Bending Stress Check',
+            description: 'Runs the simplified AGMA bending stress (J, Ko, Kv) and finds the minimum hardness and safety factor for the pinion.',
+          },
+          {
+            file: 'M04-WE47A-contact-stress.html',
+            name: 'Worked Example 4.7-A: Contact Stress and Material Specification',
+            description: 'Computes the AGMA contact (pitting) stress, shows contact governs, and specifies the governing through-hardened hardness.',
+          },
+        ],
+      },
     ],
   },
   {
