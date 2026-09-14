@@ -107,7 +107,7 @@ var STEPS = [
       +"<p class='eq-label'>Pitch-line speed ($D$ in mm, $n$ in rpm, $v_t$ in m/s):</p>"
       +"$$v_t = \\frac{\\pi D_P n_P}{60\\,000}$$"
       +"<p class='eq-label'>Pinion torque from power ($P$ in kW):</p>"
-      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N·m})$$"
+      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N}\\cdot\\text{m})$$"
       +"<p class='eq-label'>Transmitted (tangential) force:</p>"
       +"$$W_t = \\frac{2T_P}{D_P}$$"
       +"<p class='eq-label'>Radial and normal forces from the pressure angle:</p>"
@@ -115,11 +115,11 @@ var STEPS = [
   { label:"Calculate", title:"Calculations (units tracked)",
     html:"<div class='calc'>$$D_P = m N_P = 3(20) = \\textcolor{#D85A30}{60\\ \\text{mm}}, \\qquad D_G = m N_G = 3(80) = \\textcolor{#D85A30}{240\\ \\text{mm}}$$</div>"
       +"<div class='calc'>$$v_t = \\frac{\\pi D_P n_P}{60\\,000} = \\frac{\\pi(60\\ \\text{mm})(1750\\ \\text{rpm})}{60\\,000} = \\textcolor{#D85A30}{5.50\\ \\text{m/s}}$$</div>"
-      +"<div class='calc'>$$T_P = \\frac{9550\\,P}{n_P} = \\frac{9550(15\\ \\text{kW})}{1750\\ \\text{rpm}} = 81.86\\ \\text{N·m} = 81\\,860\\ \\text{N·mm}$$</div>"
-      +"<div class='calc'>$$W_t = \\frac{2T_P}{D_P} = \\frac{2(81\\,860\\ \\text{N·mm})}{60\\ \\text{mm}} = \\textcolor{#D85A30}{2729\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$T_P = \\frac{9550\\,P}{n_P} = \\frac{9550(15\\ \\text{kW})}{1750\\ \\text{rpm}} = 81.86\\ \\text{N}\\cdot\\text{m} = 81\\,860\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$W_t = \\frac{2T_P}{D_P} = \\frac{2(81\\,860\\ \\text{N}\\cdot\\text{mm})}{60\\ \\text{mm}} = \\textcolor{#D85A30}{2729\\ \\text{N}}$$</div>"
       +"<div class='calc'>$$W_r = W_t\\tan\\phi = 2729\\tan 20^\\circ = \\textcolor{#D85A30}{993\\ \\text{N}}$$</div>"
       +"<div class='calc'>$$W_N = \\frac{W_t}{\\cos\\phi} = \\frac{2729}{\\cos 20^\\circ} = \\textcolor{#D85A30}{2904\\ \\text{N}}$$</div>"
-      +"<p class='note'>Units: with $T$ in N·mm and $D$ in mm, $W_t$ comes out in N.</p>" },
+      +"<p class='note'>Units: with $T$ in $\\text{N}\\cdot\\text{mm}$ and $D$ in mm, $W_t$ comes out in N.</p>" },
   { label:"Check", title:"Check for reasonableness",
     html:"<p>Pythagorean check on the force triangle:</p>"
       +"<div class='calc'>$$\\sqrt{W_t^2 + W_r^2} = \\sqrt{2729^2 + 993^2} = 2904\\ \\text{N} = W_N\\ \\checkmark$$</div>"
@@ -128,7 +128,7 @@ var STEPS = [
     html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
       +"<tr><td>$D_P$ / $D_G$</td><td>60 mm / 240 mm</td></tr>"
       +"<tr><td>$v_t$</td><td>5.50 m/s</td></tr>"
-      +"<tr><td>$T_P$</td><td>81.9 N·m</td></tr>"
+      +"<tr><td>$T_P$</td><td>$81.9\\ \\text{N}\\cdot\\text{m}$</td></tr>"
       +"<tr><td>$W_t$ / $W_r$ / $W_N$</td><td>2729 N / 993 N / 2904 N</td></tr></table>"
       +"<p><strong>Verdict:</strong> forces are fully determined. Carry $W_t = 2729\\ \\text{N}$, $D_P = 60\\ \\text{mm}$, and $v_t = 5.50\\ \\text{m/s}$ to Pages 4.6 (bending) and 4.7 (contact).</p>" }
 ];

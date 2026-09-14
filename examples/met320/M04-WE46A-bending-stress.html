@@ -65,7 +65,27 @@ var PROBLEM = {
   title: "Worked Example 4.6-A: Bending Stress Check",
   statement: "Continuing the running example: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, face width $F = 12m = 36\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $v_t = 5.50\\ \\text{m/s}$. Driver = electric motor (uniform); driven = moderate shock; AGMA quality $A_v = 8$. Compute the simplified AGMA bending stress on the pinion, the minimum required hardness, and evaluate SAE 4140 Q&amp;T at 250 HB."
 };
-var SKETCH = '<svg viewBox="0 0 300 200" role="img" aria-label="A single gear tooth modeled as a cantilever: the transmitted load acts near the tip and the maximum bending stress occurs at the root fillet."><defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs><line x1="45" y1="172" x2="230" y2="172" stroke="#1F3A5F" stroke-width="3"/><path d="M95,172 L108,70 Q112,58 124,58 L150,58 Q162,58 166,70 L180,172 Z" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/><line x1="180" y1="66" x2="216" y2="66" stroke="#D85A30" stroke-width="2" marker-end="url(#ar)"/><text x="150" y="44" fill="#D85A30" font-size="11">W_t near tip</text><path d="M96,168 q6,-8 12,-2" fill="none" stroke="#D85A30" stroke-width="2"/><text x="20" y="150" fill="#D85A30" font-size="10">root fillet</text><text x="26" y="164" fill="#D85A30" font-size="10">max &#963;</text></svg>';
+var SKETCH = '<svg viewBox="0 0 320 210" role="img" aria-label="A single gear tooth modeled as a cantilever: the transmitted load acts near the tip and the maximum bending stress occurs at the root fillet on the tension side.">'
++ '<defs><marker id="ar46" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
++ '<line x1="40" y1="175" x2="250" y2="175" stroke="#1F3A5F" stroke-width="3"/>'
+// tooth body with explicit root fillets at the rim
++ '<path d="M88,175'
++ ' C88,175 92,168 98,160'
++ ' L110,78 Q114,58 128,58'
++ ' L152,58 Q166,58 170,78'
++ ' L182,160'
++ ' C188,168 192,175 192,175'
++ ' Z" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
+// Wt at tip (tension side is left root)
++ '<line x1="170" y1="66" x2="210" y2="66" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar46)"/>'
++ '<text x="148" y="48" fill="#D85A30" font-size="12">W_t near tip</text>'
+// highlight left root fillet (tension side) and label with leader
++ '<path d="M90,172 C92,166 96,160 100,156" fill="none" stroke="#D85A30" stroke-width="2.8"/>'
++ '<circle cx="96" cy="164" r="3.5" fill="#D85A30"/>'
++ '<line x1="96" y1="164" x2="52" y2="130" stroke="#D85A30" stroke-width="1.2"/>'
++ '<text x="8" y="118" fill="#D85A30" font-size="11">root fillet</text>'
++ '<text x="8" y="134" fill="#D85A30" font-size="11">max &#963; (tension)</text>'
++ '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
     html:"<p>A gear tooth is a cantilever loaded near its tip, so a fatigue crack can start at the root fillet. The simplified AGMA bending equation scales the transmitted load by the geometry factor $J$ and by the overload and dynamic factors, and we compare the result to the material's allowable bending stress number.</p>" },
