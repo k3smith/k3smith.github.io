@@ -65,27 +65,39 @@ var PROBLEM = {
   title: "Worked Example 5.3-A: Bevel Gear Geometry and Forces",
   statement: "A right-angle straight-bevel drive transmits $P = 5\\ \\text{kW}$ from a $n_P = 900\\ \\text{rpm}$ pinion to a 300 rpm gear. Given $N_P = 20$, $N_G = 60$, outer pitch diameter $D_P = 80\\ \\text{mm}$, $F = 20\\ \\text{mm}$, $\\phi = 20^\\circ$. Find the pitch cone angles, cone distance, average pitch diameter, pitch-line speed, torque, and the three pinion forces."
 };
-var SKETCH = '<svg viewBox="0 0 460 240" role="img" aria-label="A bevel pinion shown as a pitch cone with apex on the shaft axis and pitch cone angle gamma. At the mean radius the tangential force W_t acts tangent to the cone, the radial force W_r points toward the pinion axis, and the axial thrust W_a acts along the pinion axis toward the cone apex.">'
+var SKETCH = '<svg viewBox="0 0 480 250" role="img" aria-label="Bevel pinion pitch cone in the meridional plane: pitch-cone angle gamma measured from the shaft axis to the generator. At the mean pitch point, W_a acts along the shaft toward the apex, W_r acts toward the shaft axis, and W_t is tangential (out of the page). A small end view shows W_t tangent to the mean pitch circle.">'
 + '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
 + '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker>'
 + '<marker id="arg" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a7a3a"/></marker></defs>'
-+ '<line x1="60" y1="150" x2="300" y2="150" stroke="#5a6b80" stroke-width="1" stroke-dasharray="5 4"/>'
-+ '<text x="300" y="146" fill="#5a6b80" font-size="10">pinion axis</text>'
-+ '<path d="M300,150 L120,96 L120,204 Z" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M120,96 A 30 55 0 0 0 120 204" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
-+ '<path d="M258,150 A42 42 0 0 0 264 135" fill="none" stroke="#2a7a3a" stroke-width="1.4"/>'
-+ '<text x="266" y="140" fill="#2a7a3a" font-size="12">&#947;</text>'
-+ '<circle cx="210" cy="123" r="3.5" fill="#1F3A5F"/>'
-+ '<line x1="210" y1="123" x2="210" y2="63" stroke="#D85A30" stroke-width="2.4" marker-end="url(#ar)"/>'
-+ '<text x="216" y="70" fill="#D85A30" font-size="12">W_t</text>'
-+ '<line x1="210" y1="123" x2="210" y2="150" stroke="#1F3A5F" stroke-width="2.4" marker-end="url(#arb)"/>'
-+ '<text x="170" y="140" fill="#1F3A5F" font-size="12">W_r</text>'
-+ '<line x1="210" y1="123" x2="266" y2="123" stroke="#2a7a3a" stroke-width="2.4" marker-end="url(#arg)"/>'
-+ '<text x="240" y="116" fill="#2a7a3a" font-size="12">W_a</text>'
-+ '<text x="210" y="222" text-anchor="middle" fill="#5a6b80" font-size="10">forces act at the mean (average) radius</text>'
-+ '<text x="360" y="95" fill="#5a6b80" font-size="11">swap at 90&#176;:</text>'
-+ '<text x="360" y="114" fill="#5a6b80" font-size="11">W<tspan baseline-shift="sub" font-size="9">r,G</tspan> = W<tspan baseline-shift="sub" font-size="9">a,P</tspan></text>'
-+ '<text x="360" y="132" fill="#5a6b80" font-size="11">W<tspan baseline-shift="sub" font-size="9">a,G</tspan> = W<tspan baseline-shift="sub" font-size="9">r,P</tspan></text>'
++ '<line x1="70" y1="140" x2="350" y2="140" stroke="#5a6b80" stroke-width="1" stroke-dasharray="5 4"/>'
++ '<text x="352" y="136" fill="#5a6b80" font-size="10">pinion axis</text>'
++ '<path d="M320,140 L130.2,76.9 L130.2,203.1 Z" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<path d="M130.2,76.9 A 28 63 0 0 0 130.2 203.1" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<line x1="213.1" y1="97.7" x2="218.1" y2="112.9" stroke="#5a6b80" stroke-width="1.4"/>'
++ '<text x="168" y="90" fill="#5a6b80" font-size="9">mean face</text>'
++ '<path d="M265,140 A55 55 0 0 1 267.8,122.6" fill="none" stroke="#2a7a3a" stroke-width="1.6"/>'
++ '<text x="278" y="128" fill="#2a7a3a" font-size="13">&#947;</text>'
++ '<circle cx="215.6" cy="105.3" r="3.5" fill="#1F3A5F"/>'
++ '<circle cx="215.6" cy="105.3" r="11" fill="#fff" stroke="#D85A30" stroke-width="2"/>'
++ '<circle cx="215.6" cy="105.3" r="3" fill="#D85A30"/>'
++ '<text x="168" y="78" fill="#D85A30" font-size="12">W_t (out)</text>'
++ '<line x1="227" y1="105.3" x2="280" y2="105.3" stroke="#2a7a3a" stroke-width="2.4" marker-end="url(#arg)"/>'
++ '<text x="248" y="98" fill="#2a7a3a" font-size="12">W_a</text>'
++ '<line x1="215.6" y1="117" x2="215.6" y2="155" stroke="#1F3A5F" stroke-width="2.4" marker-end="url(#arb)"/>'
++ '<text x="186" y="142" fill="#1F3A5F" font-size="12">W_r</text>'
++ '<text x="148" y="230" text-anchor="middle" fill="#5a6b80" font-size="10">meridional view (W_t out of page)</text>'
++ '<circle cx="400" cy="100" r="42" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.3"/>'
++ '<circle cx="400" cy="100" r="2.5" fill="#1F3A5F"/>'
++ '<circle cx="400" cy="58" r="3.5" fill="#1F3A5F"/>'
++ '<line x1="400" y1="58" x2="448" y2="58" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/>'
++ '<text x="418" y="50" fill="#D85A30" font-size="11">W_t</text>'
++ '<line x1="400" y1="58" x2="400" y2="92" stroke="#1F3A5F" stroke-width="2.2" marker-end="url(#arb)"/>'
++ '<text x="406" y="80" fill="#1F3A5F" font-size="11">W_r</text>'
++ '<text x="400" y="158" text-anchor="middle" fill="#5a6b80" font-size="10">end view at mean D</text>'
++ '<text x="400" y="172" text-anchor="middle" fill="#5a6b80" font-size="9">(W_t tangent to pitch circle)</text>'
++ '<text x="400" y="200" text-anchor="middle" fill="#5a6b80" font-size="10">swap at 90&#176;:</text>'
++ '<text x="400" y="216" text-anchor="middle" fill="#5a6b80" font-size="10">W<tspan baseline-shift="sub" font-size="8">r,G</tspan> = W<tspan baseline-shift="sub" font-size="8">a,P</tspan></text>'
++ '<text x="400" y="232" text-anchor="middle" fill="#5a6b80" font-size="10">W<tspan baseline-shift="sub" font-size="8">a,G</tspan> = W<tspan baseline-shift="sub" font-size="8">r,P</tspan></text>'
 + '</svg>';
 var STEPS = [
   { label:"Restate", title:"Restate the problem",
@@ -96,7 +108,7 @@ var STEPS = [
       +"<li>$N_P = 20$; $N_G = 60$; $D_P$ (outer) $= 80\\ \\text{mm}$; $F = 20\\ \\text{mm}$; $\\phi = 20^\\circ$</li></ul>"
       +"<p><strong>Find:</strong> $\\gamma_P$, $\\gamma_G$; $A$; $D_{av,P}$; $v_t$; $T_P$; $W_t$, $W_{r,P}$, $W_{a,P}$.</p>" },
   { label:"Sketch", title:"Assumptions and sketch",
-    html:"<p>Assumptions: straight bevel gears at a 90&deg; shaft angle; forces act at the mean radius; face-width guideline $F \\le A/3$.</p>"
+    html:"<p>Assumptions: straight bevel gears at a 90&deg; shaft angle; forces act at the mean radius; face-width guideline $F \\le A/3$. In the meridional view, $W_t$ is tangential (out of the page), $W_r$ points toward the pinion axis, and $W_a$ acts along the shaft toward the apex; the end view shows $W_t$ tangent to the mean pitch circle.</p>"
       + SKETCH
       + "<p class='cite'>Reference: Mott &sect;8-8 (bevel geometry) and &sect;10-6 (forces on straight bevel gears); Eqs. 10-10 to 10-13.</p>" },
   { label:"Equations", title:"Equations",
