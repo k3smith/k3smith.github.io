@@ -163,6 +163,37 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 5,
+        title: 'Helical & Bevel Gears, Keys & Couplings',
+        examples: [
+          {
+            file: 'M05-WE51A-helical-forces.html',
+            name: 'Worked Example 5.1-A: Forces on a Helical Gear Pair',
+            description: 'Finds the transverse geometry, pitch-line speed, torque, and the tangential, radial, and axial (thrust) forces on a helical gear pair.',
+          },
+          {
+            file: 'M05-WE52A-helical-stress.html',
+            name: 'Worked Example 5.2-A: Helical Gear Stress and Material',
+            description: 'Runs the simplified AGMA bending and contact stresses (J from Fig. 10-6, I from Table 10-1) and specifies the governing hardness.',
+          },
+          {
+            file: 'M05-WE53A-bevel-forces.html',
+            name: 'Worked Example 5.3-A: Bevel Gear Geometry and Forces',
+            description: 'Finds the pitch cone angles, cone distance, average pitch diameter, and the three pinion forces, and applies the 90-degree swap rule.',
+          },
+          {
+            file: 'M05-WE55A-parallel-key.html',
+            name: 'Worked Example 5.5-A: Parallel Key Design',
+            description: 'Selects an ANSI B17.1 key, identifies the weakest member, and finds the minimum key length from shear and bearing.',
+          },
+          {
+            file: 'M05-WE55B-parallel-key-si.html',
+            name: 'Worked Example 5.5-B: Parallel Key Design (SI, rectangular)',
+            description: 'Sizes a standard SI metric key (rectangular, H < W) and shows that bearing governs the length — the metric counterpart to 5.5-A.',
+          },
+        ],
+      },
     ],
   },
   {

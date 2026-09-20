@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 5.3-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 5.3-A: Bevel Gear Geometry and Forces",
+  statement: "A right-angle straight-bevel drive transmits $P = 5\\ \\text{kW}$ from a $n_P = 900\\ \\text{rpm}$ pinion to a 300 rpm gear. Given $N_P = 20$, $N_G = 60$, outer pitch diameter $D_P = 80\\ \\text{mm}$, $F = 20\\ \\text{mm}$, $\\phi = 20^\\circ$. Find the pitch cone angles, cone distance, average pitch diameter, pitch-line speed, torque, and the three pinion forces."
+};
+var SKETCH = '<svg viewBox="0 0 460 240" role="img" aria-label="A bevel pinion shown as a pitch cone with apex on the shaft axis and pitch cone angle gamma. At the mean radius the tangential force W_t acts tangent to the cone, the radial force W_r points toward the pinion axis, and the axial thrust W_a acts along the pinion axis toward the cone apex.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
++ '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker>'
++ '<marker id="arg" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a7a3a"/></marker></defs>'
++ '<line x1="60" y1="150" x2="300" y2="150" stroke="#5a6b80" stroke-width="1" stroke-dasharray="5 4"/>'
++ '<text x="300" y="146" fill="#5a6b80" font-size="10">pinion axis</text>'
++ '<path d="M300,150 L120,96 L120,204 Z" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<path d="M120,96 A 30 55 0 0 0 120 204" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<path d="M258,150 A42 42 0 0 0 264 135" fill="none" stroke="#2a7a3a" stroke-width="1.4"/>'
++ '<text x="266" y="140" fill="#2a7a3a" font-size="12">&#947;</text>'
++ '<circle cx="210" cy="123" r="3.5" fill="#1F3A5F"/>'
++ '<line x1="210" y1="123" x2="210" y2="63" stroke="#D85A30" stroke-width="2.4" marker-end="url(#ar)"/>'
++ '<text x="216" y="70" fill="#D85A30" font-size="12">W_t</text>'
++ '<line x1="210" y1="123" x2="210" y2="150" stroke="#1F3A5F" stroke-width="2.4" marker-end="url(#arb)"/>'
++ '<text x="170" y="140" fill="#1F3A5F" font-size="12">W_r</text>'
++ '<line x1="210" y1="123" x2="266" y2="123" stroke="#2a7a3a" stroke-width="2.4" marker-end="url(#arg)"/>'
++ '<text x="240" y="116" fill="#2a7a3a" font-size="12">W_a</text>'
++ '<text x="210" y="222" text-anchor="middle" fill="#5a6b80" font-size="10">forces act at the mean (average) radius</text>'
++ '<text x="360" y="95" fill="#5a6b80" font-size="11">swap at 90&#176;:</text>'
++ '<text x="360" y="114" fill="#5a6b80" font-size="11">W<tspan baseline-shift="sub" font-size="9">r,G</tspan> = W<tspan baseline-shift="sub" font-size="9">a,P</tspan></text>'
++ '<text x="360" y="132" fill="#5a6b80" font-size="11">W<tspan baseline-shift="sub" font-size="9">a,G</tspan> = W<tspan baseline-shift="sub" font-size="9">r,P</tspan></text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>Bevel teeth taper along the face, so the force analysis uses the <em>average</em> (mean) pitch diameter, not the outer one. As with helical gears there are three force components; at a 90&deg; shaft angle the radial and axial forces swap between pinion and gear.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$P = 5\\ \\text{kW}$; $n_P = 900\\ \\text{rpm}$; 90&deg; shaft angle</li>"
+      +"<li>$N_P = 20$; $N_G = 60$; $D_P$ (outer) $= 80\\ \\text{mm}$; $F = 20\\ \\text{mm}$; $\\phi = 20^\\circ$</li></ul>"
+      +"<p><strong>Find:</strong> $\\gamma_P$, $\\gamma_G$; $A$; $D_{av,P}$; $v_t$; $T_P$; $W_t$, $W_{r,P}$, $W_{a,P}$.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: straight bevel gears at a 90&deg; shaft angle; forces act at the mean radius; face-width guideline $F \\le A/3$.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott &sect;8-8 (bevel geometry) and &sect;10-6 (forces on straight bevel gears); Eqs. 10-10 to 10-13.</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Cone geometry at the mean radius, then torque and pinion forces:</p>"
+      +"<p class='eq-label'>Pitch cone angles (90&deg; shafts):</p>"
+      +"$$\\tan\\gamma_P = \\frac{N_P}{N_G}, \\qquad \\gamma_G = 90^\\circ - \\gamma_P$$"
+      +"<p class='eq-label'>Cone distance and average pinion pitch diameter:</p>"
+      +"$$A = \\frac{D_P}{2\\sin\\gamma_P}, \\qquad D_{av,P} = D_P - F\\sin\\gamma_P$$"
+      +"<p class='eq-label'>Torque and transmitted force at the mean diameter:</p>"
+      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N}\\cdot\\text{m}), \\qquad W_t = \\frac{2T_P}{D_{av,P}}$$"
+      +"<p class='eq-label'>Pinion radial and axial components (Eqs. 10-12, 10-13):</p>"
+      +"$$W_{r,P} = W_t\\tan\\phi\\cos\\gamma_P, \\qquad W_{a,P} = W_t\\tan\\phi\\sin\\gamma_P$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$\\tan\\gamma_P = \\tfrac{20}{60} \\Rightarrow \\gamma_P = \\textcolor{#D85A30}{18.4^\\circ}, \\quad \\gamma_G = \\textcolor{#D85A30}{71.6^\\circ}$$</div>"
+      +"<div class='calc'>$$A = \\frac{80}{2\\sin18.4^\\circ} = \\textcolor{#D85A30}{126.5\\ \\text{mm}}, \\quad \\tfrac{F}{A}=\\tfrac{20}{126.5}=0.158 \\le \\tfrac13\\ \\checkmark$$</div>"
+      +"<div class='calc'>$$D_{av,P} = 80 - 20\\sin18.4^\\circ = \\textcolor{#D85A30}{73.7\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$v_t = \\frac{\\pi(73.7)(900)}{60\\,000} = \\textcolor{#D85A30}{3.47\\ \\text{m/s}}$$</div>"
+      +"<div class='calc'>$$T_P = \\frac{9550(5)}{900} = 53.1\\ \\text{N}\\cdot\\text{m} = 53\\,100\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$W_t = \\frac{2(53\\,100)}{73.7} = \\textcolor{#D85A30}{1441\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_{r,P} = 1441\\tan20^\\circ\\cos18.4^\\circ = \\textcolor{#D85A30}{498\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_{a,P} = 1441\\tan20^\\circ\\sin18.4^\\circ = \\textcolor{#D85A30}{166\\ \\text{N}}$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Swap rule at 90&deg;: $W_{r,G} = W_{a,P} = 166\\ \\text{N}$ and $W_{a,G} = W_{r,P} = 498\\ \\text{N}$ (since $\\cos\\gamma_G = \\sin\\gamma_P$) &check;</li>"
+      +"<li>$F/A = 0.158 \\le 1/3$, so the tooth-size taper across the face is acceptable &check;</li>"
+      +"<li>Alternate mean-diameter check: $D_{av,P} = 2(A - F/2)\\sin\\gamma_P = 2(126.5-10)\\sin18.4^\\circ = 73.7\\ \\text{mm}$ &check;</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>$\\gamma_P$ / $\\gamma_G$</td><td>18.4&deg; / 71.6&deg;</td></tr>"
+      +"<tr><td>$A$ / $D_{av,P}$</td><td>126.5 mm / 73.7 mm</td></tr>"
+      +"<tr><td>$T_P$ / $v_t$</td><td>$53.1\\ \\text{N}\\cdot\\text{m}$ / 3.47 m/s</td></tr>"
+      +"<tr><td>$W_t$ / $W_{r,P}$ / $W_{a,P}$</td><td>1441 N / 498 N / 166 N</td></tr></table>"
+      +"<p><strong>Verdict:</strong> geometry and forces are ready for shaft and bearing design. The pinion axial thrust (166 N) points toward the cone apex and must be reacted by a thrust bearing.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
