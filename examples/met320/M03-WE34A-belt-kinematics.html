@@ -99,8 +99,8 @@ var STEPS = [
       + "<p class='cite'>Reference: Mott Ch. 7 (belt drives), Eqs. 7-4 (length) and 7-5 (arc of contact).</p>" },
   { label:"Equations", title:"Equations",
     html:"<p>Velocity ratio and output speed, belt speed, belt length, and arc of contact:</p>"
-      +"<p class='eq-label'>Velocity ratio and driven speed:</p>"
-      +"$$VR = \\frac{D_1}{D_2}, \\qquad n_2 = n_1\\,VR = n_1\\,\\frac{D_1}{D_2}$$"
+      +"<p class='eq-label'>Velocity ratio and driven speed (Mott: driver over driven, so $VR>1$ for a reduction):</p>"
+      +"$$VR = \\frac{D_2}{D_1}, \\qquad n_2 = \\frac{n_1}{VR} = n_1\\,\\frac{D_1}{D_2}$$"
       +"<p class='eq-label'>Belt speed ($D_1$ in mm, $n_1$ in rpm, $v_b$ in m/s):</p>"
       +"$$v_b = \\frac{\\pi D_1 n_1}{60{,}000}$$"
       +"<p class='eq-label'>Belt length (open drive):</p>"
@@ -108,8 +108,8 @@ var STEPS = [
       +"<p class='eq-label'>Arc of contact on the smaller sheave (degrees):</p>"
       +"$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C}$$" },
   { label:"Calculate", title:"Calculations (units tracked)",
-    html:"<div class='calc'>$$VR = \\frac{D_1}{D_2} = \\frac{150\\ \\text{mm}}{375\\ \\text{mm}} = 0.400$$</div>"
-      +"<div class='calc'>$$n_2 = n_1\\,VR = (1750\\ \\text{rpm})(0.400) = \\textcolor{#D85A30}{700\\ \\text{rpm}}$$</div>"
+    html:"<div class='calc'>$$VR = \\frac{D_2}{D_1} = \\frac{375\\ \\text{mm}}{150\\ \\text{mm}} = 2.50$$</div>"
+      +"<div class='calc'>$$n_2 = \\frac{n_1}{VR} = \\frac{1750\\ \\text{rpm}}{2.50} = \\textcolor{#D85A30}{700\\ \\text{rpm}}$$</div>"
       +"<div class='calc'>$$v_b = \\frac{\\pi D_1 n_1}{60{,}000} = \\frac{\\pi(150\\ \\text{mm})(1750\\ \\text{rpm})}{60{,}000} = \\textcolor{#D85A30}{13.74\\ \\text{m/s}}$$</div>"
       +"<div class='calc'>$$L = 2C + \\frac{\\pi(D_1+D_2)}{2} + \\frac{(D_2-D_1)^2}{4C} = 2(600) + \\frac{\\pi(525)}{2} + \\frac{(225)^2}{2400} = 1200 + 824.7 + 21.1 = \\textcolor{#D85A30}{2046\\ \\text{mm}}$$</div>"
       +"<div class='calc'>$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C} = 180 - 57.3\\,\\frac{225\\ \\text{mm}}{600\\ \\text{mm}} = 180 - 21.5 = \\textcolor{#D85A30}{158.5^\\circ}$$</div>"
