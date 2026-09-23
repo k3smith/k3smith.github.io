@@ -27,7 +27,24 @@ const EXAMPLE_COURSES = [
     name: 'MET 475 — Marine Engineering I',
     term: 'ODU',
     index: '/examples/met475/index.html',
-    modules: [],
+    modules: [
+      {
+        number: 2,
+        title: 'Steam Plants I: Boilers, Combustion & Steam Generation',
+        examples: [
+          {
+            file: 'M02-WE1-CombustionAir.html',
+            name: 'Worked Example 2.1: Combustion Air and Air-Fuel Ratio',
+            description: 'Seven-step solution: stoichiometric air, actual air flow with excess air, and a forced-draft fan capacity check.',
+          },
+          {
+            file: 'M02-WE2-SteamHeatBalance.html',
+            name: 'Worked Example 2.2: Steam Heat Balance and Output',
+            description: 'Seven-step solution: heat to steam from fuel and efficiency, steam output, and a check against plant demand.',
+          },
+        ],
+      },
+    ],
   },
 ];
 

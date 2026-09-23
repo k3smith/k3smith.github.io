@@ -1,0 +1,35 @@
+[
+  {
+    "item_id": "demo_mm_unans_001",
+    "benchmark_id": "mmlongbench_doc",
+    "question": "What is the CEO's middle name?",
+    "evidence": "[section=Cover | page=1]\nAnnual report overview.",
+    "answer": "ABSTAIN",
+    "citations": "- none",
+    "abstain": true,
+    "confidence_correct": 0.2,
+    "confidence_grounded": 0.9
+  },
+  {
+    "item_id": "demo_ohr_001",
+    "benchmark_id": "ohrbench",
+    "question": "What helps generation according to the passage?",
+    "evidence": "[section=Introduction | page=1 | chunk=c1]\nRetrieval helps generation.",
+    "answer": "Retrieval helps generation.",
+    "citations": "- section: Introduction | page: 1 | chunk: c1 | quote: Retrieval helps generation",
+    "abstain": false,
+    "confidence_correct": null,
+    "confidence_grounded": null
+  },
+  {
+    "item_id": "demo_fin_001",
+    "benchmark_id": "financebench",
+    "question": "What were nonaccrual loans retained?",
+    "evidence": "[section=Notes | page=24]\nNonaccrual loans retained $842 million.",
+    "answer": "842 million",
+    "citations": "- section: Notes | page: 24 | chunk: c3 | quote: Nonaccrual loans retained $842 million",
+    "abstain": false,
+    "confidence_correct": null,
+    "confidence_grounded": null
+  }
+]

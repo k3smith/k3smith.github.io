@@ -128,6 +128,27 @@ const DEMO_COURSES = [
             description: 'Step through fuel oil treatment from the bunker tank to the engine: transfer, settling, purifying, service tank, boosting, and heating.',
           },
         ]
+      },
+      {
+        number: 2,
+        title: 'Marine Steam Generation, Boilers & Combustion',
+        demos: [
+          {
+            file: 'M02-01-BoilerExplorer.html',
+            name: 'Water-Tube Boiler Explorer',
+            description: 'Click each part of a two-drum water-tube boiler: drums, downcomers, risers, furnace, burner, superheater, and economizer.',
+          },
+          {
+            file: 'M02-02-CombustionAirCalculator.html',
+            name: 'Combustion Air Calculator',
+            description: 'Set fuel composition and excess air to compute stoichiometric air, the air-fuel ratio, and the flue-gas make-up.',
+          },
+          {
+            file: 'M02-03-BoilerPerformanceCalculator.html',
+            name: 'Boiler Performance Calculator',
+            description: 'Vary fuel rate, calorific value, steam rate, and enthalpies to see boiler efficiency and equivalent evaporation.',
+          },
+        ]
       }
     ]
   }
