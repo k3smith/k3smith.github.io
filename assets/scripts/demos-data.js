@@ -45,10 +45,15 @@ const DEMO_COURSES = [
         title: 'Fatigue & Flexible Drives',
         demos: [
           {
-            file: 'M03-03-GoodmanDiagramDemo.html',
-            name: 'Goodman Diagram',
-            description: 'Plot mean and alternating stress; check modified Goodman safety factor.',
+            file: 'M03-FE-Find-the-Errors-Fatigue-Solution.html',
+            name: 'Find the Errors: Fatigue Solution',
+            description: 'Find the errors in a fatigue calculation and solution.',
           },
+            {
+              file: 'M03-03-GoodmanDiagramDemo.html',
+              name: 'Goodman Diagram',
+              description: 'Plot mean and alternating stress; check modified Goodman safety factor.',
+            },
           {
             file: 'M03-05-BeltDriveDemo.html',
             name: 'V-Belt Drive Kinematics',
@@ -64,6 +69,11 @@ const DEMO_COURSES = [
             file: 'M04-01-GearMeshDemo.html',
             name: 'Gear Mesh & Involute Action',
             description: 'Module, pitch diameter, center distance, and involute tooth contact.',
+          },
+          {
+            file: 'M04-DS-Design-Challenge-Gear-Reducer.html',
+            name: 'Design Challenge: Compact Gear Reducer',
+            description: 'Hit the velocity ratio, avoid interference, hold the contact ratio and the simplified AGMA bending stress in bounds, and minimize center distance.',
           },
         ],
       },

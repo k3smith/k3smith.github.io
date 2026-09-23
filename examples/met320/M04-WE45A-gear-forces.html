@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.5-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 4.5-A: Forces on a Spur Gear Pair",
+  statement: "A spur pair uses $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, pressure angle $\\phi = 20^\\circ$. The pinion runs at $n_P = 1750\\ \\text{rpm}$ and transmits $P = 15\\ \\text{kW}$. Find the pitch diameters, pitch-line speed, pinion torque, and the tooth forces $W_t$, $W_r$, $W_N$. This running example continues on Pages 4.6 and 4.7."
+};
+var SKETCH = '<svg viewBox="0 0 400 240" role="img" aria-label="A 20-tooth spur pinion meshing an 80-tooth gear (pitch-diameter ratio 1 to 4). At the pitch point P the transmitted force W_t acts tangent to the pitch circles and the radial separating force W_r acts along the line of centers.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
++ '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<circle cx="90" cy="120" r="28" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="90" cy="120" r="28" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<circle cx="90" cy="120" r="2.5" fill="#1F3A5F"/>'
++ '<circle cx="230" cy="120" r="112" fill="#dce8f5" stroke="#1F3A5F" stroke-width="1.5" fill-opacity="0.5"/>'
++ '<circle cx="230" cy="120" r="112" fill="none" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<circle cx="230" cy="120" r="2.5" fill="#1F3A5F"/>'
++ '<line x1="90" y1="120" x2="230" y2="120" stroke="#5a6b80" stroke-width="0.7" stroke-dasharray="3 3"/>'
++ '<circle cx="118" cy="120" r="4" fill="#2a7a3a"/>'
++ '<text x="116" y="108" text-anchor="end" fill="#2a7a3a" font-size="11">P</text>'
++ '<line x1="118" y1="120" x2="118" y2="68" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/>'
++ '<text x="125" y="66" fill="#D85A30" font-size="12">W_t</text>'
++ '<line x1="118" y1="120" x2="82" y2="120" stroke="#1F3A5F" stroke-width="2.2" marker-end="url(#arb)"/>'
++ '<text x="64" y="136" fill="#1F3A5F" font-size="12">W_r</text>'
++ '<text x="90" y="168" text-anchor="middle" fill="#5a6b80" font-size="11">pinion</text>'
++ '<text x="90" y="182" text-anchor="middle" fill="#5a6b80" font-size="10">N_P = 20</text>'
++ '<text x="90" y="195" text-anchor="middle" fill="#5a6b80" font-size="10">D_P = 60 mm</text>'
++ '<text x="265" y="118" text-anchor="middle" fill="#5a6b80" font-size="11">gear N_G = 80</text>'
++ '<text x="265" y="132" text-anchor="middle" fill="#5a6b80" font-size="10">D_G = 240 mm</text>'
++ '<text x="200" y="228" text-anchor="middle" fill="#5a6b80" font-size="10">pitch circles drawn to scale: D_G / D_P = 4</text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>Stresses come later; first we need the forces. The transmitted (tangential) force $W_t$ comes from the torque and pitch radius, then the pressure angle resolves it into the radial (separating) force and the total normal force. These same forces load the shaft and bearings in Module 6.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$m = 3\\ \\text{mm}$; $N_P = 20$; $N_G = 80$; $\\phi = 20^\\circ$</li>"
+      +"<li>$n_P = 1750\\ \\text{rpm}$; $P = 15\\ \\text{kW}$</li></ul>"
+      +"<p><strong>Find:</strong> $D_P, D_G$; $v_t$; $T_P$; $W_t$, $W_r$, $W_N$.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: spur gears, metric module system; 100% mesh efficiency for the force balance; steady load (no shock factor at this step).</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 9, forces, torque and power in gearing (&sect;9-3, &sect;9-4).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Geometry and kinematics, then torque and tooth forces:</p>"
+      +"<p class='eq-label'>Pitch diameters (metric module):</p>"
+      +"$$D = m N$$"
+      +"<p class='eq-label'>Pitch-line speed ($D$ in mm, $n$ in rpm, $v_t$ in m/s):</p>"
+      +"$$v_t = \\frac{\\pi D_P n_P}{60\\,000}$$"
+      +"<p class='eq-label'>Pinion torque from power ($P$ in kW):</p>"
+      +"$$T_P = \\frac{9550\\,P}{n_P}\\ (\\text{N}\\cdot\\text{m})$$"
+      +"<p class='eq-label'>Transmitted (tangential) force:</p>"
+      +"$$W_t = \\frac{2T_P}{D_P}$$"
+      +"<p class='eq-label'>Radial and normal forces from the pressure angle:</p>"
+      +"$$W_r = W_t \\tan\\phi, \\qquad W_N = \\frac{W_t}{\\cos\\phi}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$D_P = m N_P = 3(20) = \\textcolor{#D85A30}{60\\ \\text{mm}}, \\qquad D_G = m N_G = 3(80) = \\textcolor{#D85A30}{240\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$v_t = \\frac{\\pi D_P n_P}{60\\,000} = \\frac{\\pi(60\\ \\text{mm})(1750\\ \\text{rpm})}{60\\,000} = \\textcolor{#D85A30}{5.50\\ \\text{m/s}}$$</div>"
+      +"<div class='calc'>$$T_P = \\frac{9550\\,P}{n_P} = \\frac{9550(15\\ \\text{kW})}{1750\\ \\text{rpm}} = 81.86\\ \\text{N}\\cdot\\text{m} = 81\\,860\\ \\text{N}\\cdot\\text{mm}$$</div>"
+      +"<div class='calc'>$$W_t = \\frac{2T_P}{D_P} = \\frac{2(81\\,860\\ \\text{N}\\cdot\\text{mm})}{60\\ \\text{mm}} = \\textcolor{#D85A30}{2729\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_r = W_t\\tan\\phi = 2729\\tan 20^\\circ = \\textcolor{#D85A30}{993\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$W_N = \\frac{W_t}{\\cos\\phi} = \\frac{2729}{\\cos 20^\\circ} = \\textcolor{#D85A30}{2904\\ \\text{N}}$$</div>"
+      +"<p class='note'>Units: with $T$ in $\\text{N}\\cdot\\text{mm}$ and $D$ in mm, $W_t$ comes out in N.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Pythagorean check on the force triangle:</p>"
+      +"<div class='calc'>$$\\sqrt{W_t^2 + W_r^2} = \\sqrt{2729^2 + 993^2} = 2904\\ \\text{N} = W_N\\ \\checkmark$$</div>"
+      +"<p>Components are consistent with the 20&deg; pressure-angle geometry. Carry $W_t$, $D_P$, and $v_t$ to Pages 4.6&ndash;4.7; a typical face width $F \\approx 12m = 36\\ \\text{mm}$ is used there.</p>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>$D_P$ / $D_G$</td><td>60 mm / 240 mm</td></tr>"
+      +"<tr><td>$v_t$</td><td>5.50 m/s</td></tr>"
+      +"<tr><td>$T_P$</td><td>$81.9\\ \\text{N}\\cdot\\text{m}$</td></tr>"
+      +"<tr><td>$W_t$ / $W_r$ / $W_N$</td><td>2729 N / 993 N / 2904 N</td></tr></table>"
+      +"<p><strong>Verdict:</strong> forces are fully determined. Carry $W_t = 2729\\ \\text{N}$, $D_P = 60\\ \\text{mm}$, and $v_t = 5.50\\ \\text{m/s}$ to Pages 4.6 (bending) and 4.7 (contact).</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

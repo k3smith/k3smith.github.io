@@ -58,10 +58,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px;
   </div>
 
   <div class="spec">
-    <strong>SPEC SHEET (20° full-depth spur gears, steel, cut teeth):</strong>
+    <strong>SPEC SHEET (20° full-depth spur gears, steel, AGMA quality A<sub>v</sub> = 8, uniform load K<sub>o</sub> = 1.0):</strong>
     Transmit 3.0 kW at 1150 rpm (pinion) · velocity ratio VR = 3.50 ± 2% ·
     no involute interference · contact ratio m<sub>f</sub> ≥ 1.4 ·
-    tooth bending stress (Lewis with Barth K<sub>v</sub>) σ ≤ 140 MPa ·
+    simplified AGMA bending stress s<sub>t</sub> = W<sub>t</sub>/(F·m·J)·K<sub>o</sub>·K<sub>v</sub> ≤ 140 MPa ·
     face width within 8m ≤ F ≤ 16m. &nbsp;<strong>Objective: minimize center distance C.</strong>
   </div>
 
@@ -115,22 +115,27 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px;
 </div>
 
 <script>
-const P = 3000, n1 = 1150, phi = 20 * Math.PI / 180, SIGALLOW = 140;
+const P = 3000, n1 = 1150, phi = 20 * Math.PI / 180, SIGALLOW = 140, Ko = 1.0;
+
+// AGMA dynamic factor Kv, analytical form for quality Av = 8 (Mott Fig. 9-16 / Table 9-6, SI)
+const Bv = 0.25 * Math.pow(8 - 5, 2 / 3), Cv = 50 + 56 * (1 - Bv);
+function agmaKv(v) { return Math.pow((Cv + Math.sqrt(200 * v)) / Cv, Bv); }
+
 let Np = 18, Ng = 63, m = 2.5, Fw = 30;
 
-// Lewis form factor Y (20° full depth) — interpolated table
-const YT = [[12,.245],[13,.261],[14,.277],[15,.290],[16,.296],[17,.303],[18,.309],[19,.314],
-  [20,.322],[21,.328],[22,.331],[24,.337],[26,.346],[28,.353],[30,.359],[34,.371],[38,.384],
-  [43,.397],[50,.409],[60,.422],[75,.435],[100,.447],[150,.460],[300,.472]];
-function lewisY(N) {
-  if (N <= YT[0][0]) return YT[0][1];
-  for (let i = 1; i < YT.length; i++) {
-    if (N <= YT[i][0]) {
-      const [n0, y0] = YT[i - 1], [n1_, y1] = YT[i];
-      return y0 + (y1 - y0) * (N - n0) / (n1_ - n0);
+// AGMA bending geometry factor J for the pinion (20° full depth, load at highest point of
+// single-tooth contact, Mott Fig. 9-10) — interpolated vs. pinion tooth count, calibrated to
+// Mott's stated reading (30-tooth pinion ≈ 0.38); mating-gear dependence is weak and neglected here.
+const JT = [[10,.22],[12,.245],[14,.27],[17,.31],[20,.34],[24,.355],[30,.38],[40,.40]];
+function geomJ(N) {
+  if (N <= JT[0][0]) return JT[0][1];
+  for (let i = 1; i < JT.length; i++) {
+    if (N <= JT[i][0]) {
+      const [n0, j0] = JT[i - 1], [n1_, j1] = JT[i];
+      return j0 + (j1 - j0) * (N - n0) / (n1_ - n0);
     }
   }
-  return YT[YT.length - 1][1];
+  return JT[JT.length - 1][1];
 }
 
 function calc() {
@@ -140,9 +145,9 @@ function calc() {
   const T = 9550 * (P / 1000) / n1;                 // N·m
   const Wt = 2 * T * 1000 / Dp;                      // N
   const v = Math.PI * Dp * n1 / 60000;               // m/s
-  const Kv = (6.1 + v) / 6.1;
-  const Y = lewisY(Np);
-  const sig = Wt * Kv / (Fw * m * Y);
+  const Kv = agmaKv(v);                              // AGMA dynamic factor (Fig. 9-16, Av = 8)
+  const J = geomJ(Np);                               // AGMA bending geometry factor (Fig. 9-10)
+  const sig = Wt / (Fw * m * J) * Ko * Kv;           // simplified AGMA bending stress s_t
   // interference: gear tip vs line-of-action tangency
   const rp = Dp / 2, rg = Dg / 2, a = m;
   const rbg = rg * Math.cos(phi);

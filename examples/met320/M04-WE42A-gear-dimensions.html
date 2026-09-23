@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.2-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 4.2-A: Spur Gear Dimensions (US System)",
+  statement: "A spur gear pair uses diametral pitch $P_d = 8$ teeth/in with a pinion $N_P = 20$ and a gear $N_G = 60$ (20&deg; full-depth involute). Find the pitch diameters, addendum and dedendum, whole depth, recommended face-width range, center distance, and velocity ratio."
+};
+var SKETCH = '<svg viewBox="0 0 460 220" role="img" aria-label="A small pinion pitch circle and a larger gear pitch circle drawn tangent at the pitch point P, with pitch diameters D_P and D_G marked and the center distance C between the two shaft centers."><circle cx="150" cy="110" r="50" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5" stroke-dasharray="6 4"/><circle cx="286" cy="110" r="86" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.5" stroke-dasharray="6 4"/><circle cx="150" cy="110" r="3" fill="#1F3A5F"/><circle cx="286" cy="110" r="3" fill="#1F3A5F"/><line x1="150" y1="60" x2="150" y2="160" stroke="#5a6b80" stroke-width="1"/><text x="156" y="185" fill="#5a6b80" font-size="11">D_P</text><line x1="286" y1="24" x2="286" y2="196" stroke="#5a6b80" stroke-width="1"/><text x="292" y="215" fill="#5a6b80" font-size="11">D_G</text><line x1="150" y1="110" x2="286" y2="110" stroke="#D85A30" stroke-width="1.5"/><text x="205" y="103" text-anchor="middle" fill="#D85A30" font-size="12">C</text><circle cx="200" cy="110" r="4" fill="#2a7a3a"/><text x="196" y="100" fill="#2a7a3a" font-size="11">P</text><text x="120" y="185" fill="#5a6b80" font-size="11">pinion</text><text x="330" y="120" fill="#5a6b80" font-size="11">gear</text></svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>With the diametral pitch and tooth counts fixed, every basic gear dimension follows from the standard full-depth proportions. We compute the pitch diameters, tooth heights, a face-width range, the center distance, and the speed ratio.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'><li>$P_d = 8\\ \\text{teeth/in}$; $N_P = 20$; $N_G = 60$; 20&deg; full-depth</li></ul>"
+      +"<p><strong>Find:</strong> $D_P,\\ D_G$; addendum $a$, dedendum $b$; whole depth $h_t$; face-width range; center distance $C$; velocity ratio VR.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: US diametral-pitch system; standard 20&deg; full-depth teeth; recommended spur face width $\\tfrac{8}{P_d} \\le F \\le \\tfrac{16}{P_d}$.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 8, Table 8-1 gear and tooth features (&sect;8-4).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>US diametral-pitch proportions for standard 20&deg; full-depth teeth:</p>"
+      +"<p class='eq-label'>Pitch diameter:</p>"
+      +"$$D = \\frac{N}{P_d}$$"
+      +"<p class='eq-label'>Addendum, dedendum, and whole depth:</p>"
+      +"$$a = \\frac{1}{P_d}, \\qquad b = \\frac{1.25}{P_d}, \\qquad h_t = a + b = \\frac{2.25}{P_d}$$"
+      +"<p class='eq-label'>Recommended spur face-width range:</p>"
+      +"$$\\frac{8}{P_d} \\le F \\le \\frac{16}{P_d}$$"
+      +"<p class='eq-label'>Center distance and velocity ratio:</p>"
+      +"$$C = \\frac{N_P + N_G}{2P_d} = \\frac{D_P + D_G}{2}, \\qquad VR = \\frac{N_G}{N_P}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$D_P = \\frac{N_P}{P_d} = \\frac{20}{8} = \\textcolor{#D85A30}{2.500\\ \\text{in}}, \\qquad D_G = \\frac{N_G}{P_d} = \\frac{60}{8} = \\textcolor{#D85A30}{7.500\\ \\text{in}}$$</div>"
+      +"<div class='calc'>$$a = \\frac{1}{8} = \\textcolor{#D85A30}{0.1250\\ \\text{in}}, \\quad b = \\frac{1.25}{8} = \\textcolor{#D85A30}{0.1563\\ \\text{in}}, \\quad h_t = 0.1250 + 0.1563 = \\textcolor{#D85A30}{0.2813\\ \\text{in}}$$</div>"
+      +"<div class='calc'>$$F:\\ \\frac{8}{8}\\ \\text{to}\\ \\frac{16}{8} = 1.000\\ \\text{to}\\ 2.000\\ \\text{in} \\;\\Rightarrow\\; \\text{mid-range } \\textcolor{#D85A30}{F \\approx 1.500\\ \\text{in}}$$</div>"
+      +"<div class='calc'>$$C = \\frac{N_P+N_G}{2P_d} = \\frac{20+60}{2(8)} = \\textcolor{#D85A30}{5.000\\ \\text{in}}, \\qquad VR = \\frac{60}{20} = \\textcolor{#D85A30}{3.0}$$</div>"
+      +"<p class='note'>Check: $D_P + D_G = 2.500 + 7.500 = 10.000\\ \\text{in} = 2C$.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Geometry: $D_P + D_G = 2C$ &check;</li>"
+      +"<li>Interference: $N_P = 20 \\ge 18$, the minimum for a 20&deg; full-depth pinion (Table 8-7) &check;</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>$D_P$ / $D_G$</td><td>2.500 in / 7.500 in</td></tr>"
+      +"<tr><td>$a$ / $b$ / $h_t$</td><td>0.1250 / 0.1563 / 0.2813 in</td></tr>"
+      +"<tr><td>Face width $F$</td><td>1.00&ndash;2.00 in (use ~1.500 in)</td></tr>"
+      +"<tr><td>$C$ / VR</td><td>5.000 in / 3.0</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the dimensions are consistent and the pair is free of interference. Same tooth counts in metric with $m = 3\\ \\text{mm}$: $D_P = mN_P = 60\\ \\text{mm}$, $D_G = 180\\ \\text{mm}$, $a = m = 3\\ \\text{mm}$, $b = 1.25m = 3.75\\ \\text{mm}$, $C = 120\\ \\text{mm}$.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 5.5-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 5.5-A: Parallel Key Design",
+  statement: "A 1.500-in-diameter shaft transmits $T = 1200\\ \\text{lb}\\cdot\\text{in}$ to a spur-gear hub under moderate shock. Select the key size from ANSI B17.1, choose a key material, and find the minimum key length. Use $N = 3.0$ (typical industrial service)."
+};
+var SKETCH = '<svg viewBox="0 0 460 240" role="img" aria-label="A square parallel key in a shaft-and-hub joint. Torque T produces tangential force F at the shaft surface; the key resists by shear across width W and by bearing on height H/2.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
++ '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<circle cx="130" cy="120" r="86" fill="#f0f3f7" stroke="#1F3A5F" stroke-width="1.4"/>'
++ '<circle cx="130" cy="120" r="58" fill="#fff" stroke="#1F3A5F" stroke-width="1.4"/>'
++ '<circle cx="130" cy="120" r="56" fill="#dce8f5" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<rect x="112" y="52" width="36" height="28" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<line x1="112" y1="66" x2="148" y2="66" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="3 2"/>'
++ '<line x1="130" y1="52" x2="130" y2="28" stroke="#D85A30" stroke-width="1"/>'
++ '<text x="136" y="22" fill="#D85A30" font-size="11">shear plane (W &#215; L)</text>'
++ '<line x1="148" y1="66" x2="230" y2="66" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/>'
++ '<text x="236" y="62" fill="#D85A30" font-size="12">F = 2T/D</text>'
++ '<line x1="148" y1="80" x2="220" y2="108" stroke="#1F3A5F" stroke-width="1"/>'
++ '<text x="224" y="112" fill="#1F3A5F" font-size="11">bearing (H/2 &#215; L)</text>'
++ '<path d="M200,160 A60 60 0 0 1 130 200" fill="none" stroke="#2a7a3a" stroke-width="1.6" marker-end="url(#ar)"/>'
++ '<text x="208" y="156" fill="#2a7a3a" font-size="12">T</text>'
++ '<text x="130" y="226" text-anchor="middle" fill="#5a6b80" font-size="10">shaft (inner) &#8226; square key &#8226; hub (outer)</text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A key transmits torque from shaft to hub and is meant to be the sacrificial (weakest) member. Its width and height are fixed by the shaft diameter (ANSI B17.1); the only design variable is length, set by whichever failure mode &mdash; shear or bearing &mdash; needs the longer key.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$D = 1.500\\ \\text{in}$; $T = 1200\\ \\text{lb}\\cdot\\text{in}$; moderate shock</li>"
+      +"<li>$N = 3.0$ (Mott Parallel-Key Design Procedure)</li></ul>"
+      +"<p><strong>Find:</strong> key size $W\\times H$; material and $S_y$; minimum length $L_{min}$.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: standard square parallel key per ANSI B17.1. For $D = 1.500\\ \\text{in}$ (in the 1.375&ndash;1.75 in range) the key is $W = H = 3/8\\ \\text{in}$ square. Key material SAE 1018 CD ($S_y = 54\\,000\\ \\text{psi}$); the shaft/hub are stronger, so the key governs both modes.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott &sect;11-2 (key sizes, Table 11-1), &sect;11-4/11-5 (stress and length, Eqs. 11-1 to 11-5).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Shear and bearing on a parallel key; for a square key with the key as weakest member both modes reduce to the same length:</p>"
+      +"<p class='eq-label'>Tangential force at the shaft surface:</p>"
+      +"$$F = \\frac{2T}{D}$$"
+      +"<p class='eq-label'>Shear stress (Eqs. 11-1 / 11-2):</p>"
+      +"$$\\tau = \\frac{F}{W L} = \\frac{2T}{D\\,W\\,L} \\le \\frac{0.5 S_y}{N}$$"
+      +"<p class='eq-label'>Bearing (crushing) stress (Eqs. 11-3 / 11-4):</p>"
+      +"$$\\sigma_c = \\frac{F}{(H/2) L} = \\frac{4T}{D\\,H\\,L} \\le \\frac{S_y}{N}$$"
+      +"<p class='eq-label'>Square key, key weakest (Eq. 11-5):</p>"
+      +"$$L_{min} = \\frac{4TN}{D\\,W\\,S_y}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$L_{min} = \\frac{4(1200)(3)}{1.500(0.375)(54\\,000)} = \\frac{14\\,400}{30\\,375} = \\textcolor{#D85A30}{0.474\\ \\text{in}}$$</div>"
+      +"<p>Specify a practical length within the hub, e.g. $L = 1.25\\ \\text{in}$. Verify at that length ($F = 2T/D = 1600\\ \\text{lb}$):</p>"
+      +"<div class='calc'>$$\\tau = \\frac{1600}{0.375(1.25)} = 3413\\ \\text{psi},\\quad S_F = \\frac{0.5(54\\,000)}{3413} = \\textcolor{#D85A30}{7.9}$$</div>"
+      +"<div class='calc'>$$\\sigma_c = \\frac{1600}{0.1875(1.25)} = 6827\\ \\text{psi},\\quad S_F = \\frac{54\\,000}{6827} = \\textcolor{#D85A30}{7.9}$$</div>"
+      +"<p class='note'>Equal safety factors confirm Eq. 11-5 for a square key with the key as weakest member.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Square key with the key as the weakest material &rArr; shear and bearing give the same length &check;</li>"
+      +"<li>$L_{min} = 0.474\\ \\text{in}$ is short; the specified $L = 1.25\\ \\text{in}$ (limited by hub length, not stress) gives ample margin ($S_F = 7.9$).</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>Key size</td><td>3/8 &#215; 3/8 in square</td></tr>"
+      +"<tr><td>Material</td><td>SAE 1018 CD ($S_y=54$ ksi)</td></tr>"
+      +"<tr><td>$L_{min}$</td><td>0.474 in</td></tr>"
+      +"<tr><td>Specified $L$</td><td>1.25 in ($S_F = 7.9$)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> a 3/8 &#215; 3/8 &#215; 1-1/4 in SAE 1018 CD key is more than adequate. Key length is usually driven by the hub length, not the stress &mdash; but always confirm both shear and bearing.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

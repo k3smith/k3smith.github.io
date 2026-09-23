@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 3.4-A | MET 320</title>
+<!--
+  REUSABLE WORKED-EXAMPLE PLAYER
+  To adapt for another problem: edit the PROBLEM object (title + statement)
+  and the STEPS array below. Keep the 7-step structure.
+  Math: write LaTeX with $...$ (inline) or $$...$$ (display). KaTeX renders it.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 3.4-A: V-Belt Drive Kinematics",
+  statement: "A V-belt drive has a driver sheave $D_1 = 150\\ \\text{mm}$ turning at $n_1 = 1750\\ \\text{rpm}$ and a driven sheave $D_2 = 375\\ \\text{mm}$, with a center distance $C = 600\\ \\text{mm}$. Find the output speed, the belt speed, the belt length, and the arc of contact on the smaller sheave."
+};
+
+var SKETCH = '<svg viewBox="0 0 470 200" role="img" aria-label="An open V-belt drive: a small driver sheave and a larger driven sheave connected by a belt, with center distance C.">'
++ '<line x1="120" y1="58" x2="330" y2="44" stroke="#1F3A5F" stroke-width="2"/>'
++ '<line x1="120" y1="142" x2="330" y2="156" stroke="#1F3A5F" stroke-width="2"/>'
++ '<circle cx="120" cy="100" r="42" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="330" cy="100" r="58" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="120" cy="100" r="3" fill="#1F3A5F"/><circle cx="330" cy="100" r="3" fill="#1F3A5F"/>'
++ '<text x="120" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8321;=150</text>'
++ '<text x="330" y="104" text-anchor="middle" fill="#5a6b80" font-size="10">D&#8322;=375</text>'
++ '<line x1="120" y1="170" x2="330" y2="170" stroke="#5a6b80" stroke-width="1" stroke-dasharray="3 3"/>'
++ '<text x="225" y="185" text-anchor="middle" fill="#5a6b80" font-size="11">C = 600 mm</text>'
++ '<text x="120" y="45" text-anchor="middle" fill="#D85A30" font-size="10">n&#8321;=1750 rpm</text>'
++ '</svg>';
+
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>Before selecting or checking a belt drive, you need its kinematics: how fast the driven shaft turns, how fast the belt runs, how long the belt is, and how much of the small sheave the belt wraps. These four numbers come straight from the two diameters, the input speed, and the center distance.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$D_1 = 150\\ \\text{mm}$ (driver), $D_2 = 375\\ \\text{mm}$ (driven)</li>"
+      +"<li>$n_1 = 1750\\ \\text{rpm}$, $C = 600\\ \\text{mm}$</li></ul>"
+      +"<p><strong>Find:</strong> output speed $n_2$, belt speed $v_b$, belt length $L$, and arc of contact $\\alpha_1$ on the small sheave.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: open belt drive (not crossed); no belt slip; rigid sheaves and an inextensible belt. The belt wraps less than half of the small sheave and more than half of the large one.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 7 (belt drives), Eqs. 7-4 (length) and 7-5 (arc of contact).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Velocity ratio and output speed, belt speed, belt length, and arc of contact:</p>"
+      +"<p class='eq-label'>Velocity ratio and driven speed (Mott: driver over driven, so $VR>1$ for a reduction):</p>"
+      +"$$VR = \\frac{D_2}{D_1}, \\qquad n_2 = \\frac{n_1}{VR} = n_1\\,\\frac{D_1}{D_2}$$"
+      +"<p class='eq-label'>Belt speed ($D_1$ in mm, $n_1$ in rpm, $v_b$ in m/s):</p>"
+      +"$$v_b = \\frac{\\pi D_1 n_1}{60{,}000}$$"
+      +"<p class='eq-label'>Belt length (open drive):</p>"
+      +"$$L = 2C + \\frac{\\pi(D_1+D_2)}{2} + \\frac{(D_2-D_1)^2}{4C}$$"
+      +"<p class='eq-label'>Arc of contact on the smaller sheave (degrees):</p>"
+      +"$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$VR = \\frac{D_2}{D_1} = \\frac{375\\ \\text{mm}}{150\\ \\text{mm}} = 2.50$$</div>"
+      +"<div class='calc'>$$n_2 = \\frac{n_1}{VR} = \\frac{1750\\ \\text{rpm}}{2.50} = \\textcolor{#D85A30}{700\\ \\text{rpm}}$$</div>"
+      +"<div class='calc'>$$v_b = \\frac{\\pi D_1 n_1}{60{,}000} = \\frac{\\pi(150\\ \\text{mm})(1750\\ \\text{rpm})}{60{,}000} = \\textcolor{#D85A30}{13.74\\ \\text{m/s}}$$</div>"
+      +"<div class='calc'>$$L = 2C + \\frac{\\pi(D_1+D_2)}{2} + \\frac{(D_2-D_1)^2}{4C} = 2(600) + \\frac{\\pi(525)}{2} + \\frac{(225)^2}{2400} = 1200 + 824.7 + 21.1 = \\textcolor{#D85A30}{2046\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\alpha_1 = 180 - 57.3\\,\\frac{D_2-D_1}{C} = 180 - 57.3\\,\\frac{225\\ \\text{mm}}{600\\ \\text{mm}} = 180 - 21.5 = \\textcolor{#D85A30}{158.5^\\circ}$$</div>"
+      +"<p class='note'>Belt speed units: $\\pi D n / 60{,}000$ converts mm and rpm to m/s.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<p>Sanity checks:</p><ul class='kv'>"
+      +"<li>The arc of contact $158.5^\\circ$ is comfortably above the $120^\\circ$ minimum, so the belt grips well.</li>"
+      +"<li>Belt speed $13.74\\ \\text{m/s}$ sits in the efficient V-belt range of 5 to 25 m/s.</li>"
+      +"<li>A 2.5:1 diameter ratio gives a 2.5:1 speed reduction (1750 to 700 rpm), as expected.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Symbol</th><th>Result</th></tr>"
+      +"<tr><td>Output speed</td><td>$n_2$</td><td>$700\\ \\text{rpm}$</td></tr>"
+      +"<tr><td>Belt speed</td><td>$v_b$</td><td>$13.74\\ \\text{m/s}$</td></tr>"
+      +"<tr><td>Belt length</td><td>$L$</td><td>$2046\\ \\text{mm}$</td></tr>"
+      +"<tr><td>Arc of contact</td><td>$\\alpha_1$</td><td>$158.5^\\circ$</td></tr></table>"
+      +"<p><strong>Verdict:</strong> the drive kinematics are valid; arc of contact and belt speed are both in range. These feed directly into belt selection on Page 3.5.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

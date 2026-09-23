@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.6-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 4.6-A: Bending Stress Check",
+  statement: "Continuing the running example: $m = 3\\ \\text{mm}$, $N_P = 20$, $N_G = 80$, face width $F = 12m = 36\\ \\text{mm}$, $W_t = 2729\\ \\text{N}$, $v_t = 5.50\\ \\text{m/s}$. Driver = electric motor (uniform); driven = moderate shock; AGMA quality $A_v = 8$. Compute the simplified AGMA bending stress on the pinion, the minimum required hardness, and evaluate SAE 4140 Q&amp;T at 250 HB."
+};
+var SKETCH = '<svg viewBox="0 0 320 210" role="img" aria-label="A single gear tooth modeled as a cantilever: the transmitted load acts near the tip and the maximum bending stress occurs at the root fillet on the tension side.">'
++ '<defs><marker id="ar46" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
++ '<line x1="40" y1="175" x2="250" y2="175" stroke="#1F3A5F" stroke-width="3"/>'
+// tooth body with explicit root fillets at the rim
++ '<path d="M88,175'
++ ' C88,175 92,168 98,160'
++ ' L110,78 Q114,58 128,58'
++ ' L152,58 Q166,58 170,78'
++ ' L182,160'
++ ' C188,168 192,175 192,175'
++ ' Z" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
+// Wt at tip (tension side is left root)
++ '<line x1="170" y1="66" x2="210" y2="66" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar46)"/>'
++ '<text x="148" y="48" fill="#D85A30" font-size="12">W_t near tip</text>'
+// highlight left root fillet (tension side) and label with leader
++ '<path d="M90,172 C92,166 96,160 100,156" fill="none" stroke="#D85A30" stroke-width="2.8"/>'
++ '<circle cx="96" cy="164" r="3.5" fill="#D85A30"/>'
++ '<line x1="96" y1="164" x2="52" y2="130" stroke="#D85A30" stroke-width="1.2"/>'
++ '<text x="8" y="118" fill="#D85A30" font-size="11">root fillet</text>'
++ '<text x="8" y="134" fill="#D85A30" font-size="11">max &#963; (tension)</text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A gear tooth is a cantilever loaded near its tip, so a fatigue crack can start at the root fillet. The simplified AGMA bending equation scales the transmitted load by the geometry factor $J$ and by the overload and dynamic factors, and we compare the result to the material's allowable bending stress number.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$W_t = 2729\\ \\text{N}$ (from Page 4.5); $m = 3\\ \\text{mm}$; $F = 12m = 36\\ \\text{mm}$ (mid-range spur face width)</li>"
+      +"<li>$J_P = 0.34$ (Fig. 9-10, 20/80 pair); $K_o = 1.50$ (Table 9-1, uniform / moderate shock); $K_v = 1.20$ ($A_v = 8$, 5.50 m/s)</li></ul>"
+      +"<p><strong>Find:</strong> $s_t$; minimum $H_B$; is SAE 4140 Q&amp;T at 250 HB safe?</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: simplified AGMA method with the two dominant factors $K_o$ and $K_v$ ($K_s = K_B = 1.0$); through-hardened steel, Grade 1; minimum bending safety factor $S_F = 1.2$. The pinion (fewer teeth, smaller $J$) is the critical member.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott &sect;9-5 (and &sect;9-10 metric-module form); $J$ from Fig. 9-10, $K_o$ from Table 9-1, $K_v$ from Fig. 9-16, $s_{at}$ from Fig. 9-18 (Grade 1).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Simplified AGMA bending stress and allowable hardness fit:</p>"
+      +"<p class='eq-label'>Bending stress number (metric-module form):</p>"
+      +"$$s_t = \\frac{W_t}{F\\,m\\,J}\\,K_o\\,K_v$$"
+      +"<p class='eq-label'>Allowable bending stress number (Grade 1 through-hardened, Mott Fig. 9-18 fit):</p>"
+      +"$$s_{at} \\approx 0.533\\,H_B + 88.3\\ \\text{MPa}$$"
+      +"<p class='eq-label'>Bending safety factor and required hardness for a target $S_F$:</p>"
+      +"$$S_F = \\frac{s_{at}}{s_t}, \\qquad H_{B,req} = \\frac{S_F\\,s_t - 88.3}{0.533}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$s_t = \\frac{W_t}{F\\,m\\,J}\\,K_o\\,K_v = \\frac{2729\\ \\text{N}}{(36\\ \\text{mm})(3\\ \\text{mm})(0.34)}(1.50)(1.20)$$</div>"
+      +"<div class='calc'>$$= 74.32 \\times 1.80 = \\textcolor{#D85A30}{133.8\\ \\text{MPa}}$$</div>"
+      +"<div class='calc'>$$s_{at,req} = S_F\\,s_t = 1.2(133.8) = 160.5\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$H_{B,min} = \\frac{160.5 - 88.3}{0.533} = \\textcolor{#D85A30}{136}$$</div>"
+      +"<div class='calc'>$$\\text{4140 Q\\&T @ 250 HB: } s_{at} = 0.533(250)+88.3 = 221.6\\ \\text{MPa}$$</div>"
+      +"<div class='calc'>$$S_F = \\frac{221.6}{133.8} = \\textcolor{#D85A30}{1.66} \\ge 1.2\\ \\checkmark$$</div>"
+      +"<p class='note'>Units: N / (mm·mm) = N/mm$^2$ = MPa.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Required $H_B = 136$ is easily met; 250 HB gives $S_F = 1.66 \\ge 1.2$ &check;</li>"
+      +"<li>If the pinion passes bending, the gear (larger $J$) also passes for the same $W_t$, $F$, $m$.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>Bending stress $s_t$</td><td>133.8 MPa</td></tr>"
+      +"<tr><td>Minimum $H_B$ (bending)</td><td>136</td></tr>"
+      +"<tr><td>$S_F$ at 250 HB</td><td>1.66 &check;</td></tr></table>"
+      +"<p><strong>Verdict:</strong> bending is safe with SAE 4140 Q&amp;T (250 HB). Bending is <em>not</em> the governing check &mdash; the contact (pitting) stress on Page 4.7 usually decides the material.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

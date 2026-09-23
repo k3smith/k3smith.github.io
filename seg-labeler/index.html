@@ -3,87 +3,60 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Document chunk block labeling</title>
+    <title>DocGraph span section labeling</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=section_model_v2" />
   </head>
   <body>
     <div class="wrap">
       <header class="site">
-        <h1>Chunk block labeling</h1>
+        <h1>Section span labeling</h1>
         <span class="badge" id="round-badge">round</span>
       </header>
 
       <div id="sheet-warn" class="warn-banner" hidden>
-        Google Sheet is not configured yet (<code>config.js</code> ?
-        <code>sheetWebAppUrl</code>). Shared double-coverage needs the Sheet live
-        before you recruit raters.
+        Google Sheet is not configured (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Labels still save locally + CSV backup.
+        For shared coverage, create a <strong>new</strong> Sheet for
+        <code>section_model_v2</code>, paste updated <code>apps_script/Code.gs</code>,
+        deploy, and paste the URL.
       </div>
 
       <details class="how" id="how" open>
         <summary>Instructions (about 2 minutes)</summary>
         <div class="body">
           <p>
-            You will see one <strong>text block</strong> from a Navy / regulatory
-            PDF (with a little context above and below). Decide what kind of chunk
-            unit it is and which section it belongs to - so an automated system can
-            cite document, section, page, and quote correctly.
+            Mark <strong>spans</strong> inside each unit. The product graph is:
+            a <em>header</em> title node, then one or more <em>body</em> chunks
+            whose parent is that header (never another body).
           </p>
           <div class="defs">
             <div>
-              <strong>requirement</strong>
-              Obligation language (<em>shall</em>, <em>must</em>, numbered
-              requirement). Prefer this for nested sub-requirements.
+              <strong>header</strong>
+              Short title / identifier (what would be underlined). Examples:
+              <code>2.3.4 Training Requirements.</code>,
+              <code>(b) OPNAVINST 3120.32</code>, <code>References</code>.
             </div>
             <div>
-              <strong>definition</strong>
-              Defines a term ("means", "DEFINITION", glossary-style).
-            </div>
-            <div>
-              <strong>reference</strong>
-              Citation to another standard, CFR, NSI, or document list entry.
-            </div>
-            <div>
-              <strong>scope</strong>
-              Title / purpose / applicability of an item or chapter.
-            </div>
-            <div>
-              <strong>note</strong>
-              NOTES section, guidance, or non-binding commentary.
-            </div>
-            <div>
-              <strong>table</strong>
-              Tabular content (or a clear table caption/row blob).
-            </div>
-            <div>
-              <strong>paragraph</strong>
-              Ordinary body prose that is still a citeable unit.
-            </div>
-            <div>
-              <strong>not_section_start</strong>
-              This block is <em>not</em> a new section header. Merge it with the
-              previous section. Example: <em>3M 301 Personnel Qualification
-              Standard...</em> is a training name in body text, not section 3/301.
-              Set section path to the true continuing section from context (e.g.
-              <code>1 &gt; 1.4</code>).
+              <strong>body</strong>
+              Prose under that header — including text after a citation dash,
+              and long requirement text after a numbered title. Parent = the
+              header you marked (or its section id).
             </div>
             <div>
               <strong>skip</strong>
-              Running header/footer, TOC noise, blank/junk, or not a chunk unit.
+              Chrome / junk (running headers, VerDate, SGML paths).
             </div>
           </div>
           <p>
-            Prefill fields are <em>suggestions only</em> - correct them when wrong.
-            Section path should be numbers only (e.g. <code>2 &gt; 2.6 &gt; 2.6.2</code>),
-            not chapter titles. For nested requirements, set
-            <strong>parent section</strong> and <strong>must not split with</strong>
-            to the immediate parent. Use the same name/initials when you return.
-            Each block is labeled by up to two people.
+            Select text in the unit, then press <kbd>H</kbd> / <kbd>B</kbd> /
+            <kbd>S</kbd> (or the buttons). Prefills are extractor suggestions —
+            fix them. Multiple body spans may share one header parent.
           </p>
         </div>
       </details>
@@ -91,9 +64,8 @@
       <section class="panel" id="setup">
         <h2>Start a session</h2>
         <p class="lead">
-          Enter a short name or initials (same every time you return). The site
-          will only offer blocks that still need a rating and that you have not
-          already labeled.
+          Enter initials (same every return). Only units still needing a rating
+          are offered.
         </p>
         <label class="field" for="rater-id">Your name or initials</label>
         <input
@@ -113,7 +85,7 @@
         <div class="progress">
           <div class="progress-text" id="progress-text">Your labels: 0</div>
           <div class="progress-text" id="coverage-text" style="margin-top: 0.15rem">
-            Checking coverage?
+            Checking coverage…
           </div>
           <div class="bar" aria-hidden="true">
             <span id="progress-fill"></span>
@@ -133,8 +105,25 @@
             <p id="ctx-before"></p>
           </article>
           <article class="ctx-card focal">
-            <h3>Block to label</h3>
-            <p id="block-text"></p>
+            <h3>Unit — select text, then mark</h3>
+            <div id="block-text" class="markable" tabindex="0"></div>
+            <div class="mark-toolbar" role="toolbar" aria-label="Mark selection">
+              <button type="button" id="mark-header" class="mark-btn header">
+                Header <kbd>H</kbd>
+              </button>
+              <button type="button" id="mark-body" class="mark-btn body">
+                Body <kbd>B</kbd>
+              </button>
+              <button type="button" id="mark-skip" class="mark-btn skip">
+                Skip <kbd>S</kbd>
+              </button>
+              <button type="button" id="clear-marks" class="secondary">
+                Clear marks
+              </button>
+              <button type="button" id="use-suggestions" class="secondary">
+                Reset suggestions
+              </button>
+            </div>
           </article>
           <article class="ctx-card muted-card" id="ctx-after-wrap" hidden>
             <h3>Context after</h3>
@@ -143,55 +132,14 @@
         </div>
 
         <form id="label-form" class="label-form" autocomplete="off">
-          <label class="field" for="block-type">Block type</label>
-          <select id="block-type" required>
-            <option value="">Select?</option>
-            <option value="requirement">requirement</option>
-            <option value="definition">definition</option>
-            <option value="reference">reference</option>
-            <option value="scope">scope</option>
-            <option value="note">note</option>
-            <option value="table">table</option>
-            <option value="paragraph">paragraph</option>
-            <option value="not_section_start">not_section_start</option>
-            <option value="skip">skip</option>
-          </select>
-
-          <div class="form-grid">
-            <div>
-              <label class="field" for="section-number">Section number</label>
-              <input id="section-number" type="text" placeholder="e.g. 3.3.1.1" />
-            </div>
-            <div>
-              <label class="field" for="parent-section"
-                >Parent section (optional)</label
-              >
-              <input id="parent-section" type="text" placeholder="e.g. 3.3.1" />
-            </div>
-          </div>
-
-          <label class="field" for="section-path"
-            >Section path (breadcrumb, use > or |)</label
-          >
-          <input
-            id="section-path"
-            type="text"
-            placeholder="ITEM 009-003 > 3. REQUIREMENTS > 3.3 > 3.3.1 > 3.3.1.1"
-          />
-
-          <label class="field" for="must-not-split"
-            >Must not split with (comma-separated section numbers)</label
-          >
-          <input id="must-not-split" type="text" placeholder="e.g. 3.3.1" />
+          <h3 class="marks-heading">Marks on this unit</h3>
+          <div id="marks-list" class="marks-list"></div>
 
           <label class="field" for="notes">Notes (optional)</label>
-          <input id="notes" type="text" placeholder="Ambiguity, page OCR issues?" />
+          <input id="notes" type="text" placeholder="Ambiguity, bad split, missing parent?" />
 
           <div class="actions">
             <button type="submit" id="save">Save &amp; next</button>
-            <button type="button" class="secondary" id="use-suggestions">
-              Reset to suggestions
-            </button>
           </div>
         </form>
 
@@ -216,12 +164,14 @@
       </section>
 
       <footer class="note">
-        Research labeling for structural document chunking. Labels become gold
-        boundaries for ingestion eval (section path, block type, hierarchy).
+        Round <code>section_model_v2</code>: header spans + body spans (body →
+        header parent). OSHA GPO PDF quarantined until eCFR / verified
+        column-aware extract. See
+        <code>supship-data-validation/04-changeset-span-section-model.md</code>.
       </footer>
     </div>
 
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js?v=section_model_v2"></script>
+    <script src="app.js?v=section_model_v2"></script>
   </body>
 </html>

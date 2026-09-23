@@ -1,10 +1,9 @@
-// Paste your Apps Script web-app URL after deploy (required for shared double-coverage).
-// Until then, labels stay in localStorage + Download backup CSV.
+// Fresh round: span header/body marking. Use a NEW Google Sheet + redeploy Apps Script.
+// Leave sheetWebAppUrl empty until the new Sheet web app is pasted here.
 window.LABELER_CONFIG = {
-  roundId: "pilot_chunk_blocks_v1",
-  roundTitle: "Pilot - chunk block labeling",
-  blocksUrl: "blocks/pilot_v1.json",
-  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbxfKWR0n3UNa0Q3yrTk8Mm5LaOVvEUsG4-zwuED-cmyQ4k_Y70iXr4RqQm7rOA_AfY/exec",
-  /** Each block stops being offered once this many distinct raters have labeled it. */
+  roundId: "section_model_v2",
+  roundTitle: "DocGraph — span section model (mark header + body)",
+  blocksUrl: "blocks/section_model_v2.json",
+  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwG3JxXHewwd3yM0rntyZBlbD3skJWTI8z1nTV4OH7zLFrFcQ-g1WwoMuSgRfMtPzkF/exec",
   targetRatings: 2,
 };

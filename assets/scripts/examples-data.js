@@ -20,6 +20,180 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 2,
+        title: 'Stress Analysis & Static Design',
+        examples: [
+          {
+            file: 'M02-WE22A-tension.html',
+            name: 'Worked Example 2.2-A: Round bar in tension',
+            description: 'Finds axial stress and the safety factor for a round bar in tension using the 7-step process.',
+          },
+          {
+            file: 'M02-WE22B-clevis-pin.html',
+            name: 'Worked Example 2.2-B: Clevis pin in double shear and bearing',
+            description: 'Checks a clevis pin in double shear and the leg in bearing, and identifies which mode governs.',
+          },
+          {
+            file: 'M02-WE23A-torsion.html',
+            name: 'Worked Example 2.3-A: Shaft torque and shear stress',
+            description: 'Finds transmitted torque, torsional shear stress, and the shear safety factor for a solid shaft.',
+          },
+          {
+            file: 'M02-WE23B-angle-of-twist.html',
+            name: 'Worked Example 2.3-B: Angle of twist of a shaft',
+            description: 'Computes the angle of twist and twist rate, and compares them to the 1 degree per meter guideline.',
+          },
+          {
+            file: 'M02-WE24A-bending-diameter.html',
+            name: 'Worked Example 2.4-A: Bending stress and diameter selection',
+            description: 'Checks a simply supported beam in bending, then sizes the diameter for a target safety factor.',
+          },
+          {
+            file: 'M02-WE24B-cantilever.html',
+            name: 'Worked Example 2.4-B: Cantilever bracket',
+            description: 'Finds bending stress and safety factor for a cantilever bracket and compares section efficiency.',
+          },
+          {
+            file: 'M02-WE25A-deflection.html',
+            name: 'Worked Example 2.5-A: Simply supported shaft deflection',
+            description: 'Checks midspan deflection against an L/1000 limit and sizes the shaft up to comply.',
+          },
+          {
+            file: 'M02-WE25B-superposition.html',
+            name: 'Worked Example 2.5-B: Superposition of two loads',
+            description: 'Adds two off-center load deflections by superposition and checks the stiffness limit.',
+          },
+          {
+            file: 'M02-WE26A-stress-concentration.html',
+            name: 'Worked Example 2.6-A: Stepped shaft with a shoulder fillet',
+            description: 'Applies a stress-concentration factor at a shoulder fillet to find peak stress and static N.',
+          },
+          {
+            file: 'M02-WE27A-stress-element.html',
+            name: 'Worked Example 2.7-A: Setting up the stress element for a shaft',
+            description: 'Builds the combined bending-plus-torsion stress element at the critical surface point.',
+          },
+          {
+            file: 'M02-WE28A-mohrs-circle.html',
+            name: "Worked Example 2.8-A: Mohr's circle for the shaft",
+            description: "Constructs Mohr's circle to find principal stresses and maximum shear from a stress element.",
+          },
+          {
+            file: 'M02-WE29A-von-mises.html',
+            name: 'Worked Example 2.9-A: Complete static design check for a shaft',
+            description: 'Runs the full von Mises static design check with Kt and redesigns the shaft to pass.',
+          },
+        ],
+      },
+      {
+        number: 3,
+        title: 'Fatigue & Power Transmission',
+        examples: [
+          {
+            file: 'M03-WE31A-fluctuating-stress.html',
+            name: 'Worked Example 3.1-A: Characterizing a Fully Reversed Stress State',
+            description: 'Splits a reversed bending cycle into mean and alternating stress, finds the stress ratio, and estimates the unmodified endurance limit.',
+          },
+          {
+            file: 'M03-WE32A-marin-factors.html',
+            name: 'Worked Example 3.2-A: Applying Marin Factors and Kf',
+            description: 'Applies the Marin modifying factors and the fatigue notch factor to find the corrected endurance limit and effective alternating stress.',
+          },
+          {
+            file: 'M03-WE13A-fatigue-design.html',
+            name: 'Worked Example 3.1-3.3: Complete Fatigue Design of a Rotating Shaft',
+            description: 'Full fatigue workflow: characterize the reversed stress, apply Marin factors and Kf, run the Goodman and yield checks, and redesign.',
+          },
+          {
+            file: 'M03-WE34A-belt-kinematics.html',
+            name: 'Worked Example 3.4-A: V-Belt Drive Kinematics',
+            description: 'Finds output speed, belt speed, belt length, and arc of contact for an open V-belt drive.',
+          },
+          {
+            file: 'M03-WE35A-belt-selection.html',
+            name: 'Worked Example 3.5-A: V-Belt Drive Selection',
+            description: 'Sizes a V-belt drive: design power, sheave pair, belt speed, arc of contact, and number of belts.',
+          },
+          {
+            file: 'M03-WE36A-chain-drive.html',
+            name: 'Worked Example 3.6-A: Roller Chain Drive Design',
+            description: 'Designs an ANSI #50 roller chain drive: tooth counts, sprocket diameters, chain length, speed, and lubrication type.',
+          },
+          {
+            file: 'M03-WE37A-wire-rope.html',
+            name: 'Worked Example 3.7-A: Hoist Wire Rope Selection',
+            description: 'Selects a 6x19 wire rope for a hoist and checks both rope strength and the minimum sheave diameter.',
+          },
+        ],
+      },
+      {
+        number: 4,
+        title: 'Gears',
+        examples: [
+          {
+            file: 'M04-WE41A-gear-type-selection.html',
+            name: 'Worked Example 4.1-A: Gear Type Selection',
+            description: 'Matches three drives to the right gear family (spur, bevel, worm) by shaft orientation, speed ratio, and packaging.',
+          },
+          {
+            file: 'M04-WE42A-gear-dimensions.html',
+            name: 'Worked Example 4.2-A: Spur Gear Dimensions (US System)',
+            description: 'Finds pitch diameters, tooth proportions, face-width range, center distance, and velocity ratio for a diametral-pitch spur pair.',
+          },
+          {
+            file: 'M04-WE43A-gear-train.html',
+            name: 'Worked Example 4.3-A: Double-Reduction Gear Train Design',
+            description: 'Designs a two-stage compound spur gear train to a 16:1 target using equal ratio splits and integer tooth counts.',
+          },
+          {
+            file: 'M04-WE45A-gear-forces.html',
+            name: 'Worked Example 4.5-A: Forces on a Spur Gear Pair',
+            description: 'Computes pitch-line speed, torque, and the transmitted, radial, and normal tooth forces for the running design example.',
+          },
+          {
+            file: 'M04-WE46A-bending-stress.html',
+            name: 'Worked Example 4.6-A: Bending Stress Check',
+            description: 'Runs the simplified AGMA bending stress (J, Ko, Kv) and finds the minimum hardness and safety factor for the pinion.',
+          },
+          {
+            file: 'M04-WE47A-contact-stress.html',
+            name: 'Worked Example 4.7-A: Contact Stress and Material Specification',
+            description: 'Computes the AGMA contact (pitting) stress, shows contact governs, and specifies the governing through-hardened hardness.',
+          },
+        ],
+      },
+      {
+        number: 5,
+        title: 'Helical & Bevel Gears, Keys & Couplings',
+        examples: [
+          {
+            file: 'M05-WE51A-helical-forces.html',
+            name: 'Worked Example 5.1-A: Forces on a Helical Gear Pair',
+            description: 'Finds the transverse geometry, pitch-line speed, torque, and the tangential, radial, and axial (thrust) forces on a helical gear pair.',
+          },
+          {
+            file: 'M05-WE52A-helical-stress.html',
+            name: 'Worked Example 5.2-A: Helical Gear Stress and Material',
+            description: 'Runs the simplified AGMA bending and contact stresses (J from Fig. 10-6, I from Table 10-1) and specifies the governing hardness.',
+          },
+          {
+            file: 'M05-WE53A-bevel-forces.html',
+            name: 'Worked Example 5.3-A: Bevel Gear Geometry and Forces',
+            description: 'Finds the pitch cone angles, cone distance, average pitch diameter, and the three pinion forces, and applies the 90-degree swap rule.',
+          },
+          {
+            file: 'M05-WE55A-parallel-key.html',
+            name: 'Worked Example 5.5-A: Parallel Key Design',
+            description: 'Selects an ANSI B17.1 key, identifies the weakest member, and finds the minimum key length from shear and bearing.',
+          },
+          {
+            file: 'M05-WE55B-parallel-key-si.html',
+            name: 'Worked Example 5.5-B: Parallel Key Design (SI, rectangular)',
+            description: 'Sizes a standard SI metric key (rectangular, H < W) and shows that bearing governs the length — the metric counterpart to 5.5-A.',
+          },
+        ],
+      },
     ],
   },
   {

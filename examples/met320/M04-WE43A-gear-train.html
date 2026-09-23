@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.3-A | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 4.3-A: Double-Reduction Gear Train Design",
+  statement: "A speed reducer takes an electric motor at $n_{in} = 1750\\ \\text{rpm}$ and must deliver about $n_{out} \\approx 109\\ \\text{rpm}$ (target ratio &asymp; 16:1). Design a two-stage compound spur gear train with $P_d = 8$ teeth/in, minimum pinion 18 teeth, and gears no larger than about 120 teeth. Find the tooth counts and the actual output speed."
+};
+var SKETCH = '<svg viewBox="0 0 460 255" role="img" aria-label="Compound double-reduction train: pinion A meshes gear B; gears B and C share the intermediate shaft; pinion C meshes gear D on the output shaft. Stage ratios are each 4 to 1.">'
++ '<defs><marker id="ar43" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker></defs>'
+// input shaft + pinion A (r = 15) meshing gear B (r = 60) — 1:4
++ '<line x1="18" y1="78" x2="62" y2="78" stroke="#5a6b80" stroke-width="2.5"/>'
++ '<text x="16" y="64" fill="#5a6b80" font-size="11">Motor</text>'
++ '<text x="16" y="98" fill="#5a6b80" font-size="10">1750 rpm</text>'
++ '<circle cx="80" cy="78" r="15" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<circle cx="80" cy="78" r="2.5" fill="#1F3A5F"/>'
++ '<text x="80" y="52" text-anchor="middle" fill="#1F3A5F" font-size="12" font-weight="bold">A 20</text>'
++ '<circle cx="155" cy="78" r="60" fill="#dce8f5" fill-opacity="0.55" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<circle cx="155" cy="78" r="2.5" fill="#1F3A5F"/>'
++ '<text x="155" y="28" text-anchor="middle" fill="#1F3A5F" font-size="12" font-weight="bold">B 80</text>'
++ '<text x="155" y="42" text-anchor="middle" fill="#5a6b80" font-size="10">Stage 1 (4:1)</text>'
+// intermediate shaft shared by B and C
++ '<line x1="155" y1="78" x2="155" y2="175" stroke="#1F3A5F" stroke-width="2.5"/>'
++ '<text x="168" y="130" fill="#5a6b80" font-size="10">intermediate</text>'
++ '<text x="168" y="144" fill="#5a6b80" font-size="10">shaft (B + C)</text>'
+// pinion C (r = 14) meshing gear D (r = 56) — 1:4
++ '<circle cx="155" cy="175" r="14" fill="#eef3f9" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<circle cx="155" cy="175" r="2.5" fill="#1F3A5F"/>'
++ '<text x="120" y="180" text-anchor="end" fill="#1F3A5F" font-size="12" font-weight="bold">C 18</text>'
++ '<circle cx="225" cy="175" r="56" fill="#dce8f5" fill-opacity="0.55" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<circle cx="225" cy="175" r="2.5" fill="#1F3A5F"/>'
++ '<text x="290" y="170" fill="#1F3A5F" font-size="12" font-weight="bold">D 72</text>'
++ '<text x="290" y="186" fill="#5a6b80" font-size="10">Stage 2 (4:1)</text>'
++ '<line x1="281" y1="175" x2="330" y2="175" stroke="#5a6b80" stroke-width="2.5" marker-end="url(#ar43)"/>'
++ '<text x="336" y="172" fill="#5a6b80" font-size="11">109.4 rpm</text>'
++ '<text x="230" y="248" text-anchor="middle" fill="#D85A30" font-size="12">VR_total = (80/20) &#215; (72/18) = 4 &#215; 4 = 16</text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>A single spur stage is limited to roughly 10:1, so a 16:1 reduction needs two stages. Splitting the ratio evenly keeps the largest gear as small as possible. We pick integer tooth counts, respect the 18-tooth minimum pinion, and check the delivered speed.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$n_{in} = 1750\\ \\text{rpm}$; target $n_{out} \\approx 109\\ \\text{rpm}$; $VR_{total} \\approx 16$</li>"
+      +"<li>$P_d = 8$ teeth/in; $N_{P,min} = 18$; $N_{G,max} \\approx 120$</li></ul>"
+      +"<p><strong>Find:</strong> tooth counts $N_A, N_B, N_C, N_D$ and the actual $n_{out}$.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: two equal stages ($VR_1 = VR_2 = \\sqrt{VR_{total}}$) to minimize the largest gear; compound train with gears B and C fixed on the intermediate shaft; standard 20&deg; full-depth teeth. Stage 1 uses $N_A = 20$ (slightly above the 18-tooth minimum) so $N_B = 80$ stays well under 120.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott Ch. 8, velocity ratio and gear trains (&sect;8-13, &sect;8-14).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Split the total ratio, then size each stage:</p>"
+      +"<p class='eq-label'>Equal stage ratios (minimizes the largest gear):</p>"
+      +"$$VR_1 = VR_2 = \\sqrt{VR_{total}}$$"
+      +"<p class='eq-label'>Stage ratio from tooth counts:</p>"
+      +"$$VR_{stage} = \\frac{N_{driven}}{N_{driver}}$$"
+      +"<p class='eq-label'>Compound train overall ratio and speeds:</p>"
+      +"$$VR_{total} = VR_1 \\times VR_2 = \\frac{N_B}{N_A}\\cdot\\frac{N_D}{N_C}$$"
+      +"$$n_{int} = \\frac{n_{in}}{VR_1}, \\qquad n_{out} = \\frac{n_{int}}{VR_2} = \\frac{n_{in}}{VR_{total}}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$VR_1 = VR_2 = \\sqrt{16} = \\textcolor{#D85A30}{4.0}$$</div>"
+      +"<p><strong>Stage 1</strong> (choose $N_A = 20 \\ge 18$):</p>"
+      +"<div class='calc'>$$N_B = N_A \\times VR_1 = 20 \\times 4 = 80 \\le 120\\ \\checkmark$$</div>"
+      +"<p><strong>Stage 2</strong> (use the minimum pinion $N_C = 18$):</p>"
+      +"<div class='calc'>$$N_D = N_C \\times VR_2 = 18 \\times 4 = 72 \\le 120\\ \\checkmark$$</div>"
+      +"<div class='calc'>$$VR_{total} = \\frac{80}{20}\\times\\frac{72}{18} = 4.0 \\times 4.0 = \\textcolor{#D85A30}{16.0}$$</div>"
+      +"<div class='calc'>$$n_{int} = \\frac{1750\\ \\text{rpm}}{4.0} = 437.5\\ \\text{rpm}, \\qquad n_{out} = \\frac{1750}{16.0} = \\textcolor{#D85A30}{109.4\\ \\text{rpm}}$$</div>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>All tooth counts are integers; $N_P \\ge 18$ and $N_G \\le 120$ &check;</li>"
+      +"<li>$n_{out} = 109.4 \\approx 109\\ \\text{rpm}$ target; $VR_{total} = 16.0$ exactly &check;</li>"
+      +"<li>Hunting-tooth option: e.g. change $N_B$ to 79 or 81 so $N_A$ and $N_B$ share no common factor, spreading wear.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Stage</th><th>Driver</th><th>Driven</th><th>Ratio</th></tr>"
+      +"<tr><td>1</td><td>$N_A = 20$</td><td>$N_B = 80$</td><td>4.0</td></tr>"
+      +"<tr><td>2</td><td>$N_C = 18$</td><td>$N_D = 72$</td><td>4.0</td></tr></table>"
+      +"<p><strong>Verdict:</strong> $VR_{total} = 16.0$, $n_{out} = 109.4\\ \\text{rpm}$. In the final design, apply the hunting-tooth idea &mdash; nudge a driven count by &plusmn;1 to remove common factors &mdash; so wear spreads evenly.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

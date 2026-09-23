@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 5.5-B | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 5.5-B: Parallel Key Design (SI, rectangular key)",
+  statement: "A gear transmits $T = 250\\ \\text{N}\\cdot\\text{m}$ on a \u00d840 mm shaft. The standard SI key (Mott Table 11-1, 38\u201344 mm range) is $12 \\times 8\\ \\text{mm}$ \u2014 a rectangular key ($H < W$), AISI 1018 CD ($S_y = 372\\ \\text{MPa}$), design factor $N = 3$. Find the minimum key length for shear and bearing, and the length to specify."
+};
+var SKETCH = '<svg viewBox="0 0 440 230" role="img" aria-label="A rectangular parallel key (H less than W) in a shaft-and-hub joint. Torque T produces tangential force F; shear uses width W, bearing uses height H/2, so bearing typically governs.">'
++ '<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D85A30"/></marker>'
++ '<marker id="arb" markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1F3A5F"/></marker></defs>'
++ '<circle cx="140" cy="112" r="86" fill="#f0f3f7" stroke="#1F3A5F" stroke-width="1.4"/>'
++ '<circle cx="140" cy="112" r="58" fill="#fff" stroke="#1F3A5F" stroke-width="1.4"/>'
++ '<circle cx="140" cy="112" r="56" fill="#dce8f5" stroke="#5a6b80" stroke-width="0.8" stroke-dasharray="4 3"/>'
++ '<rect x="122" y="48" width="36" height="20" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.6"/>'
++ '<line x1="122" y1="58" x2="158" y2="58" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="3 2"/>'
++ '<text x="168" y="44" fill="#1F3A5F" font-size="10">H &lt; W</text>'
++ '<text x="196" y="56" fill="#D85A30" font-size="10">shear plane</text>'
++ '<text x="196" y="69" fill="#5a6b80" font-size="10">(width W &#215; length L)</text>'
++ '<text x="196" y="90" fill="#1F3A5F" font-size="10">bearing on key sides</text>'
++ '<text x="196" y="103" fill="#5a6b80" font-size="10">(height H/2 &#215; L)</text>'
++ '<path d="M140,42 A70 70 0 0 1 210 112" fill="none" stroke="#2a7a3a" stroke-width="1.6" marker-end="url(#ar)"/>'
++ '<text x="196" y="128" fill="#2a7a3a" font-size="11">T</text>'
++ '<line x1="158" y1="58" x2="210" y2="58" stroke="#D85A30" stroke-width="2.2" marker-end="url(#ar)"/>'
++ '<text x="214" y="54" fill="#D85A30" font-size="11">F = 2T/D</text>'
++ '<text x="140" y="214" text-anchor="middle" fill="#5a6b80" font-size="10">shaft (inner) &#8226; rectangular key &#8226; hub (outer)</text>'
++ '</svg>';
+var STEPS = [
+  { label:"Restate", title:"Restate the problem",
+    html:"<p>In SI, standard keys become <em>rectangular</em> (height less than width) for any shaft above 22 mm, so shear and bearing no longer give the same length. We must check both modes separately &mdash; the one needing the longer key governs.</p>" },
+  { label:"Given/Find", title:"Given and Find",
+    html:"<p><strong>Given:</strong></p><ul class='kv'>"
+      +"<li>$D = 40\\ \\text{mm}$; $T = 250\\ \\text{N}\\cdot\\text{m}$; $N = 3$</li>"
+      +"<li>Standard key $W \\times H = 12 \\times 8\\ \\text{mm}$ (Mott SI Table 11-1, 38\u201344 mm)</li>"
+      +"<li>Key SAE 1018 CD, $S_y = 372\\ \\text{MPa}$ (weakest member)</li></ul>"
+      +"<p><strong>Find:</strong> $L$ from shear and from bearing; the length to specify.</p>" },
+  { label:"Sketch", title:"Assumptions and sketch",
+    html:"<p>Assumptions: the key is the weakest member (shaft and hub are stronger steel), so both checks use the key's $S_y$. Because $H = 8 < W = 12$, the bearing area (proportional to $H/2$) is smaller than the shear area (proportional to $W$), so bearing is expected to govern.</p>"
+      + SKETCH
+      + "<p class='cite'>Reference: Mott &sect;11-2 (key sizes, Table 11-1) and &sect;11-4/11-5 (Eqs. 11-1 to 11-4).</p>" },
+  { label:"Equations", title:"Equations",
+    html:"<p>Check shear and bearing separately; take the longer required length:</p>"
+      +"<p class='eq-label'>Tangential force at the shaft surface:</p>"
+      +"$$F = \\frac{2T}{D}$$"
+      +"<p class='eq-label'>Shear and bearing limits:</p>"
+      +"$$\\tau = \\frac{F}{W L} \\le \\frac{0.5 S_y}{N}, \\qquad \\sigma_c = \\frac{F}{(H/2) L} \\le \\frac{S_y}{N}$$"
+      +"<p class='eq-label'>Required lengths:</p>"
+      +"$$L_{shear} = \\frac{F}{W\\,(0.5 S_y/N)}, \\qquad L_{bear} = \\frac{F}{(H/2)\\,(S_y/N)}$$" },
+  { label:"Calculate", title:"Calculations (units tracked)",
+    html:"<div class='calc'>$$F = \\frac{2(250\\,000\\ \\text{N}\\cdot\\text{mm})}{40\\ \\text{mm}} = \\textcolor{#D85A30}{12\\,500\\ \\text{N}}$$</div>"
+      +"<div class='calc'>$$\\tau_d = \\frac{0.5(372)}{3} = 62.0\\ \\text{MPa} \\;\\Rightarrow\\; L_{shear} = \\frac{12\\,500}{12(62.0)} = \\textcolor{#D85A30}{16.8\\ \\text{mm}}$$</div>"
+      +"<div class='calc'>$$\\sigma_d = \\frac{372}{3} = 124.0\\ \\text{MPa} \\;\\Rightarrow\\; L_{bear} = \\frac{12\\,500}{4(124.0)} = \\textcolor{#D85A30}{25.2\\ \\text{mm}}$$</div>"
+      +"<p class='note'>Units: with $T$ in $\\text{N}\\cdot\\text{mm}$ and $D$ in mm, $F$ comes out in N; MPa $= \\text{N/mm}^2$.</p>" },
+  { label:"Check", title:"Check for reasonableness",
+    html:"<ul class='kv'>"
+      +"<li>Bearing (25.2 mm) &gt; shear (16.8 mm), so <strong>bearing governs</strong> &mdash; expected because $H < W$ for a rectangular key &check;</li>"
+      +"<li>A square key ($H = W$) would give equal lengths; the split here is the signature of a rectangular metric key.</li></ul>" },
+  { label:"Result", title:"Result and verdict",
+    html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+      +"<tr><td>Key size</td><td>12 &#215; 8 mm (rectangular)</td></tr>"
+      +"<tr><td>$L_{shear}$ / $L_{bear}$</td><td>16.8 mm / 25.2 mm</td></tr>"
+      +"<tr><td>Governing mode</td><td>Bearing</td></tr>"
+      +"<tr><td>Specify $L$</td><td>32 mm (next preferred size, &le; hub)</td></tr></table>"
+      +"<p><strong>Verdict:</strong> specify a 12 &#215; 8 &#215; 32 mm SAE 1018 CD key; bearing governs. <em>Your turn:</em> repeat for $T = 400\\ \\text{N}\\cdot\\text{m}$ on a \u00d850 mm shaft (standard key 14 &#215; 9): $F = 16\\,000$ N, $L_{shear} = 18.4$ mm, $L_{bear} = 28.7$ mm &mdash; bearing governs; specify $L = 32$ mm.</p>" }
+];
+
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title;
+  stmtEl.innerHTML=PROBLEM.statement;
+  typeset(stmtEl);
+
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i];
+    sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html;
+    typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
