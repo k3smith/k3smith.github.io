@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 6.8-A: Plain-Bearing pV | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 6.8-A: Boundary-Lubricated Plain Bearing (pV method)", "statement": "A conveyor roller pin carries $F = 2200\\ \\text{N}$ on a $D = 30\\ \\text{mm}$ journal at $n = 150\\ \\text{rpm}$ in a filled-PTFE (Rulon 641) bushing: $pV_{max} = 350{,}000\\ \\text{Pa}\\cdot\\text{m/s}$, $p_{max} = 6.9\\ \\text{MPa}$, $V_{max} = 2.0\\ \\text{m/s}$. Starting from $L = 30\\ \\text{mm}$, check the three pV-method limits and size the bearing length."};
+var SKETCH = '<svg viewBox="0 0 360 220" role="img" aria-label="Journal rotating inside a plain bushing under radial load, with projected area L times D.">'
++ '<defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#D85A30"/></marker></defs>'
++ '<circle cx="150" cy="110" r="62" fill="#eef3f9" stroke="#1F3A5F" stroke-width="2"/>'
++ '<circle cx="150" cy="110" r="40" fill="#dfe8f3" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="150" cy="110" r="3" fill="#1F3A5F"/>'
++ '<line x1="150" y1="22" x2="150" y2="64" stroke="#D85A30" stroke-width="3" marker-end="url(#ar2)"/>'
++ '<text x="158" y="36" font-size="11" fill="#D85A30">F = 2200 N</text>'
++ '<text x="100" y="108" font-size="10" fill="#5a6b80">D</text>'
++ '<line x1="150" y1="110" x2="190" y2="110" stroke="#5a6b80" stroke-width="1"/>'
++ '<text x="230" y="70" font-size="11" fill="#1F3A5F">bushing</text>'
++ '<text x="230" y="88" font-size="10" fill="#5a6b80">(filled PTFE)</text>'
++ '<text x="230" y="120" font-size="11" fill="#1F3A5F">projected area</text>'
++ '<text x="230" y="138" font-size="11" fill="#D85A30">A = L &#215; D</text>'
++ '<text x="230" y="156" font-size="10" fill="#5a6b80">try L = 30 mm</text>'
++ '<text x="80" y="200" font-size="10" fill="#5a6b80">journal D = 30 mm; V = &#960;Dn/60,000</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>A slow conveyor roller pin runs in a boundary-lubricated plain bushing. There is no full oil film, so the design tool is the $pV$ factor &mdash; the frictional-heat rate per unit projected area. We must keep pressure, speed, and their product within the material limits, adjusting the bearing length if needed.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Given:</strong></p><ul class='kv'><li>Radial load $F = 2200\\ \\text{N}$; journal $D = 30\\ \\text{mm}$; $n = 150\\ \\text{rpm}$</li><li>Filled PTFE (Rulon 641): $pV_{max} = 350{,}000\\ \\text{Pa}\\cdot\\text{m/s}$ (Mott Table 16-1); $p_{max} = 6.9\\ \\text{MPa}$, $V_{max} = 2.0\\ \\text{m/s}$</li><li>Try $L = 30\\ \\text{mm}$ ($L/D = 1.0$)</li></ul><p><strong>Find:</strong> $p$, $V$, $pV$; whether the design passes all three limits; redesign if needed.</p>"}, {"label": "Sketch", "title": "Sketch", "html": "<p>Projected bearing area is $L \\times D$ (the shadow the journal casts on the bushing).</p>__SKETCH__<p class='cite'>Reference: Mott &sect;16-5 (pV design), Table 16-1 (material limits), Fig. 16-4 (clearance).</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Pressure, surface speed, and pV (all three limits must hold):</p>$$p = \\frac{F}{L D},\\qquad V = \\frac{\\pi D n}{60{,}000}\\ \\text{(D in mm)},\\qquad pV = p\\,V$$<p class='note'>Increasing $L$ lowers $p$ (and $pV$) but leaves $V$ unchanged.</p>"}, {"label": "Calculate", "title": "Calculations", "html": "<p><strong>Trial 1: $L = 30\\ \\text{mm}$</strong></p><div class='calc'>$$p = \\frac{2200}{0.030(0.030)} = 2.44\\ \\text{MPa} < 6.9\\ \\text{MPa}\\ \\checkmark,\\qquad V = \\frac{\\pi(30)(150)}{60{,}000} = 0.236\\ \\text{m/s} < 2.0\\ \\text{m/s}\\ \\checkmark$$</div><div class='calc'>$$pV = 2.44\\times10^6 (0.236) = 576{,}889\\ \\text{Pa}\\cdot\\text{m/s} > 350{,}000\\ \\Rightarrow\\ \\textcolor{#D85A30}{\\text{fails } pV}$$</div><p><strong>Trial 2: increase to $L = 50\\ \\text{mm}$</strong> (V unchanged):</p><div class='calc'>$$p = \\frac{2200}{0.030(0.050)} = 1.47\\ \\text{MPa},\\qquad pV = 1.47\\times10^6 (0.236) = \\textcolor{#D85A30}{346{,}133\\ \\text{Pa}\\cdot\\text{m/s}} < 350{,}000\\ \\checkmark$$</div>"}, {"label": "Check", "title": "Check for reasonableness", "html": "<ul class='kv'><li>At $L = 50\\ \\text{mm}$: $p = 1.47\\ \\text{MPa} < 6.9$ &#10003;, $V = 0.236\\ \\text{m/s} < 2.0$ &#10003;, $pV = 346{,}133 < 350{,}000$ &#10003;.</li><li>The $pV$ margin is only ~1%, so if load or speed could rise, go to $L = 60\\ \\text{mm}$ or a higher-$pV$ material (a bronze) for margin.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Quantity</th><th>Result</th></tr><tr><td>Pressure</td><td>$p = 1.47\\ \\text{MPa}$ &#10003;</td></tr><tr><td>Surface speed</td><td>$V = 0.236\\ \\text{m/s}$ &#10003;</td></tr><tr><td>pV factor</td><td>$346{,}133\\ \\text{Pa}\\cdot\\text{m/s} < 350{,}000$ &#10003;</td></tr><tr><td>Specify</td><td>Filled-PTFE bushing, $L = 50\\ \\text{mm}$ ($L/D = 1.67$)</td></tr></table><p><strong>Verdict:</strong> $L = 30\\ \\text{mm}$ fails on $pV$; specify $L = 50\\ \\text{mm}$ minimum. The pV method is what makes a boundary-lubricated bushing a design calculation rather than a guess.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

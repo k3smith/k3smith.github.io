@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 6.7-A: Rolling-Bearing Selection | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 6.7-A: Rolling-Contact Bearing Selection", "statement": "Continuing the Module 6 project shaft: both bearing seats are 35 mm (Page 6.5). The radial reactions are $R_A = 1482\\ \\text{N}$ and $R_B = 1585\\ \\text{N}$ at $n = 600\\ \\text{rpm}$ with no thrust. For a $20{,}000$-h industrial-conveyor design life, find the required dynamic capacity, select a deep-groove ball bearing, and verify its actual life."};
+var SKETCH = '<svg viewBox="0 0 470 160" role="img" aria-label="Shaft on bearings A and B with radial reactions from Page 6.2.">'
++ '<defs><marker id="ar67" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#D85A30"/></marker></defs>'
++ '<line x1="60" y1="90" x2="410" y2="90" stroke="#1F3A5F" stroke-width="6"/>'
++ '<rect x="46" y="80" width="28" height="20" fill="#cfe0f2" stroke="#1F3A5F"/>'
++ '<rect x="396" y="80" width="28" height="20" fill="#cfe0f2" stroke="#1F3A5F"/>'
++ '<text x="48" y="122" font-size="10" fill="#5a6b80">A (35 mm)</text>'
++ '<text x="388" y="122" font-size="10" fill="#5a6b80">B (35 mm)</text>'
++ '<line x1="60" y1="78" x2="60" y2="42" stroke="#D85A30" stroke-width="2.4" marker-end="url(#ar67)"/>'
++ '<line x1="410" y1="78" x2="410" y2="36" stroke="#D85A30" stroke-width="2.4" marker-end="url(#ar67)"/>'
++ '<text x="68" y="50" font-size="11" fill="#D85A30">R<tspan baseline-shift="sub" font-size="8">A</tspan> = 1482 N</text>'
++ '<text x="300" y="42" font-size="11" fill="#D85A30">R<tspan baseline-shift="sub" font-size="8">B</tspan> = 1585 N (governs)</text>'
++ '<text x="200" y="70" font-size="10" fill="#5a6b80">n = 600 rpm</text>'
++ '<text x="140" y="148" font-size="9" fill="#7d8ea0">reactions from Page 6.2; no thrust (T_a = 0)</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>Both shaft bearing seats are fixed at 35 mm by the shaft geometry (Pages 6.4&ndash;6.5), and the radial reactions come from the two-plane analysis (Page 6.2). The bearings carry radial load only (a spur-gear / V-belt drive gives no thrust at the bearings). We pick a deep-groove ball bearing that meets the required dynamic capacity for the design life, then verify its actual $L_{10}$ life.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Carried in from Pages 6.2 and 6.5:</strong></p><ul class='kv'><li>Bearing seats $\\varnothing 35\\ \\text{mm}$; resultant reactions $R_A = 1482\\ \\text{N}$, $R_B = 1585\\ \\text{N}$ (Page 6.2)</li><li>Speed $n = 600\\ \\text{rpm}$; no thrust ($T_a = 0$)</li><li>Design life $L_h = 20{,}000\\ \\text{h}$ (industrial conveyor, Mott Table 14-4)</li></ul><p><strong>Find:</strong> the required dynamic capacity C, a suitable bearing, and its actual life.</p>"}, {"label": "Sketch", "title": "Sketch", "html": "<p>Bearing B carries the larger radial reaction, so it governs the selection.</p>__SKETCH__<p class='cite'>Reference: Mott Ch. 14, Eq. 14-4 (equivalent load), &sect;14-9 / Table 14-6 (reliability).</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Equivalent load (Mott Eq. 14-4) &mdash; here $T_a=0$, so $X=1,\\ Y=0$:</p>$$P = V X R + Y T_a = V R$$<p class='eq-label'>Design life in revolutions, and required capacity ($k=3$ for ball bearings):</p>$$L_d = L_h\\,n\\,(60),\\qquad C_{req} = P\\left(\\frac{L_d}{10^6}\\right)^{1/k}$$<p class='eq-label'>Actual rated life of the selected bearing:</p>$$L_{10} = \\left(\\frac{C}{P}\\right)^k \\times 10^6\\ \\text{rev}$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>$$P_B = V R_B = 1.0(1585) = \\textcolor{#D85A30}{1585\\ \\text{N}}\\ (\\text{governs; } P_A = 1482\\ \\text{N})$$</div><p class='note'>$V = 1.0$ because the inner ring rotates with the shaft (Mott Table 14-1); $T_a = 0$ so $X = 1$, $Y = 0$.</p><div class='calc'>$$L_d = 20{,}000 \\times 600 \\times 60 = 7.20\\times10^{8}\\ \\text{rev}$$</div><div class='calc'>$$C_{req} = 1585\\,(720)^{1/3} = 1585(8.963) = \\textcolor{#D85A30}{14{,}207\\ \\text{N} = 14.2\\ \\text{kN}}$$</div><div class='calc'>35 mm bore, deep-groove ball, light series <strong>6207</strong> (Mott App. 14 / catalog): $C = 25.5\\ \\text{kN} > 14.2\\ \\text{kN}$ &#10003;</div><div class='calc'>$$L_{10} = \\left(\\frac{25{,}500}{1585}\\right)^3 \\times 10^6 = 4168\\times10^6\\ \\text{rev}\\ \\Rightarrow\\ L_h = \\frac{4168\\times10^6}{600(60)} = \\textcolor{#D85A30}{115{,}778\\ \\text{h}}$$</div>"}, {"label": "Check", "title": "Check for reasonableness", "html": "<ul class='kv'><li>$C = 25.5\\ \\text{kN}$ comfortably exceeds $C_{req} = 14.2\\ \\text{kN}$ &#10003;.</li><li>Speed $600\\ \\text{rpm} \\ll n_{max} \\approx 13{,}000\\ \\text{rpm}$ for a 6207 &#10003;.</li><li>Actual life $115{,}778\\ \\text{h}$ is $\\approx 5.8\\times$ the required $20{,}000\\ \\text{h}$ &mdash; the bearing bore was set by the shaft size, not the load, so a large margin is expected and acceptable.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Quantity</th><th>Result</th></tr><tr><td>Governing load</td><td>$P_B = 1585\\ \\text{N}$</td></tr><tr><td>Required capacity</td><td>$C_{req} = 14.2\\ \\text{kN}$</td></tr><tr><td>Selection</td><td>6207 deep-groove ball, both ends ($C = 25.5\\ \\text{kN}$)</td></tr><tr><td>Actual life</td><td>$L_h = 115{,}778\\ \\text{h}$ (5.8&times; required)</td></tr></table><p><strong>Verdict:</strong> a 6207 at both ends satisfies capacity, speed, and life with margin to spare.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 6.2-A: Two-Plane Bending | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 6.2-A: Two-Plane Bending, Reactions and Moments", "statement": "Using the Page 6.1 forces &mdash; $W_t = 1592\\ \\text{N}$ (vertical) and $W_r = 579\\ \\text{N}$ (horizontal) at the gear, $F_B = 1910\\ \\text{N}$ (horizontal) at the sheave, span $L = 500\\ \\text{mm}$ &mdash; find the bearing reactions and bending moments in each plane, then the resultant moment, critical section, and resultant bearing loads."};
+var SKETCH = '<svg viewBox="0 0 470 240" role="img" aria-label="Vertical-plane and horizontal-plane free-body diagrams of the shaft.">'
++ '<defs><marker id="tv" markerWidth="8" markerHeight="8" refX="4" refY="6" orient="auto"><path d="M0,0 L4,6 L8,0 Z" fill="#D85A30"/></marker>'
++ '<marker id="tv2" markerWidth="8" markerHeight="8" refX="4" refY="2" orient="auto"><path d="M0,8 L4,2 L8,8 Z" fill="#2c7a54"/></marker>'
++ '<marker id="th" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L6,4 L0,8 Z" fill="#2c7a54"/></marker>'
++ '<marker id="th2" markerWidth="8" markerHeight="8" refX="2" refY="4" orient="auto"><path d="M8,0 L2,4 L8,8 Z" fill="#D85A30"/></marker></defs>'
++ '<text x="60" y="24" font-size="11" fill="#1F3A5F" font-weight="bold">Vertical plane</text>'
++ '<line x1="70" y1="55" x2="400" y2="55" stroke="#1F3A5F" stroke-width="5"/>'
++ '<text x="60" y="72" font-size="9" fill="#5a6b80">A</text>'
++ '<text x="396" y="72" font-size="9" fill="#5a6b80">B</text>'
++ '<line x1="188" y1="20" x2="188" y2="48" stroke="#D85A30" stroke-width="2.5" marker-end="url(#tv)"/>'
++ '<text x="150" y="18" font-size="9" fill="#D85A30">W_t = 1592</text>'
++ '<line x1="70" y1="78" x2="70" y2="58" stroke="#2c7a54" stroke-width="2" marker-end="url(#tv2)"/>'
++ '<line x1="400" y1="78" x2="400" y2="58" stroke="#2c7a54" stroke-width="2" marker-end="url(#tv2)"/>'
++ '<text x="40" y="94" font-size="9" fill="#2c7a54">R<tspan baseline-shift="sub" font-size="7">Av</tspan>=1114</text>'
++ '<text x="368" y="94" font-size="9" fill="#2c7a54">R<tspan baseline-shift="sub" font-size="7">Bv</tspan>=478</text>'
++ '<text x="60" y="140" font-size="11" fill="#1F3A5F" font-weight="bold">Horizontal plane</text>'
++ '<line x1="70" y1="170" x2="400" y2="170" stroke="#1F3A5F" stroke-width="5"/>'
++ '<text x="60" y="187" font-size="9" fill="#5a6b80">A</text>'
++ '<text x="396" y="187" font-size="9" fill="#5a6b80">B</text>'
++ '<line x1="188" y1="170" x2="230" y2="170" stroke="#2c7a54" stroke-width="2" marker-end="url(#th)"/>'
++ '<text x="150" y="163" font-size="9" fill="#2c7a54">W_r=579</text>'
++ '<line x1="304" y1="170" x2="352" y2="170" stroke="#2c7a54" stroke-width="2.5" marker-end="url(#th)"/>'
++ '<text x="300" y="163" font-size="9" fill="#2c7a54">F_B=1910</text>'
++ '<line x1="95" y1="170" x2="70" y2="170" stroke="#D85A30" stroke-width="2" marker-end="url(#th2)"/>'
++ '<line x1="425" y1="170" x2="400" y2="170" stroke="#D85A30" stroke-width="2" marker-end="url(#th2)"/>'
++ '<text x="40" y="205" font-size="9" fill="#D85A30">R<tspan baseline-shift="sub" font-size="7">Ah</tspan>=978</text>'
++ '<text x="360" y="205" font-size="9" fill="#D85A30">R<tspan baseline-shift="sub" font-size="7">Bh</tspan>=1511</text>'
++ '<text x="150" y="228" font-size="9" fill="#7d8ea0">M = &#8730;(M_v&#178; + M_h&#178;) at each section</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>The gear and belt forces act in two perpendicular planes, so the shaft bends in both. We solve each plane as its own simply-supported beam, then combine the per-plane moments (and the per-plane reactions) by vector addition to find the resultant bending moment, the critical section, and the resultant bearing loads.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Carried in from Page 6.1</strong> ($L = 500\\ \\text{mm}$):</p><ul class='kv'><li>Vertical plane: $W_t = 1592\\ \\text{N}$ at $x = 150$</li><li>Horizontal plane: $W_r = 579\\ \\text{N}$ at $x = 150$; $F_B = 1910\\ \\text{N}$ at $x = 350$</li></ul><p><strong>Find:</strong> bearing reactions in each plane, bending moments at the gear and sheave, the resultant moment and critical section, and the resultant bearing loads.</p>"}, {"label": "Sketch", "title": "Two-plane free-body diagrams", "html": "<p>Each plane is solved separately, then combined.</p>__SKETCH__<p class='cite'>Reference: Mott Ch. 12 &sect;12-3 (two-plane bending); statics of a simply supported shaft.</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Per plane, equilibrium then moments; then combine:</p>$$\\sum M_A = 0,\\quad \\sum F = 0\\ \\Rightarrow\\ R_A,\\,R_B \\text{ in each plane}$$$$M = \\sqrt{M_v^2 + M_h^2},\\qquad R = \\sqrt{R_v^2 + R_h^2}$$"}, {"label": "Calculate", "title": "Calculations", "html": "<p><strong>Vertical plane</strong> ($W_t = 1592$ at $x=150$):</p><div class='calc'>$$R_{Bv} = \\frac{1592(150)}{500} = 478\\ \\text{N},\\quad R_{Av} = 1592 - 478 = 1114\\ \\text{N}$$$$M_{v,G} = 1114(150) = 167.1\\ \\text{N}\\cdot\\text{m},\\quad M_{v,S} = 478(150) = 71.7\\ \\text{N}\\cdot\\text{m}$$</div><p><strong>Horizontal plane</strong> ($W_r = 579$ at $150$, $F_B = 1910$ at $350$):</p><div class='calc'>$$R_{Bh} = \\frac{579(150) + 1910(350)}{500} = \\frac{755{,}350}{500} = 1511\\ \\text{N},\\quad R_{Ah} = 579 + 1910 - 1511 = 978\\ \\text{N}$$$$M_{h,G} = 978(150) = 146.7\\ \\text{N}\\cdot\\text{m},\\quad M_{h,S} = 1511(150) = 226.7\\ \\text{N}\\cdot\\text{m}$$</div><p><strong>Resultants:</strong></p><div class='calc'>$$M_G = \\sqrt{167.1^2 + 146.7^2} = \\textcolor{#D85A30}{222.4\\ \\text{N}\\cdot\\text{m}},\\quad M_S = \\sqrt{71.7^2 + 226.7^2} = \\textcolor{#D85A30}{237.8\\ \\text{N}\\cdot\\text{m}\ (\\text{governs})}$$$$R_A = \\sqrt{1114^2 + 978^2} = \\textcolor{#D85A30}{1482\\ \\text{N}},\\quad R_B = \\sqrt{478^2 + 1511^2} = \\textcolor{#D85A30}{1585\\ \\text{N}}$$</div>"}, {"label": "Check", "title": "Check for reasonableness", "html": "<ul class='kv'><li>Cut the sheave section from the left to verify: $R_{Ah}(350) - W_r(200) = 978(350) - 579(200) = 226{,}500\\ \\text{N}\\cdot\\text{mm} \\approx M_{h,S}$ &#10003;.</li><li>The sheave carries the larger resultant moment (237.8 vs 222.4 N&middot;m), so it governs the diameter &mdash; but the gear section is only 6% smaller and must still be checked (it may have its own $K_t$).</li><li>Torque acts only between gear and sheave; the section from $A$ to the gear carries bending but no torque.</li></ul>"}, {"label": "Result", "title": "Result and hand-off", "html": "<table class='results'><tr><th>Quantity</th><th>Value</th></tr><tr><td>Resultant moment (gear / sheave)</td><td>$222.4$ / $237.8\\ \\text{N}\\cdot\\text{m}$ &mdash; sheave governs</td></tr><tr><td>Torque</td><td>$T = 119.4\\ \\text{N}\\cdot\\text{m}$ (gear to sheave)</td></tr><tr><td>Bearing loads</td><td>$R_A = 1482\\ \\text{N}$, $R_B = 1585\\ \\text{N}$</td></tr></table><p><strong>Hand-off:</strong> the moments and torque feed the design-stress and diameter work on Pages 6.3&ndash;6.4; the resultant bearing loads feed bearing selection on Page 6.7.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

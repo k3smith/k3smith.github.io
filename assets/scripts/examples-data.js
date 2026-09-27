@@ -194,6 +194,47 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 6,
+        title: 'Shaft Design & Bearings',
+        examples: [
+          {
+            file: 'M06-WE61A-shaft-forces.html',
+            name: 'Worked Example 6.1-A: Forces on the Project Shaft',
+            description: 'Computes the transmitted torque and the spur-gear and V-belt forces the shaft carries — the inputs to the entire shaft analysis.',
+          },
+          {
+            file: 'M06-WE62A-two-plane-bending.html',
+            name: 'Worked Example 6.2-A: Two-Plane Bending, Reactions and Moments',
+            description: 'Resolves the gear and belt loads into vertical- and horizontal-plane reactions and moments, then combines them into resultant moments, the critical section, and resultant bearing loads.',
+          },
+          {
+            file: 'M06-WE63A-design-stresses.html',
+            name: 'Worked Example 6.3-A: Endurance Limit and Stress Concentration',
+            description: 'Selects a shaft material and builds the corrected endurance limit by Mott §5-6 (sn from Fig. 5-11, plus C_m, C_st, C_R, C_s) and the keyseat Kt.',
+          },
+          {
+            file: 'M06-WE64A-shaft-diameter.html',
+            name: 'Worked Example 6.4-A: Minimum Shaft Diameter at the Critical Section',
+            description: 'Applies Mott Eq. 12-24 to the two-plane bending moments and transmitted torque to size the minimum shaft diameter at the critical (sheave) section and round up to a standard size.',
+          },
+          {
+            file: 'M06-WE65A-shaft-geometry.html',
+            name: 'Worked Example 6.5-A: Complete Stepped-Shaft Specification',
+            description: 'Turns the Ø40 body diameter into a full stepped-shaft spec: bearing seats, locating shoulders and fillets, ANSI B17.1 keyseats, and surface finishes.',
+          },
+          {
+            file: 'M06-WE67A-bearing-selection.html',
+            name: 'Worked Example 6.7-A: Rolling-Contact Bearing Selection',
+            description: 'Finds the equivalent radial load and required dynamic capacity for a 20,000-h design life, selects a deep-groove ball bearing, and verifies its L10 life.',
+          },
+          {
+            file: 'M06-WE68A-plain-bearing-pv.html',
+            name: 'Worked Example 6.8-A: Boundary-Lubricated Plain Bearing (pV method)',
+            description: 'Checks pressure, surface speed, and the pV factor for a filled-PTFE bushing against the Mott Table 16-1 limits and resizes the bearing length to pass.',
+          },
+        ],
+      },
     ],
   },
   {

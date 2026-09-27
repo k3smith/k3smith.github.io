@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 6.5-A: Shaft Geometry | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 6.5-A: Complete Stepped-Shaft Specification", "statement": "With the body sized at $\\varnothing 40\\ \\text{mm}$ (Page 6.4), specify the complete stepped shaft: $35\\ \\text{mm}$ bearing seats, $48\\ \\text{mm}$ locating shoulders with $2\\ \\text{mm}$ fillets, two $12 \\times 8\\ \\text{mm}$ profile keyseats (Mott Table 11-1 SI / ISO), and the surface finishes."};
+var SKETCH = "<svg viewBox=\"0 0 470 150\" role=\"img\" aria-label=\"Stepped shaft profile with bearing seats, shoulders, keyseats and body diameter.\"><line x1=\"30\" y1=\"75\" x2=\"440\" y2=\"75\" stroke=\"#b9c6d3\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><rect x=\"40\" y=\"62\" width=\"45\" height=\"26\" fill=\"#dfe8f3\" stroke=\"#1F3A5F\"/><text x=\"44\" y=\"104\" font-size=\"8.5\" fill=\"#5a6b80\">seat &empty;35</text><rect x=\"85\" y=\"52\" width=\"18\" height=\"46\" fill=\"#cfe0f2\" stroke=\"#1F3A5F\"/><text x=\"80\" y=\"46\" font-size=\"8.5\" fill=\"#1F3A5F\">&empty;48</text><rect x=\"103\" y=\"58\" width=\"110\" height=\"34\" fill=\"#eef3f9\" stroke=\"#1F3A5F\"/><rect x=\"120\" y=\"58\" width=\"30\" height=\"6\" fill=\"#D85A30\"/><text x=\"120\" y=\"112\" font-size=\"8.5\" fill=\"#D85A30\">keyseat</text><rect x=\"213\" y=\"58\" width=\"70\" height=\"34\" fill=\"#eef3f9\" stroke=\"#1F3A5F\"/><text x=\"150\" y=\"46\" font-size=\"8.5\" fill=\"#1F3A5F\">body &empty;40</text><rect x=\"283\" y=\"58\" width=\"70\" height=\"34\" fill=\"#eef3f9\" stroke=\"#1F3A5F\"/><rect x=\"300\" y=\"58\" width=\"30\" height=\"6\" fill=\"#D85A30\"/><rect x=\"353\" y=\"52\" width=\"18\" height=\"46\" fill=\"#cfe0f2\" stroke=\"#1F3A5F\"/><text x=\"349\" y=\"46\" font-size=\"8.5\" fill=\"#1F3A5F\">&empty;48</text><rect x=\"371\" y=\"62\" width=\"45\" height=\"26\" fill=\"#dfe8f3\" stroke=\"#1F3A5F\"/><text x=\"375\" y=\"104\" font-size=\"8.5\" fill=\"#5a6b80\">seat &empty;35</text><text x=\"40\" y=\"132\" font-size=\"9\" fill=\"#7d8ea0\">shoulders &empty;48 (fillet r = 2 mm, r/d = 0.05); keys 12&#215;8 profile (Mott Table 11-1 SI)</text></svg>";
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>The design equation set the body diameter at $\\varnothing 40\\ \\text{mm}$. Now we turn that single number into a complete, buildable shaft: bearing seats, locating shoulders, fillet radii, keyseats and surface finishes &mdash; each choice a compromise between assembly, stress and standard parts.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Carried in from Page 6.4:</strong> $D_{min} = 39.6\\ \\text{mm}$ at the sheave and $38.7\\ \\text{mm}$ at the gear; both specify $\\varnothing 40\\ \\text{mm}$. Bearing bore chosen at $35\\ \\text{mm}$.</p><p><strong>Find:</strong> the full stepped-shaft specification &mdash; diameters, shoulders, fillets, keyseats and finishes.</p>"}, {"label": "Sketch", "title": "Stepped-shaft profile", "html": "<p>Symmetric design: 35&nbsp;mm bearing seats step up through 48&nbsp;mm shoulders to the 40&nbsp;mm body; profile keyseats at the gear and sheave hubs.</p>__SKETCH__<p class='cite'>Reference: Mott &sect;12-6 / Page 6.5 (geometry guidelines); Mott Table 11-1 SI key sizes (cf. Page 5.5).</p>"}, {"label": "Rules", "title": "Design rules applied", "html": "<ul class='kv'><li><strong>Bearing seats:</strong> match a standard bore &mdash; $35\\ \\text{mm}$ &mdash; and check the seat sees very low bending ($M \\approx 0$ near the supports).</li><li><strong>Shoulders:</strong> tall enough to axially locate the hub and let the bearing seat against them; here $\\varnothing 48\\ \\text{mm}$ (shoulder height $= (48-40)/2 = 4\\ \\text{mm}$).</li><li><strong>Fillets:</strong> keep $r/d \\ge 0.02$ to limit $K_t$; use $r = 2\\ \\text{mm}$ at the $\\varnothing 40$ shoulders &rarr; $r/d = 2/40 = 0.05$.</li><li><strong>Keys:</strong> from Mott Table 11-1 (SI) a $40\\ \\text{mm}$ shaft takes a $12 \\times 8\\ \\text{mm}$ key.</li></ul>"}, {"label": "Specify", "title": "Specified geometry", "html": "<div class='calc'>Bearing A / B seats: $\\varnothing 35\\ \\text{mm}$ (both ends, same bore &mdash; symmetric, simplifies inventory).</div><div class='calc'>Body: $\\varnothing 40\\ \\text{mm}$ throughout the gear and sheave regions.</div><div class='calc'>Locating shoulders: $\\varnothing 48\\ \\text{mm}$ OD, fillet $r = 2\\ \\text{mm}$ ($r/d = 0.05$).</div><div class='calc'>Keyseats: two profile keyseats $12 \\times 8\\ \\text{mm}$ (Mott Table 11-1 SI), one at the gear hub, one at the sheave hub.</div><div class='calc'>Finish: machine all surfaces to $R_a \\le 3.2\\ \\mu\\text{m}$; grind bearing seats to $R_a \\le 0.8\\ \\mu\\text{m}$.</div>"}, {"label": "Check", "title": "Check for reasonableness", "html": "<ul class='kv'><li>Each shoulder gives the bearing and hub a positive axial stop; $r/d = 0.05$ keeps the shoulder $K_t$ modest.</li><li>The $12 \\times 8\\ \\text{mm}$ key matches the standard table for a $40\\ \\text{mm}$ shaft, consistent with the $K_t = 2.0$ profile keyseat used on Page 6.3.</li><li>Ground bearing seats ($R_a \\le 0.8\\ \\mu\\text{m}$) suit a press/again-fit bearing bore; the rest machined is adequate.</li></ul>"}, {"label": "Result", "title": "Result and hand-off", "html": "<table class='results'><tr><th>Feature</th><th>Specification</th></tr><tr><td>Body</td><td>$\\varnothing 40\\ \\text{mm}$ throughout</td></tr><tr><td>Bearing seats</td><td>$\\varnothing 35\\ \\text{mm}$ both ends</td></tr><tr><td>Shoulders / fillets</td><td>$\\varnothing 48\\ \\text{mm}$, $r = 2\\ \\text{mm}$</td></tr><tr><td>Keys</td><td>$12 \\times 8\\ \\text{mm}$ profile, gear &amp; sheave</td></tr><tr><td>Finish</td><td>machined $R_a \\le 3.2$; seats ground $R_a \\le 0.8\\ \\mu\\text{m}$</td></tr></table><p><strong>Hand-off:</strong> with the geometry fixed, the bearing loads $R_A = 1482\\ \\text{N}$ and $R_B = 1585\\ \\text{N}$ carry into rolling-bearing selection on Page 6.7 (Worked Example 6.7-A).</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

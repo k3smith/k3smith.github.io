@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 6.4-A: Minimum Shaft Diameter | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 6.4-A: Minimum Shaft Diameter at the Critical Section", "statement": "The Module 6 project shaft carries a spur gear and a V-belt sheave between two bearings. The two-plane analysis (Pages 6.1&ndash;6.2) gives resultant moments $M_{sheave} = 237.8\\ \\text{N}\\cdot\\text{m}$ and $M_{gear} = 222.4\\ \\text{N}\\cdot\\text{m}$, torque $T = 119.4\\ \\text{N}\\cdot\\text{m}$, and reactions $R_A = 1482\\ \\text{N}$, $R_B = 1585\\ \\text{N}$. Shaft AISI 1045 CD: $s'_n = 196\\ \\text{MPa}$, $s_y = 531\\ \\text{MPa}$; $K_t = 2.0$; design factor $N = 2.5$. Apply Mott Eq. 12-24 to find the minimum diameter at the critical section and the standard size to specify."};
+var SKETCH = '<svg viewBox="0 0 470 165" role="img" aria-label="Shaft on two bearings carrying a spur gear and a V-belt sheave, two-plane resultant loads.">'
++ '<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="6" orient="auto"><path d="M0,0 L4,6 L8,0 Z" fill="#D85A30"/></marker></defs>'
++ '<line x1="60" y1="85" x2="410" y2="85" stroke="#1F3A5F" stroke-width="6"/>'
++ '<polygon points="60,85 48,109 72,109" fill="#cfe0f2" stroke="#1F3A5F"/>'
++ '<polygon points="410,85 398,109 422,109" fill="#cfe0f2" stroke="#1F3A5F"/>'
++ '<text x="52" y="124" font-size="10" fill="#5a6b80">A</text>'
++ '<text x="400" y="124" font-size="10" fill="#5a6b80">B</text>'
++ '<circle cx="190" cy="85" r="14" fill="#dfe8f3" stroke="#1F3A5F"/>'
++ '<circle cx="330" cy="85" r="19" fill="#dfe8f3" stroke="#1F3A5F"/>'
++ '<line x1="190" y1="38" x2="190" y2="66" stroke="#D85A30" stroke-width="2" marker-end="url(#ar)"/>'
++ '<line x1="330" y1="30" x2="330" y2="60" stroke="#D85A30" stroke-width="2.5" marker-end="url(#ar)"/>'
++ '<text x="150" y="35" font-size="9.5" fill="#5a6b80">gear (x=150)</text>'
++ '<text x="145" y="150" font-size="9.5" fill="#5a6b80">M_gear = 222.4 N&middot;m</text>'
++ '<text x="298" y="26" font-size="9.5" fill="#D85A30">sheave (x=350) — governs</text>'
++ '<text x="285" y="150" font-size="9.5" fill="#D85A30">M_sheave = 237.8 N&middot;m</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>This is the Module 6 project shaft: it carries a spur gear and a V-belt sheave between two bearings. The two-plane bending analysis (Pages 6.1&ndash;6.2) has already produced the resultant bending moment at each mounted component and the bearing reactions. Because the shaft rotates, the bending stress is fully reversed (fatigue) while the torque is steady, so we now apply Mott&rsquo;s shaft design equation (Eq. 12-24) at the critical section and round up to a standard size.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Carried in from Pages 6.1&ndash;6.3:</strong></p><ul class='kv'><li>Resultant moments: $M_{sheave} = 237.8\\ \\text{N}\\cdot\\text{m}$ (at $x=350$), $M_{gear} = 222.4\\ \\text{N}\\cdot\\text{m}$ (at $x=150$)</li><li>Transmitted torque $T = 119.4\\ \\text{N}\\cdot\\text{m}$; both sections $K_t = 2.0$</li><li>AISI 1045 CD: $s'_n = 196\\ \\text{MPa}$, $s_y = 531\\ \\text{MPa}$ (Mott &sect;5-6)</li><li>Design factor $N = 2.5$ (Mott &sect;12-5)</li><li>Bearing reactions $R_A = 1482\\ \\text{N}$, $R_B = 1585\\ \\text{N}$ &mdash; used for bearing selection on Page 6.7</li></ul><p><strong>Find:</strong> the minimum diameter at the critical section and the standard size to specify.</p>"}, {"label": "Sketch", "title": "Loading sketch", "html": "<p>The two-plane resultant loads act at the gear and the sheave. The sheave carries the larger resultant moment, so it is the critical section.</p>__SKETCH__<p class='cite'>Reference: Mott Ch. 12, &sect;12-5 (procedure &amp; design factor), Eq. 12-24 (design equation). Moments and reactions from the two-plane analysis, Pages 6.1&ndash;6.2.</p>"}, {"label": "Equations", "title": "Equation", "html": "<p class='eq-label'>Shaft design equation (Mott Eq. 12-24), applied at the critical section with the resultant moment $M$:</p>$$D = \\left[\\frac{32N}{\\pi}\\sqrt{\\left(\\frac{K_t M}{s'_n}\\right)^2 + \\frac34\\left(\\frac{T}{s_y}\\right)^2}\\right]^{1/3}$$<p class='note'>Work in consistent units: moments and torque in N&middot;mm, strengths in MPa (N/mm&sup2;), so each term inside the radical is in mm&sup3; and $D$ comes out in mm. Constant $\\tfrac{32N}{\\pi} = \\tfrac{32(2.5)}{\\pi} = 25.46$.</p>"}, {"label": "Calculate", "title": "Calculations", "html": "<p><strong>Critical section &mdash; sheave ($x = 350\\ \\text{mm}$, $M = 237{,}800\\ \\text{N}\\cdot\\text{mm}$):</strong></p><div class='calc'>$$\\frac{K_t M}{s'_n} = \\frac{2.0(237{,}800)}{196} = 2{,}427\\ \\text{mm}^3,\\qquad \\left(\\frac{K_t M}{s'_n}\\right)^2 = 5.890\\times10^{6}\\ \\text{mm}^6$$</div><div class='calc'>$$\\frac34\\left(\\frac{T}{s_y}\\right)^2 = \\frac34\\left(\\frac{119{,}400}{531}\\right)^2 = 0.75(224.9)^2 = 37{,}935\\ \\text{mm}^6\\ (\\text{negligible})$$</div><div class='calc'>$$D = \\left[25.46\\,\\sqrt{5.890\\times10^{6} + 37{,}935}\\right]^{1/3} = \\left[25.46(2{,}435)\\right]^{1/3} = (61{,}995)^{1/3} = \\textcolor{#D85A30}{39.6\\ \\text{mm}}$$</div><p><strong>Secondary section &mdash; gear ($x = 150\\ \\text{mm}$, $M = 222{,}400\\ \\text{N}\\cdot\\text{mm}$):</strong></p><div class='calc'>$$\\frac{K_t M}{s'_n} = \\frac{2.0(222{,}400)}{196} = 2{,}269\\ \\text{mm}^3\\ \\Rightarrow\\ D = \\left[25.46\\,\\sqrt{5.148\\times10^{6} + 37{,}935}\\right]^{1/3} = \\textcolor{#D85A30}{38.7\\ \\text{mm}}$$</div>"}, {"label": "Check", "title": "Check for reasonableness", "html": "<ul class='kv'><li>The torsion term ($37{,}935$) is under $0.65\\%$ of the bending term ($5.89\\times10^{6}$), so the shaft is bending-dominated &mdash; typical for moderate torque.</li><li>The sheave section ($39.6\\ \\text{mm}$) exceeds the gear section ($38.7\\ \\text{mm}$), confirming the sheave governs.</li><li>Both sections round to the same preferred size, so a single body diameter is sensible.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Quantity</th><th>Result</th></tr><tr><td>Critical section</td><td>Sheave, $x = 350\\ \\text{mm}$</td></tr><tr><td>$D_{min}$ (sheave / gear)</td><td>$39.6\\ \\text{mm}$ / $38.7\\ \\text{mm}$</td></tr><tr><td>Specify (body)</td><td>$\\varnothing 40\\ \\text{mm}$ throughout the body</td></tr><tr><td>Bearing seats</td><td>step down to $\\varnothing 35\\ \\text{mm}$</td></tr></table><p><strong>Verdict:</strong> specify &empty;40 mm for the shaft body; the bearing seats step down to &empty;35 mm (Page 6.5 completes the geometry). The two-plane bearing reactions $R_A = 1482\\ \\text{N}$ and $R_B = 1585\\ \\text{N}$ carry directly into the rolling-bearing selection on Page 6.7 (Worked Example 6.7-A).</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
