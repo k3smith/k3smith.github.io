@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Water-Tube Boiler Explorer | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --hl:#D85A30; --ink:#222; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:1000px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
+  p.lede { margin:0 0 12px; color:#444; }
+  .stage { display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start; }
+  .figure { flex:2 1 440px; min-width:320px; }
+  svg { width:100%; height:auto; }
+  .marker circle { cursor:pointer; transition:fill .15s; }
+  .marker text { pointer-events:none; }
+  .marker.sel circle { fill:var(--hl); }
+  .hl { opacity:0; transition:opacity .15s; }
+  .hl.on { opacity:1; }
+  .panel { flex:1 1 300px; min-width:260px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .panel h2 { color:var(--navy); font-size:1.05rem; margin:0 0 6px; }
+  .panel p { margin:0; font-size:.95rem; line-height:1.45; }
+  .legend { list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+  .legend li { font-size:.82rem; cursor:pointer; padding:3px 6px; border-radius:4px; color:var(--navy); }
+  .legend li:hover { background:#dfe8f3; }
+  .legend li.sel { background:#cfe0f2; font-weight:bold; }
+  .legend .n { display:inline-block; width:17px; height:17px; line-height:17px; text-align:center; background:var(--navy); color:#fff; border-radius:50%; font-size:.72rem; margin-right:5px; }
+  button.reset { margin-top:12px; background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; font-size:.9rem; }
+  button.reset:hover { background:#16283f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Water-Tube Boiler Explorer</h1>
+  <p class="lede">A two-drum marine water-tube boiler. Click a numbered part, or a legend item, to learn what it does.</p>
+  <div class="stage">
+    <div class="figure">
+      <svg viewBox="0 0 470 410" role="img" aria-label="Interactive water-tube boiler with numbered, clickable parts.">
+        <defs><marker id="arf" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#9a6a2f"/></marker></defs>
+        <rect x="120" y="120" width="330" height="270" rx="4" fill="#f7f4ee" stroke="#9fb0c4" stroke-width="1.5"/>
+        <rect x="360" y="60" width="90" height="62" fill="#f7f4ee" stroke="#9fb0c4" stroke-width="1.5"/>
+        <rect x="150" y="228" width="176" height="150" fill="#fbeee2"/>
+        <g stroke="#c0392b" stroke-width="2" fill="none">
+          <path d="M150,150 C150,240 150,300 150,352"/>
+          <path d="M166,150 C168,240 168,300 166,352"/>
+          <path d="M182,150 C186,240 186,300 182,352"/>
+          <path d="M198,150 C204,240 204,300 198,352"/>
+          <path d="M214,150 C222,240 222,300 214,352"/>
+        </g>
+        <g stroke="#1F3A5F" stroke-width="4" fill="none">
+          <line x1="96" y1="150" x2="96" y2="352"/>
+          <line x1="108" y1="150" x2="108" y2="352"/>
+        </g>
+        <rect x="70" y="128" width="150" height="40" rx="20" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.6"/>
+        <rect x="78" y="352" width="120" height="32" rx="16" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.6"/>
+        <g stroke="#1F3A5F" stroke-width="2" fill="none">
+          <path d="M250,175 v30 h14 v-30"/>
+          <path d="M272,175 v30 h14 v-30"/>
+          <path d="M294,175 v30 h14 v-30"/>
+        </g>
+        <rect x="372" y="72" width="66" height="40" fill="#e7edf4" stroke="#1F3A5F" stroke-width="1.4"/>
+        <g stroke="#1F3A5F" stroke-width="1"><line x1="372" y1="85" x2="438" y2="85"/><line x1="372" y1="98" x2="438" y2="98"/></g>
+        <rect x="410" y="292" width="30" height="20" fill="#e7edf4" stroke="#1F3A5F" stroke-width="1.4"/>
+        <path d="M410,302 C388,292 372,300 356,302 C372,304 388,312 410,302 Z" fill="#f0a552" stroke="#d8802f" stroke-width="1"/>
+        <path d="M300,300 C320,250 330,180 360,140" stroke="#9a6a2f" stroke-width="2" fill="none" opacity="0.8" marker-end="url(#arf)"/>
+
+        <rect class="hl" id="hl-steamdrum" x="66" y="124" width="158" height="48" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-waterdrum" x="74" y="348" width="128" height="40" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-downcomers" x="86" y="146" width="30" height="210" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-risers" x="142" y="146" width="82" height="210" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-furnace" x="150" y="228" width="176" height="150" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-burner" x="352" y="286" width="94" height="34" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-superheater" x="244" y="170" width="70" height="42" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+        <rect class="hl" id="hl-economizer" x="368" y="68" width="74" height="48" rx="4" fill="none" stroke="#D85A30" stroke-width="3"/>
+
+        <g class="marker" data-key="steamdrum"><circle cx="145" cy="148" r="12" fill="#1F3A5F"/><text x="145" y="152" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text></g>
+        <g class="marker" data-key="waterdrum"><circle cx="138" cy="368" r="12" fill="#1F3A5F"/><text x="138" y="372" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2</text></g>
+        <g class="marker" data-key="downcomers"><circle cx="102" cy="250" r="12" fill="#1F3A5F"/><text x="102" y="254" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3</text></g>
+        <g class="marker" data-key="risers"><circle cx="188" cy="250" r="12" fill="#1F3A5F"/><text x="188" y="254" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">4</text></g>
+        <g class="marker" data-key="furnace"><circle cx="252" cy="340" r="12" fill="#1F3A5F"/><text x="252" y="344" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">5</text></g>
+        <g class="marker" data-key="burner"><circle cx="425" cy="302" r="12" fill="#1F3A5F"/><text x="425" y="306" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">6</text></g>
+        <g class="marker" data-key="superheater"><circle cx="286" cy="190" r="12" fill="#1F3A5F"/><text x="286" y="194" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">7</text></g>
+        <g class="marker" data-key="economizer"><circle cx="405" cy="92" r="12" fill="#1F3A5F"/><text x="405" y="96" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">8</text></g>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 id="p-title">Explore the boiler</h2>
+      <p id="p-desc">Click a numbered part on the drawing, or an item in the list below, to see what it does and how it fits the circulation and heat path.</p>
+      <ul class="legend" id="legend"></ul>
+      <button class="reset" id="reset" type="button">Reset</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var data={
+    steamdrum:{n:1,label:"Steam drum",desc:"The upper drum, where steam separates from water. Feedwater enters here and dry saturated steam leaves from the top toward the superheater."},
+    waterdrum:{n:2,label:"Water drum",desc:"The lower drum, which collects water and distributes it to the heated generating tubes. Sediment also settles here for blow-down."},
+    downcomers:{n:3,label:"Downcomers",desc:"Large unheated pipes outside the gas path. The relatively cool, dense water in them falls to the water drum, driving natural circulation without a pump."},
+    risers:{n:4,label:"Generating tubes (risers)",desc:"Heated tubes lining the furnace. Water inside boils, and the lighter steam-water mixture rises back to the steam drum."},
+    furnace:{n:5,label:"Furnace",desc:"The combustion space where fuel burns. Its radiant heat is absorbed by the surrounding riser tubes."},
+    burner:{n:6,label:"Burner",desc:"Atomizes the fuel oil and mixes it with combustion air, firing a controlled flame into the furnace."},
+    superheater:{n:7,label:"Superheater",desc:"Tubes in the hot gas path that raise the steam above its saturation temperature, producing dry superheated steam that will not erode the turbine."},
+    economizer:{n:8,label:"Economizer",desc:"A tube bank in the uptake that preheats incoming feedwater using heat from the leaving flue gas, recovering energy and raising boiler efficiency."}
+  };
+  var order=["steamdrum","waterdrum","downcomers","risers","furnace","burner","superheater","economizer"];
+  var markers=Array.prototype.slice.call(document.querySelectorAll('.marker'));
+  var hls=Array.prototype.slice.call(document.querySelectorAll('.hl'));
+  var legend=document.getElementById('legend');
+  var pTitle=document.getElementById('p-title'), pDesc=document.getElementById('p-desc');
+  order.forEach(function(k){
+    var li=document.createElement('li'); li.setAttribute('data-key',k);
+    li.innerHTML='<span class="n">'+data[k].n+'</span>'+data[k].label;
+    li.addEventListener('click',function(){ select(k); });
+    legend.appendChild(li);
+  });
+  var legendItems=Array.prototype.slice.call(legend.querySelectorAll('li'));
+  function reset(){
+    hls.forEach(function(h){ h.classList.remove('on'); });
+    markers.forEach(function(m){ m.classList.remove('sel'); });
+    legendItems.forEach(function(l){ l.classList.remove('sel'); });
+    pTitle.textContent='Explore the boiler';
+    pDesc.textContent='Click a numbered part on the drawing, or an item in the list below, to see what it does and how it fits the circulation and heat path.';
+  }
+  function select(k){
+    var d=data[k]; if(!d) return;
+    hls.forEach(function(h){ h.classList.toggle('on', h.id==='hl-'+k); });
+    markers.forEach(function(m){ m.classList.toggle('sel', m.getAttribute('data-key')===k); });
+    legendItems.forEach(function(l){ l.classList.toggle('sel', l.getAttribute('data-key')===k); });
+    pTitle.textContent=d.n+'. '+d.label;
+    pDesc.textContent=d.desc;
+  }
+  markers.forEach(function(m){ m.addEventListener('click',function(){ select(m.getAttribute('data-key')); }); });
+  document.getElementById('reset').addEventListener('click',reset);
+  reset();
+})();
+</script>
+</body>
+</html>

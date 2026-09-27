@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Boiler Performance Calculator | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:900px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
+  p.lede { margin:0 0 14px; color:#444; }
+  .stage { display:flex; flex-wrap:wrap; gap:20px; }
+  .controls { flex:1 1 330px; min-width:290px; }
+  .results { flex:1 1 300px; min-width:260px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .row { display:flex; align-items:center; gap:10px; margin:0 0 12px; }
+  .row label { width:170px; font-size:.88rem; color:var(--navy); }
+  .row input[type=range] { flex:1; }
+  .row output { width:64px; text-align:right; font-weight:bold; font-size:.88rem; color:var(--navy); }
+  .results h2 { color:var(--navy); font-size:1.05rem; margin:0 0 10px; }
+  .metric { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #cfe0f2; font-size:.95rem; }
+  .metric span.v { font-weight:bold; color:var(--accent); }
+  .big { font-size:1.15rem; }
+  .sub { font-size:.82rem; color:var(--muted); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Boiler Performance Calculator</h1>
+  <p class="lede">Set the fuel and steam conditions to see the fuel energy input, the useful heat to steam, the boiler efficiency, and the equivalent evaporation.</p>
+  <div class="stage">
+    <div class="controls">
+      <div class="row"><label>Fuel rate (kg/s)</label><input type="range" id="mf" min="0.1" max="0.6" step="0.01" value="0.30" /><output id="mfO">0.30</output></div>
+      <div class="row"><label>Calorific value (kJ/kg)</label><input type="range" id="cv" min="38000" max="44000" step="500" value="42000" /><output id="cvO">42000</output></div>
+      <div class="row"><label>Steam rate (kg/s)</label><input type="range" id="ms" min="1" max="8" step="0.1" value="4.0" /><output id="msO">4.0</output></div>
+      <div class="row"><label>Steam enthalpy h&#8347; (kJ/kg)</label><input type="range" id="hs" min="2700" max="3400" step="10" value="3200" /><output id="hsO">3200</output></div>
+      <div class="row"><label>Feedwater enthalpy h_f (kJ/kg)</label><input type="range" id="hf" min="120" max="700" step="10" value="420" /><output id="hfO">420</output></div>
+      <p class="sub">Defaults represent a small marine boiler burning heavy fuel oil (CV about 42 MJ/kg) raising superheated steam from feedwater near 100&deg;C. Latent heat used for equivalent evaporation is 2257 kJ/kg.</p>
+    </div>
+    <div class="results">
+      <h2>Performance</h2>
+      <div class="metric"><span>Fuel energy in</span><span class="v" id="qf">--</span></div>
+      <div class="metric"><span>Heat to steam</span><span class="v" id="qs">--</span></div>
+      <div class="metric big"><span>Boiler efficiency</span><span class="v" id="eff">--</span></div>
+      <div class="metric"><span>Equivalent evaporation</span><span class="v" id="ee">--</span></div>
+      <p class="sub" id="note"></p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var ids=['mf','cv','ms','hs','hf'];
+  var el={}; ids.forEach(function(k){ el[k]=document.getElementById(k); el[k+'O']=document.getElementById(k+'O'); });
+  function calc(){
+    var mf=+el.mf.value, cv=+el.cv.value, ms=+el.ms.value, hs=+el.hs.value, hf=+el.hf.value;
+    el.mfO.textContent=mf.toFixed(2); el.cvO.textContent=cv; el.msO.textContent=ms.toFixed(1); el.hsO.textContent=hs; el.hfO.textContent=hf;
+    var Qf=mf*cv;                 // kW
+    var Qs=ms*(hs-hf);           // kW
+    var eff=Qs/Qf*100;
+    var ee=ms*(hs-hf)/2257;      // kg/s from & at 100C
+    document.getElementById('qf').textContent=Math.round(Qf).toLocaleString()+" kW";
+    document.getElementById('qs').textContent=Math.round(Qs).toLocaleString()+" kW";
+    document.getElementById('eff').textContent=eff.toFixed(1)+" %";
+    document.getElementById('ee').textContent=ee.toFixed(2)+" kg/s";
+    var msg;
+    if(eff>100){ msg="Efficiency exceeds 100%, which is impossible: check that the heat to steam does not exceed the fuel energy in."; }
+    else if(eff>92){ msg="This efficiency is on the high side; most marine boilers fall between 85 and 90%."; }
+    else if(eff<70){ msg="This efficiency is low; a real boiler this poor would be losing a great deal of heat up the funnel."; }
+    else { msg="This is a realistic marine boiler efficiency (about 85 to 90%)."; }
+    document.getElementById('note').textContent=msg;
+  }
+  ids.forEach(function(k){ el[k].addEventListener('input',calc); });
+  calc();
+})();
+</script>
+</body>
+</html>

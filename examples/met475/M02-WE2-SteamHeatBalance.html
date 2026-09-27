@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 2.2: Steam Heat Balance and Output | MET 475</title>
+<!-- Reusable worked-example player. Edit PROBLEM and STEPS. Units: use \text{}\cdot\text{} not a literal middot inside \text{}. -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .verdict { font-weight:bold; color:#1d7a4d; }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card"><div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div><div class="card-body" id="s-body"></div></div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {
+  title: "Worked Example 2.2: Steam Heat Balance and Output",
+  statement: "A marine boiler raises superheated steam at $h_{steam}=3200\\ \\text{kJ/kg}$ from feedwater at $h_{feed}=420\\ \\text{kJ/kg}$. It burns heavy fuel oil (calorific value $42{,}000\\ \\text{kJ/kg}$) at $0.28\\ \\text{kg/s}$ with a boiler efficiency of 87%. Find the heat delivered to the steam and the steam the boiler can generate, and check whether it meets the plant's demand of $3.5\\ \\text{kg/s}$."
+};
+var SKETCH = '<svg viewBox="0 0 440 150" role="img" aria-label="Fuel energy enters a boiler and leaves as heat to steam plus losses.">'
++ '<defs><marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#1F3A5F"/></marker></defs>'
++ '<line x1="15" y1="80" x2="150" y2="80" stroke="#1F3A5F" stroke-width="6" marker-end="url(#a)"/><text x="20" y="66" fill="#1F3A5F" font-size="11">Fuel energy</text>'
++ '<rect x="152" y="52" width="120" height="56" rx="4" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/><text x="212" y="85" text-anchor="middle" fill="#1F3A5F" font-size="12" font-weight="bold">Boiler</text>'
++ '<line x1="272" y1="80" x2="410" y2="80" stroke="#1F3A5F" stroke-width="5" marker-end="url(#a)"/><text x="360" y="66" fill="#1F3A5F" font-size="11">Heat to steam</text>'
++ '<line x1="212" y1="52" x2="212" y2="18" stroke="#9a6a2f" stroke-width="2.5" marker-end="url(#a)"/><text x="222" y="30" fill="#9a6a2f" font-size="10">losses</text></svg>';
+var STEPS = [
+ { label:"Restate", title:"Restate the problem",
+   html:"<p>A boiler of known efficiency burns fuel at a known rate to raise steam between known feed and steam enthalpies. We must find the heat delivered to the steam, the resulting steam mass flow, and whether it meets the plant's steam demand.</p>" },
+ { label:"Given/Find", title:"Given and Find",
+   html:"<p><strong>Given:</strong></p><ul class='kv'>"
+     +"<li>$h_{steam} = 3200\\ \\text{kJ/kg}$, $\\ h_{feed} = 420\\ \\text{kJ/kg}$</li>"
+     +"<li>Calorific value $CV = 42{,}000\\ \\text{kJ/kg}$</li>"
+     +"<li>Fuel rate $\\dot m_f = 0.28\\ \\text{kg/s}$</li>"
+     +"<li>Boiler efficiency $\\eta = 0.87$</li>"
+     +"<li>Steam demand $= 3.5\\ \\text{kg/s}$</li></ul>"
+     +"<p><strong>Find:</strong> heat to steam, steam output, and whether demand is met.</p>" },
+ { label:"Sketch", title:"Assumptions and sketch",
+   html:"<p>Assume steady operation. The heat reaching the steam is the boiler efficiency times the fuel energy input; the steam produced is that heat divided by the enthalpy rise per kilogram.</p>"
+     + SKETCH
+     + "<p class='cite'>Reference: Reeds Vol 3, ch. 13, Boiler Efficiency and Equivalent Evaporation.</p>" },
+ { label:"Equations", title:"Equations",
+   html:"$$\\begin{aligned} \\dot Q_{fuel} &= \\dot m_f \\times CV \\\\ \\dot Q_{steam} &= \\eta \\, \\dot Q_{fuel} \\\\ \\dot m_{steam} &= \\frac{\\dot Q_{steam}}{h_{steam} - h_{feed}} \\end{aligned}$$" },
+ { label:"Calculate", title:"Calculations (units tracked)",
+   html:"<div class='calc'>$$\\dot Q_{fuel} = 0.28\\ \\tfrac{\\text{kg}}{\\text{s}} \\times 42{,}000\\ \\tfrac{\\text{kJ}}{\\text{kg}} = 11{,}760\\ \\text{kW}$$</div>"
+     +"<div class='calc'>$$\\dot Q_{steam} = 0.87 \\times 11{,}760 = \\textcolor{#D85A30}{10{,}231\\ \\text{kW}}$$</div>"
+     +"<div class='calc'>$$\\dot m_{steam} = \\frac{10{,}231\\ \\text{kW}}{(3200 - 420)\\ \\text{kJ/kg}} = \\frac{10{,}231}{2780} = \\textcolor{#D85A30}{3.68\\ \\text{kg/s}}$$</div>" },
+ { label:"Check", title:"Check for reasonableness",
+   html:"<p>About 10 MW reaches the steam, and each kilogram of steam absorbs roughly 2780 kJ, so the output should be near $10{,}000/2780 \\approx 3.7\\ \\text{kg/s}$, which matches. The value is a sensible size for a small marine boiler.</p>" },
+ { label:"Result", title:"Result",
+   html:"<table class='results'><tr><th>Quantity</th><th>Value</th></tr>"
+     +"<tr><td>Heat to steam</td><td>$10{,}231\\ \\text{kW}$</td></tr>"
+     +"<tr><td>Steam output</td><td>$3.68\\ \\text{kg/s}$</td></tr>"
+     +"<tr><td>Steam demand</td><td>$3.5\\ \\text{kg/s}$</td></tr></table>"
+     +"<p><span class='verdict'>Verdict: PASS.</span> The boiler produces $3.68\\ \\text{kg/s}$ against a demand of $3.5\\ \\text{kg/s}$, a margin of about 5%. It meets demand, though the margin is slim; a prudent design would confirm the boiler can also cover peak and transient loads.</p>" }
+];
+(function(){
+  function typeset(el){ if(window.renderMathInElement){ try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false}); }catch(e){} } }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){ var c=document.createElement('div'); c.className='chip'; c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label; c.addEventListener('click',function(){ stop(); go(idx); }); stepper.appendChild(c); });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){ var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody); count.textContent='Step '+(i+1)+' of '+STEPS.length; chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); }); prev.disabled=(i===0); next.disabled=(i===STEPS.length-1); }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){ if(timer){ stop(); return; } play.textContent='Pause'; timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); },7000); });
+  render();
+})();
+</script>
+</body>
+</html>

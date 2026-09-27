@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Combustion Air Calculator | MET 475</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:900px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 4px; }
+  p.lede { margin:0 0 14px; color:#444; }
+  .stage { display:flex; flex-wrap:wrap; gap:20px; }
+  .controls { flex:1 1 320px; min-width:280px; }
+  .results { flex:1 1 320px; min-width:280px; background:var(--light); border:1px solid var(--navy); border-radius:6px; padding:14px 16px; }
+  .row { display:flex; align-items:center; gap:10px; margin:0 0 12px; }
+  .row label { width:150px; font-size:.9rem; color:var(--navy); }
+  .row input[type=range] { flex:1; }
+  .row output { width:52px; text-align:right; font-weight:bold; font-size:.9rem; color:var(--navy); }
+  .results h2 { color:var(--navy); font-size:1.05rem; margin:0 0 10px; }
+  .metric { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #cfe0f2; font-size:.95rem; }
+  .metric span.v { font-weight:bold; color:var(--accent); }
+  .sub { font-size:.82rem; color:var(--muted); margin-top:10px; }
+  h3 { color:var(--navy); font-size:.9rem; margin:14px 0 4px; }
+  table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  td { padding:3px 4px; border-bottom:1px solid #cfe0f2; }
+  td.r { text-align:right; font-weight:bold; }
+  .warn { color:#b23b3b; font-size:.82rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Combustion Air Calculator</h1>
+  <p class="lede">Set the fuel composition (carbon, hydrogen, sulfur by mass) and the excess air, and see the stoichiometric air, the air-fuel ratio, and the flue-gas make-up. The composition is normalized to 100%.</p>
+  <div class="stage">
+    <div class="controls">
+      <div class="row"><label>Carbon C (%)</label><input type="range" id="c" min="70" max="92" step="0.5" value="86" /><output id="cO">86</output></div>
+      <div class="row"><label>Hydrogen H (%)</label><input type="range" id="h" min="5" max="15" step="0.5" value="11" /><output id="hO">11</output></div>
+      <div class="row"><label>Sulfur S (%)</label><input type="range" id="s" min="0" max="5" step="0.1" value="3" /><output id="sO">3</output></div>
+      <div class="row"><label>Excess air (%)</label><input type="range" id="e" min="0" max="50" step="1" value="20" /><output id="eO">20</output></div>
+      <p class="sub">Typical heavy fuel oil is roughly 86% C, 11% H, 3% S. Marine boilers usually run 15 to 25% excess air. Air is taken as 23.3% O&#8322; by mass.</p>
+    </div>
+    <div class="results">
+      <h2>Results (per kg of fuel)</h2>
+      <div class="metric"><span>Stoichiometric air-fuel ratio</span><span class="v" id="afrS">--</span></div>
+      <div class="metric"><span>Actual air-fuel ratio</span><span class="v" id="afrA">--</span></div>
+      <div class="metric"><span>Stoichiometric O&#8322; required</span><span class="v" id="o2">--</span></div>
+      <h3>Flue-gas products (kg per kg fuel)</h3>
+      <table id="flue"></table>
+      <p class="sub" id="note"></p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var ids=['c','h','s','e'];
+  var el={}; ids.forEach(function(k){ el[k]=document.getElementById(k); el[k+'O']=document.getElementById(k+'O'); });
+  function num(x,d){ return Number(x).toFixed(d===undefined?2:d); }
+  function calc(){
+    var C=+el.c.value, H=+el.h.value, S=+el.s.value, ex=+el.e.value;
+    el.cO.textContent=C; el.hO.textContent=H; el.sO.textContent=S; el.eO.textContent=ex;
+    var sum=C+H+S; var c=C/sum, h=H/sum, s=S/sum;   // normalized mass fractions
+    var o2 = 2.667*c + 8*h + 1*s;                    // kg O2 per kg fuel
+    var airS = o2/0.233;                             // stoichiometric air
+    var airA = airS*(1+ex/100);                      // actual air
+    document.getElementById('afrS').textContent = num(airS,1)+" : 1";
+    document.getElementById('afrA').textContent = num(airA,1)+" : 1";
+    document.getElementById('o2').textContent = num(o2,2)+" kg";
+    var CO2=3.667*c, H2O=9*h, SO2=2*s, N2=0.767*airA, O2x=0.233*(airA-airS);
+    var rows=[["CO₂",CO2],["H₂O",H2O],["SO₂",SO2],["N₂",N2],["Excess O₂",O2x]];
+    var t=document.getElementById('flue'); t.innerHTML='';
+    rows.forEach(function(r){ var tr=document.createElement('tr'); tr.innerHTML='<td>'+r[0]+'</td><td class="r">'+num(r[1],3)+'</td>'; t.appendChild(tr); });
+    var totalFlue=1+airA; var co2pct=CO2/totalFlue*100;
+    document.getElementById('note').innerHTML='Normalized fuel: '+num(c*100,1)+'% C, '+num(h*100,1)+'% H, '+num(s*100,1)+'% S. &nbsp; CO₂ in flue gas: about '+num(co2pct,1)+'% by mass.';
+  }
+  ids.forEach(function(k){ el[k].addEventListener('input',calc); });
+  calc();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG trust labeling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <h1>RAG answer trust</h1>
+        <span class="badge" id="round-badge">round</span>
+      </header>
+
+      <div id="sheet-warn" class="warn-banner" hidden>
+        Google Sheet is not configured (<code>config.js</code> →
+        <code>sheetWebAppUrl</code>). Labels stay in this browser + CSV download
+        until the Sheet is live.
+      </div>
+
+      <details class="how" id="how" open>
+        <summary>Instructions — read once</summary>
+        <div class="body">
+          <p>
+            You will see a <strong>question</strong>, the
+            <strong>evidence</strong> shown to a model, and the model’s
+            <strong>answer + citations</strong>. Judge from that material alone —
+            do not look up outside sources.
+          </p>
+          <div class="defs">
+            <div>
+              <strong>Correct</strong> — the answer matches what the evidence
+              supports (or <em>abstain-correct</em> if the model rightly declined).
+              Use <em>n/a</em> only if the item is unusable.
+            </div>
+            <div>
+              <strong>Faithful</strong> — every claim in the answer is supported by
+              the evidence (no invented facts). Abstain → usually yes.
+            </div>
+            <div>
+              <strong>Attributed</strong> — cited sections/quotes actually appear in
+              the evidence and support the claims. Abstain with “none” → yes.
+            </div>
+          </div>
+          <p>
+            Optional: click <strong>Start citation timer</strong> before checking
+            citations, then <strong>Stop</strong> when done — we record seconds for
+            RQ5. Work in short batches. Use the <em>same name/initials</em> when you
+            return. Each item is shown to up to two different people.
+          </p>
+        </div>
+      </details>
+
+      <section class="panel" id="setup">
+        <h2>Start a session</h2>
+        <p class="lead">
+          Enter a short name or initials (same every time). Authors may label if
+          blinded to gold answers and auto scores (see study notes).
+        </p>
+        <label class="field" for="rater-id">Your name or initials</label>
+        <input
+          id="rater-id"
+          type="text"
+          autocomplete="nickname"
+          placeholder="e.g. jsmith"
+          maxlength="40"
+        />
+        <div class="actions">
+          <button type="button" id="start">Start labeling</button>
+        </div>
+      </section>
+
+      <section class="panel" id="main" hidden>
+        <div class="progress">
+          <div class="progress-text" id="progress-text">Your labels: 0</div>
+          <div class="progress-text" id="coverage-text" style="margin-top: 0.15rem">
+            Checking coverage…
+          </div>
+          <div class="bar" aria-hidden="true">
+            <span id="progress-fill"></span>
+          </div>
+        </div>
+
+        <div class="pair-meta">
+          <span>Benchmark: <strong id="meta-bench">—</strong></span>
+          <span>Item: <strong id="meta-item">—</strong></span>
+        </div>
+
+        <article class="lo-card" style="margin-top: 0.75rem">
+          <h3>Question</h3>
+          <p id="text-question"></p>
+        </article>
+
+        <article class="lo-card" style="margin-top: 0.75rem">
+          <h3>Evidence</h3>
+          <pre id="text-evidence" style="white-space: pre-wrap; font-family: var(--sans); margin: 0; font-size: 0.92rem"></pre>
+        </article>
+
+        <article class="lo-card" style="margin-top: 0.75rem">
+          <h3>Model answer</h3>
+          <p id="text-answer"></p>
+          <p class="lead" style="margin-top: 0.5rem; margin-bottom: 0">
+            Citations
+          </p>
+          <pre id="text-citations" style="white-space: pre-wrap; font-family: var(--sans); margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--muted)"></pre>
+          <p id="text-confidence" class="lead" style="margin-top: 0.5rem"></p>
+        </article>
+
+        <div class="field" style="margin-top: 1rem">
+          <span>Correct</span>
+          <div class="btn-row" id="row-correct">
+            <button type="button" data-dim="correct" data-val="yes">Yes</button>
+            <button type="button" data-dim="correct" data-val="no">No</button>
+            <button type="button" data-dim="correct" data-val="abstain_correct">Abstain OK</button>
+            <button type="button" data-dim="correct" data-val="abstain_wrong">Abstain wrong</button>
+            <button type="button" data-dim="correct" data-val="na">n/a</button>
+          </div>
+        </div>
+        <div class="field">
+          <span>Faithful</span>
+          <div class="btn-row" id="row-faithful">
+            <button type="button" data-dim="faithful" data-val="yes">Yes</button>
+            <button type="button" data-dim="faithful" data-val="no">No</button>
+            <button type="button" data-dim="faithful" data-val="na">n/a</button>
+          </div>
+        </div>
+        <div class="field">
+          <span>Attributed</span>
+          <div class="btn-row" id="row-attributed">
+            <button type="button" data-dim="attributed" data-val="yes">Yes</button>
+            <button type="button" data-dim="attributed" data-val="no">No</button>
+            <button type="button" data-dim="attributed" data-val="na">n/a</button>
+          </div>
+        </div>
+
+        <label class="field" for="notes">Notes (optional)</label>
+        <input id="notes" type="text" maxlength="240" placeholder="Brief note" />
+
+        <div class="actions" style="margin-top: 0.75rem">
+          <button type="button" class="secondary" id="timer-start">Start citation timer</button>
+          <button type="button" class="secondary" id="timer-stop" disabled>Stop timer</button>
+          <span id="timer-display" class="lead" style="align-self: center">—</span>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="save" disabled>Save &amp; next</button>
+        </div>
+        <div id="status" role="status"></div>
+
+        <div class="actions">
+          <button type="button" class="secondary" id="download">Download backup CSV</button>
+          <button type="button" class="secondary" id="reset">Reset my progress</button>
+        </div>
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>All caught up</h2>
+        <p class="lead" id="done-msg">Thank you!</p>
+        <div class="actions">
+          <button type="button" id="download-done">Download backup CSV</button>
+        </div>
+      </section>
+
+      <footer class="note">
+        RAGStudy Phase 6 human trust validation. Gold answers and auto scores are
+        withheld. See study docs for author-as-rater guidance.
+      </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
