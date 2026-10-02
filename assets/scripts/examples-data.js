@@ -235,6 +235,37 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 7,
+        title: 'Tolerances, Fits & Fasteners',
+        examples: [
+          {
+            file: 'M07-WE72A-rc5-limits.html',
+            name: 'Worked Example 7.2-A: RC5 Clearance Fit Limits',
+            description: 'Reads Mott Table 13-3 to convert RC5 deviations into hole and shaft limit dimensions at a 2.000 in nominal, then finds the minimum (allowance) and maximum assembly clearance.',
+          },
+          {
+            file: 'M07-WE73A-fn2-limits.html',
+            name: 'Worked Example 7.3-A: FN2 Interference Fit Limits',
+            description: 'Reads Mott Table 13-4 (1.97-2.56 in band) to convert FN2 deviations into hole and shaft limits, and finds the minimum and maximum interference that feed the Page 7.4 stress analysis.',
+          },
+          {
+            file: 'M07-WE74A-press-fit.html',
+            name: 'Worked Example 7.4-A: Force-Fit (Press-Fit) Stress Analysis',
+            description: 'Applies Mott Eqs. 13-2, 13-4, 13-5 to find the interface pressure and hub bore hoop stress for the FN2 press fit, checks the friction torque capacity, and applies the hub-end stress-concentration factor.',
+          },
+          {
+            file: 'M07-WE76A-bolt-preload.html',
+            name: 'Worked Example 7.6-A: Bolt Preload and Tightening Torque',
+            description: 'Finds the tensile stress area (Mott Eq. 19-1), proof load, clamping preload (75% of proof), and tightening torque (Eq. 19-3) for a 5/16-18 UNC Grade 5 bolt.',
+          },
+          {
+            file: 'M07-WE77A-bolted-joint.html',
+            name: 'Worked Example 7.7-A: Bolted Joint Under External Load',
+            description: 'Applies Mott Eqs. 19-8 and 19-9 to find the bolt force and stress, the remaining clamp force, and the joint separation load with its design factor under an external separating load.',
+          },
+        ],
+      },
     ],
   },
   {

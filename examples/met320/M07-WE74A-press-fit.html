@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 7.4-A: Force-Fit (Press-Fit) Stress Analysis | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 7.4-A: Force-Fit (Press-Fit) Stress Analysis", "statement": "A steel gear hub (OD $=4.000\\ \\text{in}$) is pressed onto a solid steel shaft ($2.000\\ \\text{in}$) with the FN2 fit from Page 7.3 ($\\Delta_{max}=0.0027\\ \\text{in}$); hub length $2.50\\ \\text{in}$, torque $5000\\ \\text{lb}\\cdot\\text{in}$, AISI 1020 CD ($s_y=57{,}000\\ \\text{psi}$, $E=30\\times10^6\\ \\text{psi}$). Find the interface pressure, hub and shaft stresses, and friction torque capacity, and verify the hub at $N=2$ &mdash; including the hub-end stress concentration."};
+var SKETCH = '<svg viewBox="0 0 320 220" role="img" aria-label="Press-fit cross section: gear hub pressed onto a solid shaft, with interface pressure acting into both members.">'
++ '<defs>'
++ '<marker id="pa" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#D85A30"/></marker>'
++ '</defs>'
++ '<circle cx="160" cy="110" r="86" fill="#eef3f9" stroke="#1F3A5F" stroke-width="2"/>'
++ '<circle cx="160" cy="110" r="43" fill="#cfe0f2" stroke="#1F3A5F" stroke-width="1.5"/>'
++ '<circle cx="160" cy="110" r="3" fill="#1F3A5F"/>'
++ '<line x1="160" y1="110" x2="203" y2="110" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="160" y1="110" x2="160" y2="24" stroke="#5a6b80" stroke-width="1"/>'
++ '<text x="172" y="104" font-size="9" fill="#5a6b80">c = 1.0</text>'
++ '<text x="165" y="40" font-size="9" fill="#5a6b80">c_o = 2.0</text>'
++ '<!-- p into shaft (compression) -->'
++ '<line x1="203" y1="110" x2="188" y2="110" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="117" y1="110" x2="132" y2="110" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="160" y1="67" x2="160" y2="82" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="160" y1="153" x2="160" y2="138" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<!-- p into hub (bore tension) -->'
++ '<line x1="203" y1="110" x2="218" y2="110" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="117" y1="110" x2="102" y2="110" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="160" y1="67" x2="160" y2="52" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<line x1="160" y1="153" x2="160" y2="168" stroke="#D85A30" stroke-width="2" marker-end="url(#pa)"/>'
++ '<text x="95" y="205" font-size="9.5" fill="#D85A30">p into shaft (comp.) and hub bore (hoop tension)</text>'
++ '<text x="118" y="18" font-size="9" fill="#2c7a54">hub (outer member)</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>A gear hub is pressed onto a solid shaft with the FN2 interference from Page 7.3. The interference creates a pressure at the mating surface; that pressure puts the hub bore into tension (hoop stress) and the shaft into compression, and the friction it generates transmits torque. We size the stresses with Lam&eacute;&rsquo;s thick-wall equations (Mott &sect;13-8), verify the hub, check torque capacity, and finish with the hub-end stress-concentration check.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Given:</strong></p><ul class='kv'><li>Hub OD $=4.000\\ \\text{in}\\Rightarrow c_o=2.000\\ \\text{in}$; solid shaft $=2.000\\ \\text{in}\\Rightarrow c=1.000\\ \\text{in}$, $c_i=0$</li><li>FN2 (medium drive): $\\Delta_{max}=0.0027\\ \\text{in}$ (from Page 7.3, Table 13-4)</li><li>Hub length $L=2.50\\ \\text{in}$; torque $T=5000\\ \\text{lb}\\cdot\\text{in}$; $\\mu=0.12$</li><li>Both members AISI 1020 CD: $s_y=57{,}000\\ \\text{psi}$, $E=30\\times10^6\\ \\text{psi}$</li></ul><p><strong>Find:</strong> interface pressure, hub bore hoop stress, shaft stress, friction torque capacity, and verify the hub at $N=2$.</p>"}, {"label": "Sketch", "title": "Interference-fit cross-section", "html": "<p>The hub is the outer member (radius $c$ to $c_o$); the solid shaft fills the bore. Mott labels these radii $a,b,c$; here $c_i,c,c_o$. Interface pressure $p$ acts into both members.</p>__SKETCH__<p class='cite'>Reference: Mott &sect;13-8, Fig. 13-6 (terminology); Eqs. 13-2 (pressure), 13-4 (hub hoop), 13-5 (shaft).</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Interface pressure &mdash; same material, solid shaft (Mott Eq. 13-2, radial form):</p>$$p=\\frac{E\\,\\delta}{2c}\\cdot\\frac{c_o^2-c^2}{c_o^2},\\qquad \\delta=\\tfrac12\\Delta_{max}$$<p class='eq-label'>Hub bore hoop stress (Eq. 13-4) and shaft stress (Eq. 13-5):</p>$$\\sigma_{t,hub}=p\\,\\frac{c_o^2+c^2}{c_o^2-c^2},\\qquad \\sigma_{c,shaft}=-p$$<p class='eq-label'>Friction torque capacity:</p>$$T_{max}=\\mu\\,p\\,(\\pi D L)\\,c$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>FN2 at 2.0 in (Table 13-4): $\\Delta_{max}=0.0027\\ \\text{in}$, so $\\delta=0.00135\\ \\text{in}$.</div><div class='calc'>$$p=\\frac{30\\times10^6(0.00135)}{2(1.0)}\\cdot\\frac{4-1}{4}=20{,}250(0.75)=\\textcolor{#D85A30}{15{,}188\\ \\text{psi}}$$</div><div class='calc'>$$\\sigma_{t,hub}=15{,}188\\cdot\\frac{4+1}{4-1}=15{,}188\\cdot\\tfrac53=\\textcolor{#D85A30}{25{,}313\\ \\text{psi (tension)}}$$</div><div class='calc'>$$\\sigma_{c,shaft}=-p=-15{,}188\\ \\text{psi};\\qquad T_{max}=0.12(15{,}188)(\\pi\\cdot2\\cdot2.5)(1.0)=\\textcolor{#D85A30}{28{,}632\\ \\text{lb}\\cdot\\text{in}}$$</div>"}, {"label": "Check", "title": "Checks (bore, torque, hub ends)", "html": "<ul class='kv'><li><strong>Hub bore:</strong> $25{,}313<s_y/N=28{,}500\\ \\text{psi}$ &#10003; (actual $N=57{,}000/25{,}313=2.25$).</li><li><strong>Torque (max interference):</strong> $T_{max}=28{,}632>T\\cdot N=10{,}000\\ \\text{lb}\\cdot\\text{in}$ &#10003; ($N=5.7$).</li><li><strong>Torque (min interference &mdash; governs slip):</strong> at $\\Delta_{min}=0.0008\\ \\text{in}$ ($\\delta=0.0004$), $p_{min}=4{,}500\\ \\text{psi}$ and $T_{max,min}=8{,}483\\ \\text{lb}\\cdot\\text{in}$, so $N_{slip}=8{,}483/5{,}000=1.7<2$ &mdash; the press fit alone is marginal; add a key.</li><li><strong>Hub ends (Mott &sect;13-8):</strong> the hub is shorter than the shaft, so end stresses can reach $2\\times$ the bore value: $\\sigma_{end}\\approx2(25{,}313)=50{,}625\\ \\text{psi}>28{,}500$ &mdash; the <em>ends</em> fall to $N_{end}=1.1$ and govern.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Quantity</th><th>Result</th></tr><tr><td>Interface pressure</td><td>$p=15{,}188\\ \\text{psi}$</td></tr><tr><td>Hub bore hoop stress</td><td>$25{,}313\\ \\text{psi}$ ($N=2.25$)</td></tr><tr><td>Shaft stress</td><td>$-15{,}188\\ \\text{psi}$ (not critical)</td></tr><tr><td>Torque capacity (max / min interf.)</td><td>$28{,}632$ / $8{,}483\\ \\text{lb}\\cdot\\text{in}$ ($N_{slip}=1.7$)</td></tr><tr><td>Governing checks</td><td>hub ends $N_{end}=1.1$; slip $N_{slip}=1.7$</td></tr></table><p><strong>Verdict:</strong> the FN2 fit is safe at the bore, but two checks fall below $N=2$: the hub-end stress concentration ($N_{end}=1.1$) and the worst-case slip margin at minimum interference ($N_{slip}=1.7$). For a robust design, relieve or lengthen the hub <em>and</em> add a key (or specify a tighter fit class).</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

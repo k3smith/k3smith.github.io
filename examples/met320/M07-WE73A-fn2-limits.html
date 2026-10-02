@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 7.3-A: FN2 Interference Fit Limits | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 7.3-A: FN2 Interference Fit Limits", "statement": "A steel gear hub is pressed onto a steel shaft at a 2.000 in nominal diameter with an FN2 (medium drive) fit. Using Mott Table 13-4 (FN2 row for the 1.97&ndash;2.56 in band: hole $0/{+}1.2$, shaft $+2.0/{+}2.7$ thousandths), find the hole and shaft limit dimensions and the minimum and maximum interference. The maximum interference feeds the stress analysis on Page 7.4."};
+var SKETCH = '<svg viewBox="0 0 460 200" role="img" aria-label="Interference-fit tolerance zones: shaft zone above the hole zone, overlapping the basic-size line.">'
++ '<defs>'
++ '<marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#D85A30"/></marker>'
++ '</defs>'
++ '<line x1="40" y1="120" x2="430" y2="120" stroke="#5a6b80" stroke-width="1" stroke-dasharray="5 3"/>'
++ '<text x="360" y="134" font-size="10" fill="#5a6b80">basic size 2.0000</text>'
++ '<rect x="90" y="103.2" width="150" height="16.8" fill="#dfe8f3" stroke="#1F3A5F"/>'
++ '<text x="105" y="150" font-size="10" fill="#1F3A5F">HOLE  0 to +1.2  (2.0000&ndash;2.0012)</text>'
++ '<rect x="90" y="82.2" width="150" height="9.8" fill="#cfe0f2" stroke="#1F3A5F"/>'
++ '<text x="105" y="74" font-size="10" fill="#1F3A5F">SHAFT  +2.0 to +2.7  (2.0020&ndash;2.0027)</text>'
++ '<line x1="270" y1="120" x2="270" y2="82.2" stroke="#D85A30" stroke-width="2" marker-start="url(#a2)" marker-end="url(#a2)"/>'
++ '<text x="278" y="104" font-size="10" fill="#D85A30">max interf 2.7 thou</text>'
++ '<text x="140" y="192" font-size="9.5" fill="#5a6b80">Interference fit: shaft always larger than hole (deviations in 0.001 in)</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>A steel spur-gear hub must be pressed onto a steel shaft at a 2.000 in nominal diameter and must not slip. An <strong>FN2</strong> (medium drive) interference fit is selected. We read Mott&rsquo;s Table 13-4, convert to actual limits, and find the interference range &mdash; the maximum value carries forward to Page 7.4 for the stress analysis.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<p><strong>Given:</strong></p><ul class='kv'><li>Nominal (basic) diameter $= 2.000\\ \\text{in}$ &mdash; FN band is $1.97\\text{\u2013}2.56\\ \\text{in}$</li><li>Class <strong>FN2</strong> (medium drive fit), hole-basis system</li><li>Mott Table 13-4, FN2 row: hole $0/{+}1.2$, shaft $+2.0/{+}2.7$ (thousandths)</li></ul><p><strong>Find:</strong> hole and shaft limit dimensions, and the minimum and maximum interference.</p>"}, {"label": "Sketch", "title": "Tolerance zones (interference fit)", "html": "<p>In an interference fit the shaft tolerance zone sits <em>above</em> the hole zone: the shaft is always larger than the hole, so assembly needs force (or heating the hub).</p>__SKETCH__<p class='cite'>Reference: Mott &sect;13-6, Table 13-4 (FN1&ndash;FN5). Note FN bands split at 2.56 in.</p>"}, {"label": "Equations", "title": "Reading the table", "html": "<p class='eq-label'>Actual limits = basic size + deviation:</p>$$\\text{Hole: } LL=2.000+0,\\ UL=2.000+0.0012$$$$\\text{Shaft: } LL=2.000+0.0020,\\ UL=2.000+0.0027$$<p class='eq-label'>Interference extremes (shaft larger than hole):</p>$$\\delta_{min}=LL_{shaft}-UL_{hole},\\qquad \\Delta_{max}=UL_{shaft}-LL_{hole}$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>$$\\text{Hole: } 2.0000\\ \\text{to}\\ \\textcolor{#D85A30}{2.0012\\ \\text{in}}$$</div><div class='calc'>$$\\text{Shaft: } 2.0020\\ \\text{(LL) to}\\ \\textcolor{#D85A30}{2.0027\\ \\text{in (UL)}}$$</div><div class='calc'>$$\\delta_{min}=2.0020-2.0012=\\textcolor{#D85A30}{0.0008\\ \\text{in}}\\quad(0.8\\ \\text{thou})$$</div><div class='calc'>$$\\Delta_{max}=2.0027-2.0000=\\textcolor{#D85A30}{0.0027\\ \\text{in}}\\quad(2.7\\ \\text{thou})$$</div>"}, {"label": "Check", "title": "Checks", "html": "<ul class='kv'><li>$\\delta_{min}=0.8$ thou and $\\Delta_{max}=2.7$ thou match the &ldquo;limits of interference&rdquo; column of Table 13-4 &#10003;.</li><li>The shaft LL ($2.0020$) exceeds the hole UL ($2.0012$), so interference is guaranteed at every combination &mdash; a true force fit &#10003;.</li><li>Using the 1.97&ndash;2.56 band (not 1.97&ndash;3.15) matters: FN tables use narrower size steps than RC tables.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Quantity</th><th>Result</th></tr><tr><td>Hole limits</td><td>$2.0000$ / $2.0012\\ \\text{in}$</td></tr><tr><td>Shaft limits</td><td>$2.0020$ / $2.0027\\ \\text{in}$</td></tr><tr><td>Min interference</td><td>$0.0008\\ \\text{in}$</td></tr><tr><td>Max interference $\\Delta_{max}$</td><td>$0.0027\\ \\text{in}$</td></tr></table><p><strong>Verdict:</strong> the FN2 fit always produces 0.8&ndash;2.7 thou of interference. The worst-case $\\Delta_{max}=0.0027\\ \\text{in}$ is carried into Page 7.4 (Worked Example 7.4-A) to find the interface pressure and hub bore stress.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
