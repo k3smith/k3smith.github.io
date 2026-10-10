@@ -53,7 +53,15 @@
             Optional: click <strong>Start citation timer</strong> before checking
             citations, then <strong>Stop</strong> when done — we record seconds for
             RQ5. Work in short batches. Use the <em>same name/initials</em> when you
-            return. Each item is shown to up to two different people.
+            return. Each item is shown to up to <strong>three</strong> different
+            people. Rate your <strong>confidence</strong> from 1 (very unsure) to
+            5 (very sure) on every item.
+          </p>
+          <p>
+            Third-rater / adjudication: follow the pre-committed decision rules in
+            the study repo
+            (<code>docs/phase9/adjudication_decision_rules_2026-10-10.md</code>).
+            Stay blind to other raters and auto scores.
           </p>
         </div>
       </details>
@@ -139,8 +147,18 @@
             <button type="button" data-dim="attributed" data-val="na">n/a</button>
           </div>
         </div>
+        <div class="field">
+          <span>Confidence — how sure are you of this item’s labels?</span>
+          <div class="btn-row" id="row-confidence">
+            <button type="button" data-dim="confidence" data-val="1">1 very unsure</button>
+            <button type="button" data-dim="confidence" data-val="2">2 unsure</button>
+            <button type="button" data-dim="confidence" data-val="3">3 moderate</button>
+            <button type="button" data-dim="confidence" data-val="4">4 sure</button>
+            <button type="button" data-dim="confidence" data-val="5">5 very sure</button>
+          </div>
+        </div>
 
-        <label class="field" for="notes">Notes (optional)</label>
+        <label class="field" for="notes">Notes (optional; use when confidence ≤ 2)</label>
         <input id="notes" type="text" maxlength="240" placeholder="Brief note" />
 
         <div class="actions" style="margin-top: 0.75rem">
