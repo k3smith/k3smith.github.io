@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 8.4-A: Extension Spring Body and Hook Stresses | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 8.4-A: Extension Spring Body and Hook Stresses", "statement": "A screen-door closer extension spring has $D_w=0.092\\ \\text{in}$, $D_m=0.920\\ \\text{in}$ ($C=10$), $N_a=15$, music wire, $G=11.85\\times10^6\\ \\text{psi}$, initial tension $F_i=4\\ \\text{lb}$, and maximum force $F_o=18\\ \\text{lb}$ with standard loops ($R_1=D_m/2$, $R_2=D_w\\Rightarrow C_2=2$). Check the coil-body shear stress and the two hook stresses (Point A bending, Point B torsion), and state which location governs."};
+var SKETCH = '<svg viewBox="0 0 340 170" role="img" aria-label="Helical extension spring with end hooks, showing Point A at the hook-to-body bend and Point B at the inner hook radius, pulled in tension.">'
++ '<defs><marker id="fa" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#D85A30"/></marker></defs>'
++ '<path d="M70,85 a16,16 0 1 1 18,0" fill="none" stroke="#1F3A5F" stroke-width="2.4"/>'
++ '<path d="M110,70 L120,100 L132,70 L144,100 L156,70 L168,100 L180,70 L192,100 L204,70 L216,100 L228,70" fill="none" stroke="#1F3A5F" stroke-width="2.4"/>'
++ '<path d="M252,85 a16,16 0 1 0 -18,0" fill="none" stroke="#1F3A5F" stroke-width="2.4"/>'
++ '<line x1="20" y1="85" x2="58" y2="85" stroke="#D85A30" stroke-width="2.4" marker-end="url(#fa)"/>'
++ '<line x1="320" y1="85" x2="282" y2="85" stroke="#D85A30" stroke-width="2.4" marker-end="url(#fa)"/>'
++ '<circle cx="104" cy="85" r="5" fill="none" stroke="#D85A30" stroke-width="2"/>'
++ '<text x="86" y="128" font-size="10" fill="#D85A30">Point A (bending)</text>'
++ '<circle cx="79" cy="70" r="4.5" fill="none" stroke="#2c7a54" stroke-width="2"/>'
++ '<text x="16" y="36" font-size="10" fill="#2c7a54">Point B (torsion, inner hook)</text>'
++ '<text x="150" y="150" font-size="10" fill="#5a6b80">coil body: C = 10, N_a = 15</text>'
++ '<text x="300" y="78" font-size="10" fill="#D85A30">F</text>'
++ '<text x="24" y="78" font-size="10" fill="#D85A30">F</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>An extension spring carries load in tension. The coil body is checked like a compression spring, but the <em>end hooks</em> add two stress-concentration sites &mdash; Point A (bending where the hook meets the body) and Point B (torsion at the inner hook radius) &mdash; that usually set the critical stress. We check all three and report the governing location.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<ul class='kv'><li>$D_w=0.092$, $D_m=0.920\\ \\text{in}$, $C=10$, $N_a=15$</li><li>Music wire, $G=11.85\\times10^6\\ \\text{psi}$; $F_i=4\\ \\text{lb}$, $F_o=18\\ \\text{lb}$</li><li>Standard loops: $R_1=D_m/2\\Rightarrow C_1=10$; $R_2=D_w\\Rightarrow C_2=2$</li></ul><p><strong>Find:</strong> spring rate, coil-body $\\tau$, hook bending $\\sigma_A$, hook torsion $\\tau_B$, and the governing check.</p>"}, {"label": "Sketch", "title": "Extension spring and hook points", "html": "<p>The body coils are all active. Point A is the bend where the hook rises out of the body (bending stress); Point B is the tight inner radius of the hook (torsional shear).</p>__SKETCH__<p class='cite'>Reference: Mott &sect;18-7, Fig. 18-22; Eq. 18-4 (body), Eq. 18-13/18-14 (Point A), Eq. 18-15/18-16 (Point B).</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Spring rate and coil-body shear:</p>$$k=\\frac{G\\,D_w^4}{8\\,D_m^3\\,N_a},\\qquad \\tau_{body}=\\frac{8\\,K\\,F_o\\,D_m}{\\pi\\,D_w^3}$$<p class='eq-label'>Hook bending at A (Eq. 18-13), $K_1=\\dfrac{4C_1^2-C_1-1}{4C_1(C_1-1)}$:</p>$$\\sigma_A=\\frac{16\\,D_m\\,F_o\\,K_1}{\\pi\\,D_w^3}+\\frac{4\\,F_o}{\\pi\\,D_w^2}$$<p class='eq-label'>Hook torsion at B (Eq. 18-15), $K_2=\\dfrac{4C_2-1}{4C_2-4}$:</p>$$\\tau_B=\\frac{8\\,D_m\\,F_o\\,K_2}{\\pi\\,D_w^3}$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>$$k=\\frac{(11.85\\times10^6)(0.092)^4}{8(0.920)^3(15)}=\\textcolor{#D85A30}{9.1\\ \\text{lb/in}},\\qquad K=1.145\\ (C=10)$$</div><div class='calc'>$$\\tau_{body}=\\frac{8(1.145)(18)(0.920)}{\\pi(0.092)^3}=\\textcolor{#D85A30}{62{,}000\\ \\text{psi}}$$Fig. 18-9 avg @ $0.092$: $\\tau_d\\approx123{,}000\\Rightarrow N=\\textcolor{#D85A30}{2.0}$</div><div class='calc'>$$K_1=\\frac{4(100)-10-1}{4(10)(9)}=\\frac{389}{360}=1.081$$$$\\sigma_A=\\frac{16(0.920)(18)(1.081)}{\\pi(0.092)^3}+\\frac{4(18)}{\\pi(0.092)^2}=117{,}000+2{,}700=\\textcolor{#D85A30}{119{,}700\\ \\text{psi}}$$Fig. 18-25 (bending) avg @ $0.092$: $\\approx158{,}000\\Rightarrow N_A=\\textcolor{#D85A30}{1.3}$</div><div class='calc'>$$K_2=\\frac{4(2)-1}{4(2)-4}=\\frac{7}{4}=1.75,\\qquad \\tau_B=\\frac{8(0.920)(18)(1.75)}{\\pi(0.092)^3}=\\textcolor{#D85A30}{94{,}800\\ \\text{psi}}$$Fig. 18-9 avg @ $0.092$: $123{,}000\\Rightarrow N_B=\\textcolor{#D85A30}{1.3}$</div>"}, {"label": "Check", "title": "Checks (three locations)", "html": "<ul class='kv'><li><strong>Coil body:</strong> $\\tau=62{,}000\\ \\text{psi}$, $N=2.0$ &mdash; comfortable.</li><li><strong>Point A (bending):</strong> $\\sigma_A=119{,}700\\ \\text{psi}$ vs. $\\approx158{,}000$ (Fig. 18-25) &rarr; $N_A\\approx1.3$.</li><li><strong>Point B (torsion):</strong> $\\tau_B=94{,}800\\ \\text{psi}$ vs. $\\approx123{,}000$ (Fig. 18-9) &rarr; $N_B\\approx1.3$.</li><li>The two hooks come out <em>nearly equal</em> and well below the body &mdash; the hooks govern.</li></ul>"}, {"label": "Result", "title": "Result and verdict", "html": "<table class='results'><tr><th>Location</th><th>Stress</th><th>$N$</th></tr><tr><td>Coil body (shear)</td><td>62,000 psi</td><td>2.0</td></tr><tr><td>Point A (hook bending)</td><td>119,700 psi</td><td>1.3</td></tr><tr><td>Point B (hook torsion)</td><td>94,800 psi</td><td>1.3</td></tr></table><p><strong>Verdict:</strong> all three locations pass, but the <em>hooks govern</em> ($N\\approx1.3$ at both A and B), not the coil body ($N=2.0$). This is why an extension-spring design must always check the end loops. If a hook fell short, the fixes are a larger hook radius (raises $C_1/C_2$, lowers $K$), a larger wire, or a machine/side loop that removes the sharp bend.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

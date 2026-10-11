@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 8.3-A: Compression Spring Design (Mott Method 1) | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 8.3-A: Compression Spring Design (Mott Method 1)", "statement": "Design a helical compression die spring to exert $F_i=20\\ \\text{lb}$ at installed length $L_i=3.00\\ \\text{in}$ and $F_o=40\\ \\text{lb}$ at operating length $L_o=2.50\\ \\text{in}$, fitting a $1.375\\ \\text{in}$ bore. Music wire (A228), $G=11.85\\times10^6\\ \\text{psi}$, squared-and-ground ends. Use Mott&rsquo;s Method 1 (assume $D_m$, read a design stress, solve Eq. 18-7 for $D_w$, then check)."};
+var SKETCH = '<svg viewBox="0 0 360 240" role="img" aria-label="Die spring guided inside a 1.375 in bore, with design mean diameter, wire diameter, and free length labeled.">'
++ '<rect x="70" y="24" width="160" height="192" fill="none" stroke="#5a6b80" stroke-width="2" stroke-dasharray="5 3"/>'
++ '<text x="78" y="18" font-size="10" fill="#5a6b80">bore = 1.375 in</text>'
++ '<line x1="100" y1="40" x2="200" y2="40" stroke="#1F3A5F" stroke-width="3"/>'
++ '<line x1="100" y1="200" x2="200" y2="200" stroke="#1F3A5F" stroke-width="3"/>'
++ '<path d="M110,40 L190,62 L110,84 L190,106 L110,128 L190,150 L110,172 L190,194 L110,200" fill="none" stroke="#1F3A5F" stroke-width="2.2"/>'
++ '<line x1="110" y1="216" x2="190" y2="216" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="110" y1="211" x2="110" y2="221" stroke="#5a6b80"/>'
++ '<line x1="190" y1="211" x2="190" y2="221" stroke="#5a6b80"/>'
++ '<text x="128" y="236" font-size="10" fill="#5a6b80">D_m = 0.60</text>'
++ '<line x1="250" y1="40" x2="250" y2="200" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="245" y1="40" x2="255" y2="40" stroke="#5a6b80"/>'
++ '<line x1="245" y1="200" x2="255" y2="200" stroke="#5a6b80"/>'
++ '<text x="260" y="124" font-size="10" fill="#5a6b80">L_f = 3.50</text>'
++ '<circle cx="190" cy="106" r="5" fill="none" stroke="#D85A30" stroke-width="2"/>'
++ '<line x1="196" y1="100" x2="268" y2="58" stroke="#D85A30" stroke-width="1"/>'
++ '<text x="240" y="52" font-size="10" fill="#D85A30">D_w = 0.0915 (#13)</text>'
++ '<text x="78" y="188" font-size="9" fill="#2c7a54">OD = 0.692 &lt; bore</text>'
++ '<text x="78" y="202" font-size="9" fill="#2c7a54">travel stop at L_o</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>Spring <em>design</em> works backward from the required forces and lengths to a wire size, coil diameter, and coil count. Because the allowable stress depends on the (still-unknown) wire diameter, the process is a trial-and-check loop: assume $D_m$ and a design stress, solve for a trial $D_w$, round to a standard size, then recompute the actual stress and finish the geometry.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<ul class='kv'><li>$F_i=20\\ \\text{lb}$ @ $L_i=3.00\\ \\text{in}$; $F_o=40\\ \\text{lb}$ @ $L_o=2.50\\ \\text{in}$</li><li>Bore $\\le 1.375\\ \\text{in}$; music wire (A228), $G=11.85\\times10^6\\ \\text{psi}$; S&amp;G ends</li></ul><p><strong>Find:</strong> wire diameter $D_w$, mean diameter $D_m$, active coils $N_a$, and the complete geometry, with stress, set, buckling, and fit checks.</p>"}, {"label": "Sketch", "title": "Spring in its bore", "html": "<p>The die spring is guided inside the $1.375\\ \\text{in}$ bore, which also prevents buckling. $D_m$ must leave clearance to the bore wall.</p>__SKETCH__<p class='cite'>Reference: Mott &sect;18-6, Method 1 (Steps 1&ndash;10); Eq. 18-7 (trial wire), Eq. 18-4 (stress), Eq. 18-9 (coils).</p>"}, {"label": "Equations", "title": "Equations (Method 1)", "html": "<p class='eq-label'>Rate and free length:</p>$$k=\\frac{F_o-F_i}{L_i-L_o},\\qquad L_f=L_i+\\frac{F_i}{k}$$<p class='eq-label'>Trial wire diameter (Eq. 18-7, $K\\approx1.2$):</p>$$D_w=\\left[\\frac{8\\,K\\,F_o\\,D_m}{\\pi\\,\\tau_d}\\right]^{1/3}$$<p class='eq-label'>Actual stress and active coils:</p>$$\\tau=\\frac{8\\,K\\,F_o\\,D_m}{\\pi\\,D_w^3},\\qquad N_a=\\frac{G\\,D_w^4}{8\\,D_m^3\\,k}$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>Rate and free length:$$k=\\frac{40-20}{3.00-2.50}=\\textcolor{#D85A30}{40\\ \\text{lb/in}},\\qquad L_f=3.00+\\frac{20}{40}=\\textcolor{#D85A30}{3.50\\ \\text{in}}$$</div><div class='calc'>Assume $D_m=0.60\\ \\text{in}$, trial $\\tau_d\\approx120{,}000\\ \\text{psi}$ (Fig. 18-9, avg), $K\\approx1.2$:$$D_w=\\left[\\frac{8(1.2)(40)(0.60)}{\\pi(120{,}000)}\\right]^{1/3}=0.085\\ \\text{in}\\ \\rightarrow\\ \\textcolor{#D85A30}{D_w=0.0915\\ \\text{in}\\ (\\#13)}$$</div><div class='calc'>$$C=\\frac{0.60}{0.0915}=6.56,\\quad K=1.229,\\quad \\tau=\\frac{8(1.229)(40)(0.60)}{\\pi(0.0915)^3}=\\textcolor{#D85A30}{98{,}000\\ \\text{psi}}$$</div><div class='calc'>Re-read Fig. 18-9 at $0.0915\\ \\text{in}$: $\\tau_d\\approx123{,}000\\ \\text{psi}\\Rightarrow N=\\textcolor{#D85A30}{1.26}$.$$N_a=\\frac{(11.85\\times10^6)(0.0915)^4}{8(0.60)^3(40)}=12.0\\ \\text{coils}\\ (k=40.1\\ \\text{lb/in})$$</div>"}, {"label": "Check", "title": "Checks (fit, set, buckling)", "html": "<ul class='kv'><li><strong>Fit:</strong> $OD=0.60+0.0915=0.692\\ \\text{in}<1.375\\ \\text{in}$ &#10003;.</li><li><strong>Strength:</strong> $\\tau=98{,}000<\\tau_d\\approx123{,}000\\ \\text{psi}$ ($N=1.26$) &mdash; adequate for a bore-guided, travel-stopped die spring, though a tighter margin.</li><li><strong>Solid length:</strong> $N_t=14$, $L_s=14(0.0915)=1.28\\ \\text{in}<L_o=2.50$ &#10003;. Compressing fully would far exceed the light-service stress, so the press includes a <em>travel stop</em> at $L_o$ (standard for die springs).</li><li><strong>Buckling:</strong> $L_f/D_m=3.50/0.60=5.83$, but the spring is guided by the bore &#10003;.</li></ul>"}, {"label": "Result", "title": "Final specification", "html": "<table class='results'><tr><th>Parameter</th><th>Value</th></tr><tr><td>Wire diameter $D_w$</td><td>0.0915 in (#13)</td></tr><tr><td>Mean diameter $D_m$ / $C$</td><td>0.60 in / 6.6</td></tr><tr><td>Active / total coils</td><td>$N_a=12$ / $N_t=14$ (S&amp;G)</td></tr><tr><td>Free / solid length</td><td>3.50 / 1.28 in</td></tr><tr><td>Spring rate $k$</td><td>40.1 lb/in</td></tr><tr><td>Operating design factor</td><td>$N=1.26$</td></tr></table><p><strong>Verdict:</strong> a valid Method-1 design &mdash; music wire, $D_w=0.0915\\ \\text{in}$, $D_m=0.60\\ \\text{in}$, 14 total coils, guided in the bore and travel-stopped at the operating length.</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

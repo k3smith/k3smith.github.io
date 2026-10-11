@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 8.1-A: Compression Spring Geometry and Forces | MET 320</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 8.1-A: Compression Spring Geometry and Forces", "statement": "An industrial poppet-valve return spring has wire diameter $D_w=0.125\\ \\text{in}$, mean coil diameter $D_m=1.000\\ \\text{in}$, $N_a=10$ active coils, squared-and-ground ends, free length $L_f=3.00\\ \\text{in}$, installed length $L_i=2.25\\ \\text{in}$, and operating length $L_o=1.75\\ \\text{in}$. Music wire (ASTM A228), $G=11.85\\times10^6\\ \\text{psi}$. Find the spring index, OD, ID, total coils, solid length, spring rate, and the installed, operating, and solid forces."};
+var SKETCH = '<svg viewBox="0 0 320 240" role="img" aria-label="Helical compression spring side view with mean diameter, wire diameter, and free length labeled.">'
++ '<line x1="80" y1="30" x2="220" y2="30" stroke="#1F3A5F" stroke-width="3"/>'
++ '<line x1="80" y1="210" x2="220" y2="210" stroke="#1F3A5F" stroke-width="3"/>'
++ '<path d="M90,30 L210,55 L90,80 L210,105 L90,130 L210,155 L90,180 L210,205" fill="none" stroke="#1F3A5F" stroke-width="2.2"/>'
++ '<line x1="90" y1="226" x2="210" y2="226" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="90" y1="221" x2="90" y2="231" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="210" y1="221" x2="210" y2="231" stroke="#5a6b80" stroke-width="1"/>'
++ '<text x="135" y="239" font-size="10" fill="#5a6b80">D_m = 1.000</text>'
++ '<line x1="258" y1="30" x2="258" y2="210" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="253" y1="30" x2="263" y2="30" stroke="#5a6b80" stroke-width="1"/>'
++ '<line x1="253" y1="210" x2="263" y2="210" stroke="#5a6b80" stroke-width="1"/>'
++ '<text x="266" y="124" font-size="10" fill="#5a6b80">L_f = 3.00</text>'
++ '<circle cx="210" cy="105" r="5" fill="none" stroke="#D85A30" stroke-width="2"/>'
++ '<line x1="216" y1="100" x2="248" y2="52" stroke="#D85A30" stroke-width="1"/>'
++ '<text x="200" y="46" font-size="10" fill="#D85A30">D_w = 0.125</text>'
++ '</svg>';
+var STEPS = [{"label": "Restate", "title": "Restate the problem", "html": "<p>A valve return spring is fully specified by its wire and coil geometry. The task is the <em>geometric characterization</em>: convert the given diameters and coil count into the spring index, outside/inside diameters, total coils and solid length, then use the spring rate to get the force at each working length. These values feed the stress check on Page 8.2.</p>"}, {"label": "Given/Find", "title": "Given and Find", "html": "<ul class='kv'><li>$D_w=0.125\\ \\text{in}$, $D_m=1.000\\ \\text{in}$, $N_a=10$</li><li>Squared-and-ground ends; $L_f=3.00$, $L_i=2.25$, $L_o=1.75\\ \\text{in}$</li><li>Music wire (A228), $G=11.85\\times10^6\\ \\text{psi}$</li></ul><p><strong>Find:</strong> $C$, OD, ID, $N_t$, $L_s$, spring rate $k$, and forces $F_i,\\ F_o,\\ F_s$.</p>"}, {"label": "Sketch", "title": "Spring geometry", "html": "<p>Side view of the helical compression spring. $D_m$ is the mean coil diameter; $D_w$ the wire diameter; $L_f$ the free (unloaded) length. Squared-and-ground ends add two inactive coils.</p>__SKETCH__<p class='cite'>Reference: Mott &sect;18-2, &sect;18-3 (geometry and spring rate); Eq. 18-9 (rate).</p>"}, {"label": "Equations", "title": "Equations", "html": "<p class='eq-label'>Index and diameters:</p>$$C=\\frac{D_m}{D_w},\\qquad OD=D_m+D_w,\\qquad ID=D_m-D_w$$<p class='eq-label'>Coils and solid length (squared and ground):</p>$$N_t=N_a+2,\\qquad L_s=N_t\\,D_w$$<p class='eq-label'>Spring rate and force at a length $L$:</p>$$k=\\frac{G\\,D_w^4}{8\\,D_m^3\\,N_a},\\qquad F=k\\,(L_f-L)$$"}, {"label": "Calculate", "title": "Calculations", "html": "<div class='calc'>$$C=\\frac{1.000}{0.125}=\\textcolor{#D85A30}{8}\\quad(5\\text{--}12\\ \\checkmark)$$</div><div class='calc'>$$OD=1.000+0.125=\\textcolor{#D85A30}{1.125\\ \\text{in}},\\qquad ID=1.000-0.125=\\textcolor{#D85A30}{0.875\\ \\text{in}}$$</div><div class='calc'>$$N_t=10+2=12,\\qquad L_s=12(0.125)=\\textcolor{#D85A30}{1.500\\ \\text{in}}$$</div><div class='calc'>$$k=\\frac{(11.85\\times10^6)(0.125)^4}{8(1.000)^3(10)}=\\frac{2893}{80}=\\textcolor{#D85A30}{36.2\\ \\text{lb/in}}$$</div><div class='calc'>$$F_i=36.2(3.00-2.25)=\\textcolor{#D85A30}{27.1\\ \\text{lb}}$$$$F_o=36.2(3.00-1.75)=\\textcolor{#D85A30}{45.2\\ \\text{lb}}$$$$F_s=36.2(3.00-1.50)=\\textcolor{#D85A30}{54.2\\ \\text{lb}}$$</div>"}, {"label": "Check", "title": "Checks", "html": "<ul class='kv'><li><strong>Index:</strong> $C=8$ sits mid-range (5&ndash;12) &#10003; &mdash; easy to coil, moderate Wahl factor.</li><li><strong>Does not go solid:</strong> $L_o=1.75>L_s=1.50\\ \\text{in}$ &#10003;; clearance $=0.25\\ \\text{in}=2D_w$.</li><li><strong>Force ordering:</strong> $F_i<F_o<F_s$ &#10003; (force rises as the spring shortens).</li></ul>"}, {"label": "Result", "title": "Result", "html": "<table class='results'><tr><th>Quantity</th><th>Value</th></tr><tr><td>Spring index $C$</td><td>8</td></tr><tr><td>OD / ID</td><td>1.125 / 0.875 in</td></tr><tr><td>Total coils $N_t$ / solid length $L_s$</td><td>12 / 1.500 in</td></tr><tr><td>Spring rate $k$</td><td>36.2 lb/in</td></tr><tr><td>Forces $F_i$ / $F_o$ / $F_s$</td><td>27.1 / 45.2 / 54.2 lb</td></tr></table><p><strong>Carry forward:</strong> these geometry and force values feed the Page 8.2 stress, set, and buckling checks (Worked Example 8.2-A).</p>"}];
+
+STEPS.forEach(function(s){ if(s.html) s.html = s.html.split('__SKETCH__').join(SKETCH); });
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

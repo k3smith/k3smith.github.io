@@ -266,6 +266,32 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 8,
+        title: 'Springs',
+        examples: [
+          {
+            file: 'M08-WE81A-compression-geometry.html',
+            name: 'Worked Example 8.1-A: Compression Spring Geometry and Forces',
+            description: 'Converts the valve-spring wire and coil geometry into index, OD/ID, total coils, and solid length, then uses the spring rate to find the installed, operating, and solid forces.',
+          },
+          {
+            file: 'M08-WE82A-compression-stress-buckling.html',
+            name: 'Worked Example 8.2-A: Compression Spring Stress and Buckling Check',
+            description: 'Finds the Wahl factor and operating shear stress, compares to the Fig. 18-9 design stress, checks the solid-length set condition, and checks buckling with Fig. 18-15.',
+          },
+          {
+            file: 'M08-WE83A-compression-design.html',
+            name: 'Worked Example 8.3-A: Compression Spring Design (Mott Method 1)',
+            description: 'Runs Mott Method 1 to design a bore-guided die spring: spring rate and free length, trial wire from Eq. 18-7, actual stress and coils, and the fit, set, and buckling checks.',
+          },
+          {
+            file: 'M08-WE84A-extension-hooks.html',
+            name: 'Worked Example 8.4-A: Extension Spring Body and Hook Stresses',
+            description: 'Checks the coil-body shear and the two extension-spring hook stresses (Point A bending via Fig. 18-25, Point B torsion via Fig. 18-9) and shows the hooks govern over the body.',
+          },
+        ],
+      },
     ],
   },
   {
