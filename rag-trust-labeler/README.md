@@ -1,8 +1,8 @@
 # RAGStudy trust labeler (GitHub Pages)
 
-Blind human labels for Phase 6 judge validation: **correct / faithful / attributed**,
-optional citation-verification timer (RQ5). Same Sheets + JSONP coverage pattern as
-[lo-labeler](../lo-labeler/).
+Blind human labels for Phase 6 / Stage A judge validation: **correct / faithful /
+attributed**, required **confidence 1–5**, optional citation-verification timer
+(RQ5). Same Sheets + JSONP coverage pattern as [lo-labeler](../lo-labeler/).
 
 Public URL (after push): https://k3smith.github.io/rag-trust-labeler/
 
@@ -10,10 +10,15 @@ Public URL (after push): https://k3smith.github.io/rag-trust-labeler/
 
 1. Rater enters stable initials.
 2. Page reads Sheet coverage (JSONP).
-3. Offers a random item with fewer than `targetRatings` (default **2**) distinct
+3. Offers a random item with fewer than `targetRatings` (default **3**) distinct
    raters that this rater has not already labeled.
-4. On save, appends a Sheet row and draws the next item.
+4. On save, appends a Sheet row (incl. confidence) and draws the next item.
 5. Gold answers and auto `TrustReport` scores are **never** in the item JSON.
+
+**Adjudication (third rater):** set `targetRatings: 3` in `config.js` **and**
+`TARGET_RATINGS = 3` in Apps Script, redeploy the web app, then run
+`ensureHeader` so the Sheet gains a `confidence` column. Decision rules live in
+RAGStudy `docs/phase9/adjudication_decision_rules_2026-10-10.md`.
 
 ## Contents
 

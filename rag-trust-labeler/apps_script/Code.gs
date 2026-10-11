@@ -10,13 +10,16 @@
  *    - Who has access: Anyone
  * 5. Paste the web-app URL into rag-trust-labeler/config.js → sheetWebAppUrl
  *
+ * If upgrading an existing Sheet: add a "confidence" column at the end of
+ * the header row (column L), or clear the sheet and re-run ensureHeader.
+ *
  * Endpoints:
  * - GET  ?callback=fn → JSONP coverage { target, labels:[{item_id,rater_id}] }
  * - POST text/plain JSON → append one label row
  */
 
 var SHEET_NAME = "labels";
-var TARGET_RATINGS = 2;
+var TARGET_RATINGS = 3;
 
 var HEADER = [
   "timestamp",
@@ -30,6 +33,7 @@ var HEADER = [
   "citation_seconds",
   "benchmark_id",
   "client",
+  "confidence",
 ];
 
 var CORRECT_OK = {
@@ -40,11 +44,26 @@ var CORRECT_OK = {
   na: 1,
 };
 var YN_OK = { yes: 1, no: 1, na: 1 };
+var CONF_OK = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1 };
 
 function ensureHeader() {
   var sh = _sheet();
   if (sh.getLastRow() === 0) {
     sh.appendRow(HEADER);
+    return;
+  }
+  // Upgrade: ensure confidence column exists on row 1
+  var lastCol = sh.getLastColumn();
+  var headers = sh.getRange(1, 1, 1, Math.max(lastCol, HEADER.length)).getValues()[0];
+  var hasConf = false;
+  for (var i = 0; i < headers.length; i++) {
+    if (String(headers[i] || "").trim().toLowerCase() === "confidence") {
+      hasConf = true;
+      break;
+    }
+  }
+  if (!hasConf) {
+    sh.getRange(1, HEADER.length).setValue("confidence");
   }
 }
 
@@ -84,6 +103,7 @@ function doPost(e) {
         : "",
       data.benchmark_id || "",
       data.client || "",
+      data.confidence === 0 || data.confidence ? data.confidence : "",
     ]);
     return _json({ ok: true });
   } catch (err) {

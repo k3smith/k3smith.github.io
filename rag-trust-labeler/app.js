@@ -11,11 +11,12 @@
     "na",
   ]);
   const YN_OK = new Set(["yes", "no", "na"]);
+  const CONF_OK = new Set(["1", "2", "3", "4", "5"]);
 
   const TARGET = () =>
     Number(LABELER_CONFIG.targetRatings) > 0
       ? Number(LABELER_CONFIG.targetRatings)
-      : 2;
+      : 3;
 
   const els = {
     setup: document.getElementById("setup"),
@@ -57,8 +58,8 @@
   /** @type {object|null} */
   let current = null;
   let raterId = "";
-  /** @type {{correct:string|null,faithful:string|null,attributed:string|null}} */
-  let draft = { correct: null, faithful: null, attributed: null };
+  /** @type {{correct:string|null,faithful:string|null,attributed:string|null,confidence:string|null}} */
+  let draft = { correct: null, faithful: null, attributed: null, confidence: null };
 
   let timerStartedAt = null;
   let timerSeconds = null;
@@ -172,7 +173,7 @@
   }
 
   function resetDraft() {
-    draft = { correct: null, faithful: null, attributed: null };
+    draft = { correct: null, faithful: null, attributed: null, confidence: null };
     els.notes.value = "";
     document.querySelectorAll(".btn-row button").forEach((b) => {
       b.classList.remove("selected");
@@ -185,7 +186,8 @@
     const ok =
       CORRECT_OK.has(draft.correct || "") &&
       YN_OK.has(draft.faithful || "") &&
-      YN_OK.has(draft.attributed || "");
+      YN_OK.has(draft.attributed || "") &&
+      CONF_OK.has(draft.confidence || "");
     els.save.disabled = !ok;
   }
 
@@ -351,6 +353,7 @@
       correct: draft.correct,
       faithful: draft.faithful,
       attributed: draft.attributed,
+      confidence: draft.confidence,
       notes: (els.notes.value || "").trim(),
       citation_seconds: timerSeconds,
       ts,
@@ -367,6 +370,7 @@
       correct: record.correct,
       faithful: record.faithful,
       attributed: record.attributed,
+      confidence: record.confidence,
       notes: record.notes,
       citation_seconds: record.citation_seconds == null ? "" : record.citation_seconds,
       benchmark_id: it.benchmark_id || "",
@@ -403,6 +407,7 @@
         correct: a.correct,
         faithful: a.faithful,
         attributed: a.attributed,
+        confidence: a.confidence == null ? "" : a.confidence,
         notes: a.notes || "",
         citation_seconds: a.citation_seconds == null ? "" : a.citation_seconds,
         benchmark_id: it.benchmark_id || "",
@@ -420,6 +425,7 @@
       "correct",
       "faithful",
       "attributed",
+      "confidence",
       "notes",
       "citation_seconds",
       "benchmark_id",
