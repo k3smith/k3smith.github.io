@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 1.3-A: Where Does Each Error Land? | MFET 410</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  table.results td.num, table.results th.num { text-align:right; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .decision { border:2px solid var(--accent); border-radius:6px; padding:8px 12px; margin:10px 0; background:#fdf4f0; }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  .fig { text-align:center; margin:8px 0; }
+  .fig .cap { font-size:.82rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 1.3-A: Where Does Each Error Land?", "statement": "On the VMC-R1, a 6061-T6 aluminum block gets (1) a finished vertical wall located in $X$, side-milled with a $\\varnothing16$ mm end mill, and (2) a step face whose height is measured from a datum face. The datum face was cut first thing in the morning; the step face is cut 30 minutes later. Known conditions: the X-axis pitch angle (rotation about Y, $E_{BX}$) differs by <strong>6 arcsec</strong> between the datum and the wall positions; the Abbe offset between the ballscrew line and the tool tip is <strong>180 mm</strong>; the spindle grows <strong>18 \u00b5m</strong> in Z over its first 30 minutes (spec sheet); the radial cutting force normal to the wall is <strong>300 N</strong>; tool-plus-holder stiffness at the tip is <strong>15 N/\u00b5m</strong>. Classify each error, size it, and say which feature it lands on."};
+var STEPS = [{"label": "Requirement", "title": "Requirement", "html": "<p><strong>Given:</strong> $\\Delta\\varepsilon = 6''$, Abbe offset $h=180$ mm; spindle growth $\\delta_{th}=18\\ \\mu$m (Z, first 30 min); $F_n=300$ N, $k=15$ N/\u00b5m.</p><p><strong>Find:</strong> for each error source, its class, whether it is systematic or random, its size, and which part dimension it affects.</p><p><strong>Decision to defend:</strong> which error deserves attention first on this part.</p>"}, {"label": "Model", "title": "Model", "html": "<p><strong>Abbe error.</strong> When the point being positioned (the tool tip) is offset by $h$ from the line where position is measured (the screw), an angular error $\\varepsilon$ becomes a linear error:</p>$$\\delta_{Abbe}=h\\tan\\varepsilon\\approx h\\,\\varepsilon\\ (\\text{rad}),\\qquad 1''=4.848\\times10^{-6}\\ \\text{rad}$$<p>The offset $h$ is the distance from the ballscrew to the tool tip, so it changes with stickout. This end mill is at 180 mm. The boring bar in Worked Example 1.4-A is at 120 mm.</p><p><strong>Load-induced deflection.</strong> The tool behaves as a spring at the tip: $\\delta=F/k$. Only the component <em>normal to the finished surface</em> changes the dimension. That is the surface's <strong>sensitive direction</strong>.</p><p><strong>Thermal.</strong> Spindle growth moves the tool tip toward the table in $-Z$, so a face cut later is cut deeper than one cut earlier.</p><p class='note'>Error classes follow Ramesh, Mannan &amp; Poo (2000), <em>Int. J. Machine Tools &amp; Manufacture</em> 40(9); the $E_{BX}$ notation follows ISO 230-1.</p>"}, {"label": "Compute", "title": "Compute", "html": "<div class='calc'>$$\\delta_{Abbe}=180\\ \\text{mm}\\times(6\\times4.848\\times10^{-6})=5.2\\times10^{-3}\\ \\text{mm}=5.2\\ \\mu\\text{m}\\ \\ (X)$$</div><div class='calc'>$$\\delta_{defl}=\\frac{300\\ \\text{N}}{15\\ \\text{N}/\\mu\\text{m}}=20\\ \\mu\\text{m}\\ \\ (X,\\ \\text{normal to the wall})$$</div><div class='calc'>$$\\delta_{th}=18\\ \\mu\\text{m}\\ \\ (Z):\\ \\text{step face cut 18 }\\mu\\text{m deeper relative to the datum}$$</div><p>The tool deflects <em>away</em> from the wall, so the wall is left 20 \u00b5m proud: there is extra material where the drawing wanted none.</p>"}, {"label": "Check", "title": "Check", "html": "<ul><li><strong>Units:</strong> mm \u00d7 rad = mm \u2713; N \u00f7 (N/\u00b5m) = \u00b5m \u2713.</li><li><strong>Sensitive direction:</strong> the feed-direction component of the cutting force deflects the tool <em>along</em> the wall. It does not change the wall location. Only the 300 N normal component counts.</li><li><strong>Common-mode cancellation:</strong> if the drawing dimensions the wall from another wall cut by the same tool at the same engagement, part of the 20 \u00b5m cancels. On a boss (both walls cut from outside) it doubles: the boss comes out about 40 \u00b5m wide.</li><li><strong>Size against the spec:</strong> the only error here that is in the \u00b10.005 mm positioning spec at all is the 5.2 \u00b5m geometric one.</li></ul>"}, {"label": "Defend", "title": "Defend", "html": "<table class='results'><tr><th>Source</th><th>Class</th><th>Sys./random</th><th>Lands on</th><th class='num'>\u00b5m</th></tr><tr><td>Pitch error \u00d7 Abbe offset</td><td>Geometric (quasi-static)</td><td>Systematic</td><td>Wall location, X</td><td class='num'>5.2</td></tr><tr><td>Tool deflection</td><td>Load-induced</td><td>Systematic for fixed engagement; varies with tool wear</td><td>Wall location, X</td><td class='num'>20</td></tr><tr><td>Spindle growth</td><td>Thermal</td><td>Systematic in time; random across shifts</td><td>Step height, Z</td><td class='num'>18</td></tr></table><div class='decision'><strong>Decision:</strong> attack the load-induced and thermal errors first. They are 4 and 3.5 times the geometric error, and neither appears on the spec sheet. Practical fixes: a spring pass or lighter finishing engagement for the wall; a spindle warm-up before cutting the datum, or cutting the datum and the step in the same thermal state.</div><p class='note'>Course spine: this is <em>achieved part accuracy</em>. Modules 2, 6, and 7 return to the force, fixture, and dynamics terms with real models.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 9000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

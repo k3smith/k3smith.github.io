@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Module 1 Simulator: Ballbar and Error Budget | MFET 410</title>
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; --ok:#2e7d4f; --bad:#b3261e; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .wrap { max-width:960px; margin:0 auto; padding:14px; }
+  h1 { color:var(--navy); font-size:1.25rem; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:.88rem; margin:0 0 12px; }
+  .tabs { display:flex; gap:6px; border-bottom:2px solid var(--navy); margin-bottom:12px; flex-wrap:wrap; }
+  .tab { background:#eef3f9; color:var(--navy); border:1px solid #cfe0f2; border-bottom:none; border-radius:6px 6px 0 0; padding:8px 14px; cursor:pointer; font-size:.92rem; }
+  .tab.active { background:var(--navy); color:#fff; }
+  .panel { display:none; } .panel.active { display:block; }
+  .grid { display:grid; grid-template-columns: 300px 1fr; gap:14px; }
+  @media (max-width:760px){ .grid { grid-template-columns:1fr; } }
+  .box { border:1px solid #cfe0f2; border-radius:8px; padding:10px 12px; background:#fbfcfe; }
+  .box h3 { margin:0 0 8px; font-size:.95rem; color:var(--navy); }
+  .ctl { margin:6px 0 10px; font-size:.84rem; }
+  .ctl label { display:flex; justify-content:space-between; gap:6px; }
+  .ctl .val { font-weight:bold; color:var(--navy); white-space:nowrap; }
+  input[type=range] { width:100%; }
+  .row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:6px 0; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:7px 12px; cursor:pointer; font-size:.84rem; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button.sel { background:var(--accent); }
+  select, input[type=number], input[type=text] { font-size:.85rem; padding:4px 6px; border:1px solid #9cb8d6; border-radius:4px; }
+  .readout { display:grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap:8px; margin-top:8px; }
+  .stat { background:#fff; border:1px solid #dbe6f2; border-radius:6px; padding:6px 8px; }
+  .stat .k { font-size:.74rem; color:var(--muted); }
+  .stat .v { font-size:1.05rem; font-weight:bold; color:var(--navy); }
+  .plotbox { text-align:center; }
+  svg { max-width:100%; height:auto; }
+  .note { font-size:.82rem; color:var(--muted); }
+  .mystery { border:2px dashed var(--accent); background:#fdf4f0; border-radius:8px; padding:8px 10px; margin:8px 0; font-size:.86rem; }
+  table.bud { width:100%; border-collapse:collapse; font-size:.86rem; }
+  table.bud th, table.bud td { border:1px solid #cfe0f2; padding:5px 6px; }
+  table.bud th { background:var(--navy); color:#fff; text-align:left; }
+  table.bud td input[type=text] { width:100%; min-width:16rem; }
+  table.bud td input[type=number] { width:80px; }
+  .bar { height:14px; background:var(--navy); border-radius:2px; }
+  .bar.sys { background:var(--accent); }
+  .verdict { font-weight:bold; padding:8px 10px; border-radius:6px; margin-top:8px; }
+  .verdict.ok { background:#e7f4ec; color:var(--ok); border:1px solid #9fd0b2; }
+  .verdict.bad { background:#fbe9e7; color:var(--bad); border:1px solid #efb3ab; }
+  .legend span { display:inline-block; margin-right:12px; font-size:.82rem; }
+  .sw { display:inline-block; width:18px; height:3px; vertical-align:middle; margin-right:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Module 1 Simulator: Ballbar Diagnosis and Error Budget</h1>
+  <p class="sub">MFET 410 · Machine: VMC-R1 course reference machine · Use with the Module 1 Simulator Activity page.</p>
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="bb" role="tab" type="button">A. Ballbar test</button>
+    <button class="tab" data-tab="eb" role="tab" type="button">B. Error budget</button>
+  </div>
+
+  <!-- ===================== BALLBAR ===================== -->
+  <div class="panel active" id="bb">
+    <div class="grid">
+      <div>
+        <div class="box">
+          <h3>Mode</h3>
+          <div class="row">
+            <button type="button" id="m-free" class="sel">Explore</button>
+            <button type="button" class="ghost mbtn" data-m="A">Mystery A</button>
+            <button type="button" class="ghost mbtn" data-m="B">Mystery B</button>
+            <button type="button" class="ghost mbtn" data-m="C">Mystery C</button>
+          </div>
+          <div class="mystery" id="mys-msg" style="display:none"></div>
+        </div>
+        <div class="box" style="margin-top:10px">
+          <h3>Test settings</h3>
+          <div class="ctl"><label>Radius R <span class="val" id="v-R"></span></label><select id="R"><option>50</option><option selected>100</option><option>150</option></select> mm</div>
+          <div class="ctl"><label>Feed F <span class="val" id="v-F"></span></label><input type="range" id="F" min="250" max="5000" step="250" value="1000"></div>
+          <div class="ctl"><label>Plot scale <span class="val" id="v-sc"></span></label><select id="sc"><option value="2">2 µm/div</option><option value="5" selected>5 µm/div</option><option value="10">10 µm/div</option><option value="20">20 µm/div</option></select></div>
+          <div class="row"><label><input type="checkbox" id="showccw" checked> CCW</label><label><input type="checkbox" id="showcw" checked> CW</label></div>
+        </div>
+        <div class="box" style="margin-top:10px">
+          <h3 id="err-h">Machine errors</h3>
+          <div class="ctl"><label>Squareness S <span class="val" id="v-S"></span></label><input type="range" id="S" min="-200" max="200" step="5" value="0"></div>
+          <div class="ctl"><label>Scale mismatch, X <span class="val" id="v-ex"></span></label><input type="range" id="ex" min="-60" max="60" step="2" value="0"></div>
+          <div class="ctl"><label>Scale mismatch, Y <span class="val" id="v-ey"></span></label><input type="range" id="ey" min="-60" max="60" step="2" value="0"></div>
+          <div class="ctl"><label>Backlash, X <span class="val" id="v-bx"></span></label><input type="range" id="bx" min="0" max="12" step="0.5" value="0"></div>
+          <div class="ctl"><label>Backlash, Y <span class="val" id="v-by"></span></label><input type="range" id="by" min="0" max="12" step="0.5" value="0"></div>
+          <div class="ctl"><label>Servo mismatch Δt (X lags Y) <span class="val" id="v-dt"></span></label><input type="range" id="dt" min="-2" max="2" step="0.05" value="0"></div>
+          <div class="ctl"><label>Reversal spike, X <span class="val" id="v-px"></span></label><input type="range" id="px" min="0" max="10" step="0.5" value="0"></div>
+          <div class="ctl"><label>Reversal spike, Y <span class="val" id="v-py"></span></label><input type="range" id="py" min="0" max="10" step="0.5" value="0"></div>
+          <div class="ctl"><label>Position loop gain Kv (both axes) <span class="val" id="v-kv"></span></label><input type="range" id="kv" min="10" max="100" step="5" value="100"></div>
+          <div class="row"><button type="button" class="ghost" id="reset">Reset errors to zero</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="box plotbox">
+          <div class="legend" id="legend"></div>
+          <div id="plot"></div>
+          <div class="readout" id="readout"></div>
+          <p class="note" id="plotnote">Radial deviation from the nominal circle, magnified. Dashed rings are one division apart. X reverses at 0° and 180°; Y reverses at 90° and 270°. With every slider at zero, G is still about 0.8 µm because the trace includes a little measurement noise. A mystery match leaves a small RMS for the same reason.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ERROR BUDGET ===================== -->
+  <div class="panel" id="eb">
+    <div class="box">
+      <h3>Feature and tolerance</h3>
+      <div class="row">
+        <label>Feature: <input type="text" id="feat" value="Bore center distance, 240 mm along X" style="width:300px"></label>
+        <label>Tolerance ± <input type="number" id="tol" value="10" step="0.5" min="0.5"> µm</label>
+      </div>
+      <div class="row">
+        <span class="note">Load a preset:</span>
+        <button type="button" class="ghost pre" data-p="p1">WE 1.4-A, pass 1 (as run)</button>
+        <button type="button" class="ghost pre" data-p="p2">WE 1.4-A, pass 2 (corrected)</button>
+        <button type="button" class="ghost pre" data-p="p3">Pass 2 + linear scales</button>
+        <button type="button" class="ghost pre" data-p="blank">Blank</button>
+      </div>
+    </div>
+    <div class="box" style="margin-top:10px; overflow-x:auto">
+      <h3>Contributors (state every value as ± at about 2σ, in µm)</h3>
+      <table class="bud" id="budtbl">
+        <thead><tr><th>Include</th><th>Contributor</th><th>± µm</th><th>Type</th><th style="width:28%">Share of total</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="row"><button type="button" id="addrow">Add contributor</button></div>
+    </div>
+    <div class="box" style="margin-top:10px">
+      <h3>Result</h3>
+      <div class="readout" id="budout"></div>
+      <div id="verdict"></div>
+      <p class="note">Total = Σ systematic + √(Σ random²). Worst case = Σ of all lines. Bar shares: systematic lines by value, random lines by their share of the RSS (variance fraction × RSS). The C<sub>p</sub> line is a Module 8 preview and assumes the total is a 2σ bound on a centered process.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---------- tabs ----------
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active'); document.getElementById(t.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  // ---------- ballbar model ----------
+  var ids=['S','ex','ey','bx','by','dt','px','py','kv'];
+  var units={S:' µm/m',ex:' µm/m',ey:' µm/m',bx:' µm',by:' µm',dt:' ms',px:' µm',py:' µm',kv:' 1/s'};
+  var el=function(i){return document.getElementById(i);};
+  var MYS={
+    A:{F:2000,R:100,p:{S:0,ex:0,ey:0,bx:1.0,by:1.0,dt:0.6,px:0,py:0,kv:100},msg:'Mystery A was recorded at R = 100 mm, F = 2000 mm/min. The grey trace is the machine. Adjust the error sliders until your model (colored) matches it, then record your values.'},
+    B:{F:1000,R:100,p:{S:0,ex:0,ey:40,bx:0,by:5,dt:0,px:0,py:0,kv:100},msg:'Mystery B was recorded at R = 100 mm, F = 1000 mm/min. Match the grey trace with your model, then record your values.'},
+    C:{F:1000,R:150,p:{S:-80,ex:0,ey:0,bx:0,by:0,dt:0,px:5,py:0,kv:100},msg:'Mystery C was recorded at R = 150 mm, F = 1000 mm/min. Match the grey trace with your model, then record your values.'}
+  };
+  var mode='free';
+  function P(){ var o={}; ids.forEach(function(i){o[i]=parseFloat(el(i).value);}); return o; }
+  function hash(n){ var x=Math.sin(n*12.9898+78.233)*43758.5453; return x-Math.floor(x); }
+  // At the exact reversal sample the axis velocity is zero. Take the sign just after the reversal so the step is the full backlash, not a one-sample hole.
+  function velSign(component, th, dir, axis){
+    if(Math.abs(component)>1e-8) return Math.sign(component);
+    var th2=th+dir*1e-3;
+    if(axis==='x') return Math.sign(-dir*Math.sin(th2));
+    return Math.sign(dir*Math.cos(th2));
+  }
+  // radial deviation (um) along the circle for a direction (+1 CCW, -1 CW)
+  function traceDev(p,R,F,dir,noiseSeed){
+    var N=720, out=[]; var Fs=F/60; // mm/s
+    var w=Fs/R; // rad/s
+    var phi=w*(p.dt/1000); // rad
+    var lag = (p.kv<100) ? -(Fs*Fs)/(2*R*p.kv*p.kv)*1000 : 0; // um radius loss, no feedforward
+    for(var k=0;k<=N;k++){
+      var th=2*Math.PI*k/N, c=Math.cos(th), s=Math.sin(th);
+      var d=0;
+      d += R*1000*(p.S*1e-6)/2*Math.sin(2*th);              // squareness
+      d += R*1000*((p.ex*1e-6)*c*c + (p.ey*1e-6)*s*s);       // scale mismatch
+      var vx=-dir*s, vy=dir*c;                                // velocity direction
+      d += (p.bx/2)*velSign(vx,th,dir,'x')*c + (p.by/2)*velSign(vy,th,dir,'y')*s; // backlash
+      d += dir*(R*1000*phi/2)*Math.sin(2*th);                 // servo mismatch (flips with direction)
+      d += lag;
+      // reversal spikes: X reverses at th=0,pi ; Y at pi/2, 3pi/2. Angle travelled since reversal:
+      function since(rev){ var a=dir*(th-rev); a=((a%(2*Math.PI))+2*Math.PI)%(2*Math.PI); return a; }
+      if(p.px>0){ var a1=Math.min(since(0),since(Math.PI)); d += p.px*Math.exp(-a1/0.05)*Math.abs(c); }
+      if(p.py>0){ var a2=Math.min(since(Math.PI/2),since(3*Math.PI/2)); d += p.py*Math.exp(-a2/0.05)*Math.abs(s); }
+      if(noiseSeed){ d += 0.25*Math.sin(7*th+noiseSeed) + 0.35*(hash(k+noiseSeed*1000)-0.5); }
+      out.push([th,d]);
+    }
+    return out;
+  }
+  function G(tr){ var mn=1e9,mx=-1e9; tr.forEach(function(q){mn=Math.min(mn,q[1]);mx=Math.max(mx,q[1]);}); return mx-mn; }
+  function draw(){
+    var p=P(), R=parseFloat(el('R').value), F=parseFloat(el('F').value), sc=parseFloat(el('sc').value);
+    ids.forEach(function(i){ el('v-'+i).textContent=(i==='kv'&&p.kv>=100?'∞ (feedforward on)':p[i]+units[i]); });
+    el('v-R').textContent=R+' mm'; el('v-F').textContent=F+' mm/min'; el('v-sc').textContent='';
+    var size=520, c=260, base=132, div=26, pxPerUm=div/sc; // one division = 26 px, with room for labels
+    var svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'" role="img" aria-label="Ballbar polar plot">'];
+    for(var r=-3;r<=3;r++){
+      var rr=base+r*div;
+      svg.push('<circle cx="'+c+'" cy="'+c+'" r="'+rr+'" fill="none" stroke="'+(r===0?'#1F3A5F':'#cfd8e3')+'" stroke-width="'+(r===0?1.2:0.8)+'"'+(r===0?'':' stroke-dasharray="3 3"')+'/>');
+    }
+    var outer=base+3*div, inner=base-3*div;
+    svg.push('<text x="'+(c+8)+'" y="'+(c-outer-2)+'" font-size="11" fill="#5a6b80">+'+(3*sc)+' µm</text>');
+    svg.push('<text x="'+(c+8)+'" y="'+(c-inner-2)+'" font-size="11" fill="#5a6b80">−'+(3*sc)+' µm</text>');
+    var labelR=outer+22;
+    for(var a=0;a<360;a+=45){
+      var rad=a*Math.PI/180, x2=c+(outer+6)*Math.cos(rad), y2=c-(outer+6)*Math.sin(rad);
+      svg.push('<line x1="'+c+'" y1="'+c+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#e3e9f0"/>');
+      var lx=c+labelR*Math.cos(rad), ly=c-labelR*Math.sin(rad)+4;
+      svg.push('<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" font-size="12" text-anchor="middle" fill="#1F3A5F">'+a+'°</text>');
+    }
+    function poly(tr,col,dash,wid){
+      var pts=tr.map(function(q){ var rr=base+Math.max(-4*div,Math.min(4*div,q[1]*pxPerUm)); return (c+rr*Math.cos(q[0])).toFixed(1)+','+(c-rr*Math.sin(q[0])).toFixed(1); }).join(' ');
+      return '<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="'+wid+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';
+    }
+    var out=[], leg=[];
+    if(mode!=='free'){
+      var m=MYS[mode];
+      var mccw=traceDev(m.p,m.R,m.F,1,3), mcw=traceDev(m.p,m.R,m.F,-1,5);
+      if(el('showccw').checked) svg.push(poly(mccw,'#9aa5b1','',3.2));
+      if(el('showcw').checked) svg.push(poly(mcw,'#c3cad2','',3.2));
+      leg.push('<span><span class="sw" style="background:#9aa5b1"></span>Machine CCW</span><span><span class="sw" style="background:#c3cad2"></span>Machine CW</span>');
+      var accw=traceDev(p,R,F,1,0), acw=traceDev(p,R,F,-1,0);
+      var rms=0,n=0; for(var k=0;k<accw.length;k++){ rms+=Math.pow(accw[k][1]-mccw[k][1],2)+Math.pow(acw[k][1]-mcw[k][1],2); n+=2; }
+      rms=Math.sqrt(rms/n);
+      out.push(['Machine G (CCW)',G(mccw).toFixed(1)+' µm'],['Machine G (CW)',G(mcw).toFixed(1)+' µm'],['Model vs machine, RMS',rms.toFixed(2)+' µm']);
+      if(el('showccw').checked) svg.push(poly(accw,'#1F3A5F','',1.4));
+      if(el('showcw').checked) svg.push(poly(acw,'#D85A30','4 2',1.4));
+      leg.push('<span><span class="sw" style="background:#1F3A5F"></span>Your model CCW</span><span><span class="sw" style="background:#D85A30"></span>Your model CW</span>');
+    } else {
+      var tccw=traceDev(p,R,F,1,3), tcw=traceDev(p,R,F,-1,5);
+      if(el('showccw').checked) svg.push(poly(tccw,'#1F3A5F','',1.6));
+      if(el('showcw').checked) svg.push(poly(tcw,'#D85A30','4 2',1.6));
+      leg.push('<span><span class="sw" style="background:#1F3A5F"></span>CCW</span><span><span class="sw" style="background:#D85A30"></span>CW</span>');
+      out.push(['Circular deviation G (CCW)',G(tccw).toFixed(1)+' µm'],['Circular deviation G (CW)',G(tcw).toFixed(1)+' µm'],['Bidirectional G',G(tccw.concat(tcw)).toFixed(1)+' µm']);
+    }
+    svg.push('</svg>');
+    el('plot').innerHTML=svg.join('');
+    el('legend').innerHTML=leg.join('');
+    el('readout').innerHTML=out.map(function(o){return '<div class="stat"><div class="k">'+o[0]+'</div><div class="v">'+o[1]+'</div></div>';}).join('');
+  }
+  ids.concat(['R','F','sc','showccw','showcw']).forEach(function(i){ el(i).addEventListener('input',draw); el(i).addEventListener('change',draw); });
+  el('reset').addEventListener('click',function(){ ids.forEach(function(i){ el(i).value=(i==='kv'?100:0); }); draw(); });
+  function setMode(m){
+    mode=m;
+    el('m-free').className=(m==='free'?'sel':'ghost');
+    document.querySelectorAll('.mbtn').forEach(function(b){ b.className='mbtn '+(b.getAttribute('data-m')===m?'sel':'ghost'); });
+    if(m==='free'){ el('mys-msg').style.display='none'; el('R').disabled=false; el('F').disabled=false; el('err-h').textContent='Machine errors'; }
+    else { var M=MYS[m]; el('mys-msg').style.display='block'; el('mys-msg').textContent=M.msg; el('R').value=M.R; el('F').value=M.F; el('R').disabled=true; el('F').disabled=true; ids.forEach(function(i){ el(i).value=(i==='kv'?100:0); }); el('err-h').textContent='Your model of the machine'; }
+    draw();
+  }
+  el('m-free').addEventListener('click',function(){ setMode('free'); });
+  document.querySelectorAll('.mbtn').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.getAttribute('data-m')); }); });
+  draw();
+
+  // ---------- error budget ----------
+  var PRE={
+    p1:{tol:10,rows:[['Linear positioning error, 6.7 µm/m × 0.24 m',1.6,'sys'],['Differential thermal, part 24 °C vs inspection 20 °C',11.6,'sys'],['Abbe change between the bores, 120 mm × 3″',1.7,'sys']]},
+    p2:{tol:10,rows:[['Pitch compensation residual',0.5,'sys'],['Abbe change between the bores, 120 mm × 3″',1.7,'sys'],['Repeatability of the distance, (R↑/2)√2',1.1,'rand'],['Ballscrew temperature, ±2 °C',5.5,'rand'],['Part temperature uncertainty, ±1 °C',2.9,'rand'],['Boring tool / bore center variation',1.5,'rand']]},
+    p3:{tol:10,rows:[['Pitch compensation residual',0.5,'sys'],['Abbe change between the bores, 120 mm × 3″',1.7,'sys'],['Repeatability of the distance, (R↑/2)√2',1.1,'rand'],['Linear scale accuracy, ±3 µm/m × 0.24 m',0.7,'rand'],['Part temperature uncertainty, ±1 °C',2.9,'rand'],['Boring tool / bore center variation',1.5,'rand']]},
+    blank:{tol:10,rows:[['New contributor',1.0,'rand']]}
+  };
+  var tbody=document.querySelector('#budtbl tbody');
+  function addRow(name,val,type,inc){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td style="text-align:center"><input type="checkbox" class="inc"'+(inc===false?'':' checked')+'></td>'+
+      '<td><input type="text" class="nm"></td>'+
+      '<td><input type="number" class="vl" step="0.1" min="0"></td>'+
+      '<td><select class="tp"><option value="rand">Random</option><option value="sys">Systematic</option></select></td>'+
+      '<td><div class="bar"></div><span class="note pct"></span></td>'+
+      '<td><button type="button" class="ghost del" aria-label="Remove row">✕</button></td>';
+    tr.querySelector('.nm').value=name; tr.querySelector('.vl').value=val; tr.querySelector('.tp').value=type;
+    tr.querySelectorAll('input,select').forEach(function(x){ x.addEventListener('input',calc); x.addEventListener('change',calc); });
+    tr.querySelector('.del').addEventListener('click',function(){ tr.remove(); calc(); });
+    tbody.appendChild(tr);
+  }
+  function load(k){ tbody.innerHTML=''; el('tol').value=PRE[k].tol; PRE[k].rows.forEach(function(r){ addRow(r[0],r[1],r[2]); }); calc(); }
+  function calc(){
+    var rows=Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+    var sys=0, v2=0, wc=0;
+    rows.forEach(function(tr){ var on=tr.querySelector('.inc').checked, v=Math.abs(parseFloat(tr.querySelector('.vl').value)||0), t=tr.querySelector('.tp').value; if(!on) return; wc+=v; if(t==='sys') sys+=v; else v2+=v*v; });
+    var rss=Math.sqrt(v2), tot=sys+rss, tol=parseFloat(el('tol').value)||1;
+    rows.forEach(function(tr){ var on=tr.querySelector('.inc').checked, v=Math.abs(parseFloat(tr.querySelector('.vl').value)||0), t=tr.querySelector('.tp').value;
+      var share = !on?0:(t==='sys'? v : (v2>0? (v*v/v2)*rss : 0));
+      var b=tr.querySelector('.bar'); b.style.width=Math.min(100,100*share/Math.max(tot,1e-9))+'%'; b.className='bar'+(t==='sys'?' sys':'');
+      tr.querySelector('.pct').textContent= on ? (t==='sys'? 'adds '+v.toFixed(1)+' µm' : (v2>0? (100*v*v/v2).toFixed(0)+'% of variance':'')) : 'excluded';
+    });
+    var sigma=tot/2, cp= sigma>0 ? (2*tol)/(6*sigma) : 0;
+    var stats=[['Σ systematic',sys.toFixed(1)+' µm'],['RSS of random',rss.toFixed(1)+' µm'],['Predicted total ±',tot.toFixed(1)+' µm'],['Worst-case sum ±',wc.toFixed(1)+' µm'],['Total / tolerance',(100*tot/tol).toFixed(0)+'%'],['Preview: C_p ≈',cp.toFixed(2)]];
+    el('budout').innerHTML=stats.map(function(o){return '<div class="stat"><div class="k">'+o[0]+'</div><div class="v">'+o[1]+'</div></div>';}).join('');
+    var ok=tot<=tol;
+    el('verdict').className='verdict '+(ok?'ok':'bad');
+    el('verdict').textContent= ok ? ('Predicted ±'+tot.toFixed(1)+' µm fits inside ±'+tol+' µm ('+(100*tot/tol).toFixed(0)+'% of tolerance). State the conditions that make this budget true.') : ('Predicted ±'+tot.toFixed(1)+' µm exceeds ±'+tol+' µm. Find the dominant term and decide what would have to change.');
+  }
+  el('tol').addEventListener('input',calc);
+  el('addrow').addEventListener('click',function(){ addRow('New contributor',1.0,'rand'); calc(); });
+  document.querySelectorAll('.pre').forEach(function(b){ b.addEventListener('click',function(){ load(b.getAttribute('data-p')); }); });
+  load('p2');
+})();
+</script>
+</body>
+</html>
