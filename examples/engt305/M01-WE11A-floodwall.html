@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 1.1-A: Water Load on a Floodwall | ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  pre.code { background:#1e2a38; color:#e8eef5; border-radius:6px; padding:10px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.86rem; line-height:1.45; margin:8px 0; }
+  pre.code .c { color:#8fb3d9; }
+  pre.out { background:#f5f8fc; border:1px dashed #9cb8d6; color:#1F3A5F; border-radius:6px; padding:8px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.84rem; margin:6px 0; }
+  .wf { display:inline-block; font-size:.72rem; font-weight:bold; letter-spacing:.03em; color:#fff; background:#D85A30; border-radius:3px; padding:1px 6px; margin-right:6px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 1.1-A: Water Load on a Floodwall", "statement": "A temporary floodwall holds back water $h = 3.0\\ \\text{m}$ deep. Find the resultant hydrostatic force per metre of wall length and the overturning moment about the base, using the Command Window. Repeat for a $10\\ \\text{ft}$ wall in US units. Watch the order of operations."};
+var STEPS = [{"label": "Formulate", "title": "Formulate", "html": "<p><strong>Given:</strong> $h=3.0$ m, $\\rho=1000$ kg/m\u00b3, $g=9.81$ m/s\u00b2 (SI); $h=10$ ft, $\\gamma=62.4$ lb/ft\u00b3 (US). <strong>Find:</strong> resultant force $F$ per unit length and moment $M$ about the base.</p><p><strong>Assumptions:</strong> still water, vertical wall, dry side at atmospheric pressure.</p><p>Pressure grows linearly with depth, $p=\\rho g y$, so the load diagram is a triangle:</p>$$F=\\tfrac12\\rho g h^2\\quad(\\text{SI}),\\qquad F=\\tfrac12\\gamma h^2\\quad(\\text{US}),\\qquad M=F\\cdot\\frac{h}{3}$$<p>The resultant acts at $h/3$ above the base, which is the centroid of the triangle.</p>"}, {"label": "Solve", "title": "Solve classically", "html": "<div class='calc'>$$F=\\tfrac12(1000)(9.81)(3.0)^2=44{,}145\\ \\text{N/m}\\approx 44.1\\ \\text{kN/m}$$</div><div class='calc'>$$M=44{,}145\\times\\frac{3.0}{3}=44{,}145\\ \\text{N\u00b7m/m}\\approx 44.1\\ \\text{kN\u00b7m/m}$$</div><div class='calc'>$$\\text{US: }F=\\tfrac12(62.4)(10)^2=3120\\ \\text{lb/ft},\\qquad M=3120\\times\\frac{10}{3}=10{,}400\\ \\text{lb\u00b7ft/ft}$$</div>"}, {"label": "Compute", "title": "Compute in MATLAB", "html": "<pre class='code'>rho = 1000;          <span class=\"c\">% kg/m^3</span>\ng   = 9.81;          <span class=\"c\">% m/s^2</span>\nh   = 3.0;           <span class=\"c\">% m</span>\nF = 0.5*rho*g*h^2    <span class=\"c\">% N per m of wall</span>\nM = F*h/3            <span class=\"c\">% N*m per m of wall</span></pre><pre class='out'>F =\n   4.4145e+04\nM =\n   4.4145e+04</pre><p>MATLAB applies <code>^</code> before <code>*</code>, so only $h$ is squared, which is what the formula needs. Leaving off the semicolon displays each result. MATLAB's default <code>format short</code> switches to scientific notation for large values.</p>"}, {"label": "Verify", "title": "Verify", "html": "<p><strong>Hand vs. MATLAB:</strong> 44,145 N/m both ways (0% difference).</p><p><strong>What if the parentheses are wrong?</strong></p><pre class='code'>F_wrong = (0.5*rho*g*h)^2</pre><pre class='out'>F_wrong =\n   2.1653e+08</pre><p>That is 4,900 times too large. The units give it away: 0.5*rho*g*h is a pressure (N/m\u00b2), so squaring it produces N\u00b2/m\u2074. Force per unit length must come out in N/m. Checking that the units come out right is the quickest way to catch a hierarchy error.</p><p><strong>Unit cross-check:</strong> 10 ft = 3.048 m. Scaling the unrounded SI force, $44{,}145\\ \\text{N/m}\\times(3.048/3.0)^2=45{,}569\\ \\text{N/m}=45.57\\ \\text{kN/m}$, which converts to 3122 lb/ft and agrees with 3120 lb/ft (the small difference is from rounding $\\gamma$).</p>"}, {"label": "Interpret", "title": "Interpret & communicate", "html": "<table class='results'><tr><th>Wall</th><th>Force per unit length</th><th>Moment about base</th></tr><tr><td>3.0 m (SI)</td><td>44.1 kN/m</td><td>44.1 kN\u00b7m/m</td></tr><tr><td>10 ft (US)</td><td>3,120 lb/ft</td><td>10,400 lb\u00b7ft/ft</td></tr></table><p><strong>Memo sentence:</strong> each metre of the 3.0 m floodwall must resist about 44 kN of water load, acting 1.0 m above the base. Because the load grows with $h^2$, a 20% deeper flood (3.6 m) raises the force by 44%.</p><p class='note'>Limitation: assumes still water. Waves or debris impact add load.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -318,6 +318,90 @@ const EXAMPLE_COURSES = [
       },
     ],
   },
+  {
+    id: 'mfet410',
+    name: 'MFET 410: Computer Numerical Control in Production',
+    term: 'ODU',
+    index: '/examples/mfet410/index.html',
+    modules: [
+      {
+        number: 1,
+        title: 'The CNC Machine as an Engineered System',
+        examples: [
+          {
+            file: 'M01-WE11A-feedback-loop.html',
+            name: 'Worked Example 1.1-A: What the Feedback Loop Can See',
+            description: 'Encoder resolution vs. command increment vs. 27.6 µm of ballscrew growth a semi-closed loop cannot see; what a linear scale changes.',
+          },
+          {
+            file: 'M01-WE12A-iso230-2-test.html',
+            name: 'Worked Example 1.2-A: Reading an ISO 230-2 Positioning Test',
+            description: 'Computes B, R, R↑, A, and E from laser test data, judges acceptance, and shows why a one-direction approach helps.',
+          },
+          {
+            file: 'M01-WE13A-where-errors-land.html',
+            name: 'Worked Example 1.3-A: Where Does Each Error Land?',
+            description: 'Sizes and classifies Abbe, spindle thermal, and tool deflection errors and finds the sensitive direction of each.',
+          },
+          {
+            file: 'M01-WE14A-error-budget.html',
+            name: 'Worked Example 1.4-A: Can the VMC-R1 Hold This Tolerance?',
+            description: 'Two-pass error budget for a 240 ± 0.010 mm bore center distance: systematic sum, RSS of random terms, conditions.',
+          },
+          {
+            file: 'M01-WE15A-ballbar-diagnosis.html',
+            name: 'Worked Example 1.5-A: Diagnosing a Ballbar Plot',
+            description: 'Reads squareness and backlash from CW/CCW ballbar traces and decides whether a pocket can be cut.',
+          },
+          {
+            file: 'M01-SIM-ballbar-error-budget.html',
+            kind: 'simulator',
+            name: 'Module 1 Simulator: Ballbar Diagnosis and Error Budget',
+            description: 'Interactive ballbar with adjustable machine errors and three mystery machines, plus an editable RSS error budget.',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'engt305',
+    name: 'ENGT 305: Advanced Technical Analysis',
+    term: 'ODU',
+    index: '/examples/engt305/index.html',
+    modules: [
+      {
+        number: 1,
+        title: 'MATLAB Fundamentals & Programming',
+        examples: [
+          {
+            file: 'M01-WE11A-floodwall.html',
+            name: 'Worked Example 1.1-A: Water Load on a Floodwall',
+            description: 'Hydrostatic force and overturning moment in SI and US units in the Command Window, with an order-of-operations trap caught by units.',
+          },
+          {
+            file: 'M01-WE12A-pipe-capacity-table.html',
+            name: 'Worked Example 1.2-A: Storm Sewer Capacity Table',
+            description: 'Manning full-flow capacity for a vector of pipe sizes with element-wise operators and an fprintf table.',
+          },
+          {
+            file: 'M01-WE13A-manning-function.html',
+            name: 'Worked Example 1.3-A: Turning the Capacity Calculation into a Function',
+            description: 'Wraps the Manning calculation in a reusable, documented MATLAB function.',
+          },
+          {
+            file: 'M01-WE14A-pipe-selection-loop.html',
+            name: 'Worked Example 1.4-A: Selecting the Smallest Adequate Pipe',
+            description: 'A while loop and an if check find the smallest standard pipe that carries the design flow at a self-cleansing velocity.',
+          },
+          {
+            file: 'M01-WE15A-debugging.html',
+            name: 'Worked Example 1.5-A: Debugging a Broken Capacity Script',
+            description: 'Finds and fixes a run-time error, a silent wrong answer, and garbled output using messages, breakpoints, and a hand estimate.',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 /** Flat list of all worked examples for a course (for sidebar). */

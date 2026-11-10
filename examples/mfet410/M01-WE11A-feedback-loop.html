@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 1.1-A: What the Feedback Loop Can See | MFET 410</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  table.results td.num, table.results th.num { text-align:right; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .decision { border:2px solid var(--accent); border-radius:6px; padding:8px 12px; margin:10px 0; background:#fdf4f0; }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  .fig { text-align:center; margin:8px 0; }
+  .fig .cap { font-size:.82rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 1.1-A: What the Feedback Loop Can See", "statement": "The X axis of the course reference machine (VMC-R1) is <strong>semi-closed loop</strong>: a 40 mm ballscrew with a $10\\ \\text{mm}$ lead, fixed at the motor end, driven by a servo motor with an absolute rotary encoder of $2^{20}$ counts/rev. The control accepts commands in steps of $0.001\\ \\text{mm}$. After two hours of heavy cycling the screw runs $6\\ ^\\circ\\text{C}$ warmer than when the axis was calibrated. A feature is machined at $X = 400\\ \\text{mm}$ from the fixed end. The spec sheet quotes positioning accuracy of $\\pm 0.005$ mm. This course reads that as an ISO 230-2 accuracy $A \\le 10\\ \\mu$m, which Worked Example 1.2-A calculates directly. <strong>Is the encoder what limits this axis?</strong>"};
+var STEPS = [{"label": "Requirement", "title": "Requirement", "html": "<p><strong>Given:</strong> lead $p = 10$ mm/rev; encoder $N = 2^{20} = 1{,}048{,}576$ counts/rev; least command increment $0.001$ mm; screw temperature rise $\\Delta T = 6\\ ^\\circ$C; feature at $L = 400$ mm from the fixed end; spec-sheet positioning accuracy $\\pm 0.005$ mm, read as $A \\le 10\\ \\mu$m.</p><p><strong>Find:</strong> (a) the encoder resolution at the table, (b) the effective positioning resolution, (c) the table position error the control cannot detect, (d) what changes with a linear scale.</p><p><strong>Decision to defend:</strong> what actually limits where this axis puts the tool.</p>"}, {"label": "Model", "title": "Model", "html": "<p>In a semi-closed loop the control <em>infers</em> table position from motor angle: $x = (\\theta/2\\pi)\\,p$. Everything mechanical between the encoder and the table (screw growth, screw wind-up, nut backlash, lead error) is outside the loop and invisible to it.</p>$$\\text{encoder resolution}=\\frac{p}{N}\\qquad\\text{effective resolution}=\\max\\left(\\frac{p}{N},\\ \\text{command increment}\\right)$$<p>A screw that warms by $\\Delta T$ grows from its fixed end. A point at distance $L$ moves by</p>$$\\Delta L=\\alpha\\,L\\,\\Delta T,\\qquad \\alpha_{\\text{steel}}\\approx 11.5\\times10^{-6}\\ /^\\circ\\text{C}$$<p><strong>Assumptions:</strong> uniform temperature over 0 to 400 mm; screw free to grow from the fixed end (pretension ignored); nut and table follow the screw.</p>"}, {"label": "Compute", "title": "Compute", "html": "<div class='calc'>$$\\frac{p}{N}=\\frac{10\\ \\text{mm}}{1{,}048{,}576}=9.5\\times10^{-6}\\ \\text{mm}=0.0095\\ \\mu\\text{m}$$</div><div class='calc'>$$\\text{effective resolution}=\\max(0.0095,\\ 1.0)=1.0\\ \\mu\\text{m}\\quad(\\text{set by the control, not the encoder})$$</div><div class='calc'>$$\\Delta L=(11.5\\times10^{-6})(400\\ \\text{mm})(6)=0.0276\\ \\text{mm}=27.6\\ \\mu\\text{m}$$</div><p><strong>With a linear scale (closed loop):</strong> the scale reads the table directly, so screw growth is inside the loop and is corrected. What remains is the scale's own accuracy grade. For a $\\pm 3\\ \\mu$m/m scale over 400 mm:</p><div class='calc'>$$\\pm 3\\ \\mu\\text{m/m}\\times 0.400\\ \\text{m}=\\pm 1.2\\ \\mu\\text{m}$$</div>"}, {"label": "Check", "title": "Check", "html": "<table class='results'><tr><th>Quantity</th><th class='num'>Size (\u00b5m)</th></tr><tr><td>Encoder resolution at the table</td><td class='num'>0.0095</td></tr><tr><td>Least command increment</td><td class='num'>1.0</td></tr><tr><td>Spec-sheet positioning accuracy, ISO 230-2 A</td><td class='num'>10</td></tr><tr><td>Unseen thermal error at X = 400 mm</td><td class='num'>27.6</td></tr><tr><td>Linear scale residual at X = 400 mm</td><td class='num'>\u00b11.2</td></tr></table><p><strong>Rule-of-thumb check:</strong> steel grows about 11.5 \u00b5m per metre per \u00b0C. Then $11.5\\times0.4\\times6=27.6$ \u00b5m, which agrees.</p><p><strong>Units:</strong> (1/\u00b0C)(mm)(\u00b0C) = mm. \u2713</p><p>The thermal error is about 2,900 times the encoder resolution and almost 3 times the accuracy the spec sheet promises.</p>"}, {"label": "Defend", "title": "Defend", "html": "<div class='decision'><strong>Decision:</strong> the encoder does not limit this axis. Resolution is three orders of magnitude finer than anything that matters. On a warm machine the limit is what happens <em>between</em> the encoder and the table: here, 27.6 \u00b5m of screw growth at X = 400 mm that the control reports as zero error.</div><p><strong>Recommendation:</strong> for tight location tolerances over long distances, either specify linear scales (residual about \u00b11.2 \u00b5m here) or require a warm-up cycle plus the control's thermal compensation, and verify with a check part.</p><p><strong>Course spine:</strong> this is the first gap between <em>machine positioning accuracy</em> (tested cold and stable) and <em>achieved part accuracy</em> (on a working machine).</p><p class='note'>Limitation: real screws do not warm uniformly. Growth depends on where the nut has been running, so the true error varies along the stroke and over the shift.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 9000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

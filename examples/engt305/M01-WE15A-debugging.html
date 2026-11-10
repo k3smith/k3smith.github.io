@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 1.5-A: Debugging a Broken Capacity Script | ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  pre.code { background:#1e2a38; color:#e8eef5; border-radius:6px; padding:10px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.86rem; line-height:1.45; margin:8px 0; }
+  pre.code .c { color:#8fb3d9; }
+  pre.out { background:#f5f8fc; border:1px dashed #9cb8d6; color:#1F3A5F; border-radius:6px; padding:8px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.84rem; margin:6px 0; }
+  .wf { display:inline-block; font-size:.72rem; font-weight:bold; letter-spacing:.03em; color:#fff; background:#D85A30; border-radius:3px; padding:1px 6px; margin-right:6px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 1.5-A: Debugging a Broken Capacity Script", "statement": "A classmate saved the sewer table (WE 1.2-A) as sewer_table.m. It crashes as soon as it runs. After each repair it still misbehaves: first a huge silent answer, then a scrambled table. Use the error message, the Workspace, and a breakpoint to find and correct three bugs."};
+var STEPS = [{"label": "Formulate", "title": "The broken script", "html": "<pre class='code'>n = 0.013;  S = 0.005;\nD = [300 375 450 525 600];          <span class=\"c\">% mm</span>\nA = pi*D.^2/4;\nR = D/4;\nQ = (1/n)*A*R.^(2/3)*sqrt(S);\nV = Q./A;\nfprintf(&#x27;%8.0f %10.4f %8.3f\\n&#x27;, D, Q, V);</pre><p>Before running anything, state what <em>correct</em> output looks like: five rows, with the 300 mm pipe at Q \u2248 0.068 m\u00b3/s (from WE 1.2-A). That expected answer is the target for the debugging.</p>"}, {"label": "Solve", "title": "Read the first error", "html": "<p>Running the script gives:</p><pre class='out'>Error using  *\nIncorrect dimensions for matrix multiplication. Check that the number of\ncolumns in the first matrix matches the number of rows in the second matrix.\nTo operate on corresponding elements of the arrays, use TIMES (.*) for\nelementwise multiplication.\n\nError in sewer_table (line 5)</pre><p>The message gives the <strong>line number</strong> and the cause. <code>A</code> and <code>R</code> are both 1\u00d75, so <code>A*R</code> asks for a matrix product. <strong>Bug 1:</strong> change <code>A*R</code> to <code>A.*R</code>.</p>"}, {"label": "Compute", "title": "Silent bug: use a breakpoint", "html": "<p>After fixing line 5 the script runs, but the first value of Q is about 6.8 million. Nothing crashed, so there is no error message to read. Click in the margin next to line 6 to set a <strong>breakpoint</strong>, then run. MATLAB pauses at line 6 with every variable in the Workspace:</p><pre class='out'>K&gt;&gt; D(1)\nans =\n   300\nK&gt;&gt; Q(1)\nans =\n   6.8378e+06</pre><p>A pipe carrying 6.8 million m\u00b3/s is clearly wrong. The Workspace shows D(1) = 300, but Manning's SI form expects metres. <strong>Bug 2 (units):</strong> use <code>D = [300 375 450 525 600]/1000;</code>. Type <code>dbquit</code> to leave debug mode.</p>"}, {"label": "Verify", "title": "Check the output format", "html": "<p>The numbers are now right, but the table is scrambled. With <code>D</code> in metres, the first row is <code>D(1)</code>, <code>D(2)</code>, and <code>D(3)</code>. The format <code>%8.0f</code> rounds 0.300 m to 0:</p><pre class='out'>       0     0.3750   0.450\n...</pre><p><strong>Bug 3:</strong> <code>fprintf</code> consumes its arguments in order, D(1..5), then Q(1..5), then V(1..5), three at a time. The data must be stacked as rows so each column is one pipe: <code>fprintf('%8.0f %10.4f %8.3f\\n', [D*1000; Q; V]);</code></p>"}, {"label": "Interpret", "title": "Lessons", "html": "<table class='results'><tr><th>Bug</th><th>Type</th><th>How it was found</th></tr><tr><td><code>*</code> vs <code>.*</code></td><td>loud (error)</td><td>read the message and the line number</td></tr><tr><td>mm vs m</td><td>silent (wrong answer)</td><td>breakpoint, then compare with the hand estimate</td></tr><tr><td><code>fprintf</code> order</td><td>silent (garbled output)</td><td>inspect output against the expected shape</td></tr></table><p><strong>The key habit:</strong> decide what the answer should roughly be <em>before</em> you run the code. Without the expected 0.068 m\u00b3/s, Bug 2 would have gone unnoticed.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

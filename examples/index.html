@@ -34,12 +34,16 @@
   <script>
     const list = document.getElementById('course-list');
     EXAMPLE_COURSES.forEach((course) => {
-      const count = course.modules.reduce((n, m) => n + m.examples.length, 0);
+      const count = course.modules.reduce((n, m) => n + m.examples.filter((e) => e.kind !== 'simulator').length, 0);
+      const sims = course.modules.reduce((n, m) => n + m.examples.filter((e) => e.kind === 'simulator').length, 0);
+      const countLabel = sims
+        ? `${count} worked example${count === 1 ? '' : 's'} · ${sims} simulator${sims === 1 ? '' : 's'}`
+        : `${count} worked example${count === 1 ? '' : 's'}`;
       const card = document.createElement('div');
       card.className = 'course-card';
       card.innerHTML = `
         <h2>${course.name}</h2>
-        <p class="demo-count">${course.term} · ${count} worked example${count === 1 ? '' : 's'}</p>
+        <p class="demo-count">${course.term} · ${countLabel}</p>
         <a class="btn-primary" href="${course.index}">Browse ${course.id.toUpperCase()} examples →</a>
       `;
       list.appendChild(card);

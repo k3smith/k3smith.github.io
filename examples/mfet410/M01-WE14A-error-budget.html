@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 1.4-A: Can the VMC-R1 Hold This Tolerance? | MFET 410</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  table.results td.num, table.results th.num { text-align:right; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .decision { border:2px solid var(--accent); border-radius:6px; padding:8px 12px; margin:10px 0; background:#fdf4f0; }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  .fig { text-align:center; margin:8px 0; }
+  .fig .cap { font-size:.82rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 1.4-A: Can the VMC-R1 Hold This Tolerance?", "statement": "A 6061-T6 hydraulic manifold has two $\\varnothing20$ H7 bores whose <strong>center distance along X is 240.000 \u00b1 0.010 mm</strong>. Both bores are finished in one setup with the same boring tool on the VMC-R1 (semi-closed loop). The shop runs at about 24 \u00b0C; parts are inspected at 20 \u00b0C. Use the ISO 230-2 results from Worked Example 1.2-A. <strong>Can this machine hold this tolerance, and under what conditions?</strong>"};
+var STEPS = [{"label": "Requirement", "title": "Requirement", "html": "<p><strong>Given:</strong> $L = 240$ mm, tolerance $\\pm10\\ \\mu$m; $\\alpha_{Al}=23.6\\times10^{-6}$/°C, $\\alpha_{steel}=11.5\\times10^{-6}$/°C; X-axis trend 6.7 µm/m end to end, $R{\\uparrow}=1.6\\ \\mu$m (WE 1.2-A); a measured pitch-angle change of 3″ between the two bore positions (systematic, not an uncertainty); Abbe offset 120 mm for this boring tool, which is stickout from the screw (the end mill in WE 1.3-A was 180 mm); screw temperature varies ±2 °C after warm-up.</p><p><strong>Find:</strong> the predicted error in the 240 mm distance, systematic and random, and compare it with ±10 µm.</p><p><strong>Decision to defend:</strong> yes, no, or yes-with-conditions.</p>"}, {"label": "Model", "title": "Model", "html": "<p>Only errors that <em>differ between the two bores</em> affect a center distance. Errors common to both cancel: fixture offset, tool length, tool deflection (same tool and cut), and spindle Z growth.</p><p><strong>Systematic</strong> errors (known sign and size) add linearly and can often be corrected. <strong>Random</strong> errors, if independent and stated at the same confidence, combine by root-sum-square:</p>$$\\delta_{total}=\\sum\\delta_{sys}+\\sqrt{\\sum\\delta_{rand}^{2}}$$<p><strong>Thermal reference.</strong> Drawing dimensions apply at 20 \u00b0C (ISO 1). Steel screw and aluminum part both expand at 24 \u00b0C, but at different rates. The machine's scale and the part grow apart by</p>$$\\delta=(\\alpha_{Al}-\\alpha_{steel})\\,L\\,\\Delta T$$<p class='note'>Error budgeting method: Slocum, <em>Precision Machine Design</em> (1992), Ch. 2.</p>"}, {"label": "Compute", "title": "Compute", "html": "<p><strong>Pass 1, as the shop runs today (no corrections):</strong></p>\n<div class='calc'>$$\\text{linear positioning: }6.7\\ \\mu\\text{m/m}\\times0.240\\ \\text{m}=1.6\\ \\mu\\text{m}$$</div>\n<div class='calc'>$$\\text{differential thermal: }(12.1\\times10^{-6})(240\\ \\text{mm})(4)=0.0116\\ \\text{mm}=11.6\\ \\mu\\text{m}$$</div>\n<div class='calc'>$$\\text{Abbe, measured }3''\\text{ between the bores: }120\\ \\text{mm}\\times(3\\times4.848\\times10^{-6})=0.00175\\ \\text{mm}=1.7\\ \\mu\\text{m}$$</div>\n<div class='calc'>$$\\sum\\delta_{sys}=1.6+11.6+1.7=14.9\\ \\mu\\text{m}>10\\ \\mu\\text{m}$$</div>\n<p>The systematic part alone exceeds the tolerance, before any random error is counted. The 3″ pitch change is systematic because it is a measured difference between these two positions. Each product is in millimetres. Multiplying by 1,000 reports micrometres: $0.0116\\ \\text{mm} = 11.6\\ \\mu\\text{m}$.</p>\n<p><strong>Pass 2, with corrections</strong> (pitch compensation updated, residual 0.5 µm; part temperature measured and the program scaled for it). Pitch compensation does not remove the angular Abbe term, so the 1.7 µm stays:</p>\n<table class='results'><tr><th>Contributor</th><th>Basis</th><th class='num'>µm</th><th>Type</th></tr>\n<tr><td>Pitch compensation residual</td><td>after the table is updated</td><td class='num'>0.5</td><td>Systematic</td></tr>\n<tr><td>Change in Abbe error between bores</td><td>$120\\ \\text{mm}\\times3''=0.00175\\ \\text{mm}$</td><td class='num'>1.7</td><td>Systematic</td></tr>\n<tr><td>Repeatability of the distance</td><td>$(R{\\uparrow}/2)\\sqrt{2}=0.8\\sqrt{2}$</td><td class='num'>1.1</td><td>Random</td></tr>\n<tr><td>Ballscrew temperature after warm-up, ±2 °C</td><td>$11.5\\times10^{-6}(240\\ \\text{mm})(2)=0.00552\\ \\text{mm}$</td><td class='num'>5.5</td><td>Random</td></tr>\n<tr><td>Part temperature uncertainty, ±1 °C</td><td>$(23.6-11.5)\\times10^{-6}(240\\ \\text{mm})(1)=0.00290\\ \\text{mm}$</td><td class='num'>2.9</td><td>Random</td></tr>\n<tr><td>Boring tool / bore center variation</td><td>tool supplier data</td><td class='num'>1.5</td><td>Random</td></tr>\n</table>\n<p class='note'>$R{\\uparrow}/2 = 0.8$ µm is the ±2s half-width of one approach. The center distance is the difference of two independent approaches, so those random parts combine as $\\sqrt{0.8^2+0.8^2}=1.1$ µm.</p>\n<div class='calc'>$$\\sqrt{1.1^2+5.5^2+2.9^2+1.5^2}=\\sqrt{42.12}=6.5\\ \\mu\\text{m}$$</div>\n<div class='calc'>$$\\delta_{total}=(0.5+1.7)+6.5=8.7\\ \\mu\\text{m}$$</div>"}, {"label": "Check", "title": "Check", "html": "<ul>\n<li><strong>Worst-case sum</strong> of the same terms: $0.5+1.7+1.1+5.5+2.9+1.5=13.2$ µm, which exceeds ±10. The two systematic terms keep their signs, so they are added. RSS is defensible for the four random terms because those sources are physically independent; all four reaching their limits at once in the same direction is very unlikely.</li>\n<li><strong>Dominant term:</strong> screw thermal contributes $5.5^2/42.12 = 72\\%$ of the random variance.</li>\n<li><strong>Sensitivity:</strong> with linear scales, that line becomes $\\pm3\\ \\mu$m/m $\\times 0.24 = 0.7$ µm and the total drops to about $5.7$ µm.</li>\n<li><strong>Units and confidence:</strong> each random line is a ± value at about 2σ, in µm. Each $\\alpha L\\Delta T$ product is computed in mm and multiplied by 1,000. ✓</li>\n</ul>"}, {"label": "Defend", "title": "Defend", "html": "<div class='decision'><strong>Decision: yes, with conditions.</strong> The VMC-R1 is predicted to hold 240.000 ± 0.010 mm to within ±8.7 µm (87% of the tolerance) <em>only if</em> (1) the pitch compensation table is current, (2) part temperature is measured and compensated, or parts are soaked to 20 ± 1 °C, (3) both bores are finished in one setup with a one-direction approach, after a warm-up cycle. The measured 1.7 µm Abbe change between the bores is still in that total. Without those conditions the systematic error alone (14.9 µm) puts the feature out of tolerance.</div>\n<p><strong>If the margin is too thin:</strong> attack the screw thermal term first (linear scales, or a coolant-controlled screw). That single change brings the budget to about ±5.7 µm.</p>\n<p class='note'>Preview of Module 8: ±8.7 µm at 2σ means σ ≈ 4.35 µm, and $C_p = 20/(6\\times4.35)\\approx0.77$. A budget that fits inside the tolerance is not yet a <em>capable</em> process. That is the gap between process variation and statistical capability.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 9000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
