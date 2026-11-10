@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrix Multiplication Visualizer: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+/* Stage: the three matrices */
+.stage {
+  background: #f7f9fc; border-bottom: 1px solid #dde4ec;
+  padding: 20px 14px 16px;
+}
+.matrices {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 12px 14px;
+}
+.mblock { display: flex; flex-direction: column; align-items: center; }
+.mlabel { font-size: 0.8em; font-weight: 700; color: #2c5f8a; margin-bottom: 6px; }
+.mlabel .dim { font-weight: 400; color: #5a6b80; }
+.matrix {
+  display: grid; gap: 4px; padding: 6px 8px; position: relative;
+  border-left: 2px solid #1a3f5c; border-right: 2px solid #1a3f5c;
+  background:
+    linear-gradient(#1a3f5c, #1a3f5c) left top / 8px 2px no-repeat,
+    linear-gradient(#1a3f5c, #1a3f5c) left bottom / 8px 2px no-repeat,
+    linear-gradient(#1a3f5c, #1a3f5c) right top / 8px 2px no-repeat,
+    linear-gradient(#1a3f5c, #1a3f5c) right bottom / 8px 2px no-repeat;
+}
+.cell {
+  width: 46px; height: 34px; border: 1px solid #c8d8e8; border-radius: 4px;
+  font: inherit; font-size: 0.86em; text-align: center; color: #222; background: #fff;
+}
+input.cell { -moz-appearance: textfield; appearance: textfield; }
+input.cell::-webkit-outer-spin-button, input.cell::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+input.cell:focus, button.cell:focus-visible, .ctl:focus-visible, .btn-row button:focus-visible,
+.seg label:focus-within {
+  outline: 2px solid #e67300; outline-offset: 1px;
+}
+.cell.rowhl { background: #dbe9f7; border-color: #2c5f8a; }
+.cell.colhl { background: #fde6cf; border-color: #b05a10; }
+.cell.pairhl { box-shadow: inset 0 0 0 2px #1a3f5c; }
+button.cell { cursor: pointer; font-weight: 700; color: #2a7a3a; }
+button.cell.empty { color: #b8c4d0; font-weight: 400; background: #fbfcfe; }
+button.cell.cur { background: #e3f4e6; border: 2px solid #2a7a3a; }
+.opsym { font-size: 1.3em; color: #1a3f5c; font-weight: 600; }
+.undefined-box {
+  border: 2px dashed #b03030; border-radius: 8px; color: #b03030; background: #fdf1f1;
+  padding: 14px 16px; font-size: 0.86em; font-weight: 700; text-align: center; max-width: 220px;
+}
+
+/* Dimension rule strip */
+.rule {
+  margin: 16px auto 0; max-width: 700px; text-align: center;
+  font-size: 0.84em; line-height: 1.6; color: #444;
+}
+.rule .chip {
+  display: inline-block; padding: 1px 8px; border-radius: 12px;
+  background: #e7edf4; font-weight: 700; color: #1a3f5c; white-space: nowrap;
+}
+.rule .inner { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.rule.ok .inner { color: #2a7a3a; }
+.rule.bad .inner { color: #b03030; }
+.rule.bad .verdict { color: #b03030; font-weight: 700; }
+.rule.ok .verdict { color: #2a7a3a; font-weight: 700; }
+
+/* Working line */
+.work {
+  margin: 14px auto 0; max-width: 700px; min-height: 104px;
+  background: #fff; border: 1px solid #dde4ec; border-radius: 8px; padding: 10px 14px;
+}
+.work .cap { font-size: 0.78em; color: #5a6b80; margin-bottom: 4px; }
+.work .cap .ra { color: #2c5f8a; font-weight: 700; }
+.work .cap .cb { color: #b05a10; font-weight: 700; }
+.work .line { overflow-x: auto; overflow-y: hidden; padding: 3px 0; font-size: 0.95em; white-space: nowrap; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; }
+.outputs  { padding: 18px 22px; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label {
+  flex: 1; min-width: 84px; text-align: center; padding: 6px 4px; font-size: 0.78em;
+  border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.dims { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-bottom: 12px; }
+.dims label { font-size: 0.8em; color: #555; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.ctl {
+  font: inherit; font-size: 0.95em; padding: 3px 6px; border: 1px solid #c0cad4; border-radius: 5px;
+  background: #fff; color: #1a3f5c; font-weight: 700;
+}
+.btn-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 64px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.slider-row { margin-top: 12px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 7px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.warn td:last-child { color: #b03030; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.eqn { margin-top: 14px; padding: 8px 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; font-size: 0.92em; text-align: center; }
+.eqn-note { font-size: 0.74em; color: #5a6b80; margin-top: 6px; line-height: 1.5; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+.sr { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+  .stage { padding: 16px 8px 14px; }
+  .cell { width: 42px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Matrix Multiplication Visualizer: Row Times Column</h1>
+    <p>ENGT 305 · Module 2 &nbsp;|&nbsp; Each entry of a matrix product is one row of the left matrix dotted with one column of the right matrix. Step through and watch the product fill in.</p>
+  </div>
+
+  <div class="stage">
+    <div class="matrices" id="matrices"></div>
+    <div class="rule" id="rule" aria-live="polite"></div>
+    <div class="work" id="work" aria-live="polite">
+      <div class="cap" id="workCap"></div>
+      <div class="line" id="work1"></div>
+      <div class="line" id="work2"></div>
+      <div class="line" id="work3"></div>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> To get the entry in row <em>i</em>, column <em>j</em> of the product, take row <em>i</em> of the left matrix and column <em>j</em> of the right matrix, multiply them pair by pair, and add. That sum of pairwise products is a <em>dot product</em>. It only works if the row and the column have the same number of entries, which is the dimension rule.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+
+      <fieldset>
+        <legend>Operation</legend>
+        <div class="seg" id="opSeg">
+          <label><input type="radio" name="op" value="AB" checked>A × B</label>
+          <label><input type="radio" name="op" value="BA">B × A</label>
+          <label><input type="radio" name="op" value="EW">A .* B (element-wise)</label>
+        </div>
+      </fieldset>
+
+      <span class="flabel">Matrix sizes (1 to 4)</span>
+      <div class="dims">
+        <label for="selAr">A rows <select class="ctl" id="selAr"></select></label>
+        <label for="selAc">A columns <select class="ctl" id="selAc"></select></label>
+        <label for="selBr">B rows <select class="ctl" id="selBr"></select></label>
+        <label for="selBc">B columns <select class="ctl" id="selBc"></select></label>
+      </div>
+
+      <span class="flabel">Step through the product</span>
+      <div class="btn-row">
+        <button id="bPrev" type="button">◀ Prev</button>
+        <button id="bPlay" type="button" class="primary">▶ Play</button>
+        <button id="bNext" type="button">Next ▶</button>
+        <button id="bReset" type="button">Reset</button>
+      </div>
+      <div class="slider-row">
+        <label for="sSpeed">Play speed <span class="val" id="vSpeed">1.0 entries/s</span></label>
+        <input type="range" id="sSpeed" min="0.5" max="3" step="0.25" value="1">
+      </div>
+
+      <span class="flabel" style="margin-top:12px">Load entries</span>
+      <div class="btn-row">
+        <button id="bExample" type="button">Course example</button>
+        <button id="bRandom" type="button">Random integers</button>
+        <button id="bIdentity" type="button">Make B an identity</button>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Left matrix size</td><td id="rL"></td></tr>
+        <tr><td>Right matrix size</td><td id="rR"></td></tr>
+        <tr id="rowDef"><td>Is the operation defined?</td><td id="rDef"></td></tr>
+        <tr><td>Result size</td><td id="rSize"></td></tr>
+        <tr><td>Entries computed</td><td id="rCount"></td></tr>
+        <tr><td>Current entry</td><td id="rCur"></td></tr>
+        <tr id="rowComm"><td>Does A × B equal B × A?</td><td id="rComm"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">$$c_{ij} \;=\; \sum_{r=1}^{n} a_{ir}\, b_{rj}$$</div>
+      <p class="eqn-note" id="eqnNote"></p>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> A set of linear equations is written as A x = b, where each row of A times the column x is the left side of one equation. That is exactly the row-times-column product shown here, so when MATLAB solves the system with <code>x = A\b</code>, you can check the answer by confirming that <code>A*x</code> reproduces <code>b</code>. In MATLAB, <code>A*B</code> is this matrix product and <code>A.*B</code> is the element-wise product (each entry times the entry in the same position, so the two sizes must be equal). They are different operations and usually give different answers. Order also matters: switch to B × A and compare.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function sub(M, rows, cols) {
+  const out = [];
+  for (let i = 0; i < rows; i++) out.push(M[i].slice(0, cols));
+  return out;
+}
+// Matrix product: c(i,j) = sum over r of l(i,r) * r(r,j). Returns null if not defined.
+function matMul(L, R) {
+  const m = L.length, n = L[0].length, p = R.length, k = R[0].length;
+  if (n !== p) return null;
+  const C = [];
+  for (let i = 0; i < m; i++) {
+    C.push([]);
+    for (let j = 0; j < k; j++) {
+      let s = 0;
+      for (let r = 0; r < n; r++) s += L[i][r] * R[r][j];
+      C[i].push(s);
+    }
+  }
+  return C;
+}
+// Element-wise product: c(i,j) = l(i,j) * r(i,j). Requires equal sizes.
+function elemMul(L, R) {
+  if (L.length !== R.length || L[0].length !== R[0].length) return null;
+  return L.map((row, i) => row.map((v, j) => v * R[i][j]));
+}
+function sameMatrix(X, Y) {
+  if (!X || !Y) return false;
+  if (X.length !== Y.length || X[0].length !== Y[0].length) return false;
+  for (let i = 0; i < X.length; i++)
+    for (let j = 0; j < X[0].length; j++)
+      if (Math.abs(X[i][j] - Y[i][j]) > 1e-9) return false;
+  return true;
+}
+// Display format: up to 4 decimals, no trailing zeros, no negative zero.
+function fmt(x) {
+  const v = parseFloat(x.toFixed(4));
+  return String(v === 0 ? 0 : v);
+}
+/*MATH-END*/
+
+// ---- State ----
+const MAXN = 4;
+const EXAMPLE_A = [[2, -3, 5, 0], [-1, 4, 6, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+const EXAMPLE_B = [[2, 1, 0, 0], [7, -4, 0, 0], [3, 1, 0, 0], [0, 0, 0, 0]];
+let A = EXAMPLE_A.map(r => r.slice());
+let B = EXAMPLE_B.map(r => r.slice());
+let ar = 2, ac = 3, br = 3, bc = 2;
+let op = 'AB';
+let step = 0;          // number of result entries revealed so far
+let timer = null;
+
+const $ = id => document.getElementById(id);
+const hasKatex = () => typeof window.katex !== 'undefined';
+
+function current() {
+  const a = sub(A, ar, ac), b = sub(B, br, bc);
+  let L, R, lName, rName, C;
+  if (op === 'BA') { L = b; R = a; lName = 'B'; rName = 'A'; }
+  else { L = a; R = b; lName = 'A'; rName = 'B'; }
+  C = op === 'EW' ? elemMul(L, R) : matMul(L, R);
+  return { a, b, L, R, lName, rName, C,
+           sym: op === 'EW' ? '.*' : '×',
+           total: C ? C.length * C[0].length : 0 };
+}
+
+// ---- Build the matrices (only when sizes or operation change) ----
+function buildMatrix(name, M, editable) {
+  const block = document.createElement('div');
+  block.className = 'mblock';
+  const label = document.createElement('div');
+  label.className = 'mlabel';
+  label.innerHTML = name + ' <span class="dim">(' + M.length + ' × ' + M[0].length + ')</span>';
+  block.appendChild(label);
+  const grid = document.createElement('div');
+  grid.className = 'matrix';
+  grid.style.gridTemplateColumns = 'repeat(' + M[0].length + ', auto)';
+  grid.setAttribute('role', 'group');
+  grid.setAttribute('aria-label', 'Matrix ' + name + ', ' + M.length + ' rows by ' + M[0].length + ' columns');
+  for (let i = 0; i < M.length; i++) {
+    for (let j = 0; j < M[0].length; j++) {
+      let el;
+      if (editable) {
+        el = document.createElement('input');
+        el.type = 'number'; el.step = 'any'; el.className = 'cell';
+        el.value = fmt(M[i][j]);
+        el.setAttribute('aria-label', name + ' row ' + (i + 1) + ' column ' + (j + 1));
+        el.addEventListener('input', () => {
+          const v = parseFloat(el.value);
+          (name === 'A' ? A : B)[i][j] = isFinite(v) ? v : 0;
+          paint();
+        });
+        el.addEventListener('blur', () => { if (el.value === '') el.value = '0'; });
+      } else {
+        el = document.createElement('button');
+        el.type = 'button'; el.className = 'cell';
+        el.addEventListener('click', () => { stop(); step = i * M[0].length + j + 1; paint(); });
+      }
+      el.dataset.m = name; el.dataset.i = i; el.dataset.j = j;
+      grid.appendChild(el);
+    }
+  }
+  block.appendChild(grid);
+  return block;
+}
+function symbol(txt) {
+  const s = document.createElement('div');
+  s.className = 'opsym'; s.textContent = txt; s.setAttribute('aria-hidden', 'true');
+  return s;
+}
+function build() {
+  const cur = current();
+  const host = $('matrices');
+  host.innerHTML = '';
+  host.appendChild(buildMatrix(cur.lName, cur.L, true));
+  host.appendChild(symbol(cur.sym));
+  host.appendChild(buildMatrix(cur.rName, cur.R, true));
+  host.appendChild(symbol('='));
+  if (cur.C) {
+    host.appendChild(buildMatrix('C', cur.C, false));
+  } else {
+    const box = document.createElement('div');
+    box.className = 'undefined-box';
+    box.textContent = cur.lName + ' ' + cur.sym + ' ' + cur.rName + ' is not defined for these sizes';
+    host.appendChild(box);
+  }
+  paint();
+}
+
+// ---- Paint (every change) ----
+function tex(el, src, plain) {
+  if (hasKatex()) {
+    try { katex.render(src, el, { throwOnError: false }); return; } catch (e) {}
+  }
+  el.textContent = plain;
+}
+function paren(x) { const s = fmt(x); return x < 0 ? '(' + s + ')' : s; }
+
+function paint() {
+  const cur = current();
+  const { L, R, lName, rName, C, sym, total } = cur;
+  const m = L.length, n = L[0].length, p = R.length, k = R[0].length;
+  if (step > total) step = total;
+  const defined = !!C;
+  const idx = step - 1;                       // entry currently in focus
+  const ci = defined && idx >= 0 ? Math.floor(idx / C[0].length) : -1;
+  const cj = defined && idx >= 0 ? idx % C[0].length : -1;
+
+  // Highlights and result cells
+  document.querySelectorAll('#matrices .cell').forEach(el => {
+    const i = +el.dataset.i, j = +el.dataset.j, nm = el.dataset.m;
+    el.classList.remove('rowhl', 'colhl', 'pairhl', 'cur', 'empty');
+    if (nm === 'C') {
+      const lin = i * C[0].length + j;
+      const shown = lin < step;
+      el.textContent = shown ? fmt(C[i][j]) : '·';
+      el.classList.toggle('empty', !shown);
+      el.classList.toggle('cur', lin === idx);
+      el.setAttribute('aria-label', 'Result row ' + (i + 1) + ' column ' + (j + 1) +
+        (shown ? ', value ' + fmt(C[i][j]) : ', not computed yet') + '. Select to jump to this entry.');
+      return;
+    }
+    if (ci < 0) return;
+    if (op === 'EW') {
+      if (i === ci && j === cj) el.classList.add(nm === lName ? 'rowhl' : 'colhl', 'pairhl');
+    } else {
+      if (nm === lName && i === ci) el.classList.add('rowhl');
+      if (nm === rName && j === cj) el.classList.add('colhl');
+    }
+  });
+
+  // Dimension rule
+  const rule = $('rule');
+  rule.className = 'rule ' + (defined ? 'ok' : 'bad');
+  if (op === 'EW') {
+    rule.innerHTML =
+      '<span class="chip">' + lName + ': <span class="inner">' + m + ' × ' + n + '</span></span> ' +
+      '<span class="chip">' + rName + ': <span class="inner">' + p + ' × ' + k + '</span></span><br>' +
+      (defined
+        ? '<span class="verdict">Sizes are equal</span>, so the element-wise product is defined and has that same size, ' + m + ' × ' + n + '.'
+        : '<span class="verdict">Not defined.</span> The element-wise product pairs each entry with the entry in the same position, so both matrices must be the same size.');
+  } else {
+    rule.innerHTML =
+      '<span class="chip">' + lName + ': ' + m + ' × <span class="inner">' + n + '</span></span> ' +
+      '<span class="chip">' + rName + ': <span class="inner">' + p + '</span> × ' + k + '</span><br>' +
+      (defined
+        ? 'Inner dimensions (columns of ' + lName + ', rows of ' + rName + ') are ' + n + ' and ' + p + ': <span class="verdict">they match</span>. ' +
+          'The result takes the outer dimensions (rows of ' + lName + ', columns of ' + rName + '): ' + m + ' × ' + k + '.'
+        : '<span class="verdict">Not defined.</span> ' + lName + ' has ' + n + ' column' + (n === 1 ? '' : 's') + ' but ' + rName + ' has ' + p + ' row' + (p === 1 ? '' : 's') +
+          '. The inner dimensions must match so each row of ' + lName + ' pairs up with each column of ' + rName + '.');
+  }
+
+  // Working lines
+  const cap = $('workCap'), w1 = $('work1'), w2 = $('work2'), w3 = $('work3');
+  w1.textContent = ''; w2.textContent = ''; w3.textContent = '';
+  if (!defined) {
+    cap.textContent = 'Change the sizes until the rule above is satisfied, or switch the operation.';
+  } else if (ci < 0) {
+    cap.textContent = 'Press Play or Next to compute the first entry. You can also select any cell of C to jump to it, and edit any entry of A or B at any time.';
+  } else {
+    const blue = '#2c5f8a', orange = '#b05a10';
+    const cname = 'c_{' + (ci + 1) + (ci + 1 > 9 || cj + 1 > 9 ? ',' : '') + (cj + 1) + '}';
+    if (op === 'EW') {
+      const x = L[ci][cj], y = R[ci][cj];
+      cap.innerHTML = 'Entry (' + (ci + 1) + ', ' + (cj + 1) + '): <span class="ra">' + lName + '(' + (ci + 1) + ',' + (cj + 1) + ')</span> times <span class="cb">' + rName + '(' + (ci + 1) + ',' + (cj + 1) + ')</span>, same position in both';
+      tex(w1, cname + ' = (\\textcolor{' + blue + '}{' + fmt(x) + '})(\\textcolor{' + orange + '}{' + fmt(y) + '}) = ' + fmt(C[ci][cj]),
+          'c(' + (ci + 1) + ',' + (cj + 1) + ') = (' + fmt(x) + ')(' + fmt(y) + ') = ' + fmt(C[ci][cj]));
+    } else {
+      cap.innerHTML = 'Entry (' + (ci + 1) + ', ' + (cj + 1) + '): <span class="ra">row ' + (ci + 1) + ' of ' + lName + '</span> dotted with <span class="cb">column ' + (cj + 1) + ' of ' + rName + '</span>';
+      const tT = [], tP = [], sT = [], sP = [];
+      let run = 0; const runT = [];
+      for (let r = 0; r < n; r++) {
+        const x = L[ci][r], y = R[r][cj];
+        tT.push('(\\textcolor{' + blue + '}{' + fmt(x) + '})(\\textcolor{' + orange + '}{' + fmt(y) + '})');
+        tP.push('(' + fmt(x) + ')(' + fmt(y) + ')');
+        sT.push(paren(x * y)); sP.push(paren(x * y));
+        run += x * y; runT.push(fmt(run));
+      }
+      tex(w1, cname + ' = ' + tT.join(' + '), 'c(' + (ci + 1) + ',' + (cj + 1) + ') = ' + tP.join(' + '));
+      if (n > 1) {
+        tex(w2, '\\phantom{' + cname + '} = ' + sT.join(' + ') + ' \\qquad \\text{running sum: } ' + runT.join(' \\rightarrow '),
+            '= ' + sP.join(' + ') + '   running sum: ' + runT.join(' -> '));
+      }
+      tex(w3, '\\phantom{' + cname + '} = \\mathbf{' + fmt(C[ci][cj]) + '}', '= ' + fmt(C[ci][cj]));
+    }
+  }
+
+  // Readouts
+  $('rL').textContent = lName + ': ' + m + ' × ' + n;
+  $('rR').textContent = rName + ': ' + p + ' × ' + k;
+  $('rDef').textContent = defined ? 'Yes' : 'No, not defined';
+  $('rowDef').className = defined ? 'ok' : 'warn';
+  $('rSize').textContent = defined ? C.length + ' × ' + C[0].length : 'none';
+  $('rCount').textContent = defined ? step + ' of ' + total : 'none';
+  $('rCur').textContent = ci >= 0 ? 'c(' + (ci + 1) + ',' + (cj + 1) + ') = ' + fmt(C[ci][cj]) : 'none yet';
+
+  const AB = matMul(cur.a, cur.b), BA = matMul(cur.b, cur.a);
+  let comm, commClass = 'warn';
+  if (!AB && !BA) comm = 'Neither product is defined';
+  else if (!AB) comm = 'No: only B × A is defined';
+  else if (!BA) comm = 'No: only A × B is defined';
+  else if (AB.length !== BA.length || AB[0].length !== BA[0].length)
+    comm = 'No: sizes differ (' + AB.length + ' × ' + AB[0].length + ' vs ' + BA.length + ' × ' + BA[0].length + ')';
+  else if (sameMatrix(AB, BA)) { comm = 'Yes, for this particular pair'; commClass = 'ok'; }
+  else comm = 'No: same size, different entries';
+  $('rComm').textContent = comm;
+  $('rowComm').className = commClass;
+
+  $('eqnNote').textContent = op === 'EW'
+    ? 'The equation above is the matrix product. The element-wise product shown now is simpler: c(i,j) = a(i,j) b(i,j), one pair of entries per result, with no sum.'
+    : 'Here ' + lName + ' is the left matrix and ' + rName + ' is the right matrix; n is the shared inner dimension' + (defined ? ' (n = ' + n + ')' : '') + ', so each entry is a sum of n products.';
+
+  // Buttons
+  $('bPrev').disabled = !defined || step === 0;
+  $('bNext').disabled = !defined || step >= total;
+  $('bPlay').disabled = !defined;
+  $('bReset').disabled = !defined || step === 0;
+  $('bPlay').textContent = timer ? '❚❚ Pause' : (defined && step >= total ? '↻ Replay' : '▶ Play');
+}
+
+// ---- Stepping ----
+function stop() { if (timer) { clearInterval(timer); timer = null; } }
+function play() {
+  const cur = current();
+  if (!cur.C) return;
+  if (timer) { stop(); paint(); return; }
+  if (step >= cur.total) step = 0;
+  const tick = () => {
+    const t = current().total;
+    if (step < t) step++;
+    if (step >= t) stop();
+    paint();
+  };
+  timer = setInterval(tick, 1000 / parseFloat($('sSpeed').value));
+  tick();
+}
+$('bPlay').addEventListener('click', play);
+$('bNext').addEventListener('click', () => { stop(); step++; paint(); });
+$('bPrev').addEventListener('click', () => { stop(); step = Math.max(0, step - 1); paint(); });
+$('bReset').addEventListener('click', () => { stop(); step = 0; paint(); });
+$('sSpeed').addEventListener('input', () => {
+  $('vSpeed').textContent = parseFloat($('sSpeed').value).toFixed(2).replace(/0$/, '') + ' entries/s';
+  if (timer) { stop(); play(); }
+});
+
+// ---- Operation and sizes ----
+function syncSeg() {
+  document.querySelectorAll('#opSeg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+}
+document.querySelectorAll('input[name=op]').forEach(r => r.addEventListener('change', () => {
+  op = r.value; stop(); step = 0; syncSeg(); build();
+}));
+[['selAr', v => ar = v], ['selAc', v => ac = v], ['selBr', v => br = v], ['selBc', v => bc = v]].forEach(([id, set]) => {
+  const sel = $(id);
+  for (let v = 1; v <= MAXN; v++) sel.add(new Option(String(v), String(v)));
+  sel.addEventListener('change', () => { set(+sel.value); stop(); step = 0; build(); });
+});
+function syncSizes() { $('selAr').value = ar; $('selAc').value = ac; $('selBr').value = br; $('selBc').value = bc; }
+
+// ---- Presets ----
+$('bExample').addEventListener('click', () => {
+  A = EXAMPLE_A.map(r => r.slice()); B = EXAMPLE_B.map(r => r.slice());
+  ar = 2; ac = 3; br = 3; bc = 2; stop(); step = 0; syncSizes(); build();
+});
+$('bRandom').addEventListener('click', () => {
+  const rnd = () => Math.floor(Math.random() * 13) - 6;   // integers from -6 to 6
+  A = A.map(r => r.map(rnd)); B = B.map(r => r.map(rnd));
+  stop(); step = 0; build();
+});
+$('bIdentity').addEventListener('click', () => {
+  // An identity matrix is square with ones on the diagonal and zeros elsewhere.
+  // Size it so that A x B is defined: B becomes (A columns) x (A columns).
+  br = ac; bc = ac;
+  B = B.map((r, i) => r.map((_, j) => (i === j ? 1 : 0)));
+  stop(); step = 0; syncSizes(); build();
+});
+
+// ---- Init ----
+syncSizes(); syncSeg(); build();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

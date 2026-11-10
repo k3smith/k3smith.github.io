@@ -113,6 +113,26 @@ const DEMO_COURSES = [
     ],
   },
   {
+    id: 'engt305',
+    name: 'ENGT 305: Advanced Technical Analysis',
+    term: 'ODU',
+    index: '/demos/engt305/index.html',
+    // Planned demos are added here as each file is built, so no card points at a missing file.
+    modules: [
+      {
+        number: 2,
+        title: 'Matrices, Functions & Plotting',
+        demos: [
+          {
+            file: 'M02-01-MatrixMultiplyDemo.html',
+            name: 'Matrix Multiplication Visualizer',
+            description: 'Build A x B one entry at a time; see the dimension rule and why order matters.',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'met475',
     name: 'MET 475 — Marine Engineering I',
     term: 'ODU',
