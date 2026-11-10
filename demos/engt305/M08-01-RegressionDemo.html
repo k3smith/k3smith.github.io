@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Least Squares and Overfitting: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; }
+#plot { display: block; width: 100%; cursor: crosshair; }
+.pt { cursor: grab; touch-action: none; outline: none; }
+.pt:active { cursor: grabbing; }
+.pt .hit { fill: transparent; }
+.pt .dot { fill: #1a3f5c; stroke: #fff; stroke-width: 2; }
+.pt.sel .dot { stroke: #e67300; stroke-width: 3; }
+.pt:focus-visible .hit { stroke: #e67300; stroke-width: 2; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 2px 12px 4px; font-size: 0.86em; color: #444;
+}
+.headline b { color: #2c5f8a; }
+.headline .err b { color: #b03030; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 2px 14px 12px; line-height: 1.5; min-height: 3.6em; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.slider-row { margin-bottom: 4px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #b05a10; cursor: pointer; }
+input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.cap-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; min-height: 3em; margin-bottom: 8px; }
+.flabel { font-size: 0.82em; color: #555; margin: 10px 0 5px; display: block; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.82em; color: #555; margin-top: 8px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.hl td:last-child { color: #b03030; }
+.result-table tr.eq td:last-child { font-weight: 600; font-size: 0.8em; }
+.mini { margin-top: 12px; }
+.mini .t { font-size: 0.78em; color: #5a6b80; margin-bottom: 2px; }
+.mini svg { display: block; width: 100%; height: auto; }
+.eqn { margin-top: 12px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Least Squares and Overfitting</h1>
+    <p>ENGT 305 · Module 8 &nbsp;|&nbsp; Fit a polynomial to measured data. Move the points, raise the degree, and see why the curve with the smallest error is not always the one to trust.</p>
+  </div>
+
+  <div class="stage">
+    <p class="hint">Drag a point to move it. Select an empty spot on the plot to add a point (up to 12). With a point focused, the arrow keys move it and Delete removes it.</p>
+    <svg id="plot" role="group" aria-label="Data points and fitted curve"><g id="bg"></g><g id="pts"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span>Degree: <b id="hDeg"></b></span>
+      <span class="err">SSE: <b id="hSSE"></b></span>
+      <span>R²: <b id="hR2"></b></span>
+    </div>
+    <div class="state-note" id="stateNote"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A <em>residual</em> is the vertical gap between a data point and the fitted curve (the red segments). <em>Least squares</em> picks the coefficients that make the sum of the squared residuals (SSE) as small as possible. <em>R²</em> is the fraction of the variation in y that the fit explains: 1 is perfect, 0 is no better than a flat line at the mean. Raising the polynomial degree always lowers SSE, but past the real complexity of the data the extra terms start fitting the scatter. That is <em>overfitting</em>, and it shows up as wiggles between the points and wild values when you <em>extrapolate</em>, meaning predict outside the range of the data (the shaded zones).
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sDeg"><span>Polynomial degree</span> <span class="val" id="vDeg"></span></label>
+        <input type="range" id="sDeg" min="1" max="9" step="1" value="1">
+      </div>
+      <p class="cap-note" id="capNote"></p>
+
+      <span class="flabel">Load a data set</span>
+      <div class="btn-row">
+        <button type="button" data-set="scatter">Line with scatter</button>
+        <button type="button" data-set="perfect">Perfect straight line</button>
+        <button type="button" data-set="rating">Outlet rating data</button>
+        <button type="button" data-set="clear">Clear all points</button>
+      </div>
+      <span class="flabel">Edit points</span>
+      <div class="btn-row">
+        <button type="button" id="bAdd">Add a point</button>
+        <button type="button" id="bDel">Remove selected point</button>
+      </div>
+      <label class="check"><input type="checkbox" id="cRes" checked> Show residuals</label>
+      <label class="check" id="truthWrap"><input type="checkbox" id="cTruth" checked> Show the relationship the data set was generated from</label>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Data points n</td><td id="rN"></td></tr>
+        <tr><td>Coefficients being fitted (degree + 1)</td><td id="rCoef"></td></tr>
+        <tr class="hl"><td>Sum of squared errors, SSE</td><td id="rSSE"></td></tr>
+        <tr><td>R²</td><td id="rR2"></td></tr>
+        <tr><td>Largest residual (absolute value)</td><td id="rMax"></td></tr>
+        <tr class="eq"><td>Fitted equation</td><td id="rEq"></td></tr>
+        <tr class="hl"><td id="rExtL">Fit extended to the right edge</td><td id="rExt"></td></tr>
+        <tr id="rowTruth"><td id="rTruthL">Generating relationship there</td><td id="rTruth"></td></tr>
+      </table>
+      <div class="mini">
+        <div class="t">SSE at each degree for these points (current degree in orange)</div>
+        <svg id="mini" viewBox="0 0 300 92" role="img" aria-labelledby="miniDesc"><desc id="miniDesc"></desc><g id="gMini"></g></svg>
+      </div>
+      <div class="eqn" id="eqn">
+        $$\hat{y} = b_0 + b_1 x + b_2 x^2 + \dots + b_d x^d$$
+        $$\text{SSE} = \sum_{i=1}^{n} \left(y_i - \hat{y}_i\right)^2 \qquad R^2 = 1 - \frac{\text{SSE}}{\sum_{i=1}^{n}\left(y_i - \bar{y}\right)^2}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB, <code>p = polyfit(x, y, d)</code> returns the least-squares coefficients for degree d and <code>polyval(p, x)</code> evaluates the fit. In the capstone (Part H), the outlet rating relates outflow Q to water depth h by a power law, Q = a h<sup>b</sup>. Taking the logarithm of both sides turns that into a straight line, log Q = log a + b log h, so a degree 1 fit on the logged data, <code>polyfit(log(h), log(Q), 1)</code>, gives the exponent b as the slope. For the limitations discussion (Part J), this demo shows the two things to say about any fitted curve: it can only be trusted inside the range of depths that were measured, and a high R² on the points you fitted does not prove the curve predicts well anywhere else.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// Least-squares solution of A c = b by Householder QR (A has at least as many rows as columns).
+function lstsq(A0, b0) {
+  const m = A0.length, n = A0[0].length;
+  const A = A0.map(r => r.slice()), b = b0.slice();
+  for (let k = 0; k < n; k++) {
+    let nrm = 0;
+    for (let i = k; i < m; i++) nrm += A[i][k] * A[i][k];
+    nrm = Math.sqrt(nrm);
+    if (nrm < 1e-14) continue;
+    const alpha = A[k][k] > 0 ? -nrm : nrm;
+    const v = new Array(m).fill(0);
+    for (let i = k; i < m; i++) v[i] = A[i][k];
+    v[k] -= alpha;
+    let vv = 0;
+    for (let i = k; i < m; i++) vv += v[i] * v[i];
+    if (vv < 1e-28) continue;
+    for (let j = k; j < n; j++) {
+      let s = 0;
+      for (let i = k; i < m; i++) s += v[i] * A[i][j];
+      s = 2 * s / vv;
+      for (let i = k; i < m; i++) A[i][j] -= s * v[i];
+    }
+    let s = 0;
+    for (let i = k; i < m; i++) s += v[i] * b[i];
+    s = 2 * s / vv;
+    for (let i = k; i < m; i++) b[i] -= s * v[i];
+  }
+  const c = new Array(n).fill(0);
+  for (let k = n - 1; k >= 0; k--) {
+    let s = b[k];
+    for (let j = k + 1; j < n; j++) s -= A[k][j] * c[j];
+    c[k] = Math.abs(A[k][k]) < 1e-14 ? 0 : s / A[k][k];
+  }
+  return c;
+}
+// Polynomial least-squares fit of degree d. x is shifted and scaled to [-1, 1] first for numerical stability.
+function polyfit(xs, ys, d) {
+  const lo = Math.min(...xs), hi = Math.max(...xs);
+  const xm = (lo + hi) / 2, sc = (hi - lo) / 2 || 1;
+  const V = xs.map(x => { const u = (x - xm) / sc, row = [1]; for (let j = 1; j <= d; j++) row.push(row[j - 1] * u); return row; });
+  return { c: lstsq(V, ys), xm, sc, d };
+}
+function polyval(fit, x) {
+  const u = (x - fit.xm) / fit.sc;
+  let y = 0;
+  for (let j = fit.d; j >= 0; j--) y = y * u + fit.c[j];
+  return y;
+}
+// Coefficients b0, b1, ... in terms of the original x (expanding the shifted and scaled form).
+function rawCoeffs(fit) {
+  const out = new Array(fit.d + 1).fill(0);
+  let pw = [1];                                    // ((x - xm)/sc)^j as a polynomial in x
+  for (let j = 0; j <= fit.d; j++) {
+    pw.forEach((v, i) => { out[i] += fit.c[j] * v; });
+    const nx = new Array(pw.length + 1).fill(0);
+    pw.forEach((v, i) => { nx[i] += v * (-fit.xm / fit.sc); nx[i + 1] += v / fit.sc; });
+    pw = nx;
+  }
+  return out;
+}
+function stats(xs, ys, fit) {
+  const n = xs.length, mean = ys.reduce((a, v) => a + v, 0) / n;
+  let sse = 0, sst = 0, mx = 0;
+  for (let i = 0; i < n; i++) {
+    const r = ys[i] - polyval(fit, xs[i]);
+    sse += r * r; sst += (ys[i] - mean) * (ys[i] - mean); mx = Math.max(mx, Math.abs(r));
+  }
+  return { sse, sst, r2: sst < 1e-12 ? null : 1 - sse / sst, maxRes: mx };
+}
+// Highest degree with a unique fit: one less than the number of distinct x values.
+function maxDegree(xs) { return new Set(xs.map(x => x.toFixed(6))).size - 1; }
+/*MATH-END*/
+
+// ---- Data sets (illustrative values) ----
+const NOISE_A = [0.35, -0.4, 0.3, -0.2, 0.5, -0.35, 0.15, -0.3];
+const NOISE_R = [0.04, -0.06, 0.05, -0.03, 0.06, -0.05, 0.02, -0.04];
+const SETS = {
+  scatter: {
+    view: { x0: 0, x1: 12, y0: -2, y1: 14, xName: 'x', yName: 'y', step: 0.1 },
+    truth: x => 1 + 0.8 * x, truthName: 'y = 1 + 0.8x',
+    pts: NOISE_A.map((e, i) => [i + 1, +(1 + 0.8 * (i + 1) + e).toFixed(2)]) },
+  perfect: {
+    view: { x0: 0, x1: 12, y0: -2, y1: 14, xName: 'x', yName: 'y', step: 0.1 },
+    truth: x => 1 + 0.8 * x, truthName: 'y = 1 + 0.8x',
+    pts: [1, 2, 3, 4, 5, 6].map(x => [x, +(1 + 0.8 * x).toFixed(2)]) },
+  rating: {
+    view: { x0: 0, x1: 2.4, y0: -1, y1: 7, xName: 'water depth h (m)', yName: 'outflow Q (m³/s)', step: 0.02 },
+    truth: h => 1.8 * Math.pow(Math.max(h, 0), 1.5), truthName: 'Q = 1.8 h^1.5',
+    pts: NOISE_R.map((e, i) => { const h = 0.2 * (i + 1); return [+h.toFixed(2), +(1.8 * Math.pow(h, 1.5) * (1 + e)).toFixed(3)]; }) },
+};
+const DEG_NAMES = ['', 'linear', 'quadratic', 'cubic'];
+const MAXPTS = 12;
+
+// ---- State ----
+let pts = SETS.scatter.pts.map(p => p.slice());
+let view = SETS.scatter.view, truth = SETS.scatter.truth, truthName = SETS.scatter.truthName;
+let degree = 1, sel = -1, showRes = true, showTruth = true;
+let geom = null, dragging = -1;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function sig(x, n) {
+  if (Math.abs(x) < 1e-9) return '0';
+  const s = Math.abs(x) >= 1e5 || Math.abs(x) < 1e-3 ? x.toExponential(2) : String(parseFloat(x.toPrecision(n || 4)));
+  return s.replace('-', '−');
+}
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const snapX = x => clamp(Math.round(x / view.step) * view.step, view.x0, view.x1);
+const snapY = y => clamp(Math.round(y / view.step) * view.step, view.y0, view.y1);
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9))).replace('-', '−'); }
+
+function currentFit() {
+  if (pts.length < 2) return null;
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const dMax = maxDegree(xs);
+  if (dMax < 1) return null;
+  const d = Math.min(degree, dMax);
+  const fit = polyfit(xs, ys, d);
+  return { fit, d, dMax, xs, ys, st: stats(xs, ys, fit) };
+}
+
+// ---- Main plot ----
+function draw(F) {
+  const svg = $('plot'), bg = $('bg');
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? 290 : 380;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  bg.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = 12, mB = small ? 40 : 44, fs = small ? 10 : 11.5;
+  const X = x => mL + (x - view.x0) / (view.x1 - view.x0) * (W - mL - mR);
+  const Y = y => H - mB - (y - view.y0) / (view.y1 - view.y0) * (H - mT - mB);
+  geom = { W, H, mL, mR, mT, mB, X, Y,
+    toX: px => view.x0 + (px - mL) / (W - mL - mR) * (view.x1 - view.x0),
+    toY: py => view.y0 + (H - mB - py) / (H - mT - mB) * (view.y1 - view.y0) };
+
+  const defs = el(bg, 'defs', {});
+  const cp = el(defs, 'clipPath', { id: 'clip' });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  el(bg, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+
+  // extrapolation zones: outside the range of the data
+  if (pts.length >= 2) {
+    const lo = Math.min(...pts.map(p => p[0])), hi = Math.max(...pts.map(p => p[0]));
+    if (lo > view.x0) el(bg, 'rect', { x: X(view.x0), y: mT, width: X(lo) - X(view.x0), height: H - mT - mB, fill: 'rgba(230,115,0,0.09)' });
+    if (hi < view.x1) {
+      el(bg, 'rect', { x: X(hi), y: mT, width: X(view.x1) - X(hi), height: H - mT - mB, fill: 'rgba(230,115,0,0.09)' });
+      if (X(view.x1) - X(hi) > 90) el(bg, 'text', { x: (X(hi) + X(view.x1)) / 2, y: mT + 14, 'text-anchor': 'middle', 'font-size': fs, fill: '#b05a10' }, 'extrapolation');
+    }
+  }
+  // grid
+  const xs = niceStep(view.x1 - view.x0, small ? 5 : 8), ysStep = niceStep(view.y1 - view.y0, small ? 5 : 8);
+  for (let x = Math.ceil(view.x0 / xs - 1e-9) * xs; x <= view.x1 + 1e-9; x += xs) {
+    el(bg, 'line', { x1: X(x), x2: X(x), y1: mT, y2: H - mB, stroke: '#e8edf3', 'stroke-width': 1 });
+    el(bg, 'text', { x: X(x), y: H - mB + 16, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(x, xs));
+  }
+  for (let y = Math.ceil(view.y0 / ysStep - 1e-9) * ysStep; y <= view.y1 + 1e-9; y += ysStep) {
+    el(bg, 'line', { x1: mL, x2: W - mR, y1: Y(y), y2: Y(y), stroke: Math.abs(y) < 1e-9 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(bg, 'text', { x: mL - 6, y: Y(y) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(y, ysStep));
+  }
+  el(bg, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  el(bg, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, view.xName);
+  el(bg, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, view.yName);
+
+  const g = el(bg, 'g', { 'clip-path': 'url(#clip)' });
+  const curve = f => {
+    let d = '';
+    const N = 400, span = (view.y1 - view.y0) * 3;
+    for (let i = 0; i <= N; i++) {
+      const x = view.x0 + (view.x1 - view.x0) * i / N;
+      const y = clamp(f(x), view.y0 - span, view.y1 + span);
+      d += (i ? 'L' : 'M') + X(x).toFixed(2) + ' ' + Y(y).toFixed(2);
+    }
+    return d;
+  };
+  if (truth && showTruth) el(g, 'path', { d: curve(truth), fill: 'none', stroke: '#2a7a3a', 'stroke-width': 1.8, 'stroke-dasharray': '7 4' });
+  if (F) {
+    if (showRes) pts.forEach(p => el(g, 'line', { x1: X(p[0]), x2: X(p[0]), y1: Y(p[1]), y2: Y(polyval(F.fit, p[0])), stroke: '#b03030', 'stroke-width': 2 }));
+    el(g, 'path', { d: curve(x => polyval(F.fit, x)), fill: 'none', stroke: '#b05a10', 'stroke-width': 2.6, 'stroke-linejoin': 'round' });
+  }
+  // legend
+  const items = [['#b05a10', '', 'fitted curve']];
+  if (showRes) items.push(['#b03030', '', 'residuals']);
+  if (truth && showTruth) items.push(['#2a7a3a', '7 4', 'generating relationship']);
+  const lx = mL + 10, ly = mT + 14;
+  el(bg, 'rect', { x: lx - 5, y: ly - 10, width: small ? 150 : 170, height: items.length * 15 + 6, fill: '#fff', opacity: 0.85 });
+  items.forEach((it, i) => {
+    const a = { x1: lx, x2: lx + 22, y1: ly + i * 15, y2: ly + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(bg, 'line', a);
+    el(bg, 'text', { x: lx + 28, y: ly + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+  syncPoints();
+}
+
+// ---- Point handles (kept between redraws so dragging and focus are not interrupted) ----
+function syncPoints() {
+  const layer = $('pts');
+  while (layer.children.length > pts.length) layer.removeChild(layer.lastChild);
+  while (layer.children.length < pts.length) {
+    const g = el(layer, 'g', { class: 'pt', tabindex: 0, role: 'button' });
+    g.dataset.i = layer.children.length - 1;
+    el(g, 'circle', { class: 'hit', r: 14 });
+    el(g, 'circle', { class: 'dot', r: 6 });
+    const idx = () => +g.dataset.i;
+    g.addEventListener('pointerdown', ev => { dragging = idx(); sel = idx(); g.setPointerCapture(ev.pointerId); g.focus(); ev.preventDefault(); update(); });
+    g.addEventListener('pointermove', ev => {
+      if (dragging !== idx()) return;
+      const svg = $('plot'), pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+      const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+      pts[idx()] = [snapX(geom.toX(q.x)), snapY(geom.toY(q.y))];
+      update();
+    });
+    const end = () => { dragging = -1; };
+    g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+    g.addEventListener('focus', () => { if (sel !== idx()) { sel = idx(); update(); } });
+    g.addEventListener('keydown', ev => {
+      const i = idx(), s = view.step * (ev.shiftKey ? 5 : 1);
+      const mv = { ArrowLeft: [-s, 0], ArrowRight: [s, 0], ArrowUp: [0, s], ArrowDown: [0, -s] }[ev.key];
+      if (mv) { ev.preventDefault(); pts[i] = [snapX(pts[i][0] + mv[0]), snapY(pts[i][1] + mv[1])]; update(); }
+      else if (ev.key === 'Delete' || ev.key === 'Backspace') { ev.preventDefault(); removePoint(i); }
+    });
+  }
+  [...layer.children].forEach((g, i) => {
+    g.setAttribute('transform', 'translate(' + geom.X(pts[i][0]).toFixed(2) + ',' + geom.Y(pts[i][1]).toFixed(2) + ')');
+    g.classList.toggle('sel', i === sel);
+    g.setAttribute('aria-label', 'Data point ' + (i + 1) + ' of ' + pts.length + ' at ' + view.xName + ' ' + sig(pts[i][0]) + ', ' + view.yName + ' ' + sig(pts[i][1]) +
+      '. Arrow keys move it, Delete removes it.');
+  });
+}
+function removePoint(i) {
+  if (i < 0 || i >= pts.length) return;
+  pts.splice(i, 1);
+  sel = pts.length ? Math.min(i, pts.length - 1) : -1;
+  update();
+  if (sel >= 0) $('pts').children[sel].focus();
+}
+function addPoint(x, y) {
+  if (pts.length >= MAXPTS) return;
+  pts.push([snapX(x), snapY(y)]);
+  sel = pts.length - 1;
+  update();
+}
+
+// ---- SSE by degree mini chart ----
+function drawMini(F) {
+  const g = $('gMini');
+  g.textContent = '';
+  if (!F) { el(g, 'text', { x: 150, y: 50, 'text-anchor': 'middle', 'font-size': 11, fill: '#8a97a6' }, 'Needs at least two points'); $('miniDesc').textContent = ''; return; }
+  const top = Math.min(9, F.dMax), vals = [];
+  for (let d = 1; d <= top; d++) vals.push(stats(F.xs, F.ys, polyfit(F.xs, F.ys, d)).sse);
+  const mx = Math.max(...vals, 1e-12), bw = Math.min(28, 270 / top - 5), x0 = 14;
+  el(g, 'line', { x1: 8, x2: 292, y1: 70, y2: 70, stroke: '#8a97a6', 'stroke-width': 1 });
+  vals.forEach((v, i) => {
+    const h = Math.max(v / mx * 56, v > 1e-9 ? 1.5 : 0), x = x0 + i * (bw + 5), on = i + 1 === F.d;
+    el(g, 'rect', { x, y: 70 - h, width: bw, height: h, fill: on ? '#b05a10' : '#c8d8e8' });
+    el(g, 'text', { x: x + bw / 2, y: 83, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': on ? 700 : 400, fill: on ? '#b05a10' : '#5a6b80' }, String(i + 1));
+    if (bw >= 22) el(g, 'text', { x: x + bw / 2, y: 70 - h - 3, 'text-anchor': 'middle', 'font-size': 8.5, fill: '#5a6b80' }, v < 1e-9 ? '0' : sig(v, 2));
+  });
+  $('miniDesc').textContent = 'Sum of squared errors by degree: ' + vals.map((v, i) => 'degree ' + (i + 1) + ' ' + sig(v, 3)).join(', ') + '.';
+}
+
+// ---- Readouts ----
+function eqText(F) {
+  if (F.d > 3) return 'degree ' + F.d + ' polynomial (' + (F.d + 1) + ' coefficients)';
+  const b = rawCoeffs(F.fit), v = view.xName === 'x' ? 'x' : 'h', lhs = view.xName === 'x' ? 'ŷ' : 'Q̂';
+  let s = lhs + ' = ' + sig(b[0], 3);
+  for (let j = 1; j <= F.d; j++) s += (b[j] < 0 ? ' − ' : ' + ') + sig(Math.abs(b[j]), 3) + v + (j === 2 ? '²' : j === 3 ? '³' : '');
+  return s;
+}
+function update() {
+  const F = currentFit();
+  const n = pts.length;
+  $('rN').textContent = n;
+  $('bAdd').disabled = n >= MAXPTS;
+  $('bDel').disabled = sel < 0 || sel >= n;
+  $('truthWrap').hidden = !truth; $('rowTruth').hidden = !truth;
+
+  if (!F) {
+    $('vDeg').textContent = String(degree);
+    $('capNote').textContent = 'Add at least two points with different x values to fit a curve.';
+    ['hDeg', 'hSSE', 'hR2', 'rCoef', 'rSSE', 'rR2', 'rMax', 'rEq', 'rExt', 'rTruth'].forEach(id => { $(id).textContent = 'none yet'; });
+    $('stateNote').textContent = 'Select the plot to add points, or load a data set.';
+  } else {
+    const { d, dMax, st } = F;
+    const nm = DEG_NAMES[d] ? ' (' + DEG_NAMES[d] + ')' : '';
+    $('vDeg').textContent = d + nm;
+    $('capNote').textContent = degree > dMax
+      ? 'The slider is at ' + degree + ', but the degree is capped at ' + dMax + ': with ' + (dMax + 1) + ' distinct x values, a degree ' + dMax + ' polynomial already passes through every point, so higher degrees have no unique answer.'
+      : 'Highest usable degree for these points is ' + dMax + ' (one less than the number of distinct x values).';
+    const sse = st.sse < 1e-9 ? '0' : sig(st.sse), r2 = st.r2 === null ? 'not defined (all y equal)' : st.r2.toFixed(4);
+    $('hDeg').textContent = d + nm; $('hSSE').textContent = sse; $('hR2').textContent = r2;
+    $('rCoef').textContent = (d + 1) + ' for ' + n + ' points';
+    $('rSSE').textContent = sse; $('rR2').textContent = r2;
+    $('rMax').textContent = st.maxRes < 1e-6 ? '0' : sig(st.maxRes, 3);
+    $('rEq').textContent = eqText(F);
+    const v = view.xName === 'x' ? 'x' : 'h';
+    $('rExtL').textContent = 'Fit extended to ' + v + ' = ' + sig(view.x1);
+    $('rExt').textContent = sig(polyval(F.fit, view.x1));
+    if (truth) { $('rTruthL').textContent = 'Generating relationship there (' + truthName + ')'; $('rTruth').textContent = sig(truth(view.x1)); }
+
+    let note;
+    if (d === dMax && n > 2) note = 'Interpolation: with ' + (d + 1) + ' coefficients for ' + (dMax + 1) + ' distinct x values the curve passes through every point, so SSE is zero and R² is 1. It is fitting the scatter, not the trend. Look between the points and in the shaded zones.';
+    else if (d === 1) note = st.r2 !== null && st.r2 > 0.9 ? 'A straight line captures the trend: R² is close to 1 and the residuals are small and fall on both sides of the line.' : 'A straight line leaves large residuals here. Check whether they follow a pattern (curved data) or just scatter.';
+    else if (d >= 4) note = 'High degree: SSE keeps dropping because extra coefficients can only reduce it. That is not evidence of a better model. Compare the value at the right edge with a lower degree.';
+    else note = 'A low-degree curve. Ask whether the extra bend is supported by the data or by one or two points. Try dragging a single point and see how far the curve moves.';
+    $('stateNote').textContent = note;
+  }
+  draw(F); drawMini(F);
+}
+
+// ---- Wiring ----
+$('sDeg').addEventListener('input', () => { degree = +$('sDeg').value; update(); });
+$('cRes').addEventListener('change', () => { showRes = $('cRes').checked; update(); });
+$('cTruth').addEventListener('change', () => { showTruth = $('cTruth').checked; update(); });
+document.querySelectorAll('button[data-set]').forEach(bn => bn.addEventListener('click', () => {
+  if (bn.dataset.set === 'clear') { pts = []; truth = null; sel = -1; }
+  else {
+    const s = SETS[bn.dataset.set];
+    pts = s.pts.map(p => p.slice()); view = s.view; truth = s.truth; truthName = s.truthName; sel = -1;
+    degree = 1; $('sDeg').value = 1;
+  }
+  update();
+}));
+$('bDel').addEventListener('click', () => removePoint(sel));
+$('bAdd').addEventListener('click', () => {
+  // place the new point in the widest gap between existing points, a little off the current curve
+  const F = currentFit();
+  let x = (view.x0 + view.x1) / 2, y = (view.y0 + view.y1) / 2;
+  if (pts.length >= 2) {
+    const xs = pts.map(p => p[0]).sort((p, q) => p - q);
+    let best = 0;
+    for (let i = 1; i < xs.length; i++) if (xs[i] - xs[i - 1] > xs[best + 1] - xs[best]) best = i - 1;
+    x = (xs[best] + xs[best + 1]) / 2;
+    if (F) y = polyval(F.fit, x) + 0.08 * (view.y1 - view.y0);
+  }
+  addPoint(x, y);
+  $('pts').lastChild.focus();
+});
+$('plot').addEventListener('click', ev => {
+  if (ev.target.closest('.pt') || !geom) return;
+  const svg = $('plot'), pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+  if (q.x < geom.mL || q.x > geom.W - geom.mR || q.y < geom.mT || q.y > geom.H - geom.mB) return;
+  addPoint(geom.toX(q.x), geom.toY(q.y));
+});
+window.addEventListener('resize', update);
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

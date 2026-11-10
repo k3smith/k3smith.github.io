@@ -45,6 +45,15 @@ body {
     linear-gradient(#1a3f5c, #1a3f5c) right top / 8px 2px no-repeat,
     linear-gradient(#1a3f5c, #1a3f5c) right bottom / 8px 2px no-repeat;
 }
+.mwrap { display: grid; grid-template-columns: auto auto; }
+.mwrap .matrix { grid-column: 2; grid-row: 2; }
+.collabs { grid-column: 2; grid-row: 1; display: flex; gap: 4px; padding: 0 10px 3px; }
+.collabs .lab { width: 46px; text-align: center; }
+.rowlabs { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; gap: 4px; padding: 6px 5px 6px 0; }
+.rowlabs .lab { height: 34px; line-height: 34px; text-align: right; }
+.lab { font-size: 0.68em; color: #8a97a6; white-space: nowrap; }
+.lab.row.on { color: #2c5f8a; font-weight: 700; }
+.lab.col.on { color: #b05a10; font-weight: 700; }
 .cell {
   width: 46px; height: 34px; border: 1px solid #c8d8e8; border-radius: 4px;
   font: inherit; font-size: 0.86em; text-align: center; color: #222; background: #fff;
@@ -86,7 +95,7 @@ button.cell.cur { background: #e3f4e6; border: 2px solid #2a7a3a; }
 
 /* Working line */
 .work {
-  margin: 14px auto 0; max-width: 700px; min-height: 104px;
+  margin: 14px auto 0; max-width: 700px; min-height: 128px;
   background: #fff; border: 1px solid #dde4ec; border-radius: 8px; padding: 10px 14px;
 }
 .work .cap { font-size: 0.78em; color: #5a6b80; margin-bottom: 4px; }
@@ -167,7 +176,7 @@ input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
   .scenario-note { margin: 12px 12px 0; }
   .cascade-bar { padding: 11px 16px; }
   .stage { padding: 16px 8px 14px; }
-  .cell { width: 42px; }
+  .cell, .collabs .lab { width: 42px; }
 }
 </style>
 </head>
@@ -186,6 +195,7 @@ input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
       <div class="line" id="work1"></div>
       <div class="line" id="work2"></div>
       <div class="line" id="work3"></div>
+      <div class="cap" id="work4"></div>
     </div>
   </div>
 
@@ -324,7 +334,7 @@ function current() {
 }
 
 // ---- Build the matrices (only when sizes or operation change) ----
-function buildMatrix(name, M, editable) {
+function buildMatrix(name, M, editable, labs) {
   const block = document.createElement('div');
   block.className = 'mblock';
   const label = document.createElement('div');
@@ -359,7 +369,26 @@ function buildMatrix(name, M, editable) {
       grid.appendChild(el);
     }
   }
-  block.appendChild(grid);
+  // Row and column labels, so c(row, column) can be traced back to its row and its column.
+  const wrap = document.createElement('div');
+  wrap.className = 'mwrap';
+  const addLabs = (kind, count) => {
+    const box = document.createElement('div');
+    box.className = kind === 'row' ? 'rowlabs' : 'collabs';
+    box.setAttribute('aria-hidden', 'true');
+    for (let q = 0; q < count; q++) {
+      const sp = document.createElement('span');
+      sp.className = 'lab ' + kind;
+      sp.dataset.idx = q;
+      sp.textContent = kind + ' ' + (q + 1);
+      box.appendChild(sp);
+    }
+    wrap.appendChild(box);
+  };
+  if (labs.rows) addLabs('row', M.length);
+  if (labs.cols) addLabs('col', M[0].length);
+  wrap.appendChild(grid);
+  block.appendChild(wrap);
   return block;
 }
 function symbol(txt) {
@@ -371,12 +400,15 @@ function build() {
   const cur = current();
   const host = $('matrices');
   host.innerHTML = '';
-  host.appendChild(buildMatrix(cur.lName, cur.L, true));
+  // Matrix product: rows come from the left matrix, columns from the right matrix.
+  // Element-wise: row and column both apply to each matrix.
+  const ew = op === 'EW';
+  host.appendChild(buildMatrix(cur.lName, cur.L, true, { rows: true, cols: ew }));
   host.appendChild(symbol(cur.sym));
-  host.appendChild(buildMatrix(cur.rName, cur.R, true));
+  host.appendChild(buildMatrix(cur.rName, cur.R, true, { rows: ew, cols: true }));
   host.appendChild(symbol('='));
   if (cur.C) {
-    host.appendChild(buildMatrix('C', cur.C, false));
+    host.appendChild(buildMatrix('C', cur.C, false, { rows: true, cols: true }));
   } else {
     const box = document.createElement('div');
     box.className = 'undefined-box';
@@ -428,6 +460,11 @@ function paint() {
     }
   });
 
+  document.querySelectorAll('#matrices .lab').forEach(el => {
+    const q = +el.dataset.idx;
+    el.classList.toggle('on', el.classList.contains('row') ? q === ci : q === cj);
+  });
+
   // Dimension rule
   const rule = $('rule');
   rule.className = 'rule ' + (defined ? 'ok' : 'bad');
@@ -451,7 +488,8 @@ function paint() {
 
   // Working lines
   const cap = $('workCap'), w1 = $('work1'), w2 = $('work2'), w3 = $('work3');
-  w1.textContent = ''; w2.textContent = ''; w3.textContent = '';
+  const w4 = $('work4');
+  w1.textContent = ''; w2.textContent = ''; w3.textContent = ''; w4.textContent = '';
   if (!defined) {
     cap.textContent = 'Change the sizes until the rule above is satisfied, or switch the operation.';
   } else if (ci < 0) {
@@ -477,8 +515,8 @@ function paint() {
       }
       tex(w1, cname + ' = ' + tT.join(' + '), 'c(' + (ci + 1) + ',' + (cj + 1) + ') = ' + tP.join(' + '));
       if (n > 1) {
-        tex(w2, '\\phantom{' + cname + '} = ' + sT.join(' + ') + ' \\qquad \\text{running sum: } ' + runT.join(' \\rightarrow '),
-            '= ' + sP.join(' + ') + '   running sum: ' + runT.join(' -> '));
+        tex(w2, '\\phantom{' + cname + '} = ' + sT.join(' + '), '= ' + sP.join(' + '));
+        w4.textContent = 'Running sum as each product is added: ' + runT.join(' → ');
       }
       tex(w3, '\\phantom{' + cname + '} = \\mathbf{' + fmt(C[ci][cj]) + '}', '= ' + fmt(C[ci][cj]));
     }

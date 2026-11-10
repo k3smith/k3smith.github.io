@@ -130,6 +130,50 @@ const DEMO_COURSES = [
           },
         ],
       },
+      {
+        number: 4,
+        title: 'Integral Calculus',
+        demos: [
+          {
+            file: 'M04-01-RiemannSumDemo.html',
+            name: 'Riemann Sum and Trapezoid Area',
+            description: 'Add strips and watch the area approximation converge; left, right, mid, trapezoid.',
+          },
+        ],
+      },
+      {
+        number: 5,
+        title: 'Vector Analysis',
+        demos: [
+          {
+            file: 'M05-01-DotCrossProductDemo.html',
+            name: 'Dot and Cross Product',
+            description: 'Drag two vectors; see the dot product, projection, and the cross product area.',
+          },
+        ],
+      },
+      {
+        number: 6,
+        title: 'Differential Equations & System Response',
+        demos: [
+          {
+            file: 'M06-01-DampingDemo.html',
+            name: 'Second-Order Damping Explorer',
+            description: 'Vary the damping ratio and natural frequency; see under, critical, and overdamped response and the poles.',
+          },
+        ],
+      },
+      {
+        number: 8,
+        title: 'Curve Fitting',
+        demos: [
+          {
+            file: 'M08-01-RegressionDemo.html',
+            name: 'Least Squares and Overfitting',
+            description: 'Fit a line to draggable data, see residuals and R-squared, then overfit with degree.',
+          },
+        ],
+      },
     ],
   },
   {
