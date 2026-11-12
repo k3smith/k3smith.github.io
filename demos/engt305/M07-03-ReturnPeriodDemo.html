@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Return Period and Flood Risk: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; padding: 12px 12px 10px; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; min-height: 2.8em; }
+.view svg { display: block; width: 100%; }
+.handle { cursor: ns-resize; touch-action: none; outline: none; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 10px 6px 2px; font-size: 0.86em; color: #444;
+}
+.headline b { color: #1a3f5c; }
+.headline .r b { color: #b03030; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.flabel { font-size: 0.82em; color: #555; margin: 10px 0 5px; display: block; }
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].th { accent-color: #b05a10; }
+input[type=range]:disabled { opacity: 0.45; cursor: not-allowed; }
+input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .tbl-wrap:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.preset-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin: 2px 0 12px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.th td:last-child { color: #b05a10; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.tbl-title { font-size: 0.78em; color: #5a6b80; margin: 14px 0 4px; }
+.tbl-wrap { max-height: 205px; overflow-y: auto; border: 1px solid #e3e9f0; border-radius: 6px; }
+.rank { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.rank th { position: sticky; top: 0; background: #eef4fa; color: #2c5f8a; font-size: 0.72em; font-weight: 700; padding: 5px 6px; text-align: right; }
+.rank td { font-size: 0.78em; padding: 4px 6px; text-align: right; border-top: 1px solid #f0f3f7; color: #444; }
+.rank tr.ex td { background: #fdf0e3; color: #8a4409; font-weight: 600; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.86em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .view p { min-height: 0; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Return Period and Flood Risk</h1>
+    <p>ENGT 305 · Module 7 &nbsp;|&nbsp; A "25-year storm" is not a storm that comes every 25 years. Use a rainfall record to estimate how likely a storm is in any one year, then see how that small yearly chance adds up over the life of a structure.</p>
+  </div>
+
+  <div class="stage">
+    <div class="views">
+      <div class="view">
+        <h2>Step 1: the rainfall record</h2>
+        <p>Largest 24-hour rainfall in each of 30 years. Drag the orange line to set a storm size and count the years that exceeded it.</p>
+        <svg id="rec" role="img" aria-labelledby="recDesc"><desc id="recDesc"></desc><g id="gRec"></g>
+          <g class="handle" id="hTh" tabindex="0" role="slider" aria-label="Storm size threshold in millimeters. Up and down arrow keys change it." aria-valuemin="50" aria-valuemax="200"><circle class="ring" r="15"/><circle r="8" fill="#b05a10" stroke="#fff" stroke-width="2"/></g>
+        </svg>
+      </div>
+      <div class="view">
+        <h2>Step 2: risk over N years</h2>
+        <p>Chance of at least one storm that large during N years, for the return period T from step 1 (or one you set yourself).</p>
+        <svg id="risk" role="img" aria-labelledby="riskDesc"><desc id="riskDesc"></desc><g id="gRisk"></g></svg>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite">
+      <span>Chance in any one year: <b id="hP"></b></span>
+      <span>Return period T: <b id="hT"></b></span>
+      <span class="r">Risk in <span id="hNn"></span> years: <b id="hR"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> The <em>annual exceedance probability</em> P is the chance that a given storm size is exceeded in any single year. From a record of n yearly maximums, rank them from largest (m = 1) to smallest (m = n) and estimate P = m/(n + 1), a formula known as the <em>Weibull plotting position</em>. The <em>return period</em> is T = 1/P, the average number of years between exceedances over a very long time. It is an average, not a schedule. If each year is independent, the chance of escaping N years in a row is (1 − P)<sup>N</sup>, so the <em>risk</em> of at least one exceedance in N years is 1 − (1 − P)<sup>N</sup>.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sTh"><span>Storm size: 24-hour rainfall depth</span> <span class="val" id="vTh"></span></label>
+        <input type="range" class="th" id="sTh" min="50" max="200" step="1" value="120">
+      </div>
+      <label class="check"><input type="checkbox" id="cLink" checked> <span>Take the return period from the record (step 1). Clear this to set T yourself.</span></label>
+      <div class="slider-row">
+        <label for="sT"><span>Return period T</span> <span class="val" id="vT"></span></label>
+        <input type="range" id="sT" min="2" max="200" step="1" value="25">
+      </div>
+      <div class="slider-row">
+        <label for="sN"><span>Number of years N (for example, a design life)</span> <span class="val" id="vN"></span></label>
+        <input type="range" id="sN" min="1" max="100" step="1" value="30">
+      </div>
+
+      <span class="flabel">Try these</span>
+      <div class="btn-row">
+        <button type="button" data-p="hundred">100-year storm over 30 years</button>
+        <button type="button" data-p="equal">N equal to T</button>
+        <button type="button" data-p="reset">Reset</button>
+      </div>
+      <p class="preset-note" id="presetNote"></p>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr class="th"><td>Years in the record above the line, m</td><td id="rM"></td></tr>
+        <tr class="th"><td>Record estimate: P = m/(n + 1), T = 1/P</td><td id="rRec"></td></tr>
+        <tr class="sep"><td>Annual exceedance probability used, P</td><td id="rP"></td></tr>
+        <tr><td>Return period used, T</td><td id="rT"></td></tr>
+        <tr><td>Chance of no exceedance in N years</td><td id="rNo"></td></tr>
+        <tr class="r"><td>Risk of at least one in N years</td><td id="rR"></td></tr>
+        <tr><td>Expected number of exceedances, N × P</td><td id="rE"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+
+      <div class="tbl-title">The record ranked from largest to smallest (rows above the line are shaded)</div>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Ranked rainfall record">
+        <table class="rank">
+          <thead><tr><th scope="col">Rank m</th><th scope="col">Year</th><th scope="col">Depth (mm)</th><th scope="col">P = m/(n+1)</th><th scope="col">T (yr)</th></tr></thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+      </div>
+
+      <div class="eqn" id="eqn">
+        $$P = \frac{m}{n+1} \qquad T = \frac{1}{P}$$
+        $$\text{risk} = 1 - \left(1 - \frac{1}{T}\right)^{N}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB: <code>xs = sort(x, 'descend');</code> <code>m = (1:numel(x))';</code> <code>P = m/(numel(x)+1);</code> <code>T = 1./P;</code> then <code>risk = 1 - (1 - P).^N</code>. In the capstone (Part G), this is how the design storm for the detention basin gets its return period, and the risk formula says what choosing that storm means: how likely the basin is to be overtopped at least once during its service life. Two limits belong in the discussion. A 30-year record cannot say anything reliable about storms rarer than about once in 30 years; going further means fitting a probability distribution to the data and extrapolating. And the risk formula assumes every year is independent with the same P, which a changing climate or a changing watershed can break.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// Illustrative record of annual maximum 24-hour rainfall depths in millimeters (not a real gauge).
+const YEAR0 = 1994;
+const DEPTHS = [71, 94, 58, 132, 85, 77, 160, 66, 102, 89, 118, 73, 61, 96, 141, 82, 69, 110, 93, 78, 187, 64, 99, 125, 87, 74, 105, 91, 152, 80];
+// Ranked largest first, with the Weibull plotting position P = m / (n + 1) and return period T = 1 / P.
+function ranked() {
+  const n = DEPTHS.length;
+  return DEPTHS.map((d, i) => ({ year: YEAR0 + i, depth: d })).sort((a, b) => b.depth - a.depth)
+    .map((r, i) => ({ m: i + 1, year: r.year, depth: r.depth, P: (i + 1) / (n + 1), T: (n + 1) / (i + 1) }));
+}
+// Number of years whose maximum exceeded the threshold.
+function exceedCount(th) { return DEPTHS.filter(d => d > th).length; }
+// Risk of at least one exceedance in N independent years, each with probability P.
+function risk(P, N) { return 1 - Math.pow(1 - P, N); }
+/*MATH-END*/
+
+const NREC = DEPTHS.length;
+let th = 120, linked = true, Tman = 25, N = 30, geomRec = null;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 2 : d));
+  return String(r === 0 ? 0 : r);
+}
+function pct(p) { const v = p * 100; return (v >= 99.95 && v < 100 ? '99.9' : v.toFixed(1)) + '%'; }
+// The probability and return period currently in use, or null when the record cannot supply one.
+function current() {
+  const m = exceedCount(th);
+  const rec = m > 0 ? { P: m / (NREC + 1), T: (NREC + 1) / m } : null;
+  const use = linked ? rec : { P: 1 / Tman, T: Tman };
+  return { m, rec, use };
+}
+
+function sizeSvg(svg, Hpx) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Hpx);
+  svg.setAttribute('height', Hpx);
+  return W;
+}
+function drawRecord(C) {
+  const svg = $('rec'), g = $('gRec'), Hpx = 270, W = sizeSvg(svg, Hpx);
+  g.textContent = '';
+  const mL = 38, mR = 22, mT = 14, mB = 36, fs = 10.5, yMax = 210;
+  const X = i => mL + (i + 0.5) / NREC * (W - mL - mR);
+  const Y = v => Hpx - mB - v / yMax * (Hpx - mT - mB);
+  geomRec = { Hpx, mT, mB, yMax };
+  for (let v = 0; v <= 200; v += 50) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 5, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, String(v));
+  }
+  const bw = (W - mL - mR) / NREC * 0.72;
+  DEPTHS.forEach((d, i) => {
+    const ex = d > th;
+    el(g, 'rect', { x: X(i) - bw / 2, y: Y(d), width: bw, height: Y(0) - Y(d), fill: ex ? '#b05a10' : '#9fb8d0' });
+    if ((YEAR0 + i) % 5 === 0) el(g, 'text', { x: X(i), y: Y(0) + 14, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, String(YEAR0 + i));
+  });
+  el(g, 'line', { x1: mL, x2: W - mR, y1: Y(0), y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
+  el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx - 5, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, 'year');
+  el(g, 'text', { x: 10, y: (mT + Hpx - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 10 ' + (mT + Hpx - mB) / 2 + ')' }, 'rainfall depth (mm)');
+  el(g, 'line', { x1: mL, x2: W - mR + 8, y1: Y(th), y2: Y(th), stroke: '#b05a10', 'stroke-width': 2, 'stroke-dasharray': '6 3' });
+  el(g, 'text', { x: mL + 6, y: Y(th) - 6, 'font-size': fs + 0.5, 'font-weight': 700, fill: '#8a4409', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 },
+    th + ' mm: exceeded in ' + C.m + ' of ' + NREC + ' years');
+  const hd = $('hTh');
+  hd.setAttribute('transform', 'translate(' + (W - mR + 8) + ',' + Y(th).toFixed(2) + ')');
+  hd.setAttribute('aria-valuenow', th);
+  hd.setAttribute('aria-valuetext', th + ' millimeters, exceeded in ' + C.m + ' years');
+  $('recDesc').textContent = 'Bar chart of 30 annual maximum rainfall depths. A threshold of ' + th + ' millimeters was exceeded in ' + C.m + ' years.';
+}
+function drawRisk(C) {
+  const svg = $('risk'), g = $('gRisk'), Hpx = 270, W = sizeSvg(svg, Hpx);
+  g.textContent = '';
+  const mL = 42, mR = 16, mT = 14, mB = 36, fs = 10.5;
+  const X = n => mL + n / 100 * (W - mL - mR);
+  const Y = r => Hpx - mB - r * (Hpx - mT - mB);
+  for (let v = 0; v <= 100; v += 25) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v / 100), y2: Y(v / 100), stroke: '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 5, y: Y(v / 100) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, v + '%');
+  }
+  for (let n = 0; n <= 100; n += 20) {
+    el(g, 'line', { x1: X(n), x2: X(n), y1: mT, y2: Y(0), stroke: '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(n), y: Y(0) + 14, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, String(n));
+  }
+  el(g, 'line', { x1: mL, x2: W - mR, y1: Y(0), y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
+  el(g, 'line', { x1: mL, x2: mL, y1: mT, y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
+  el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx - 5, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, 'number of years N');
+  if (!C.use) {
+    el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx / 2 - 8, 'text-anchor': 'middle', 'font-size': fs + 1, fill: '#b03030' }, 'No year in the record exceeded this depth,');
+    el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx / 2 + 8, 'text-anchor': 'middle', 'font-size': fs + 1, fill: '#b03030' }, 'so the record cannot give a return period.');
+    $('riskDesc').textContent = 'No risk curve: the record cannot give a return period for this depth.';
+    return;
+  }
+  const P = C.use.P, T = C.use.T;
+  let d = '';
+  for (let n = 0; n <= 100; n += 0.5) d += (n ? 'L' : 'M') + X(n).toFixed(2) + ' ' + Y(risk(P, n)).toFixed(2);
+  el(g, 'path', { d, fill: 'none', stroke: '#b03030', 'stroke-width': 2.6 });
+  if (T <= 100) {
+    el(g, 'circle', { cx: X(T), cy: Y(risk(P, T)), r: 4, fill: '#fff', stroke: '#1a3f5c', 'stroke-width': 2 });
+    const right = X(T) < W - mR - 110;
+    el(g, 'text', { x: X(T) + (right ? 8 : -8), y: Y(risk(P, T)) + 14, 'text-anchor': right ? 'start' : 'end', 'font-size': fs, fill: '#1a3f5c', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 },
+      'N = T: ' + pct(risk(P, T)));
+  }
+  const r = risk(P, N);
+  el(g, 'line', { x1: X(N), x2: X(N), y1: Y(0), y2: Y(r), stroke: '#b03030', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+  el(g, 'line', { x1: mL, x2: X(N), y1: Y(r), y2: Y(r), stroke: '#b03030', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+  el(g, 'circle', { cx: X(N), cy: Y(r), r: 6, fill: '#b03030', stroke: '#fff', 'stroke-width': 2 });
+  const lr = X(N) < W - mR - 70;
+  el(g, 'text', { x: X(N) + (lr ? 10 : -10), y: Y(r) - 8 < mT + 10 ? Y(r) + 18 : Y(r) - 8, 'text-anchor': lr ? 'start' : 'end', 'font-size': fs + 1.5, 'font-weight': 700, fill: '#b03030', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, pct(r));
+  $('riskDesc').textContent = 'Risk curve for a return period of ' + fmt(T) + ' years. Over ' + N + ' years the risk of at least one exceedance is ' + pct(r) + '.';
+}
+
+function update() {
+  const C = current();
+  $('sTh').value = th; $('sN').value = N; $('cLink').checked = linked;
+  $('vTh').textContent = th + ' mm';
+  $('vN').textContent = N + (N === 1 ? ' year' : ' years');
+  $('sT').disabled = linked;
+  if (linked && C.rec) $('sT').value = Math.max(2, Math.min(200, Math.round(C.rec.T)));
+  else if (!linked) $('sT').value = Tman;
+  $('vT').textContent = C.use ? fmt(C.use.T) + ' years' + (linked ? ' (from record)' : '') : 'not available';
+  $('hNn').textContent = N;
+
+  $('rM').textContent = C.m + ' of ' + NREC;
+  $('rRec').textContent = C.rec ? 'P = ' + C.m + '/' + (NREC + 1) + ' = ' + C.rec.P.toFixed(3) + ', T = ' + fmt(C.rec.T) + ' yr' : 'none: no year exceeded it';
+  if (C.use) {
+    const P = C.use.P, r = risk(P, N);
+    $('rP').textContent = P.toFixed(4) + ' (' + pct(P) + ' each year)';
+    $('rT').textContent = fmt(C.use.T) + ' years';
+    $('rNo').textContent = pct(1 - r);
+    $('rR').textContent = pct(r);
+    $('rE').textContent = fmt(N * P);
+    $('hP').textContent = pct(P); $('hT').textContent = fmt(C.use.T) + ' years'; $('hR').textContent = pct(r);
+    const src = '1 - \\left(1 - ' + P.toFixed(4) + '\\right)^{' + N + '} = 1 - ' + (1 - r).toFixed(4) + ' = \\textcolor{#b03030}{' + r.toFixed(4) + '}';
+    const plain = 'risk = 1 − (1 − ' + P.toFixed(4) + ')^' + N + ' = ' + r.toFixed(4);
+    if (hasKatex()) { try { katex.render(src, $('live'), { throwOnError: false }); } catch (e) { $('live').textContent = plain; } }
+    else $('live').textContent = plain;
+  } else {
+    ['rP', 'rT', 'rNo', 'rR', 'rE', 'hP', 'hT', 'hR'].forEach(id => { $(id).textContent = 'not available'; });
+    $('live').textContent = 'Lower the line until at least one year exceeds it, or set T yourself.';
+  }
+  document.querySelectorAll('#rankBody tr').forEach(tr => tr.classList.toggle('ex', +tr.dataset.depth > th));
+  drawRecord(C); drawRisk(C);
+}
+
+// ---- Ranked table (built once) ----
+ranked().forEach(r => {
+  const tr = document.createElement('tr');
+  tr.dataset.depth = r.depth;
+  [r.m, r.year, r.depth, r.P.toFixed(3), fmt(r.T)].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+  $('rankBody').appendChild(tr);
+});
+
+// ---- Wiring ----
+const clearNote = () => { $('presetNote').textContent = ''; };
+const setTh = v => { th = Math.max(50, Math.min(200, Math.round(v))); clearNote(); update(); };
+$('sTh').addEventListener('input', () => setTh(+$('sTh').value));
+$('sN').addEventListener('input', () => { N = +$('sN').value; clearNote(); update(); });
+$('sT').addEventListener('input', () => { Tman = +$('sT').value; clearNote(); update(); });
+$('cLink').addEventListener('change', () => {
+  linked = $('cLink').checked;
+  if (!linked) { const C = current(); Tman = C.rec ? Math.max(2, Math.min(200, Math.round(C.rec.T))) : 25; }
+  clearNote(); update();
+});
+const PRESETS = {
+  hundred: () => { linked = false; Tman = 100; N = 30; return 'A 1% chance each year sounds negligible, but over 30 years it compounds to about a 26% chance of at least one such storm: roughly one in four.'; },
+  equal:   () => { linked = false; Tman = 50; N = 50; return 'Over a span equal to the return period, the event is more likely than not, but far from certain: about 63% for any large T. There is a 37% chance it does not happen at all.'; },
+  reset:   () => { linked = true; th = 120; Tman = 25; N = 30; return ''; },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => { $('presetNote').textContent = PRESETS[bn.dataset.p](); update(); }));
+(function drag() {
+  const svg = $('rec'), hd = $('hTh');
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => {
+    if (!on || !geomRec) return;
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM().inverse()), G = geomRec;
+    setTh((G.Hpx - G.mB - q.y) / (G.Hpx - G.mT - G.mB) * G.yMax);
+  });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const s = (ev.shiftKey ? 10 : 1) * (ev.key === 'ArrowUp' ? 1 : ev.key === 'ArrowDown' ? -1 : 0);
+    if (!s) return;
+    ev.preventDefault(); setTh(th + s);
+  });
+})();
+window.addEventListener('resize', update);
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

@@ -64,7 +64,7 @@ input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=check
 .flabel { font-size: 0.82em; color: #555; margin: 4px 0 5px; display: block; }
 .btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .btn-row button {
-  flex: 1; min-width: 76px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  flex: 1; min-width: 60px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
   border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
 }
 .btn-row button:hover { background: #e2ecf6; }
@@ -83,19 +83,6 @@ input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=check
 .eqn .katex-display { margin: 0.45em 0; }
 .eqn-note { font-size: 0.74em; color: #5a6b80; margin-top: 6px; line-height: 1.5; }
 
-/* First-order companion */
-.companion { border-top: 1px solid #dde8f2; padding: 12px 22px; }
-.companion[open] { padding-bottom: 18px; }
-.companion summary {
-  font-size: 0.74em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
-  color: #2c5f8a; cursor: pointer; padding: 4px 0;
-}
-.companion summary:focus-visible { outline: 2px solid #e67300; outline-offset: 2px; }
-.companion[open] summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #dde8f2; }
-.companion > p { font-size: 0.78em; color: #4a5a6a; line-height: 1.55; margin-bottom: 10px; }
-.comp-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
-.comp-grid .view { border-radius: 8px; }
-#foPlot { height: auto; }
 
 .cascade-bar {
   background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
@@ -108,10 +95,9 @@ input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=check
   body { padding: 8px; }
   .card-header { padding: 14px 16px 12px; }
   .stage { padding: 8px; }
-  .stage-grid, .comp-grid, .bottom-panel { grid-template-columns: 1fr; }
+  .stage-grid, .bottom-panel { grid-template-columns: 1fr; }
   .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
   .outputs { padding: 16px; }
-  .companion { padding: 16px; }
   .scenario-note { margin: 12px 12px 0; }
   .cascade-bar { padding: 11px 16px; }
 }
@@ -190,7 +176,8 @@ input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=check
         <tr><td>For m = 1 kg: damping c = 2 ζ m ω<sub>n</sub></td><td id="rC"></td></tr>
       </table>
       <div class="eqn" id="eqn">
-        $$m\,y'' + c\,y' + k\,y = 0 \qquad \zeta = \frac{c}{2\sqrt{k\,m}} \qquad \omega_n = \sqrt{\frac{k}{m}}$$
+        $$m\,y'' + c\,y' + k\,y = 0$$
+        $$\zeta = \frac{c}{2\sqrt{k\,m}} \qquad \omega_n = \sqrt{\frac{k}{m}}$$
         $$s_{1,2} = -\zeta\,\omega_n \pm \omega_n\sqrt{\zeta^2 - 1}$$
       </div>
       <div class="eqn" id="eqnSol"></div>
@@ -198,31 +185,8 @@ input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=check
     </div>
   </div>
 
-  <details class="companion">
-    <summary>Companion: a first-order response, the basin routing case from the capstone (select to open)</summary>
-    <p>A system with only one way to store something (water in a basin, heat in a part) is <em>first order</em>: one real pole, so it can never oscillate. Its speed is set by a single <em>time constant</em> τ, the time to cover 63.2% of the way to the final value. A heavily overdamped second-order system behaves almost the same way, because its slow pole dominates.</p>
-    <div class="comp-grid">
-      <div class="view">
-        <h2>Basin outflow after inflow steps up</h2>
-        <svg id="foPlot" viewBox="0 0 400 230" role="img" aria-labelledby="foDesc"><desc id="foDesc"></desc><g id="gFo"></g></svg>
-      </div>
-      <div>
-        <div class="slider-row">
-          <label for="sTau"><span>Time constant τ</span> <span class="val" id="vTau"></span></label>
-          <input type="range" id="sTau" min="0.5" max="4" step="0.1" value="1.5">
-        </div>
-        <table class="result-table">
-          <tr><td>Pole s = −1/τ</td><td id="rFoPole"></td></tr>
-          <tr><td>Outflow at t = τ</td><td>63.2% of inflow</td></tr>
-          <tr><td>Time to reach 98% (about 4τ)</td><td id="rFo98"></td></tr>
-        </table>
-        <div class="eqn" id="eqnFo">$$\tau\,\frac{dQ}{dt} + Q = I \qquad Q(t) = I\left(1 - e^{-t/\tau}\right)$$</div>
-      </div>
-    </div>
-  </details>
-
   <div class="cascade-bar">
-    <strong>In practice:</strong> The same three regimes show up in a vehicle suspension, a building swaying after a gust, a gate on its hinge, and a pressure gauge needle. In MATLAB you can solve the equation numerically with <code>ode45</code> and find the poles with <code>roots([m c k])</code>. In the capstone (Part F), level-pool routing tracks how the water stored in the detention basin responds to inflow: dS/dt = I − Q. In the simplified case where outflow is proportional to storage (Q = S/τ), that is exactly the first-order equation above, which is why the basin's outflow lags behind the inflow and peaks lower instead of oscillating. The real basin is nonlinear because outflow depends on water depth through the outlet equations, so Part F solves it step by step.
+    <strong>In practice:</strong> The same three regimes show up in a vehicle suspension, a building swaying after a gust, a gate on its hinge, and a pressure gauge needle. In MATLAB you can solve the equation numerically with <code>ode45</code> and find the poles with <code>roots([m c k])</code>. In the capstone (Part F), level-pool routing tracks how the water stored in the detention basin responds to inflow: dS/dt = I − Q. In the simplified case where outflow is proportional to storage, that is a first-order equation: one real pole and no oscillation, which is why the basin's outflow lags behind the inflow and peaks lower instead of ringing. The First-Order Response demo covers that case. The real basin is nonlinear because outflow depends on water depth through the outlet equations, so Part F solves it step by step.
   </div>
 </div>
 
@@ -256,8 +220,6 @@ function poles(z, wn) {
 function regime(z) {
   return z < 1e-9 ? 'undamped' : z < 1 - 1e-9 ? 'underdamped' : z <= 1 + 1e-9 ? 'critical' : 'overdamped';
 }
-// First-order step response as a fraction of the final value.
-function firstOrder(tau, t) { return 1 - Math.exp(-t / tau); }
 /*MATH-END*/
 
 const REG = {
@@ -275,7 +237,7 @@ const REG = {
     tex: 'y(t) = C_1 e^{s_1 t} + C_2 e^{s_2 t}' },
 };
 
-let z = 0.2, wn = 4, y0 = 1, v0 = 0, showRef = true, tau = 1.5;
+let z = 0.2, wn = 4, y0 = 1, v0 = 0, showRef = true;
 const TMAX = 10;
 const $ = id => document.getElementById(id);
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -388,36 +350,6 @@ function drawPoles() {
   }
 }
 
-// ---- First-order companion ----
-function drawFirstOrder() {
-  const g = $('gFo');
-  g.textContent = '';
-  const T = 12, mL = 44, mR = 12, mT = 12, mB = 36, W = 400, H = 230;
-  const X = t => mL + t / T * (W - mL - mR), Y = p => H - mB - p / 110 * (H - mT - mB);
-  for (let p = 0; p <= 100; p += 25) {
-    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(p), y2: Y(p), stroke: '#e8edf3', 'stroke-width': 1 });
-    el(g, 'text', { x: mL - 6, y: Y(p) + 4, 'text-anchor': 'end', 'font-size': 10.5, fill: '#5a6b80' }, p + '%');
-  }
-  for (let t = 0; t <= T; t += 2) el(g, 'text', { x: X(t), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#5a6b80' }, String(t));
-  el(g, 'line', { x1: mL, x2: W - mR, y1: Y(0), y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
-  el(g, 'line', { x1: mL, x2: mL, y1: mT, y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
-  el(g, 'text', { x: (mL + W - mR) / 2, y: H - 5, 'text-anchor': 'middle', 'font-size': 11, fill: '#444' }, 'time t (h)');
-  el(g, 'line', { x1: mL, x2: W - mR, y1: Y(100), y2: Y(100), stroke: '#1a3f5c', 'stroke-width': 1.4, 'stroke-dasharray': '6 4' });
-  el(g, 'text', { x: W - mR - 4, y: Y(100) - 5, 'text-anchor': 'end', 'font-size': 10.5, fill: '#1a3f5c' }, 'inflow I (steady)');
-  let d = '';
-  for (let i = 0; i <= 240; i++) { const t = T * i / 240; d += (i ? 'L' : 'M') + X(t).toFixed(2) + ' ' + Y(100 * firstOrder(tau, t)).toFixed(2); }
-  el(g, 'path', { d, fill: 'none', stroke: '#b05a10', 'stroke-width': 2.6 });
-  const p63 = 100 * firstOrder(tau, tau);
-  el(g, 'line', { x1: X(tau), x2: X(tau), y1: Y(0), y2: Y(p63), stroke: '#b05a10', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
-  el(g, 'line', { x1: mL, x2: X(tau), y1: Y(p63), y2: Y(p63), stroke: '#b05a10', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
-  el(g, 'circle', { cx: X(tau), cy: Y(p63), r: 4, fill: '#fff', stroke: '#b05a10', 'stroke-width': 2 });
-  el(g, 'text', { x: X(tau) + 8, y: Y(p63) + 14, 'font-size': 10.5, fill: '#b05a10', 'font-weight': 700 }, '63.2% at t = τ');
-  el(g, 'text', { x: W - mR - 4, y: Y(100 * firstOrder(tau, T)) + 16, 'text-anchor': 'end', 'font-size': 10.5, fill: '#b05a10' }, 'outflow Q');
-  $('vTau').textContent = fmt(tau, 1) + ' h';
-  $('rFoPole').textContent = fmt(-1 / tau) + ' per hour';
-  $('rFo98').textContent = fmt(4 * tau, 1) + ' h';
-  $('foDesc').textContent = 'Basin outflow rising toward a steady inflow with time constant ' + fmt(tau, 1) + ' hours.';
-}
 
 // ---- Readouts ----
 function update() {
@@ -461,12 +393,11 @@ $('sY0').addEventListener('input', () => { y0 = +$('sY0').value; update(); });
 $('sV0').addEventListener('input', () => { v0 = +$('sV0').value; update(); });
 $('cRef').addEventListener('change', () => { showRef = $('cRef').checked; drawTime(); });
 document.querySelectorAll('button[data-z]').forEach(bn => bn.addEventListener('click', () => { z = +bn.dataset.z; update(); }));
-$('sTau').addEventListener('input', () => { tau = +$('sTau').value; drawFirstOrder(); });
 window.addEventListener('resize', drawTime);
 
-update(); drawFirstOrder();
+update();
 if (typeof renderMathInElement === 'function') {
-  ['eqn', 'eqnFo'].forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false }));
+  ['eqn'].forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false }));
 }
 </script>
 </body>

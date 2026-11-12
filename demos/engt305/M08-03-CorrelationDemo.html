@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correlation and Covariance: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Correlation and Covariance</h1>
+    <p>ENGT 305 · Module 8 &nbsp;|&nbsp; Two numbers summarize whether two measured quantities move together. See what each point contributes to them, why one depends on units and the other does not, and where both can mislead.</p>
+  </div>
+
+  <div class="stage">
+    <p class="hint">Drag any point to move it. The dashed lines mark the two means and split the plot into four quadrants.</p>
+    <svg id="plot" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc><g id="bg"></g><g class="handle" id="hp0" tabindex="0" role="button" aria-label="Data point 1. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp1" tabindex="0" role="button" aria-label="Data point 2. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp2" tabindex="0" role="button" aria-label="Data point 3. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp3" tabindex="0" role="button" aria-label="Data point 4. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp4" tabindex="0" role="button" aria-label="Data point 5. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp5" tabindex="0" role="button" aria-label="Data point 6. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp6" tabindex="0" role="button" aria-label="Data point 7. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp7" tabindex="0" role="button" aria-label="Data point 8. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp8" tabindex="0" role="button" aria-label="Data point 9. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp9" tabindex="0" role="button" aria-label="Data point 10. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp10" tabindex="0" role="button" aria-label="Data point 11. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp11" tabindex="0" role="button" aria-label="Data point 12. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp12" tabindex="0" role="button" aria-label="Data point 13. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp13" tabindex="0" role="button" aria-label="Data point 14. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp14" tabindex="0" role="button" aria-label="Data point 15. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp15" tabindex="0" role="button" aria-label="Data point 16. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp16" tabindex="0" role="button" aria-label="Data point 17. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp17" tabindex="0" role="button" aria-label="Data point 18. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp18" tabindex="0" role="button" aria-label="Data point 19. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hp19" tabindex="0" role="button" aria-label="Data point 20. Arrow keys move it."><circle class="ring" r="15"/><circle r="5.5" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g></svg>
+    <div class="headline" aria-live="polite">
+      <span>Covariance: <b id="hCov" style="color:#7a3fa0"></b></span>
+      <span>Correlation r: <b id="hR" style="color:#b05a10"></b></span>
+      <span>r²: <b id="hR2"></b></span>
+    </div>
+    <div class="state-note" id="stateNote"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> For each data point, multiply how far its x is from the mean of x by how far its y is from the mean of y. Points in the upper-right and lower-left quadrants give a positive product (both above, or both below, their means), and points in the other two give a negative one. <em>Covariance</em> is the average of those products, dividing by n − 1. Its sign says whether x and y tend to rise together or in opposition, but its size depends on the units of both variables. The <em>correlation coefficient</em> r removes the units by dividing the covariance by both standard deviations. It always lies between −1 and 1, and measures how closely the points follow a <em>straight line</em>: ±1 is a perfect line, 0 is no straight-line trend at all.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sR"><span>Generate a cloud with correlation</span> <span class="val" id="vR"></span></label>
+        <input type="range" id="sR" min="-1" max="1" step="0.05" value="0.8" style="accent-color:#b05a10">
+      </div>
+      <div class="slider-row">
+        <label for="sSy"><span>Spread of y (its standard deviation)</span> <span class="val" id="vSy"></span></label>
+        <input type="range" id="sSy" min="1" max="6" step="0.5" value="4">
+      </div>
+      <label class="check"><input type="checkbox" id="cUnits"> <span>Report peak flow in liters per second instead of m³/s (multiplies every y by 1000)</span></label>
+      <label class="check"><input type="checkbox" id="cRect" checked> <span>Show each point's product as a rectangle (blue positive, red negative)</span></label>
+      <label class="check"><input type="checkbox" id="cLine"> <span>Show the least-squares line</span></label>
+      <span class="flabel">Load a data set</span>
+      <div class="btn-row">
+        <button type="button" data-p="pos">Strong positive</button>
+        <button type="button" data-p="none">No relationship</button>
+        <button type="button" data-p="neg">Strong negative</button>
+        <button type="button" data-p="curve">Curved</button>
+        <button type="button" data-p="out">One outlier</button>
+      </div>
+      <p class="note preset-note" id="presetNote"></p>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Number of points n</td><td id="rN"></td></tr>
+        <tr><td>Mean of x, mean of y</td><td id="rMeans"></td></tr>
+        <tr><td>Standard deviations s<sub>x</sub>, s<sub>y</sub></td><td id="rSd"></td></tr>
+        <tr><td>Points with a positive product, negative product</td><td id="rSigns"></td></tr>
+        <tr class="p"><td>Covariance</td><td id="rCov"></td></tr>
+        <tr class="a"><td>Correlation coefficient r</td><td id="rR"></td></tr>
+        <tr><td>r² (share of the variation in y a straight line accounts for)</td><td id="rR2"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+      <div class="eqn" id="eqn">
+        $$\text{cov}(x, y) = \frac{1}{n-1}\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})$$
+        $$r = \frac{\text{cov}(x, y)}{s_x\, s_y}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB, <code>C = cov(x, y)</code> returns a 2 × 2 matrix with the two variances on the diagonal and the covariance in the off-diagonal entries, so the covariance is <code>C(1,2)</code>. <code>R = corrcoef(x, y)</code> has the same layout, and <code>R(1,2)</code> is r. For a straight-line fit, r² is the same number as the R² in the regression demo. Three cautions belong in any report that quotes r, including the capstone's fit quality discussion (Part H). It measures only straight-line association, so a strong curved relationship can have r near zero. A single unusual point can create or destroy a correlation, which is why you plot the data before trusting the number. And a high r says two quantities move together, not that one causes the other.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function mean(a) { return a.reduce((s, v) => s + v, 0) / a.length; }
+// Sample standard deviation and covariance (both divide by n - 1).
+function sd(a) { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) * (v - m), 0) / (a.length - 1)); }
+function covariance(x, y) { const mx = mean(x), my = mean(y); let s = 0; for (let i = 0; i < x.length; i++) s += (x[i] - mx) * (y[i] - my); return s / (x.length - 1); }
+function correlation(x, y) { const d = sd(x) * sd(y); return d < 1e-12 ? null : covariance(x, y) / d; }
+// Two fixed patterns, standardized (mean 0, standard deviation 1) and made exactly uncorrelated,
+// so a cloud built as  y = rho * U + sqrt(1 - rho^2) * W  has a sample correlation of exactly rho.
+const RAW_U = [-1.7, -1.4, -1.2, -0.95, -0.8, -0.6, -0.45, -0.3, -0.15, 0.0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.9, 1.05, 1.3, 1.5, 1.8];
+const RAW_W = [0.6, -1.1, 1.4, -0.3, 0.9, -1.6, 0.2, 1.1, -0.7, -0.1, 1.7, -1.3, 0.5, -0.4, 1.0, -0.9, 0.3, -1.5, 0.8, 0.4];
+function standardize(a) { const m = mean(a), s = sd(a); return a.map(v => (v - m) / s); }
+const U = standardize(RAW_U);
+const W = (() => { const w = standardize(RAW_W), b = covariance(w, U); return standardize(w.map((v, i) => v - b * U[i])); })();
+const MX = 50, SX = 12, MY = 12;
+function cloud(rho, sy) { return { x: U.map(u => MX + SX * u), y: U.map((u, i) => MY + sy * (rho * u + Math.sqrt(Math.max(0, 1 - rho * rho)) * W[i])) }; }
+/*MATH-END*/
+
+let rho = 0.8, sy = 4, xs, ys, liters = false, showRect = true, showLine = false, G = null;
+const Y0 = 0, Y1 = 26, X0 = 15, X1 = 90;
+
+function draw() {
+  G = plotFrame($('plot'), $('bg'), { H: [400, 300], x0: X0, x1: X1, y0: Y0, y1: Y1, xName: 'storm rainfall (mm)', yName: 'peak flow (' + (liters ? '1000 L/s' : 'm³/s') + ')', xStep: 10, yStep: 5 });
+  const g = G.inner, X = G.X, Y = G.Y, mx = mean(xs), my = mean(ys);
+  // quadrants
+  [[X0, mx, my, Y1, '#b03030'], [mx, X1, my, Y1, '#2c5f8a'], [X0, mx, Y0, my, '#2c5f8a'], [mx, X1, Y0, my, '#b03030']].forEach(q =>
+    el(g, 'rect', { x: X(q[0]), y: Y(q[3]), width: X(q[1]) - X(q[0]), height: Y(q[2]) - Y(q[3]), fill: q[4], opacity: 0.045 }));
+  if (showRect) xs.forEach((x, i) => {
+    const pos = (x - mx) * (ys[i] - my) >= 0;
+    el(g, 'rect', { x: Math.min(X(x), X(mx)), y: Math.min(Y(ys[i]), Y(my)), width: Math.abs(X(x) - X(mx)), height: Math.abs(Y(ys[i]) - Y(my)),
+      fill: pos ? 'rgba(44,95,138,0.13)' : 'rgba(176,48,48,0.15)', stroke: pos ? 'rgba(44,95,138,0.35)' : 'rgba(176,48,48,0.4)', 'stroke-width': 0.8 });
+  });
+  el(g, 'line', { x1: X(mx), x2: X(mx), y1: G.mT, y2: G.H - G.mB, stroke: '#5a6b80', 'stroke-width': 1.3, 'stroke-dasharray': '6 4' });
+  el(g, 'line', { x1: G.mL, x2: G.W - G.mR, y1: Y(my), y2: Y(my), stroke: '#5a6b80', 'stroke-width': 1.3, 'stroke-dasharray': '6 4' });
+  halo(g, X(mx) + 5, G.mT + 13, 'mean of x', '#5a6b80', G.fs, 'start');
+  halo(g, G.W - G.mR - 5, Y(my) - 5, 'mean of y', '#5a6b80', G.fs, 'end');
+  halo(g, G.W - G.mR - 8, G.mT + 16, '+', '#2c5f8a', 18, 'end'); halo(g, G.mL + 14, G.H - G.mB - 10, '+', '#2c5f8a', 18);
+  halo(g, G.mL + 14, G.mT + 16, '−', '#b03030', 18); halo(g, G.W - G.mR - 8, G.H - G.mB - 10, '−', '#b03030', 18, 'end');
+  if (showLine && sd(xs) > 1e-9) {
+    const b = covariance(xs, ys) / (sd(xs) * sd(xs));
+    el(g, 'line', { x1: X(X0), y1: Y(my + b * (X0 - mx)), x2: X(X1), y2: Y(my + b * (X1 - mx)), stroke: '#b05a10', 'stroke-width': 2.4 });
+  }
+  xs.forEach((x, i) => $('hp' + i).setAttribute('transform', 'translate(' + X(x).toFixed(2) + ',' + Y(ys[i]).toFixed(2) + ')'));
+}
+
+function update() {
+  const k = liters ? 1000 : 1, yv = ys.map(v => v * k), mx = mean(xs), my = mean(yv), sx = sd(xs), syv = sd(yv), c = covariance(xs, yv), r = correlation(xs, yv);
+  const u = liters ? 'L/s' : 'm³/s', big = v => liters ? Math.round(v).toLocaleString('en-US') : fmt(v, 2);
+  let np = 0, nn = 0;
+  xs.forEach((x, i) => { const p = (x - mean(xs)) * (ys[i] - mean(ys)); if (p > 1e-9) np++; else if (p < -1e-9) nn++; });
+  $('sR').value = rho; $('sSy').value = sy;
+  $('vR').textContent = uni(fmt(rho, 2)); $('vSy').textContent = fmt(sy, 1) + ' m³/s';
+  $('rN').textContent = xs.length;
+  $('rMeans').textContent = fmt(mx, 1) + ' mm, ' + big(my) + ' ' + u;
+  $('rSd').textContent = fmt(sx, 2) + ' mm, ' + big(syv) + ' ' + u;
+  $('rSigns').textContent = np + ' positive, ' + nn + ' negative';
+  $('rCov').textContent = uni(big(c)) + ' mm·' + u;
+  $('rR').textContent = r === null ? 'not defined' : uni(r.toFixed(3));
+  $('rR2').textContent = r === null ? 'not defined' : (r * r).toFixed(3);
+  $('hCov').textContent = uni(big(c)) + ' mm·' + u; $('hR').textContent = r === null ? 'not defined' : uni(r.toFixed(3)); $('hR2').textContent = r === null ? 'not defined' : (r * r).toFixed(3);
+  if (r !== null) tex($('live'), 'r = \\frac{' + (liters ? Math.round(c) : fmt(c, 2)) + '}{(' + fmt(sx, 2) + ')(' + (liters ? Math.round(syv) : fmt(syv, 2)) + ')} = \\textcolor{#b05a10}{' + r.toFixed(3) + '}',
+    'r = ' + big(c) + ' / (' + fmt(sx, 2) + ' × ' + big(syv) + ') = ' + r.toFixed(3));
+  else $('live').textContent = 'r needs both variables to vary.';
+  $('stateNote').textContent = r === null ? '' : liters ? 'Changing units multiplied the covariance by 1000 but left r exactly where it was. That is the reason r is the number people report.'
+    : Math.abs(r) > 0.999 ? 'Every point sits on one straight line.' : r > 0.05 ? 'More area in blue than red: x and y tend to be above their means together and below together.'
+    : r < -0.05 ? 'More area in red than blue: when x is above its mean, y tends to be below its mean.' : 'The blue and red areas nearly cancel: no straight-line trend.';
+  $('plotDesc').textContent = 'Scatter plot of ' + xs.length + ' points. Covariance ' + big(c) + ', correlation ' + (r === null ? 'not defined' : r.toFixed(3)) + '.';
+  draw();
+}
+function regen() { const c = cloud(rho, sy); xs = c.x; ys = c.y.map(v => Math.max(Y0 + 0.3, Math.min(Y1 - 0.3, v))); update(); }
+
+$('sR').addEventListener('input', () => { rho = +$('sR').value; $('presetNote').textContent = ''; regen(); });
+$('sSy').addEventListener('input', () => { sy = +$('sSy').value; $('presetNote').textContent = ''; regen(); });
+$('cUnits').addEventListener('change', () => { liters = $('cUnits').checked; update(); });
+$('cRect').addEventListener('change', () => { showRect = $('cRect').checked; draw(); });
+$('cLine').addEventListener('change', () => { showLine = $('cLine').checked; draw(); });
+const PRE = {
+  pos:  () => { rho = 0.9; regen(); return 'Bigger storms go with bigger peak flows. Nearly all the points fall in the two blue quadrants.'; },
+  none: () => { rho = 0; regen(); return 'The points scatter evenly over all four quadrants, so the positive and negative products cancel exactly.'; },
+  neg:  () => { rho = -0.9; regen(); return 'As x rises, y falls. Nearly all the points fall in the two red quadrants, so the covariance and r are negative.'; },
+  curve: () => { xs = U.map((u, i) => 31 + 2 * i); ys = xs.map(x => 3 + 0.05 * (x - 50) * (x - 50)); update(); return 'y is completely determined by x here, yet r is 0. The relationship is a curve, and r only detects straight-line trends.'; },
+  out:  () => { const c = cloud(0, 3); xs = c.x; ys = c.y; xs[19] = 86; ys[19] = 24.5; update(); return 'Nineteen points with no relationship, plus one far from the rest. That single point manufactures a sizable correlation. Drag it back toward the others and watch r collapse.'; },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => { $('presetNote').textContent = PRE[bn.dataset.p](); }));
+for (let i = 0; i < 20; i++) {
+  const set = (x, y) => { xs[i] = Math.max(X0 + 1, Math.min(X1 - 1, Math.round(x * 2) / 2)); ys[i] = Math.max(Y0 + 0.3, Math.min(Y1 - 0.3, Math.round(y * 10) / 10)); $('presetNote').textContent = ''; update(); };
+  makeDraggable($('hp' + i), $('plot'), q => set(G.toX(q.x), G.toY(q.y)), (dx, dy, big) => set(xs[i] + dx * (big ? 5 : 1), ys[i] + dy * (big ? 1 : 0.2)));
+}
+window.addEventListener('resize', draw);
+regen(); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>

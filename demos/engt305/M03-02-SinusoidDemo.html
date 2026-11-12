@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sinusoid Explorer: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.ptitle.d { color: #b05a10; }
+.stage svg { display: block; width: 100%; touch-action: pan-y; cursor: col-resize; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 4px 12px 12px; font-size: 0.86em; color: #444;
+}
+.headline b { color: #1a3f5c; }
+.headline .d b { color: #b05a10; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.flabel { font-size: 0.82em; color: #555; margin: 10px 0 5px; display: block; }
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].c { accent-color: #7a3fa0; }
+input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.preset-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; min-height: 3em; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.82em; color: #555; margin-top: 4px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.d td:last-child { color: #b05a10; }
+.result-table tr.c td:last-child { color: #7a3fa0; }
+.live { margin-top: 12px; font-size: 0.9em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.86em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Sinusoid Explorer</h1>
+    <p>ENGT 305 · Module 3 &nbsp;|&nbsp; Three numbers describe any sine wave: how tall it is, how fast it repeats, and where it starts. Change each one, and see what it does to the wave and to its rate of change.</p>
+  </div>
+
+  <div class="stage">
+    <div class="ptitle">The wave, y(t)</div>
+    <svg id="plot" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc><g id="bg"></g></svg>
+    <div class="ptitle d">Its derivative, y′(t): the rate of change (velocity, if y is position)</div>
+    <svg id="dplot" role="img" aria-label="Plot of the derivative of the wave"><g id="dbg"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span>Period T = <b id="hT"></b></span>
+      <span>Time shift = <b id="hShift"></b></span>
+      <span class="d">Peak rate A ω = <b id="hPeak"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> In y(t) = A sin(ω t + φ), the <em>amplitude</em> A is the peak height above the centerline. The <em>angular frequency</em> ω, in radians per second, sets how fast the wave repeats: one full cycle takes the <em>period</em> T = 2π/ω seconds, and the <em>frequency</em> f = 1/T counts cycles per second (hertz). The <em>phase</em> φ slides the wave along the time axis: a positive phase moves it to the left (earlier) by φ/ω seconds. The derivative of a sine is a cosine with the same period, scaled by ω, so a faster wave has a larger rate of change even at the same amplitude.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sA"><span>Amplitude A</span> <span class="val" id="vA"></span></label>
+        <input type="range" id="sA" min="0.5" max="5" step="0.1" value="3">
+      </div>
+      <div class="slider-row">
+        <label for="sW"><span>Angular frequency ω</span> <span class="val" id="vW"></span></label>
+        <input type="range" id="sW" min="1" max="8" step="0.1" value="2">
+      </div>
+      <div class="slider-row">
+        <label for="sP"><span>Phase φ</span> <span class="val" id="vP"></span></label>
+        <input type="range" id="sP" min="-180" max="180" step="5" value="0">
+      </div>
+      <div class="slider-row">
+        <label for="sT"><span>Time cursor t (or drag on either plot)</span> <span class="val" id="vT"></span></label>
+        <input type="range" class="c" id="sT" min="0" max="8" step="0.02" value="1.2">
+      </div>
+      <label class="check"><input type="checkbox" id="cRef" checked> Show the unshifted wave (φ = 0) for comparison</label>
+
+      <span class="flabel">Try these</span>
+      <div class="btn-row">
+        <button type="button" data-p="cos">φ = 90°: a cosine</button>
+        <button type="button" data-p="fast">Double the frequency</button>
+        <button type="button" data-p="lag">Lag by a quarter cycle</button>
+        <button type="button" data-p="reset">Reset</button>
+      </div>
+      <p class="preset-note" id="presetNote"></p>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Amplitude A</td><td id="rA"></td></tr>
+        <tr><td>Angular frequency ω</td><td id="rW"></td></tr>
+        <tr><td>Period T = 2π/ω</td><td id="rT"></td></tr>
+        <tr><td>Frequency f = 1/T = ω/2π</td><td id="rF"></td></tr>
+        <tr><td>Phase φ</td><td id="rP"></td></tr>
+        <tr><td>Time shift = −φ/ω</td><td id="rShift"></td></tr>
+        <tr class="d"><td>Peak rate of change, A ω</td><td id="rPeak"></td></tr>
+        <tr class="c"><td>At the cursor: y(t)</td><td id="rY"></td></tr>
+        <tr class="c"><td>At the cursor: y′(t), the tangent slope</td><td id="rDY"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+      <div class="eqn" id="eqn">
+        $$y(t) = A\sin(\omega t + \varphi)$$
+        $$T = \frac{2\pi}{\omega} \qquad f = \frac{1}{T}$$
+        $$y'(t) = A\,\omega\cos(\omega t + \varphi)$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> Sinusoids describe anything that cycles: a vibrating floor or bridge deck, alternating voltage, a rotating shaft, the tide at a pier. If y is position, the derivative is velocity, and the lower plot shows why a part vibrating at a high frequency can be moving fast even when it barely travels. In MATLAB: <code>t = linspace(0, 8, 400);</code> then <code>y = A*sin(w*t + phi);</code>. MATLAB's <code>sin</code> expects radians, so a phase given in degrees has to be converted with <code>deg2rad(phi)</code> before it is added to <code>w*t</code>. Mixing degrees and radians is the most common reason a plotted wave lands in the wrong place.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// phi is in radians here.
+function wave(A, w, phi, t) { return A * Math.sin(w * t + phi); }
+function dwave(A, w, phi, t) { return A * w * Math.cos(w * t + phi); }
+function period(w) { return 2 * Math.PI / w; }
+// Time shift of the wave relative to the unshifted sine: negative means it happens earlier (shifted left).
+function timeShift(w, phi) { return -phi / w; }
+/*MATH-END*/
+
+const TMAX = 8;
+let A = 3, w = 2, phiDeg = 0, tc = 1.2, showRef = true, geoms = [];
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+const PHI = () => phiDeg * Math.PI / 180;
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r).replace('-', '−');
+}
+function niceCeil(v) {
+  const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+  return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 4 ? 4 : m <= 5 ? 5 : 10) * p;
+}
+
+function frame(svg, g, Hpx, yMax, yStep, yName, small, showXName) {
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Hpx);
+  svg.setAttribute('height', Hpx);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = 10, mB = showXName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = t => mL + t / TMAX * (W - mL - mR);
+  const Y = v => mT + (yMax - v) / (2 * yMax) * (Hpx - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB, fill: '#fff' });
+  for (let t = 0; t <= TMAX; t++) {
+    el(g, 'line', { x1: X(t), x2: X(t), y1: mT, y2: Hpx - mB, stroke: '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(t), y: Hpx - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, String(t));
+  }
+  for (let v = -Math.floor(yMax / yStep + 1e-9) * yStep; v <= yMax + 1e-9; v += yStep) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, fmt(v, 2));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (showXName) el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, 'time t (s)');
+  el(g, 'text', { x: 12, y: (mT + Hpx - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + Hpx - mB) / 2 + ')' }, yName);
+  const defs = el(g, 'defs', {}), id = 'clip' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB });
+  return { W, Hpx, mL, mR, mT, mB, X, Y, fs, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }) };
+}
+function path(f, X, Y) {
+  let d = '';
+  for (let i = 0; i <= 800; i++) { const t = TMAX * i / 800; d += (i ? 'L' : 'M') + X(t).toFixed(2) + ' ' + Y(f(t)).toFixed(2); }
+  return d;
+}
+function hArrow(g, x1, x2, y, color) {
+  el(g, 'line', { x1, x2, y1: y, y2: y, stroke: color, 'stroke-width': 1.6 });
+  [[x1, x2 > x1 ? 1 : -1], [x2, x2 > x1 ? -1 : 1]].forEach(([x, s]) =>
+    el(g, 'polygon', { points: x + ',' + y + ' ' + (x + 7 * s) + ',' + (y - 4) + ' ' + (x + 7 * s) + ',' + (y + 4), fill: color }));
+}
+
+function draw() {
+  const phi = PHI(), T = period(w), small = $('plot').getBoundingClientRect().width < 520;
+  const G = frame($('plot'), $('bg'), small ? 250 : 310, 6, 2, 'y', small, false);
+  const g = G.inner, X = G.X, Y = G.Y;
+  // amplitude guides
+  [A, -A].forEach(v => el(g, 'line', { x1: G.mL, x2: G.W - G.mR, y1: Y(v), y2: Y(v), stroke: '#2c5f8a', 'stroke-width': 1, 'stroke-dasharray': '2 4', opacity: 0.7 }));
+  el(g, 'text', { x: G.W - G.mR - 6, y: Y(A) - 5, 'text-anchor': 'end', 'font-size': G.fs, fill: '#2c5f8a' }, '+A = ' + fmt(A, 1));
+  el(g, 'text', { x: G.W - G.mR - 6, y: Y(-A) + 13, 'text-anchor': 'end', 'font-size': G.fs, fill: '#2c5f8a' }, '−A');
+  if (showRef && phiDeg !== 0) el(g, 'path', { d: path(t => wave(A, w, 0, t), X, Y), fill: 'none', stroke: '#8a97a6', 'stroke-width': 1.5, 'stroke-dasharray': '6 4' });
+  el(g, 'path', { d: path(t => wave(A, w, phi, t), X, Y), fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.6 });
+
+  // period bracket between the first two peaks in view
+  let tp = (Math.PI / 2 - phi) / w;
+  tp -= Math.floor(tp / T) * T;
+  if (tp + T <= TMAX) {
+    const yb = Y(A) - 12 > G.mT + 12 ? Y(A) - 12 : Y(A) + 16;
+    hArrow(g, X(tp), X(tp + T), yb, '#2a7a3a');
+    [tp, tp + T].forEach(t => el(g, 'line', { x1: X(t), x2: X(t), y1: yb - 5, y2: Y(A), stroke: '#2a7a3a', 'stroke-width': 1 }));
+    el(g, 'text', { x: X(tp + T / 2), y: yb - 5, 'text-anchor': 'middle', 'font-size': G.fs, 'font-weight': 700, fill: '#2a7a3a', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'T = ' + fmt(T, 2) + ' s');
+  }
+  // time shift: from an upward zero crossing of the unshifted wave to the matching crossing of the shifted one
+  const sh = timeShift(w, phi);
+  if (showRef && phiDeg !== 0) {
+    let k = 1;
+    while (k * T + Math.min(sh, 0) < 0.15 && k < 20) k++;
+    const t0 = k * T, t1 = t0 + sh;
+    if (t0 <= TMAX && t1 <= TMAX && t1 >= 0 && Math.abs(X(t1) - X(t0)) > 18) {
+      hArrow(g, X(t0), X(t1), Y(0), '#7a3fa0');
+      el(g, 'text', { x: (X(t0) + X(t1)) / 2, y: Y(0) + 16, 'text-anchor': 'middle', 'font-size': G.fs, 'font-weight': 700, fill: '#7a3fa0', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'shift');
+    }
+  }
+  // cursor with a short tangent segment
+  const yc = wave(A, w, phi, tc), dc = dwave(A, w, phi, tc);
+  el(g, 'line', { x1: X(tc), x2: X(tc), y1: G.mT, y2: G.Hpx, stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' });
+  const sx = (G.W - G.mL - G.mR) / TMAX, sy = (G.Hpx - G.mT - G.mB) / 12;      // pixels per unit
+  const len = 46 / Math.hypot(sx, dc * sy);
+  el(g, 'line', { x1: X(tc - len), y1: Y(yc - dc * len), x2: X(tc + len), y2: Y(yc + dc * len), stroke: '#b05a10', 'stroke-width': 3, 'stroke-linecap': 'round' });
+  el(g, 'circle', { cx: X(tc), cy: Y(yc), r: 5.5, fill: '#7a3fa0', stroke: '#fff', 'stroke-width': 2 });
+  // legend
+  const bgL = $('bg'), lx = G.mL + 10, ly = G.Hpx - G.mB - (showRef && phiDeg !== 0 ? 38 : 23);
+  const items = [['#1a3f5c', '', 'y(t)'], ['#b05a10', '', 'tangent at the cursor']];
+  if (showRef && phiDeg !== 0) items.push(['#8a97a6', '6 4', 'same wave with φ = 0']);
+  el(bgL, 'rect', { x: lx - 5, y: ly - 10, width: small ? 146 : 166, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: lx, x2: lx + 20, y1: ly + i * 15, y2: ly + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(bgL, 'line', a);
+    el(bgL, 'text', { x: lx + 26, y: ly + i * 15 + 4, 'font-size': G.fs, fill: '#333' }, it[2]);
+  });
+
+  // derivative plot, rescaled to its own peak A w
+  const dMax = niceCeil(A * w * 1.05);
+  const D = frame($('dplot'), $('dbg'), small ? 190 : 220, dMax, dMax / 2, 'y′', small, true);
+  [A * w, -A * w].forEach(v => el(D.inner, 'line', { x1: D.mL, x2: D.W - D.mR, y1: D.Y(v), y2: D.Y(v), stroke: '#b05a10', 'stroke-width': 1, 'stroke-dasharray': '2 4', opacity: 0.7 }));
+  el(D.inner, 'text', { x: D.W - D.mR - 6, y: D.Y(A * w) + 13, 'text-anchor': 'end', 'font-size': D.fs, fill: '#b05a10' }, 'A ω = ' + fmt(A * w, 2));
+  el(D.inner, 'path', { d: path(t => dwave(A, w, phi, t), D.X, D.Y), fill: 'none', stroke: '#b05a10', 'stroke-width': 2.6 });
+  el(D.inner, 'line', { x1: D.X(tc), x2: D.X(tc), y1: 0, y2: D.Hpx - D.mB, stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' });
+  el(D.inner, 'circle', { cx: D.X(tc), cy: D.Y(dc), r: 5.5, fill: '#7a3fa0', stroke: '#fff', 'stroke-width': 2 });
+  geoms = [G, D];
+}
+
+function update() {
+  const phi = PHI(), T = period(w), sh = timeShift(w, phi);
+  $('sA').value = A; $('sW').value = w; $('sP').value = phiDeg; $('sT').value = tc;
+  $('vA').textContent = fmt(A, 1);
+  $('vW').textContent = fmt(w, 1) + ' rad/s';
+  $('vP').textContent = fmt(phiDeg, 0) + '°';
+  $('vT').textContent = fmt(tc, 2) + ' s';
+  const shiftTxt = Math.abs(sh) < 1e-9 ? '0 s (no shift)' : fmt(Math.abs(sh)) + ' s ' + (sh < 0 ? 'earlier (left)' : 'later (right)');
+  $('rA').textContent = fmt(A, 1);
+  $('rW').textContent = fmt(w, 1) + ' rad/s';
+  $('rT').textContent = fmt(T) + ' s';
+  $('rF').textContent = fmt(1 / T) + ' Hz';
+  $('rP').textContent = fmt(phiDeg, 0) + '° = ' + fmt(phi) + ' rad';
+  $('rShift').textContent = shiftTxt;
+  $('rPeak').textContent = fmt(A * w, 2) + ' per s';
+  const yc = wave(A, w, phi, tc), dc = dwave(A, w, phi, tc);
+  $('rY').textContent = fmt(yc);
+  $('rDY').textContent = fmt(dc) + ' per s';
+  $('hT').textContent = fmt(T) + ' s'; $('hShift').textContent = shiftTxt; $('hPeak').textContent = fmt(A * w, 2) + ' per s';
+
+  const live = $('live'), n = v => fmt(v, 3).replace('−', '-');
+  const ph = Math.abs(phi) < 1e-9 ? '' : (phi < 0 ? ' - ' : ' + ') + n(Math.abs(phi));
+  const src = 'y(t) = ' + n(A) + '\\sin(' + n(w) + '\\,t' + ph + ') \\qquad y\'(t) = \\textcolor{#b05a10}{' + n(A * w) + '}\\cos(' + n(w) + '\\,t' + ph + ')';
+  const plain = 'y(t) = ' + fmt(A) + ' sin(' + fmt(w) + ' t' + ph.replace('-', '−') + '),  y′(t) = ' + fmt(A * w) + ' cos(' + fmt(w) + ' t' + ph.replace('-', '−') + ')';
+  if (hasKatex()) { try { katex.render(src, live, { throwOnError: false }); } catch (e) { live.textContent = plain; } }
+  else live.textContent = plain;
+
+  $('plotDesc').textContent = 'Sine wave with amplitude ' + fmt(A, 1) + ', angular frequency ' + fmt(w, 1) + ' radians per second, phase ' + fmt(phiDeg, 0) +
+    ' degrees. Period ' + fmt(T) + ' seconds. At t = ' + fmt(tc, 2) + ' the value is ' + fmt(yc) + ' and the slope is ' + fmt(dc) + '.';
+  draw();
+}
+
+// ---- Wiring ----
+const clearNote = () => { $('presetNote').textContent = ''; };
+$('sA').addEventListener('input', () => { A = +$('sA').value; clearNote(); update(); });
+$('sW').addEventListener('input', () => { w = +$('sW').value; clearNote(); update(); });
+$('sP').addEventListener('input', () => { phiDeg = +$('sP').value; clearNote(); update(); });
+$('sT').addEventListener('input', () => { tc = +$('sT').value; update(); });
+$('cRef').addEventListener('change', () => { showRef = $('cRef').checked; draw(); });
+const PRESETS = {
+  cos:   () => { phiDeg = 90; return 'sin(ω t + 90°) = cos(ω t). A cosine is a sine that starts a quarter cycle early, at its peak.'; },
+  fast:  () => { w = Math.min(8, w * 2); return 'Doubling ω halves the period, so twice as many cycles fit in the window. The peak rate of change A ω doubles even though the amplitude did not change.'; },
+  lag:   () => { phiDeg = -90; return 'A phase of −90° delays the wave by a quarter of a period. It now starts at its lowest point: sin(ω t − 90°) = −cos(ω t).'; },
+  reset: () => { A = 3; w = 2; phiDeg = 0; tc = 1.2; return ''; },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => { $('presetNote').textContent = PRESETS[bn.dataset.p](); update(); }));
+// drag on either plot to move the time cursor
+['plot', 'dplot'].forEach((id, i) => {
+  const svg = $(id);
+  let on = false;
+  const set = ev => {
+    const G = geoms[i]; if (!G) return;
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+    tc = Math.max(0, Math.min(TMAX, Math.round((q.x - G.mL) / (G.W - G.mL - G.mR) * TMAX * 50) / 50));
+    update();
+  };
+  svg.addEventListener('pointerdown', ev => { on = true; svg.setPointerCapture(ev.pointerId); set(ev); });
+  svg.addEventListener('pointermove', ev => { if (on) set(ev); });
+  const end = () => { on = false; };
+  svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+});
+window.addEventListener('resize', draw);
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

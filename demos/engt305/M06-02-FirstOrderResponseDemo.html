@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First-Order Response: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>First-Order Response: Natural and Forced</h1>
+    <p>ENGT 305 · Module 6 &nbsp;|&nbsp; Fill a tank, cool a part, charge a capacitor: all three follow the same curve. One number, the time constant, sets how fast, and the response is the sum of a part that fades and a part that stays.</p>
+  </div>
+
+  <div class="stage">
+    <div class="ptitle" id="tPlot"></div>
+    <svg id="plot" role="img" aria-labelledby="plotDesc" style="touch-action:pan-y;cursor:col-resize"><desc id="plotDesc"></desc><g id="bg"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span>Time constant τ: <b id="hTau"></b></span>
+      <span>At the cursor: <b id="hY"></b></span>
+      <span>Progress toward the final value: <b id="hPct" style="color:#b05a10"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A <em>first-order system</em> has one place to store something (charge, heat, water), and its rate of change is proportional to how far it still is from where it is headed. The <em>time constant</em> τ sets the pace: after one τ it has covered 63.2% of the remaining distance, after three it is 95% of the way, and after five it has effectively arrived. The solution splits into two parts. The <em>forced response</em> (also called the particular or steady-state solution) is where the input is driving the system. The <em>natural response</em> (the homogeneous or transient solution) is the leftover gap from the initial condition, and it dies away as e<sup>−t/τ</sup>. Add them and you get the full response.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <fieldset>
+        <legend>Scenario</legend>
+        <div class="seg" id="scSeg">
+          <label><input type="radio" name="sc" value="basin" checked>Basin outflow</label>
+          <label><input type="radio" name="sc" value="cool">Part cooling</label>
+          <label><input type="radio" name="sc" value="rc">RC circuit charging</label>
+        </div>
+      </fieldset>
+      <p class="note" id="scNote" style="margin:0 0 12px;min-height:4.5em"></p>
+      <div class="slider-row">
+        <label for="sTau"><span>Time constant τ</span> <span class="val" id="vTau"></span></label>
+        <input type="range" id="sTau" min="0.5" max="6" step="0.1">
+      </div>
+      <div class="slider-row">
+        <label for="sY0"><span id="lY0"></span> <span class="val" id="vY0"></span></label>
+        <input type="range" id="sY0">
+      </div>
+      <div class="slider-row">
+        <label for="sYf"><span id="lYf"></span> <span class="val" id="vYf"></span></label>
+        <input type="range" id="sYf">
+      </div>
+      <div class="slider-row">
+        <label for="sT"><span>Time cursor t (or drag on the plot)</span> <span class="val" id="vT"></span></label>
+        <input type="range" id="sT" min="0" max="20" step="0.05" value="2">
+      </div>
+      <label class="check"><input type="checkbox" id="cParts" checked> Show the natural and forced parts separately</label>
+      <label class="check"><input type="checkbox" id="cTan" checked> Show the starting slope (it aims at the final value at t = τ)</label>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr class="g"><td>Forced part (steady state)</td><td id="rForced"></td></tr>
+        <tr class="p"><td>Natural part at the cursor</td><td id="rNat"></td></tr>
+        <tr><td>Total response at the cursor</td><td id="rY"></td></tr>
+        <tr class="a"><td>Progress toward the final value</td><td id="rPct"></td></tr>
+        <tr><td>Starting slope, (final − initial)/τ</td><td id="rSlope"></td></tr>
+        <tr><td>Time to reach 95% (3τ)</td><td id="r95"></td></tr>
+        <tr><td>Time to reach 99% (4.6τ)</td><td id="r99"></td></tr>
+        <tr><td>Pole, s = −1/τ</td><td id="rPole"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+      <div class="eqn" id="eqn">
+        $$\tau\,\frac{dy}{dt} + y = y_{\text{final}}$$
+        $$y(t) = \underbrace{y_{\text{final}}}_{\text{forced}} + \underbrace{\left(y_0 - y_{\text{final}}\right)e^{-t/\tau}}_{\text{natural}}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> The same equation covers a capacitor charging through a resistor (τ = R C), a hot part cooling in air, and a tank or basin whose outflow is proportional to how much it holds. In MATLAB, <code>dsolve</code> gives the formula and <code>ode45</code> gives the numbers: <code>[t, y] = ode45(@(t, y) (yf - y)/tau, [0 20], y0)</code>. In the capstone (Part F), level-pool routing tracks the water stored in the detention basin, dS/dt = I − Q. If outflow were simply proportional to storage (Q = S/τ), the outflow would follow this exact curve after a step in inflow, which is why a basin delays and flattens a flood peak instead of passing it straight through. The real outlet is nonlinear, with outflow depending on water depth, so Part F steps through the same balance numerically.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// Response of tau y' + y = yf with y(0) = y0, split into its two parts.
+function forced(yf) { return yf; }
+function natural(tau, y0, yf, t) { return (y0 - yf) * Math.exp(-t / tau); }
+function response(tau, y0, yf, t) { return forced(yf) + natural(tau, y0, yf, t); }
+// Fraction of the way from y0 to yf at time t.
+function progress(tau, t) { return 1 - Math.exp(-t / tau); }
+/*MATH-END*/
+
+const TMAX = 20;
+const SC = {
+  basin: { tau: 2.5, y0: 0, yf: 4, lo: 0, hi: 6, step: 0.1, tU: ' h', yU: ' m³/s', tName: 'time t (h)', yName: 'outflow Q (m³/s)', title: 'Basin outflow after the inflow steps up',
+    l0: 'Outflow at the start', lf: 'Steady inflow (final outflow)',
+    note: 'Inflow to a detention basin jumps to a steady value and stays there. The basin fills, the water level rises, and outflow climbs until it matches inflow. Assumes outflow proportional to storage.' },
+  cool:  { tau: 4, y0: 90, yf: 20, lo: 0, hi: 100, step: 1, tU: ' min', yU: ' °C', tName: 'time t (min)', yName: 'temperature (°C)', title: 'Temperature of a part cooling in air',
+    l0: 'Starting temperature', lf: 'Air temperature (final value)',
+    note: 'A hot part is set out in still air. It cools quickly at first, when it is far above the air temperature, and ever more slowly as it gets close. The response runs downward, but the mathematics is identical.' },
+  rc:    { tau: 1.5, y0: 0, yf: 5, lo: 0, hi: 12, step: 0.1, tU: ' ms', yU: ' V', tName: 'time t (ms)', yName: 'capacitor voltage (V)', title: 'Capacitor voltage after the supply is switched on',
+    l0: 'Voltage at the start', lf: 'Supply voltage (final value)',
+    note: 'A capacitor charges through a resistor from a constant supply. The time constant is the product of resistance and capacitance, τ = R C.' },
+};
+let scId = 'basin', S = SC.basin, tau = 2.5, y0 = 0, yf = 4, tc = 2, showParts = true, showTan = true, G = null;
+
+function draw() {
+  const pad = (S.hi - S.lo) * 0.08;
+  G = plotFrame($('plot'), $('bg'), { H: [340, 270], x0: 0, x1: TMAX, y0: S.lo - pad, y1: S.hi + pad, xName: S.tName, yName: S.yName, xStep: 2 });
+  const g = G.inner, X = G.X, Y = G.Y;
+  // tau markers along the bottom
+  for (let k = 1; k * tau <= TMAX && k <= 5; k++) {
+    el(g, 'line', { x1: X(k * tau), x2: X(k * tau), y1: G.mT, y2: G.H - G.mB, stroke: '#b05a10', 'stroke-width': 1, 'stroke-dasharray': '2 4', opacity: 0.7 });
+    el(g, 'text', { x: X(k * tau), y: G.H - G.mB - 5, 'text-anchor': 'middle', 'font-size': G.fs, fill: '#b05a10' }, k === 1 ? 'τ' : k + 'τ');
+  }
+  if (showParts) {
+    el(g, 'line', { x1: X(0), x2: X(TMAX), y1: Y(yf), y2: Y(yf), stroke: '#2a7a3a', 'stroke-width': 2, 'stroke-dasharray': '7 4' });
+    // natural part drawn as the gap, measured from the final value line down (or up) to the curve
+    el(g, 'path', { d: fnPath(t => response(tau, y0, yf, t), 0, TMAX, X, Y, 300) + 'L' + X(TMAX) + ' ' + Y(yf) + 'L' + X(0) + ' ' + Y(yf) + 'Z', fill: 'rgba(122,63,160,0.14)' });
+  }
+  if (showTan && Math.abs(yf - y0) > 1e-9) {
+    el(g, 'line', { x1: X(0), y1: Y(y0), x2: X(tau), y2: Y(yf), stroke: '#5a6b80', 'stroke-width': 1.6, 'stroke-dasharray': '3 3' });
+    el(g, 'circle', { cx: X(tau), cy: Y(yf), r: 3.5, fill: '#fff', stroke: '#5a6b80', 'stroke-width': 1.6 });
+  }
+  el(g, 'path', { d: fnPath(t => response(tau, y0, yf, t), 0, TMAX, X, Y, 400), fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.8 });
+  // 63.2% point
+  const y63 = response(tau, y0, yf, tau);
+  el(g, 'circle', { cx: X(tau), cy: Y(y63), r: 4.5, fill: '#fff', stroke: '#b05a10', 'stroke-width': 2 });
+  if (Math.abs(yf - y0) > 1e-9) halo(g, X(tau) + 8, Y(y63) + (yf > y0 ? 15 : -8), '63.2% of the way', '#b05a10', G.fs, 'start');
+  // cursor
+  const yc = response(tau, y0, yf, tc);
+  el(g, 'line', { x1: X(tc), x2: X(tc), y1: G.mT, y2: G.H - G.mB, stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' });
+  if (showParts && Math.abs(yc - yf) > (S.hi - S.lo) * 0.02) {
+    el(g, 'line', { x1: X(tc), x2: X(tc), y1: Y(yf), y2: Y(yc), stroke: '#7a3fa0', 'stroke-width': 3 });
+  }
+  el(g, 'circle', { cx: X(tc), cy: Y(yc), r: 5.5, fill: '#7a3fa0', stroke: '#fff', 'stroke-width': 2 });
+  const items = [['#1a3f5c', '', 'total response y(t)']];
+  if (showParts) { items.push(['#2a7a3a', '7 4', 'forced part (final value)']); items.push(['#7a3fa0', '', 'natural part (the gap)']); }
+  if (showTan) items.push(['#5a6b80', '3 3', 'starting slope']);
+  const w = G.small ? 168 : 190;
+  legend($('bg'), G.W - G.mR - w, yf > y0 ? G.H - G.mB - items.length * 15 - 22 : G.mT + 16, items, G.fs, w);
+}
+
+function update() {
+  const yc = response(tau, y0, yf, tc), nat = natural(tau, y0, yf, tc), pr = progress(tau, tc), u = S.yU, tu = S.tU;
+  $('sTau').value = tau; $('sY0').value = y0; $('sYf').value = yf; $('sT').value = tc;
+  $('tPlot').textContent = S.title; $('scNote').textContent = S.note; $('lY0').textContent = S.l0; $('lYf').textContent = S.lf;
+  $('vTau').textContent = fmt(tau, 1) + tu; $('vY0').textContent = uni(fmt(y0, 1)) + u; $('vYf').textContent = uni(fmt(yf, 1)) + u; $('vT').textContent = fmt(tc, 2) + tu;
+  $('rForced').textContent = uni(fmt(yf, 2)) + u;
+  $('rNat').textContent = uni(fmt(nat, 3)) + u;
+  $('rY').textContent = uni(fmt(yc, 3)) + u;
+  const same = Math.abs(yf - y0) < 1e-9;
+  $('rPct').textContent = same ? 'already there' : (pr * 100).toFixed(1) + '%';
+  $('rSlope').textContent = uni(fmt((yf - y0) / tau, 3)) + u + ' per' + tu;
+  $('r95').textContent = fmt(3 * tau, 1) + tu; $('r99').textContent = fmt(4.605 * tau, 1) + tu;
+  $('rPole').textContent = uni(fmt(-1 / tau, 3)) + ' per' + tu;
+  $('hTau').textContent = fmt(tau, 1) + tu; $('hY').textContent = uni(fmt(yc, 2)) + u; $('hPct').textContent = same ? 'already there' : (pr * 100).toFixed(1) + '%';
+  const n = v => fmt(v, 2), gap = y0 - yf;
+  tex($('live'), 'y(t) = \\textcolor{#2a7a3a}{' + n(yf) + '} ' + (gap < 0 ? '- ' : '+ ') + '\\textcolor{#7a3fa0}{' + n(Math.abs(gap)) + '\\,e^{-t/' + n(tau) + '}}',
+      'y(t) = ' + n(yf) + (gap < 0 ? ' − ' : ' + ') + n(Math.abs(gap)) + ' e^(−t/' + n(tau) + ')');
+  $('plotDesc').textContent = S.title + '. Time constant ' + fmt(tau, 1) + ', starting at ' + fmt(y0, 1) + ', heading to ' + fmt(yf, 1) + '. At t = ' + fmt(tc, 2) + ' the value is ' + fmt(yc, 2) + '.';
+  draw();
+}
+function setScenario(id) {
+  scId = id; S = SC[id]; tau = S.tau; y0 = S.y0; yf = S.yf;
+  ['sY0', 'sYf'].forEach(k => { $(k).min = S.lo; $(k).max = S.hi; $(k).step = S.step; });
+  syncSeg(); update();
+}
+document.querySelectorAll('input[name=sc]').forEach(r => r.addEventListener('change', () => setScenario(r.value)));
+$('sTau').addEventListener('input', () => { tau = +$('sTau').value; update(); });
+$('sY0').addEventListener('input', () => { y0 = +$('sY0').value; update(); });
+$('sYf').addEventListener('input', () => { yf = +$('sYf').value; update(); });
+$('sT').addEventListener('input', () => { tc = +$('sT').value; update(); });
+$('cParts').addEventListener('change', () => { showParts = $('cParts').checked; draw(); });
+$('cTan').addEventListener('change', () => { showTan = $('cTan').checked; draw(); });
+(function cursorDrag() {
+  const svg = $('plot');
+  let on = false;
+  const set = ev => { tc = Math.max(0, Math.min(TMAX, Math.round(G.toX(svgPoint(svg, ev).x) * 20) / 20)); update(); };
+  svg.addEventListener('pointerdown', ev => { on = true; svg.setPointerCapture(ev.pointerId); set(ev); });
+  svg.addEventListener('pointermove', ev => { if (on) set(ev); });
+  const end = () => { on = false; };
+  svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+})();
+window.addEventListener('resize', draw);
+setScenario('basin'); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>

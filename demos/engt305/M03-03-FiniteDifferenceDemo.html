@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finite Difference vs Exact: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Finite Differences: When Smaller Stops Being Better</h1>
+    <p>ENGT 305 · Module 3 &nbsp;|&nbsp; A computer estimates a derivative by taking a small step and measuring rise over run. Shrink the step and the estimate improves, up to a point. Then it falls apart.</p>
+  </div>
+
+  <div class="stage pad">
+    <div class="views">
+      <div class="view">
+        <h2>The estimate at this step size</h2>
+        <p class="cap" id="capL"></p>
+        <svg id="loc" role="img" aria-labelledby="locDesc"><desc id="locDesc"></desc><g id="gLoc"></g></svg>
+      </div>
+      <div class="view">
+        <h2>Error against step size</h2>
+        <p class="cap">Both axes are logarithmic. Smaller h is to the left. The dot is the current h.</p>
+        <svg id="err" role="img" aria-label="Error of each finite difference formula against step size, on log axes"><g id="gErr"></g></svg>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite" style="padding-top:10px">
+      <span>Estimate: <b id="hEst" style="color:#b05a10"></b></span>
+      <span>Exact derivative: <b id="hEx" style="color:#2a7a3a"></b></span>
+      <span>Error: <b id="hErr" style="color:#b03030"></b></span>
+    </div>
+    <div class="state-note" id="stateNote"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A <em>finite difference</em> estimates a derivative from function values a small step h apart, the same rise-over-run as a secant line. Two things go wrong, in opposite directions. <em>Truncation error</em> is the price of using a finite step instead of the limit: it shrinks as h shrinks. <em>Round-off error</em> comes from subtracting two nearly equal numbers that are each only known to about 16 digits, then dividing by a tiny h: it grows as h shrinks. Measured data behaves the same way, only worse, because measurement noise is far larger than round-off. The total error is smallest somewhere in between, so smaller is not always better.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <label class="flabel" for="selFn" style="margin-top:0">Function</label>
+      <select class="ctl" id="selFn"></select>
+      <fieldset style="margin-top:8px">
+        <legend>Formula</legend>
+        <div class="seg" id="mSeg">
+          <label><input type="radio" name="m" value="fwd" checked>Forward</label>
+          <label><input type="radio" name="m" value="bwd">Backward</label>
+          <label><input type="radio" name="m" value="ctr">Central</label>
+        </div>
+      </fieldset>
+      <div class="slider-row">
+        <label for="sH"><span>Step size h</span> <span class="val" id="vH"></span></label>
+        <input type="range" id="sH" min="0" max="120" step="1" value="110" style="accent-color:#b05a10">
+      </div>
+      <div class="btn-row" style="margin-bottom:10px">
+        <button type="button" data-h="110">h = 0.1</button>
+        <button type="button" data-h="90">h = 0.001</button>
+        <button type="button" data-h="20">h = 1e-10</button>
+        <button type="button" class="primary" id="bBest">Jump to the best h</button>
+      </div>
+      <div class="slider-row">
+        <label for="sX"><span>Where to take the derivative, x</span> <span class="val" id="vX"></span></label>
+        <input type="range" id="sX" min="0.3" max="2.5" step="0.05" value="1">
+      </div>
+      <fieldset>
+        <legend>Noise in the function values</legend>
+        <div class="seg" id="nSeg">
+          <label><input type="radio" name="n" value="0" checked>Round-off only</label>
+          <label><input type="radio" name="n" value="1e-6">±0.000001</label>
+          <label><input type="radio" name="n" value="1e-3">±0.001</label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Step size h</td><td id="rH"></td></tr>
+        <tr class="a"><td>Estimate of the derivative</td><td id="rEst"></td></tr>
+        <tr class="g"><td>Exact derivative</td><td id="rEx"></td></tr>
+        <tr class="r"><td>Error (absolute value)</td><td id="rErr"></td></tr>
+        <tr><td>Correct digits in the estimate</td><td id="rDig"></td></tr>
+        <tr><td>Best h for this formula</td><td id="rBest"></td></tr>
+        <tr><td>Smallest error it can reach</td><td id="rBestE"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$\text{forward: } \frac{f(x+h) - f(x)}{h} \qquad \text{backward: } \frac{f(x) - f(x-h)}{h}$$
+        $$\text{central: } \frac{f(x+h) - f(x-h)}{2h}$$
+      </div>
+      <p class="note">Truncation error is proportional to h for the forward and backward formulas and to h² for the central formula, which is why the central line on the error plot falls twice as steeply.</p>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> With data in vectors <code>x</code> and <code>y</code>, <code>diff(y)./diff(x)</code> is the forward difference (one value shorter than the data), and <code>gradient(y, x)</code> uses central differences in the interior, which is the better default. With measured data you do not get to choose h: it is the spacing of your samples, and any noise in y is divided by that small spacing. That is why a derivative computed from field data, such as the rate of rise of a water level, often looks ragged, and why the usual remedy is to smooth the data or fit a curve first and differentiate that. For a formula evaluated in double precision, the best step is roughly 1e-8 for the forward formula and 1e-5 for the central one, not the smallest number you can type.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// A plot frame with base-10 log axes on both sides. o.x0, o.x1, o.y0, o.y1 are exponents (whole numbers).
+function logFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 46 : 58, mR = small ? 10 : 20, mT = 10, mB = small ? 38 : 42, fs = small ? 10 : 11.5;
+  const LX = e => mL + (e - o.x0) / (o.x1 - o.x0) * (W - mL - mR);       // from exponent
+  const LY = e => H - mB - (e - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  const X = v => LX(Math.log10(v)), Y = v => LY(Math.log10(v));
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const lab = e => e >= -3 && e <= 3 ? String(parseFloat(Math.pow(10, e).toPrecision(1))) : '1e' + uni(e);
+  const xEvery = o.xEvery || 1, yEvery = o.yEvery || 1;
+  for (let e = o.x0; e <= o.x1; e++) {
+    if (o.minor && e < o.x1) for (let k = 2; k <= 9; k++) el(g, 'line', { x1: X(k * Math.pow(10, e)), x2: X(k * Math.pow(10, e)), y1: mT, y2: H - mB, stroke: '#f0f3f7', 'stroke-width': 1 });
+    el(g, 'line', { x1: LX(e), x2: LX(e), y1: mT, y2: H - mB, stroke: '#dbe3ec', 'stroke-width': 1 });
+    if ((e - o.x0) % xEvery === 0) el(g, 'text', { x: LX(e), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, lab(e));
+  }
+  for (let e = o.y0; e <= o.y1; e++) {
+    if (o.minor && e < o.y1) for (let k = 2; k <= 9; k++) el(g, 'line', { x1: mL, x2: W - mR, y1: Y(k * Math.pow(10, e)), y2: Y(k * Math.pow(10, e)), stroke: '#f0f3f7', 'stroke-width': 1 });
+    el(g, 'line', { x1: mL, x2: W - mR, y1: LY(e), y2: LY(e), stroke: '#dbe3ec', 'stroke-width': 1 });
+    if ((e - o.y0) % yEvery === 0) el(g, 'text', { x: mL - 6, y: LY(e) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, lab(e));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444', transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, LX, LY, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => Math.pow(10, o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0)), toY: py => Math.pow(10, o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0)) };
+}
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+const FUNCS = [
+  { id: 'sin', label: 'f(x) = sin(x)', f: Math.sin, df: Math.cos },
+  { id: 'exp', label: 'f(x) = eˣ', f: Math.exp, df: Math.exp },
+  { id: 'cube', label: 'f(x) = x³', f: x => x * x * x, df: x => 3 * x * x },
+];
+// Step sizes: index k from 0 to 120 gives h = 10^(-12 + k/10).
+function stepAt(k) { return Math.pow(10, -12 + k / 10); }
+// Finite difference estimate. e = [noise at x-h, at x, at x+h], added to the function values.
+function fdiff(f, x, h, method, e) {
+  e = e || [0, 0, 0];
+  const fm = f(x - h) + e[0], f0 = f(x) + e[1], fp = f(x + h) + e[2];
+  if (method === 'fwd') return (fp - f0) / h;
+  if (method === 'bwd') return (f0 - fm) / h;
+  return (fp - fm) / (2 * h);
+}
+// Fixed table of noise draws in [-1, 1], three per step size, so a noisy run is repeatable.
+function noiseTable(seed) {
+  let a = seed >>> 0;
+  const r = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 * 2 - 1; };
+  const out = [];
+  for (let k = 0; k <= 120; k++) out.push([r(), r(), r()]);
+  return out;
+}
+/*MATH-END*/
+
+const NOISE = noiseTable(305);
+const COL = { fwd: '#2c5f8a', bwd: '#7a3fa0', ctr: '#b05a10' }, NAME = { fwd: 'forward', bwd: 'backward', ctr: 'central' };
+let fn = FUNCS[0], method = 'fwd', k = 110, x0 = 1, amp = 0;
+const errAt = (m, kk) => Math.abs(fdiff(fn.f, x0, stepAt(kk), m, NOISE[kk].map(v => v * amp)) - fn.df(x0));
+function sci(v) {
+  if (v === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  if (e >= -3 && e < 4) return uni(String(parseFloat(v.toPrecision(3))));
+  return uni((v / Math.pow(10, e)).toFixed(1) + 'e' + e);
+}
+function best(m) { let bk = 0, be = Infinity; for (let kk = 0; kk <= 120; kk++) { const e = errAt(m, kk); if (e < be) { be = e; bk = kk; } } return { k: bk, e: be }; }
+
+function draw() {
+  const h = stepAt(k), f = fn.f, est = fdiff(f, x0, h, method, NOISE[k].map(v => v * amp)), ex = fn.df(x0);
+  // local picture
+  const w = 1.25, ys = [];
+  for (let i = 0; i <= 60; i++) ys.push(f(x0 - w + 2 * w * i / 60));
+  const lo = Math.min(...ys), hi = Math.max(...ys), pad = (hi - lo) * 0.15 || 1;
+  const L = plotFrame($('loc'), $('gLoc'), { H: [300, 270], x0: x0 - w, x1: x0 + w, y0: lo - pad, y1: hi + pad, xName: 'x', yName: 'f(x)' });
+  const g = L.inner, X = L.X, Y = L.Y, a = x0 - w;
+  el(g, 'path', { d: fnPath(f, a, x0 + w, X, Y, 300), fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.5 });
+  const lineThrough = (m, color, wd, dash) => { const o = { x1: X(x0 - w), y1: Y(f(x0) + m * -w), x2: X(x0 + w), y2: Y(f(x0) + m * w), stroke: color, 'stroke-width': wd }; if (dash) o['stroke-dasharray'] = dash; el(g, 'line', o); };
+  lineThrough(ex, '#2a7a3a', 2, '7 4');
+  lineThrough(est, '#b05a10', 2.2);
+  const pts = method === 'fwd' ? [x0, x0 + h] : method === 'bwd' ? [x0 - h, x0] : [x0 - h, x0 + h];
+  if (h >= 0.02) pts.forEach(p => { el(g, 'circle', { cx: X(p), cy: Y(f(p)), r: 5, fill: '#fff', stroke: '#b05a10', 'stroke-width': 2.5 }); });
+  el(g, 'circle', { cx: X(x0), cy: Y(f(x0)), r: 4, fill: '#1a3f5c' });
+  legend($('gLoc'), L.mL + 10, L.mT + 14, [['#1a3f5c', '', 'f(x)'], ['#b05a10', '', 'slope = the estimate'], ['#2a7a3a', '7 4', 'slope = exact derivative']], L.fs, L.small ? 158 : 176);
+  $('capL').textContent = h >= 0.02 ? 'The orange circles are the points the ' + NAME[method] + ' formula uses.' : 'At this h the points used are too close together to tell apart on the plot.';
+
+  // error plot
+  const E = logFrame($('err'), $('gErr'), { H: [300, 270], x0: -12, x1: 0, y0: -16, y1: 2, xEvery: 2, yEvery: 2, xName: 'step size h', yName: 'error of the estimate' });
+  const ge = E.inner;
+  ['fwd', 'bwd', 'ctr'].forEach(m => {
+    let d = '', pen = false;
+    for (let kk = 0; kk <= 120; kk++) {
+      const e = errAt(m, kk);
+      if (!(e > 0) || !isFinite(e)) { pen = false; continue; }
+      d += (pen ? 'L' : 'M') + E.X(stepAt(kk)).toFixed(2) + ' ' + E.Y(Math.max(e, 1e-17)).toFixed(2); pen = true;
+    }
+    el(ge, 'path', { d, fill: 'none', stroke: COL[m], 'stroke-width': m === method ? 2.8 : 1.3, opacity: m === method ? 1 : 0.5, 'stroke-linejoin': 'round' });
+  });
+  const e = errAt(method, k);
+  el(ge, 'line', { x1: E.X(h), x2: E.X(h), y1: E.mT, y2: E.H - E.mB, stroke: COL[method], 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+  el(ge, 'circle', { cx: E.X(h), cy: E.Y(Math.max(e, 1e-16)), r: 6, fill: COL[method], stroke: '#fff', 'stroke-width': 2 });
+  el(ge, 'text', { x: E.mL + 8, y: E.H - E.mB - 8, 'font-size': E.fs, fill: '#8f2020' }, amp ? '← noise takes over' : '← round-off takes over');
+  el(ge, 'text', { x: E.W - E.mR - 8, y: E.H - E.mB - 8, 'text-anchor': 'end', 'font-size': E.fs, fill: '#1f5f2c' }, 'truncation shrinks →');
+  legend($('gErr'), E.mL + 10, E.mT + 14, [[COL.fwd, '', 'forward'], [COL.bwd, '', 'backward'], [COL.ctr, '', 'central']], E.fs, 92);
+}
+
+function update() {
+  const h = stepAt(k), est = fdiff(fn.f, x0, h, method, NOISE[k].map(v => v * amp)), ex = fn.df(x0), e = Math.abs(est - ex), b = best(method);
+  $('sH').value = k; $('sX').value = x0;
+  $('vH').textContent = sci(h); $('vX').textContent = fmt(x0, 2);
+  $('rH').textContent = sci(h);
+  $('rEst').textContent = uni(est.toPrecision(12));
+  $('rEx').textContent = uni(ex.toPrecision(12));
+  $('rErr').textContent = sci(e);
+  const dig = e === 0 ? 16 : Math.max(0, Math.min(16, Math.floor(-Math.log10(e / Math.max(Math.abs(ex), 1e-300)))));
+  $('rDig').textContent = 'about ' + dig + ' of 16';
+  $('rBest').textContent = sci(stepAt(b.k)); $('rBestE').textContent = sci(b.e);
+  $('hEst').textContent = uni(est.toPrecision(8)); $('hEx').textContent = uni(ex.toPrecision(8)); $('hErr').textContent = sci(e);
+  $('stateNote').textContent = k > b.k + 8 ? 'To the right of the best h: truncation error dominates. Making h smaller improves the estimate.'
+    : k < b.k - 8 ? 'To the left of the best h: ' + (amp ? 'noise' : 'round-off') + ' dominates. Making h smaller now makes the estimate worse.'
+    : 'Near the best h for this formula: the two sources of error are about equal here.';
+  $('locDesc').textContent = fn.label + ' at x = ' + fmt(x0, 2) + ', ' + NAME[method] + ' difference with h = ' + sci(h) + '. Estimate ' + est.toPrecision(8) + ', exact ' + ex.toPrecision(8) + '.';
+  draw();
+}
+
+FUNCS.forEach(q => $('selFn').add(new Option(q.label, q.id)));
+$('selFn').addEventListener('change', () => { fn = FUNCS.find(q => q.id === $('selFn').value); update(); });
+document.querySelectorAll('input[name=m]').forEach(r => r.addEventListener('change', () => { method = r.value; syncSeg(); update(); }));
+document.querySelectorAll('input[name=n]').forEach(r => r.addEventListener('change', () => { amp = +r.value; syncSeg(); update(); }));
+$('sH').addEventListener('input', () => { k = +$('sH').value; update(); });
+$('sX').addEventListener('input', () => { x0 = +$('sX').value; update(); });
+document.querySelectorAll('button[data-h]').forEach(bn => bn.addEventListener('click', () => { k = +bn.dataset.h; update(); }));
+$('bBest').addEventListener('click', () => { k = best(method).k; update(); });
+window.addEventListener('resize', draw);
+syncSeg(); update(); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>

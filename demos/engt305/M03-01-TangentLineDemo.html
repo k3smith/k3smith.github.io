@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tangent Line and the Derivative: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 14px 0; }
+.stage svg { display: block; width: 100%; }
+.handle { cursor: ew-resize; touch-action: none; outline: none; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 4px 12px 12px; font-size: 0.86em; color: #444;
+}
+.headline .s b { color: #b05a10; } .headline .t b { color: #2a7a3a; } .headline .e b { color: #1a3f5c; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.flabel { font-size: 0.82em; color: #555; margin: 4px 0 5px; display: block; }
+.ctl {
+  font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px;
+  background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px;
+}
+.fn-note { font-size: 0.76em; color: #5a6b80; line-height: 1.5; margin-bottom: 12px; min-height: 3em; }
+.slider-row { margin-bottom: 9px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].h { accent-color: #b05a10; }
+input[type=range]:focus-visible, .btn-row button:focus-visible, .ctl:focus-visible, input[type=checkbox]:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.btn-row button {
+  flex: 1; min-width: 60px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.82em; color: #555; margin-top: 6px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.sec td:last-child { color: #b05a10; }
+.result-table tr.tan td:last-child { color: #2a7a3a; }
+.conv { margin-top: 14px; }
+.conv caption { text-align: left; font-size: 0.78em; color: #5a6b80; padding-bottom: 4px; }
+.conv th { text-align: right; color: #5a6b80; font-weight: 600; font-size: 0.74em; border-bottom: 2px solid #dde8f2; }
+.conv th:first-child { text-align: left; }
+.conv td { text-align: right; font-variant-numeric: tabular-nums; }
+.conv td:first-child { text-align: left; }
+.conv td:nth-child(2) { color: #b05a10; font-weight: 700; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.88em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Tangent Line and the Derivative</h1>
+    <p>ENGT 305 · Module 3 &nbsp;|&nbsp; The slope between two points on a curve is an average rate of change. Slide the second point toward the first and that slope settles on a single value: the derivative.</p>
+  </div>
+
+  <div class="stage">
+    <p class="hint">Drag the dark point along the curve, or focus it and use the arrow keys. Shrink h to bring the second point in.</p>
+    <svg id="plot" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc><g id="bg"></g>
+      <g class="handle" id="hP" tabindex="0" role="button" aria-label="Point P on the curve. Left and right arrow keys move it."><circle class="ring" r="15"/><circle r="7" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g>
+    </svg>
+    <div class="ptitle" id="dTitle">The derivative as a function</div>
+    <svg id="dplot" role="img" aria-label="Plot of the derivative, with the current secant slope and tangent slope marked"><g id="dbg"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span class="s">Secant slope: <b id="hSec"></b></span>
+      <span class="t">Tangent slope (derivative): <b id="hTan"></b></span>
+      <span class="e">Difference: <b id="hErr"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A <em>secant line</em> passes through two points on the curve, P at x and Q at x + h. Its slope, rise over run, is the <em>average rate of change</em> between them. A <em>tangent line</em> touches the curve at P and has the same steepness as the curve there. As h shrinks toward zero, the secant slope approaches the tangent slope. That limiting value is the <em>derivative</em> f′(x), the <em>instantaneous rate of change</em>. The lower plot records the tangent slope at every x, which makes the derivative a function in its own right.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <label class="flabel" for="selFn">Function</label>
+      <select class="ctl" id="selFn"></select>
+      <p class="fn-note" id="fnNote"></p>
+
+      <div class="slider-row">
+        <label for="sX"><span>Point P location, <span id="xSym">x</span></span> <span class="val" id="vX"></span></label>
+        <input type="range" id="sX" step="0.01">
+      </div>
+      <div class="slider-row">
+        <label for="sH"><span>Spacing to the second point, h</span> <span class="val" id="vH"></span></label>
+        <input type="range" class="h" id="sH" min="-3" max="0.3" step="0.01" value="0">
+      </div>
+      <div class="btn-row">
+        <button type="button" data-h="1">h = 1</button>
+        <button type="button" data-h="0.1">h = 0.1</button>
+        <button type="button" data-h="0.01">h = 0.01</button>
+        <button type="button" data-h="0.001">h = 0.001</button>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="primary" id="bShrink">▶ Shrink h toward zero</button>
+      </div>
+      <label class="check"><input type="checkbox" id="cTan" checked> Show the tangent line</label>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Point P</td><td id="rP"></td></tr>
+        <tr><td>Point Q</td><td id="rQ"></td></tr>
+        <tr class="sec"><td>Secant slope (average rate of change)</td><td id="rSec"></td></tr>
+        <tr class="tan"><td>Derivative at P (instantaneous rate)</td><td id="rTan"></td></tr>
+        <tr><td>The curve at P is</td><td id="rTrend"></td></tr>
+        <tr class="tan"><td>Tangent line</td><td id="rLine"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+
+      <table class="result-table conv">
+        <caption>Secant slope at this P as h shrinks</caption>
+        <thead><tr><th scope="col">h</th><th scope="col">Secant slope</th><th scope="col">Difference from derivative</th></tr></thead>
+        <tbody id="convBody"></tbody>
+      </table>
+
+      <div class="eqn" id="eqn">$$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$</div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> Whenever one quantity is plotted against another, the slope of the curve is a rate. The slope of position against time is velocity, the slope of a water level against time is how fast a basin is filling, and the slope of a load-deflection curve is stiffness. In MATLAB you can get the derivative as a formula with <code>syms x</code> and <code>diff(f, x)</code>, then plot it with <code>fplot</code>. When all you have is measured data there is no formula to differentiate, so you use the secant slope between neighboring points as the estimate, which is exactly what this demo does with a small h. The finite difference demo picks that up.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+const FUNCS = [
+  { id: 'parab', label: 'f(x) = 0.5x²', f: x => 0.5 * x * x, df: x => x,
+    x0: -4, x1: 4, y0: -1, y1: 8.5, d0: -4.5, d1: 4.5, start: 1, xName: 'x', yName: 'f(x)', v: 'x', unit: '',
+    dName: "f′(x) = x" },
+  { id: 'cubic', label: 'f(x) = (x³ − 9x)/6', f: x => (x * x * x - 9 * x) / 6, df: x => (3 * x * x - 9) / 6,
+    x0: -4, x1: 4, y0: -5.5, y1: 5.5, d0: -2.5, d1: 7, start: -2.5, xName: 'x', yName: 'f(x)', v: 'x', unit: '',
+    dName: "f′(x) = (3x² − 9)/6" },
+  { id: 'sine', label: 'f(x) = 2 sin(x)', f: x => 2 * Math.sin(x), df: x => 2 * Math.cos(x),
+    x0: 0, x1: 8, y0: -2.8, y1: 2.8, d0: -2.8, d1: 2.8, start: 1, xName: 'x (rad)', yName: 'f(x)', v: 'x', unit: '',
+    dName: "f′(x) = 2 cos(x)" },
+  { id: 'pos', label: 'Position s(t) = 20t − 4.9t² (ball thrown upward)', f: t => 20 * t - 4.9 * t * t, df: t => 20 - 9.8 * t,
+    x0: 0, x1: 4.2, y0: -3, y1: 23, d0: -24, d1: 22, start: 0.5, xName: 'time t (s)', yName: 'height s (m)', v: 't', unit: ' m/s',
+    dName: "velocity v(t) = s′(t) = 20 − 9.8t" },
+];
+function secantSlope(f, x, h) { return (f(x + h) - f(x)) / h; }
+/*MATH-END*/
+
+const FN_NOTES = {
+  parab: 'The slope grows steadily with x: negative on the left, zero at the bottom, positive on the right. The derivative is a straight line.',
+  cubic: 'Two turning points. The derivative crosses zero at each one, where the tangent line is horizontal.',
+  sine: 'The slope of a sine wave is a cosine wave: steepest where the sine crosses zero, flat at its peaks.',
+  pos: 'Height of a ball thrown upward at 20 m/s. The slope of position against time is velocity: positive on the way up, zero at the top, negative coming down.',
+};
+
+let fn = FUNCS[0], x = fn.start, hExp = 0, showTan = true, geom = null, anim = null;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+const H = () => Math.pow(10, hExp);
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r).replace('-', '−');
+}
+function fmtH(h) { return String(parseFloat(h.toPrecision(2))); }
+function fmtDiff(e) {
+  if (Math.abs(e) < 5e-10) return '0';
+  const m = Math.abs(e);
+  return (e > 0 ? '+' : '−') + (m < 0.001 ? m.toExponential(1) : parseFloat(m.toFixed(4)));
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9))).replace('-', '−'); }
+
+function frame(svg, g, Hpx, y0, y1, yName, small, showXName) {
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Hpx);
+  svg.setAttribute('height', Hpx);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = 10, mB = showXName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - fn.x0) / (fn.x1 - fn.x0) * (W - mL - mR);
+  const Y = v => Hpx - mB - (v - y0) / (y1 - y0) * (Hpx - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB, fill: '#fff' });
+  const xs = niceStep(fn.x1 - fn.x0, small ? 5 : 8), ys = niceStep(y1 - y0, Hpx < 200 ? 4 : 7);
+  for (let v = Math.ceil(fn.x0 / xs - 1e-9) * xs; v <= fn.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: Hpx - mB, stroke: Math.abs(v) < 1e-9 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: Hpx - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(y0 / ys - 1e-9) * ys; v <= y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (showXName) el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, fn.xName);
+  el(g, 'text', { x: 12, y: (mT + Hpx - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + Hpx - mB) / 2 + ')' }, yName);
+  const defs = el(g, 'defs', {}), id = 'clip' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: Hpx - mT - mB });
+  const inner = el(g, 'g', { 'clip-path': 'url(#' + id + ')' });
+  return { W, mL, mR, mT, mB, X, Y, fs, inner };
+}
+function curvePath(f, X, Y) {
+  let d = '';
+  for (let i = 0; i <= 400; i++) { const v = fn.x0 + (fn.x1 - fn.x0) * i / 400; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+
+function draw() {
+  const h = H(), f = fn.f, m = secantSlope(f, x, h), mt = fn.df(x);
+  const small = $('plot').getBoundingClientRect().width < 520;
+  // main plot
+  const G = frame($('plot'), $('bg'), small ? 270 : 350, fn.y0, fn.y1, fn.yName, small, false);
+  const g = G.inner, X = G.X, Y = G.Y;
+  geom = G;
+  el(g, 'path', { d: curvePath(f, X, Y), fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.5 });
+  const line = (slope, color, w, dash) => {
+    const a = { x1: X(fn.x0), y1: Y(f(x) + slope * (fn.x0 - x)), x2: X(fn.x1), y2: Y(f(x) + slope * (fn.x1 - x)), stroke: color, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    el(g, 'line', a);
+  };
+  if (showTan) line(mt, '#2a7a3a', 2, '7 4');
+  line(m, '#b05a10', 2.2);
+  // rise and run
+  const xq = x + h, yp = f(x), yq = f(xq);
+  el(g, 'line', { x1: X(x), y1: Y(yp), x2: X(xq), y2: Y(yp), stroke: '#7a3fa0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+  el(g, 'line', { x1: X(xq), y1: Y(yp), x2: X(xq), y2: Y(yq), stroke: '#7a3fa0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+  if (X(xq) - X(x) > 44) {
+    el(g, 'text', { x: (X(x) + X(xq)) / 2, y: Y(yp) + (yq >= yp ? 14 : -6), 'text-anchor': 'middle', 'font-size': G.fs, fill: '#7a3fa0' }, 'run = h');
+    if (Math.abs(Y(yq) - Y(yp)) > 16) el(g, 'text', { x: X(xq) + 6, y: (Y(yp) + Y(yq)) / 2 + 4, 'font-size': G.fs, fill: '#7a3fa0' }, 'rise');
+  }
+  el(g, 'circle', { cx: X(xq), cy: Y(yq), r: 5.5, fill: '#fff', stroke: '#b05a10', 'stroke-width': 2.5 });
+  el(g, 'text', { x: X(x) - 10, y: Y(yp) - 10, 'text-anchor': 'end', 'font-size': G.fs + 1, 'font-weight': 700, fill: '#1a3f5c', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'P');
+  if (X(xq) - X(x) > 16) el(g, 'text', { x: X(xq) + 9, y: Y(yq) - 8, 'font-size': G.fs + 1, 'font-weight': 700, fill: '#b05a10', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'Q');
+  // legend
+  const bgL = $('bg'), lx = G.W - G.mR - (small ? 122 : 140), ly = G.mT + 14;
+  const items = [['#1a3f5c', '', 'curve'], ['#b05a10', '', 'secant through P, Q']];
+  if (showTan) items.push(['#2a7a3a', '7 4', 'tangent at P']);
+  el(bgL, 'rect', { x: lx - 5, y: ly - 10, width: small ? 124 : 142, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: lx, x2: lx + 20, y1: ly + i * 15, y2: ly + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(bgL, 'line', a);
+    el(bgL, 'text', { x: lx + 26, y: ly + i * 15 + 4, 'font-size': G.fs, fill: '#333' }, it[2]);
+  });
+  $('hP').setAttribute('transform', 'translate(' + X(x).toFixed(2) + ',' + Y(yp).toFixed(2) + ')');
+
+  // derivative plot
+  const D = frame($('dplot'), $('dbg'), small ? 170 : 190, fn.d0, fn.d1, 'slope', small, true);
+  el(D.inner, 'path', { d: curvePath(fn.df, D.X, D.Y), fill: 'none', stroke: '#2a7a3a', 'stroke-width': 2.2 });
+  el(D.inner, 'line', { x1: D.X(x), x2: D.X(x), y1: D.mT, y2: 400, stroke: '#1a3f5c', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+  el(D.inner, 'circle', { cx: D.X(x), cy: D.Y(m), r: 5.5, fill: '#fff', stroke: '#b05a10', 'stroke-width': 2.5 });
+  el(D.inner, 'circle', { cx: D.X(x), cy: D.Y(mt), r: 5, fill: '#2a7a3a', stroke: '#fff', 'stroke-width': 1.5 });
+}
+
+function update() {
+  const h = H(), f = fn.f, m = secantSlope(f, x, h), mt = fn.df(x), v = fn.v, u = fn.unit;
+  $('sX').value = x; $('sH').value = hExp;
+  $('vX').textContent = fmt(x, 2);
+  $('vH').textContent = fmtH(h);
+  $('xSym').textContent = v;
+  $('dTitle').textContent = 'The derivative as a function: ' + fn.dName;
+  $('fnNote').textContent = FN_NOTES[fn.id];
+  $('rP').textContent = '(' + fmt(x, 2) + ', ' + fmt(f(x)) + ')';
+  $('rQ').textContent = '(' + fmt(x + h, 3) + ', ' + fmt(f(x + h)) + ')';
+  $('rSec').textContent = fmt(m, 4) + u;
+  $('rTan').textContent = fmt(mt, 4) + u;
+  $('rTrend').textContent = Math.abs(mt) < 5e-3 ? 'flat (horizontal tangent)' : mt > 0 ? 'rising (positive slope)' : 'falling (negative slope)';
+  const b = f(x) - mt * x;
+  const mtS = fmt(mt, 3);
+  $('rLine').textContent = 'y = ' + (mtS === '1' ? '' : mtS === '−1' ? '−' : mtS) + v + (b < 0 ? ' − ' : ' + ') + fmt(Math.abs(b), 3).replace('−', '');
+  $('hSec').textContent = fmt(m, 4) + u; $('hTan').textContent = fmt(mt, 4) + u; $('hErr').textContent = fmtDiff(m - mt);
+
+  const body = $('convBody');
+  body.innerHTML = '';
+  [1, 0.1, 0.01, 0.001].forEach(hh => {
+    const s = secantSlope(f, x, hh), tr = document.createElement('tr');
+    [String(hh), fmt(s, 5), fmtDiff(s - mt)].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+    body.appendChild(tr);
+  });
+
+  const live = $('live'), n = z => fmt(z, 4).replace('−', '-');
+  const fname = fn.id === 'pos' ? 's' : 'f';
+  const src = '\\dfrac{' + fname + '(' + n(x + h) + ') - ' + fname + '(' + n(x) + ')}{' + fmtH(h) + '} = \\dfrac{' + n(f(x + h)) + ' - ' + (f(x) < 0 ? '(' + n(f(x)) + ')' : n(f(x))) + '}{' + fmtH(h) + '} = \\textcolor{#b05a10}{' + n(m) + '}';
+  const plain = 'secant slope = (' + fmt(f(x + h), 4) + ' − ' + fmt(f(x), 4) + ') / ' + fmtH(h) + ' = ' + fmt(m, 4);
+  if (hasKatex()) { try { katex.render(src, live, { throwOnError: false }); } catch (e) { live.textContent = plain; } }
+  else live.textContent = plain;
+
+  $('plotDesc').textContent = fn.label + '. Point P at ' + v + ' = ' + fmt(x, 2) + ', spacing h = ' + fmtH(h) + '. Secant slope ' + fmt(m, 4) + ', tangent slope ' + fmt(mt, 4) + '.';
+  draw();
+}
+
+// ---- Wiring ----
+function setFn(id) {
+  fn = FUNCS.find(q => q.id === id);
+  const sx = $('sX');
+  sx.min = fn.x0; sx.max = fn.x1; x = fn.start;
+  update();
+}
+FUNCS.forEach(q => $('selFn').add(new Option(q.label, q.id)));
+$('selFn').addEventListener('change', () => { stopAnim(); setFn($('selFn').value); });
+$('sX').addEventListener('input', () => { x = +$('sX').value; update(); });
+$('sH').addEventListener('input', () => { stopAnim(); hExp = +$('sH').value; update(); });
+$('cTan').addEventListener('change', () => { showTan = $('cTan').checked; draw(); });
+document.querySelectorAll('button[data-h]').forEach(bn => bn.addEventListener('click', () => { stopAnim(); hExp = Math.log10(+bn.dataset.h); update(); }));
+function stopAnim() { if (anim) { cancelAnimationFrame(anim); anim = null; $('bShrink').textContent = '▶ Shrink h toward zero'; } }
+$('bShrink').addEventListener('click', () => {
+  if (anim) { stopAnim(); return; }
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hExp = -3; update(); return; }
+  if (hExp <= -2.99) hExp = 0.3;
+  const from = hExp, t0 = performance.now(), dur = 900 * (from + 3) + 300;
+  $('bShrink').textContent = '❚❚ Pause';
+  const tick = now => {
+    const p = Math.min(1, (now - t0) / dur);
+    hExp = from + (-3 - from) * p;
+    update();
+    if (p < 1) anim = requestAnimationFrame(tick); else stopAnim();
+  };
+  anim = requestAnimationFrame(tick);
+});
+(function drag() {
+  const svg = $('plot'), hd = $('hP');
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => {
+    if (!on || !geom) return;
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const v = fn.x0 + (q.x - geom.mL) / (geom.W - geom.mL - geom.mR) * (fn.x1 - fn.x0);
+    x = Math.max(fn.x0, Math.min(fn.x1, Math.round(v * 100) / 100));
+    update();
+  });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const s = (ev.shiftKey ? 0.5 : 0.05) * (ev.key === 'ArrowLeft' ? -1 : ev.key === 'ArrowRight' ? 1 : 0);
+    if (!s) return;
+    ev.preventDefault();
+    x = Math.max(fn.x0, Math.min(fn.x1, Math.round((x + s) * 100) / 100));
+    update();
+  });
+})();
+window.addEventListener('resize', draw);
+
+setFn('parab');
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

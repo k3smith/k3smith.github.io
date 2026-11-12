@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torque and Work: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+.views.w125 { grid-template-columns: 1.25fr 1fr; }
+@media (max-width: 640px) { .views.w125 { grid-template-columns: 1fr; } }
+.outputs .result-table td:nth-child(2) { font-size: 0.8em; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Torque and Work: Two Jobs for One Force</h1>
+    <p>ENGT 305 · Module 5 &nbsp;|&nbsp; A force can turn something or move something. The cross product measures the turning, the dot product measures the moving, and each cares about a different part of the force.</p>
+  </div>
+
+  <div class="stage pad">
+    <div class="views w125">
+      <div class="view">
+        <h2 id="tScene"></h2>
+        <p class="cap" id="capScene"></p>
+        <svg id="sc" viewBox="0 0 460 400" role="img" aria-labelledby="scDesc"><desc id="scDesc"></desc><g id="g"></g><g class="handle" id="hA" tabindex="0" role="button" aria-label="Point where the force is applied, or where the object ends up. Arrow keys move it."><circle class="ring" r="15"/><circle r="7" fill="#2c5f8a" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hF" tabindex="0" role="button" aria-label="Tip of the force vector. Arrow keys change the force."><circle class="ring" r="15"/><circle r="7" fill="#b05a10" stroke="#fff" stroke-width="2"/></g></svg>
+      </div>
+      <div class="view">
+        <h2 id="tNum"></h2>
+        <div style="padding:6px 12px 10px">
+          <div class="live" id="l1" style="margin-top:4px"></div>
+          <div class="live" id="l2"></div>
+          <table class="result-table" style="margin-top:8px" id="tbl"></table>
+        </div>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite" style="padding-top:10px"><span id="hMain"></span></div>
+    <div class="state-note" id="stateNote"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> The same force can do two different jobs, and each is measured by a different vector product. <em>Torque</em> (also called a <em>moment</em>) is the turning effect of a force about a pivot. It is the cross product τ = r × F, where r runs from the pivot to the point the force acts on. Only the part of the force perpendicular to r turns anything, so pushing straight along the lever gives zero torque. Equivalently, torque is the force times its <em>moment arm</em>, the perpendicular distance from the pivot to the force's line of action. <em>Work</em> is the energy a force transfers while its point of application moves through a displacement s. It is the dot product W = F · s. Only the part of the force along the motion does work, so a force perpendicular to the motion does none, and a force opposing it does negative work.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <fieldset>
+        <legend>What is the force doing?</legend>
+        <div class="seg" id="modeSeg">
+          <label><input type="radio" name="mode" value="torque" checked>Turning: torque, r × F</label>
+          <label><input type="radio" name="mode" value="work">Moving: work, F · s</label>
+        </div>
+      </fieldset>
+      <p class="note" style="margin:0 0 10px">Drag the blue point and the orange arrow tip in the picture, or use the sliders.</p>
+      <div class="slider-row"><label for="sAx"><span id="lAx"></span> <span class="val" id="vAx"></span></label><input type="range" id="sAx" min="-4" max="4" step="0.1"></div>
+      <div class="slider-row"><label for="sAy"><span id="lAy"></span> <span class="val" id="vAy"></span></label><input type="range" id="sAy" min="-3.4" max="3.4" step="0.1"></div>
+      <div class="slider-row"><label for="sFx"><span>Force, x component</span> <span class="val" id="vFx"></span></label><input type="range" id="sFx" min="-80" max="80" step="2" style="accent-color:#b05a10"></div>
+      <div class="slider-row"><label for="sFy"><span>Force, y component</span> <span class="val" id="vFy"></span></label><input type="range" id="sFy" min="-80" max="80" step="2" style="accent-color:#b05a10"></div>
+      <label class="check"><input type="checkbox" id="cParts" checked> <span id="lParts"></span></label>
+      <span class="flabel">Try these</span>
+      <div class="btn-row">
+        <button type="button" data-p="perp">Force at a right angle</button>
+        <button type="button" data-p="par">Force in line</button>
+        <button type="button" data-p="anti">Force reversed</button>
+        <button type="button" data-p="reset">Reset</button>
+      </div>
+      <p class="note preset-note" id="presetNote"></p>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">The two products side by side</div>
+      <table class="result-table">
+        <tr><td></td><td style="text-align:left;color:#2c5f8a">Torque</td><td>Work</td></tr>
+        <tr><td>Product</td><td style="text-align:left;color:#444;font-weight:400">cross, r × F</td><td style="color:#444;font-weight:400">dot, F · s</td></tr>
+        <tr><td>Result is</td><td style="text-align:left;color:#444;font-weight:400">a vector (here along z)</td><td style="color:#444;font-weight:400">a number</td></tr>
+        <tr><td>Uses the part of F</td><td style="text-align:left;color:#444;font-weight:400">perpendicular to r</td><td style="color:#444;font-weight:400">parallel to s</td></tr>
+        <tr><td>Largest when F is</td><td style="text-align:left;color:#444;font-weight:400">at 90° to r</td><td style="color:#444;font-weight:400">along s</td></tr>
+        <tr><td>Zero when F is</td><td style="text-align:left;color:#444;font-weight:400">along r</td><td style="color:#444;font-weight:400">at 90° to s</td></tr>
+        <tr><td>Units</td><td style="text-align:left;color:#444;font-weight:400">N·m</td><td style="color:#444;font-weight:400">N·m = joule (J)</td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$\tau_z = r_x F_y - r_y F_x = |\mathbf{r}|\,|\mathbf{F}|\sin\theta$$
+        $$W = F_x s_x + F_y s_y = |\mathbf{F}|\,|\mathbf{s}|\cos\theta$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB, torque is <code>cross(r, F)</code> with both written as 3D vectors (use 0 for the z components of a flat problem), and work is <code>dot(F, s)</code>. Torque and work share the unit N·m but are different things: torque is a turning effect with a direction, work is an amount of energy, and only work is called a joule. In the capstone (Part E), the water force on the outlet trash rack acts at some distance from its hinge, and the hinge moment is r × F. In 3D the result is a vector, and its component along the hinge line, found with a dot product, is the moment the hinge and latch must resist. A positive z torque here means counterclockwise, following the right-hand rule.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+const len = v => Math.hypot(v[0], v[1]);
+// z component of r x F for vectors in the xy plane (positive is counterclockwise).
+function torqueZ(r, F) { return r[0] * F[1] - r[1] * F[0]; }
+function work(F, s) { return F[0] * s[0] + F[1] * s[1]; }
+// Angle from a to b in degrees, between 0 and 180, or null if either has zero length.
+function angleBetween(a, b) {
+  const la = len(a), lb = len(b);
+  return la < 1e-12 || lb < 1e-12 ? null : Math.acos(Math.max(-1, Math.min(1, (a[0] * b[0] + a[1] * b[1]) / (la * lb)))) * 180 / Math.PI;
+}
+// Perpendicular distance from the pivot (origin) to the line of action of F through point r.
+function momentArm(r, F) { const lf = len(F); return lf < 1e-12 ? null : Math.abs(torqueZ(r, F)) / lf; }
+/*MATH-END*/
+
+const K = 50, FS = 25;                 // pixels per meter; newtons per meter of arrow length
+const P = p => [230 + p[0] * K, 200 - p[1] * K];
+const DEF = { A: [3, 1], F: [10, 60] };
+let mode = 'torque', A = DEF.A.slice(), F = DEF.F.slice(), showParts = true;
+const Ftip = () => mode === 'torque' ? [A[0] + F[0] / FS, A[1] + F[1] / FS] : [F[0] / FS, F[1] / FS];
+const row = (cls, a, b) => '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + a + '</td><td>' + b + '</td></tr>';
+
+function draw() {
+  const g = $('g');
+  g.textContent = '';
+  for (let i = -4; i <= 4; i++) {
+    el(g, 'line', { x1: P([i, 0])[0], x2: P([i, 0])[0], y1: 0, y2: 400, stroke: i ? '#edf1f5' : '#c3ccd6' });
+    if (Math.abs(i) <= 3) el(g, 'line', { y1: P([0, i])[1], y2: P([0, i])[1], x1: 0, x2: 460, stroke: i ? '#edf1f5' : '#c3ccd6' });
+  }
+  el(g, 'text', { x: 8, y: 392, 'font-size': 10.5, fill: '#8a97a6' }, 'Grid squares are 1 m. Force arrows: 1 m of length is 25 N.');
+  const O = P([0, 0]), a = P(A), tip = P(Ftip()), lf = len(F), la = len(A);
+  if (mode === 'torque') {
+    const tz = torqueZ(A, F);
+    // line of action and moment arm
+    if (lf > 1e-9) {
+      const u = [F[0] / lf, F[1] / lf];
+      el(g, 'line', { x1: P([A[0] - u[0] * 12, A[1] - u[1] * 12])[0], y1: P([A[0] - u[0] * 12, A[1] - u[1] * 12])[1], x2: P([A[0] + u[0] * 12, A[1] + u[1] * 12])[0], y2: P([A[0] + u[0] * 12, A[1] + u[1] * 12])[1],
+        stroke: '#b05a10', 'stroke-width': 1, 'stroke-dasharray': '5 4', opacity: 0.7 });
+      const t = A[0] * u[0] + A[1] * u[1], foot = [A[0] - t * u[0], A[1] - t * u[1]], fp = P(foot);
+      if (len(foot) > 0.05) {
+        el(g, 'line', { x1: O[0], y1: O[1], x2: fp[0], y2: fp[1], stroke: '#2a7a3a', 'stroke-width': 3 });
+        halo(g, (O[0] + fp[0]) / 2 + 4, (O[1] + fp[1]) / 2 - 7, 'moment arm', '#2a7a3a', 11.5);
+        // right-angle mark at the foot
+        const e1 = [-foot[0] / len(foot) * 0.22, -foot[1] / len(foot) * 0.22], e2 = [u[0] * 0.22, u[1] * 0.22];
+        el(g, 'path', { d: 'M' + P([foot[0] + e1[0], foot[1] + e1[1]]).join(' ') + 'L' + P([foot[0] + e1[0] + e2[0], foot[1] + e1[1] + e2[1]]).join(' ') + 'L' + P([foot[0] + e2[0], foot[1] + e2[1]]).join(' '), fill: 'none', stroke: '#2a7a3a', 'stroke-width': 1.3 });
+      }
+    }
+    el(g, 'line', { x1: O[0], y1: O[1], x2: a[0], y2: a[1], stroke: '#8a97a6', 'stroke-width': 11, 'stroke-linecap': 'round', opacity: 0.55 });
+    arrow(g, O, a, '#2c5f8a', 2.6);
+    if (la > 0.3) halo(g, (O[0] + a[0]) / 2 - 10 * (A[1] / la), (O[1] + a[1]) / 2 - 10 * (A[0] / la), 'r', '#2c5f8a', 14);
+    // components of F perpendicular and parallel to r
+    if (showParts && la > 1e-9 && lf > 1e-9) {
+      const ur = [A[0] / la, A[1] / la], fpar = F[0] * ur[0] + F[1] * ur[1], fperp = -F[0] * ur[1] + F[1] * ur[0];
+      arrow(g, a, P([A[0] + ur[0] * fpar / FS, A[1] + ur[1] * fpar / FS]), '#8a97a6', 2, '4 3');
+      arrow(g, a, P([A[0] - ur[1] * fperp / FS, A[1] + ur[0] * fperp / FS]), '#7a3fa0', 2.4);
+      const q = P([A[0] - ur[1] * fperp / FS, A[1] + ur[0] * fperp / FS]);
+      if (Math.abs(fperp) > 8) halo(g, q[0] + 4, q[1] - 8, 'F⊥', '#7a3fa0', 12.5);
+    }
+    arrow(g, a, tip, '#b05a10', 3.2);
+    // pivot and sense of rotation
+    if (Math.abs(tz) > 0.5) {
+      const R = 26, ccw = tz > 0, a0 = ccw ? -40 : 220, a1 = ccw ? 220 : -40, pt = d => [O[0] + R * Math.cos(d * Math.PI / 180), O[1] - R * Math.sin(d * Math.PI / 180)];
+      const s = pt(a0), e = pt(a1);
+      el(g, 'path', { d: 'M' + s[0].toFixed(1) + ' ' + s[1].toFixed(1) + 'A' + R + ' ' + R + ' 0 1 ' + (ccw ? 0 : 1) + ' ' + e[0].toFixed(1) + ' ' + e[1].toFixed(1), fill: 'none', stroke: '#b03030', 'stroke-width': 2.2 });
+      const e2 = pt(a1 + (ccw ? -14 : 14));
+      arrow(g, e2, e, '#b03030', 2.2);
+    }
+    el(g, 'circle', { cx: O[0], cy: O[1], r: 8, fill: '#fff', stroke: '#1a3f5c', 'stroke-width': 3 });
+    el(g, 'circle', { cx: O[0], cy: O[1], r: 2.5, fill: '#1a3f5c' });
+    halo(g, O[0] - 14, O[1] + 24, 'pivot', '#1a3f5c', 11.5);
+  } else {
+    // displacement: block at the start, ghost block at the end
+    el(g, 'rect', { x: a[0] - 15, y: a[1] - 11, width: 30, height: 22, rx: 3, fill: 'none', stroke: '#2c5f8a', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' });
+    el(g, 'rect', { x: O[0] - 15, y: O[1] - 11, width: 30, height: 22, rx: 3, fill: '#dbe9f7', stroke: '#2c5f8a', 'stroke-width': 1.5 });
+    arrow(g, O, a, '#2c5f8a', 2.6);
+    if (la > 0.4) halo(g, (O[0] + a[0]) / 2 + 12 * (A[1] / la), (O[1] + a[1]) / 2 + 12 * (A[0] / la) + 4, 's', '#2c5f8a', 14);
+    if (showParts && la > 1e-9 && lf > 1e-9) {
+      const us = [A[0] / la, A[1] / la], fpar = (F[0] * us[0] + F[1] * us[1]), foot = [us[0] * fpar / FS, us[1] * fpar / FS], fp = P(foot);
+      el(g, 'line', { x1: tip[0], y1: tip[1], x2: fp[0], y2: fp[1], stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '3 3' });
+      el(g, 'line', { x1: O[0], y1: O[1], x2: fp[0], y2: fp[1], stroke: '#7a3fa0', 'stroke-width': 7, 'stroke-linecap': 'round', opacity: 0.45 });
+      if (Math.abs(fpar) > 8) halo(g, (O[0] + fp[0]) / 2, (O[1] + fp[1]) / 2 + 20, 'F∥', '#7a3fa0', 12.5);
+    }
+    arrow(g, O, tip, '#b05a10', 3.2);
+  }
+  const fm = [(mode === 'torque' ? a[0] : O[0]) + tip[0], (mode === 'torque' ? a[1] : O[1]) + tip[1]];
+  if (lf > 6) halo(g, fm[0] / 2 + 12, fm[1] / 2 - 6, 'F', '#b05a10', 14);
+  $('hA').setAttribute('transform', 'translate(' + a[0].toFixed(1) + ',' + a[1].toFixed(1) + ')');
+  $('hF').setAttribute('transform', 'translate(' + tip[0].toFixed(1) + ',' + tip[1].toFixed(1) + ')');
+}
+
+function update() {
+  const tq = mode === 'torque', la = len(A), lf = len(F), th = angleBetween(A, F), n = v => uni(fmt(v, 2)), pf = v => '(' + fmt(v, 2) + ')';
+  $('sAx').value = A[0]; $('sAy').value = A[1]; $('sFx').value = F[0]; $('sFy').value = F[1];
+  $('vAx').textContent = n(A[0]) + ' m'; $('vAy').textContent = n(A[1]) + ' m'; $('vFx').textContent = n(F[0]) + ' N'; $('vFy').textContent = n(F[1]) + ' N';
+  $('lAx').textContent = tq ? 'Point of application r, x' : 'Displacement s, x'; $('lAy').textContent = tq ? 'Point of application r, y' : 'Displacement s, y';
+  $('lParts').textContent = tq ? 'Show the part of F perpendicular to r (the part that turns)' : 'Show the part of F along s (the part that does work)';
+  $('tScene').textContent = tq ? 'A force on a lever' : 'A force on a moving object';
+  $('capScene').textContent = tq ? 'The lever turns about the pivot. The force acts at the blue point.' : 'The object slides from the solid box to the dashed box while the force acts on it.';
+  $('tNum').textContent = tq ? 'Torque about the pivot' : 'Work done by the force';
+  const thTxt = th === null ? 'not defined' : fmt(th, 1) + '°';
+  if (tq) {
+    const tz = torqueZ(A, F), d = momentArm(A, F), fperp = la > 1e-9 ? tz / la : null;
+    tex($('l1'), '\\tau_z = r_x F_y - r_y F_x', 'τz = rx Fy − ry Fx');
+    tex($('l2'), '= ' + pf(A[0]) + pf(F[1]) + ' - ' + pf(A[1]) + pf(F[0]) + ' = \\mathbf{' + fmt(tz, 1) + '}\\ \\text{N}\\!\\cdot\\!\\text{m}', '= ' + n(tz) + ' N·m');
+    const dir = Math.abs(tz) < 0.05 ? 'no turning effect' : tz > 0 ? 'counterclockwise (+z, out of the page)' : 'clockwise (−z, into the page)';
+    $('tbl').innerHTML = row('r', 'Torque τ<sub>z</sub>', n(tz) + ' N·m') + row('', 'Direction', dir) + row('', 'Lever length |r|', n(la) + ' m') + row('a', 'Force size |F|', n(lf) + ' N') +
+      row('', 'Angle between r and F', thTxt) + row('g', 'Moment arm', d === null ? 'not defined' : n(d) + ' m') + row('p', 'Part of F perpendicular to r', fperp === null ? 'not defined' : n(fperp) + ' N') +
+      row('', 'Check: |r| |F| sin θ', th === null ? 'not defined' : n(la * lf * Math.sin(th * Math.PI / 180)) + ' N·m');
+    $('hMain').innerHTML = 'Torque: <b style="color:#b03030">' + n(tz) + ' N·m</b> &nbsp; = force ' + n(lf) + ' N × moment arm ' + (d === null ? '0' : n(d)) + ' m';
+    $('stateNote').textContent = th === null ? 'One of the vectors has zero length.' : Math.abs(tz) < 0.05 ? 'The force points along the lever, straight at or away from the pivot. Its line of action passes through the pivot, so it cannot turn anything.'
+      : Math.abs(th - 90) < 3 ? 'The force is at a right angle to the lever: all of it goes into turning, and the moment arm is the full lever length.'
+      : 'Only the perpendicular part of the force turns the lever. The rest pushes or pulls along it and is carried by the pivot.';
+    $('scDesc').textContent = 'Lever from the pivot to (' + n(A[0]) + ', ' + n(A[1]) + ') meters with force (' + n(F[0]) + ', ' + n(F[1]) + ') newtons. Torque ' + n(tz) + ' newton meters, ' + dir + '.';
+  } else {
+    const W = work(F, A), fpar = la > 1e-9 ? W / la : null;
+    tex($('l1'), 'W = F_x s_x + F_y s_y', 'W = Fx sx + Fy sy');
+    tex($('l2'), '= ' + pf(F[0]) + pf(A[0]) + ' + ' + pf(F[1]) + pf(A[1]) + ' = \\mathbf{' + fmt(W, 1) + '}\\ \\text{J}', '= ' + n(W) + ' J');
+    const meaning = Math.abs(W) < 0.05 ? 'none: no energy transferred' : W > 0 ? 'positive: the force adds energy' : 'negative: the force removes energy';
+    $('tbl').innerHTML = row('r', 'Work W', n(W) + ' J') + row('', 'Sign', meaning) + row('', 'Distance moved |s|', n(la) + ' m') + row('a', 'Force size |F|', n(lf) + ' N') +
+      row('', 'Angle between F and s', thTxt) + row('p', 'Part of F along s', fpar === null ? 'not defined' : n(fpar) + ' N') +
+      row('', 'Check: |F| |s| cos θ', th === null ? 'not defined' : n(la * lf * Math.cos(th * Math.PI / 180)) + ' J');
+    $('hMain').innerHTML = 'Work: <b style="color:#b03030">' + n(W) + ' J</b> &nbsp; = force along the motion ' + (fpar === null ? '0' : n(fpar)) + ' N × distance ' + n(la) + ' m';
+    $('stateNote').textContent = th === null ? 'One of the vectors has zero length.' : Math.abs(W) < 0.05 ? 'The force is perpendicular to the motion, so it does no work, however large it is.'
+      : W > 0 ? 'The force has a part pointing along the motion, so it does positive work: it helps the object along.'
+      : 'The force has a part pointing against the motion, so it does negative work: it takes energy out, the way friction or a brake does.';
+    $('scDesc').textContent = 'Object displaced by (' + n(A[0]) + ', ' + n(A[1]) + ') meters under force (' + n(F[0]) + ', ' + n(F[1]) + ') newtons. Work ' + n(W) + ' joules.';
+  }
+  draw();
+}
+
+const cl = (v, lo, hi, st) => Math.max(lo, Math.min(hi, Math.round(v / st) * st));
+const setA = (x, y) => { A = [cl(x, -4, 4, 0.1), cl(y, -3.4, 3.4, 0.1)]; $('presetNote').textContent = ''; update(); };
+const setF = (x, y) => { F = [cl(x, -80, 80, 2), cl(y, -80, 80, 2)]; $('presetNote').textContent = ''; update(); };
+$('sAx').addEventListener('input', () => setA(+$('sAx').value, A[1])); $('sAy').addEventListener('input', () => setA(A[0], +$('sAy').value));
+$('sFx').addEventListener('input', () => setF(+$('sFx').value, F[1])); $('sFy').addEventListener('input', () => setF(F[0], +$('sFy').value));
+$('cParts').addEventListener('change', () => { showParts = $('cParts').checked; draw(); });
+const toW = q => [(q.x - 230) / K, (200 - q.y) / K];
+makeDraggable($('hA'), $('sc'), q => { const w = toW(q); setA(w[0], w[1]); }, (dx, dy, big) => setA(A[0] + dx * (big ? 0.5 : 0.1), A[1] + dy * (big ? 0.5 : 0.1)));
+makeDraggable($('hF'), $('sc'), q => { const w = toW(q), b = mode === 'torque' ? A : [0, 0]; setF((w[0] - b[0]) * FS, (w[1] - b[1]) * FS); }, (dx, dy, big) => setF(F[0] + dx * (big ? 10 : 2), F[1] + dy * (big ? 10 : 2)));
+const PRE = {
+  torque: { perp: [[3, 0], [0, 60], 'A 60 N push square to a 3 m lever: 180 N·m, the most this force can produce at this point.'],
+            par:  [[3, 0], [60, 0], 'The same 60 N, now pushing along the lever toward its end. Zero torque: the force goes straight into the pivot.'],
+            anti: [[3, 0], [0, -60], 'Reversing the force reverses the turning direction: −180 N·m, clockwise.'] },
+  work:   { perp: [[3, 0], [0, 60], 'A 60 N force at a right angle to the motion does no work, like the weight of a cart rolling on level ground.'],
+            par:  [[3, 0], [60, 0], 'A 60 N force along a 3 m move does 180 J of work, the most this force can do over this distance.'],
+            anti: [[3, 0], [-60, 0], 'A 60 N force directly against the motion does −180 J: it removes energy, like a brake.'] },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => {
+  const id = bn.dataset.p;
+  if (id === 'reset') { A = DEF.A.slice(); F = DEF.F.slice(); $('presetNote').textContent = ''; }
+  else { const p = PRE[mode][id]; A = p[0].slice(); F = p[1].slice(); $('presetNote').textContent = p[2]; }
+  update();
+}));
+document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener('change', () => { mode = r.value; $('presetNote').textContent = ''; syncSeg(); update(); }));
+syncSeg(); update(); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>

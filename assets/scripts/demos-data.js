@@ -128,6 +128,37 @@ const DEMO_COURSES = [
             name: 'Matrix Multiplication Visualizer',
             description: 'Build A x B one entry at a time; see the dimension rule and why order matters.',
           },
+          {
+            file: 'M02-02-LinearSystemSolverDemo.html',
+            name: 'Solving A x = b',
+            description: 'Two lines intersect at the solution; watch the determinant hit zero as a singular system goes parallel.',
+          },
+          {
+            file: 'M02-03-FunctionFamiliesDemo.html',
+            name: 'Function Families Explorer',
+            description: 'Linear, polynomial, exponential, log, and Gaussian shapes; domain, range, symmetry, and inverses; then name the curve.',
+          },
+        ],
+      },
+      {
+        number: 3,
+        title: 'Differential Calculus',
+        demos: [
+          {
+            file: 'M03-01-TangentLineDemo.html',
+            name: 'Tangent Line and the Derivative',
+            description: 'Drag a point along a curve; the secant closes to the tangent, slope f prime of x.',
+          },
+          {
+            file: 'M03-02-SinusoidDemo.html',
+            name: 'Sinusoid Explorer',
+            description: 'Sliders for amplitude, frequency, and phase, with the derivative drawn as velocity.',
+          },
+          {
+            file: 'M03-03-FiniteDifferenceDemo.html',
+            name: 'Finite Difference vs Exact',
+            description: 'Shrink the step size and watch the numerical derivative converge, then break down.',
+          },
         ],
       },
       {
@@ -138,6 +169,11 @@ const DEMO_COURSES = [
             file: 'M04-01-RiemannSumDemo.html',
             name: 'Riemann Sum and Trapezoid Area',
             description: 'Add strips and watch the area approximation converge; left, right, mid, trapezoid.',
+          },
+          {
+            file: 'M04-02-AccumulationDemo.html',
+            name: 'Running Integral',
+            description: 'Sweep across a rate curve and watch its area accumulate into the integral curve.',
           },
         ],
       },
@@ -150,6 +186,16 @@ const DEMO_COURSES = [
             name: 'Dot and Cross Product',
             description: 'Drag two vectors; see the dot product, projection, and the cross product area.',
           },
+          {
+            file: 'M05-02-VectorComponentsDemo.html',
+            name: '3D Vector Components and Direction Angles',
+            description: 'Set three components; see the magnitude, unit vector, and the angle to each axis.',
+          },
+          {
+            file: 'M05-03-TorqueWorkDemo.html',
+            name: 'Torque and Work',
+            description: 'One force, two jobs: the cross product for turning and the dot product for moving.',
+          },
         ],
       },
       {
@@ -161,6 +207,37 @@ const DEMO_COURSES = [
             name: 'Second-Order Damping Explorer',
             description: 'Vary the damping ratio and natural frequency; see under, critical, and overdamped response and the poles.',
           },
+          {
+            file: 'M06-02-FirstOrderResponseDemo.html',
+            name: 'First-Order Response',
+            description: 'A time constant, and a response split into its natural and forced parts.',
+          },
+        ],
+      },
+      {
+        number: 7,
+        title: 'Probability & Statistics',
+        demos: [
+          {
+            file: 'M07-01-NormalToleranceDemo.html',
+            name: 'Normal Distribution and Tolerance',
+            description: 'Sliders for mean and standard deviation; shade the yield inside tolerance limits.',
+          },
+          {
+            file: 'M07-02-SamplingDemo.html',
+            name: 'Sampling and Estimation',
+            description: 'Draw repeated samples and watch the sample means pile up; see the standard error shrink with sample size.',
+          },
+          {
+            file: 'M07-03-ReturnPeriodDemo.html',
+            name: 'Return Period and Flood Risk',
+            description: 'Exceedance probability and the N-year risk from a rainfall record.',
+          },
+          {
+            file: 'M07-04-ProbabilitySimDemo.html',
+            name: 'Experimental vs Theoretical Probability',
+            description: 'Run an experiment many times and watch the observed frequency settle on the theory.',
+          },
         ],
       },
       {
@@ -171,6 +248,16 @@ const DEMO_COURSES = [
             file: 'M08-01-RegressionDemo.html',
             name: 'Least Squares and Overfitting',
             description: 'Fit a line to draggable data, see residuals and R-squared, then overfit with degree.',
+          },
+          {
+            file: 'M08-02-LogLogFitDemo.html',
+            name: 'Log-Log Power-Law Fit',
+            description: 'Fit a straight line in log-log space and read the power-law exponent.',
+          },
+          {
+            file: 'M08-03-CorrelationDemo.html',
+            name: 'Correlation and Covariance',
+            description: 'See what each point adds to the covariance, and why correlation ignores units.',
           },
         ],
       },

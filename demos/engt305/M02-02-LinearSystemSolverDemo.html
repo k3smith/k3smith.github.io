@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solving A x = b: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; padding: 12px 12px 10px; }
+.views { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view svg { display: block; width: 100%; height: auto; }
+.eqs { padding: 4px 10px 0; font-size: 0.9em; line-height: 1.7; }
+.eqs .e1 { color: #2c5f8a; font-weight: 700; } .eqs .e2 { color: #b05a10; font-weight: 700; }
+.mathcol { padding: 4px 12px 10px; }
+.mathcol .row { overflow-x: auto; overflow-y: hidden; padding: 5px 0; font-size: 0.92em; white-space: nowrap; }
+.mathcol .cap { font-size: 0.72em; color: #5a6b80; margin-top: 6px; }
+.status {
+  margin: 10px auto 0; max-width: 760px; text-align: center; font-size: 0.86em; line-height: 1.5;
+  padding: 7px 12px; border-radius: 8px; font-weight: 600;
+}
+.status.one  { background: #e3f4e6; color: #1f5f2c; }
+.status.none { background: #fdeaea; color: #8f2020; }
+.status.many { background: #f1e8f8; color: #5b2a80; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.eq-title { font-size: 0.82em; font-weight: 700; margin: 4px 0 6px; }
+.eq-title.e1 { color: #2c5f8a; } .eq-title.e2 { color: #b05a10; margin-top: 12px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.8em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.95em; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].e2 { accent-color: #b05a10; }
+input[type=range]:focus-visible, .btn-row button:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.flabel { font-size: 0.82em; color: #555; margin: 14px 0 5px; display: block; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.preset-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; min-height: 3em; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.hl td:last-child { color: #2a7a3a; }
+.result-table tr.warn td:last-child { color: #b03030; }
+.eqn { margin-top: 12px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Solving A x = b: Two Equations, Two Lines</h1>
+    <p>ENGT 305 · Module 2 &nbsp;|&nbsp; Each linear equation in two unknowns is a line. Solving the system means finding the point on both lines. Change the coefficients and see when that point exists, and what the determinant has to do with it.</p>
+  </div>
+
+  <div class="stage">
+    <div class="views">
+      <div class="view">
+        <h2>The two equations as lines</h2>
+        <div class="eqs"><span class="e1" id="eq1"></span><br><span class="e2" id="eq2"></span></div>
+        <svg id="plot" viewBox="0 0 400 400" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc><g id="bg"></g></svg>
+      </div>
+      <div class="view">
+        <h2>The same system in matrix form</h2>
+        <div class="mathcol">
+          <div class="cap">The system, A x = b</div>
+          <div class="row" id="mSys"></div>
+          <div class="cap">The determinant of A</div>
+          <div class="row" id="mDet"></div>
+          <div class="cap">The inverse of A</div>
+          <div class="row" id="mInv"></div>
+          <div class="cap">The solution, x = A⁻¹ b</div>
+          <div class="row" id="mSol"></div>
+        </div>
+      </div>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> Writing the coefficients in a matrix A, the unknowns in a column x, and the right-hand sides in a column b turns the system into A x = b. The <em>determinant</em> of a 2 × 2 matrix is one number, a<sub>11</sub>a<sub>22</sub> − a<sub>12</sub>a<sub>21</sub>, and it tells you what kind of system you have. If it is not zero, the lines cross at exactly one point, A has an <em>inverse</em> A⁻¹ (the matrix that undoes A), and the solution is x = A⁻¹ b. If it is zero, the lines have the same slope and A is called <em>singular</em>: it has no inverse, and the system has either no solution (parallel lines) or infinitely many (the same line twice).
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Coefficients</div>
+      <div id="sliders"></div>
+
+      <span class="flabel">Load an example</span>
+      <div class="btn-row">
+        <button type="button" data-p="one">One solution</button>
+        <button type="button" data-p="par">Parallel lines</button>
+        <button type="button" data-p="same">Same line twice</button>
+        <button type="button" data-p="near">Nearly parallel</button>
+        <button type="button" data-p="flow">Pipe junction</button>
+      </div>
+      <p class="preset-note" id="presetNote"></p>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr id="rowDet"><td>Determinant of A</td><td id="rDet"></td></tr>
+        <tr><td>Number of solutions</td><td id="rCount"></td></tr>
+        <tr class="hl"><td>Solution (x, y)</td><td id="rSol"></td></tr>
+        <tr><td>Slope of line 1</td><td id="rS1"></td></tr>
+        <tr><td>Slope of line 2</td><td id="rS2"></td></tr>
+        <tr><td>Check: equation 1 at the solution</td><td id="rC1"></td></tr>
+        <tr><td>Check: equation 2 at the solution</td><td id="rC2"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$\det A = a_{11}a_{22} - a_{12}a_{21}$$
+        $$A^{-1} = \frac{1}{\det A}\begin{bmatrix} a_{22} & -a_{12} \\ -a_{21} & a_{11} \end{bmatrix} \qquad \mathbf{x} = A^{-1}\mathbf{b}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB, enter <code>A = [2 1; 1 -2];</code> and <code>b = [7; -4];</code> then solve with <code>x = A\b</code>. Check the answer with <code>A*x</code>, which should reproduce b. <code>det(A)</code> gives the determinant and <code>inv(A)</code> the inverse, but the backslash is the tool to use for solving: it is faster and more accurate than computing the inverse first. If the matrix is singular, MATLAB warns "Matrix is singular to working precision" and the result is not to be trusted. In the capstone (Part B), the unknowns are found the same way, and the same idea extends to any number of equations, where each one is a plane or higher-dimensional surface instead of a line. A determinant that is small compared with the coefficients is its own warning: the lines are nearly parallel, so a small change in the measured values on the right-hand side moves the answer a long way.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function det2(A) { return A[0][0] * A[1][1] - A[0][1] * A[1][0]; }
+function inv2(A) {
+  const d = det2(A);
+  return [[A[1][1] / d, -A[0][1] / d], [-A[1][0] / d, A[0][0] / d]];
+}
+// Classify and solve a 2 x 2 system. kind is 'one', 'none', or 'many'.
+function solve2(A, b) {
+  const d = det2(A), EPS = 1e-9;
+  if (Math.abs(d) > EPS) {
+    return { kind: 'one', det: d, x: (b[0] * A[1][1] - A[0][1] * b[1]) / d, y: (A[0][0] * b[1] - A[1][0] * b[0]) / d };
+  }
+  // Singular: consistent only if the augmented matrix [A | b] has the same rank as A.
+  const m1 = A[0][0] * b[1] - A[1][0] * b[0], m2 = A[0][1] * b[1] - A[1][1] * b[0];
+  const zeroA = A.every(r => r.every(v => Math.abs(v) < EPS));
+  const consistent = Math.abs(m1) < EPS && Math.abs(m2) < EPS && (!zeroA || (Math.abs(b[0]) < EPS && Math.abs(b[1]) < EPS));
+  return { kind: consistent ? 'many' : 'none', det: 0 };
+}
+/*MATH-END*/
+
+let A = [[2, 1], [1, -2]], b = [7, -4];
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+const C1 = '#2c5f8a', C2 = '#b05a10';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace('-', '−');
+function eqText(row, rhs) {
+  const [p, q] = row;
+  const term = (c, v, first) => {
+    if (c === 0) return '';
+    const a = Math.abs(c), body = (a === 1 ? '' : fmt(a)) + v;
+    return first ? (c < 0 ? '−' : '') + body : (c < 0 ? ' − ' : ' + ') + body;
+  };
+  const tx = term(p, 'x', true), ty = term(q, 'y', tx === '');
+  return (tx + ty || '0') + ' = ' + uni(fmt(rhs));
+}
+function slopeText(row) {
+  if (row[0] === 0 && row[1] === 0) return 'not a line';
+  if (row[1] === 0) return 'vertical';
+  return uni(fmt(-row[0] / row[1]));
+}
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+const bm = rows => '\\begin{bmatrix}' + rows.map(r => r.join(' & ')).join(' \\\\ ') + '\\end{bmatrix}';
+
+function draw(S) {
+  const g = $('bg');
+  g.textContent = '';
+  const k = 400 / 16.4, X = x => 200 + x * k, Y = y => 200 - y * k;
+  for (let i = -8; i <= 8; i++) {
+    el(g, 'line', { x1: X(i), x2: X(i), y1: 0, y2: 400, stroke: i ? '#e8edf3' : '#8a97a6', 'stroke-width': i ? 1 : 1.3 });
+    el(g, 'line', { y1: Y(i), y2: Y(i), x1: 0, x2: 400, stroke: i ? '#e8edf3' : '#8a97a6', 'stroke-width': i ? 1 : 1.3 });
+    if (i && i % 2 === 0) {
+      el(g, 'text', { x: X(i), y: Y(0) + 13, 'text-anchor': 'middle', 'font-size': 10, fill: '#8a97a6' }, uni(i));
+      el(g, 'text', { x: X(0) - 5, y: Y(i) + 3.5, 'text-anchor': 'end', 'font-size': 10, fill: '#8a97a6' }, uni(i));
+    }
+  }
+  el(g, 'text', { x: 392, y: Y(0) - 6, 'text-anchor': 'end', 'font-size': 12, 'font-style': 'italic', fill: '#5a6b80' }, 'x');
+  el(g, 'text', { x: X(0) + 7, y: 13, 'font-size': 12, 'font-style': 'italic', fill: '#5a6b80' }, 'y');
+  const line = (row, rhs, color, w, dash, label) => {
+    const [p, q] = row, n2 = p * p + q * q;
+    if (n2 === 0) return;
+    const x0 = rhs * p / n2, y0 = rhs * q / n2, L = 40 / Math.sqrt(n2);
+    const a = { x1: X(x0 - q * L), y1: Y(y0 + p * L), x2: X(x0 + q * L), y2: Y(y0 - p * L), stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+    if (dash) a['stroke-dasharray'] = dash;
+    el(g, 'line', a);
+  };
+  line(A[0], b[0], C1, S.kind === 'many' ? 6 : 2.8);
+  line(A[1], b[1], C2, 2.8, S.kind === 'many' ? '8 6' : '');
+  if (S.kind === 'one') {
+    const inside = Math.abs(S.x) <= 8.2 && Math.abs(S.y) <= 8.2;
+    if (inside) {
+      el(g, 'line', { x1: X(S.x), x2: X(S.x), y1: Y(S.y), y2: Y(0), stroke: '#2a7a3a', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      el(g, 'line', { x1: X(S.x), x2: X(0), y1: Y(S.y), y2: Y(S.y), stroke: '#2a7a3a', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      el(g, 'circle', { cx: X(S.x), cy: Y(S.y), r: 7, fill: '#2a7a3a', stroke: '#fff', 'stroke-width': 2.5 });
+      const right = S.x < 4;
+      el(g, 'text', { x: X(S.x) + (right ? 11 : -11), y: Y(S.y) - 10, 'text-anchor': right ? 'start' : 'end', 'font-size': 13, 'font-weight': 700, fill: '#1f5f2c',
+        'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3.5 }, '(' + uni(fmt(S.x, 2)) + ', ' + uni(fmt(S.y, 2)) + ')');
+    } else {
+      el(g, 'rect', { x: 60, y: 372, width: 280, height: 22, rx: 5, fill: '#fff', stroke: '#2a7a3a' });
+      el(g, 'text', { x: 200, y: 387, 'text-anchor': 'middle', 'font-size': 11.5, fill: '#1f5f2c' }, 'The lines cross off the plot, at (' + uni(fmt(S.x, 2)) + ', ' + uni(fmt(S.y, 2)) + ')');
+    }
+  }
+}
+
+function update() {
+  const S = solve2(A, b), d = det2(A);
+  ['a11', 'a12', 'b1', 'a21', 'a22', 'b2'].forEach(id => {
+    const v = id[0] === 'b' ? b[+id[1] - 1] : A[+id[1] - 1][+id[2] - 1];
+    $('s_' + id).value = v; $('v_' + id).textContent = uni(fmt(v));
+  });
+  $('eq1').textContent = 'Line 1:  ' + eqText(A[0], b[0]);
+  $('eq2').textContent = 'Line 2:  ' + eqText(A[1], b[1]);
+
+  const f = v => fmt(v), pf = v => (v < 0 ? '(' + fmt(v) + ')' : fmt(v));
+  tex($('mSys'), bm(A.map(r => r.map(f))) + bm([['x'], ['y']]) + ' = ' + bm(b.map(v => [f(v)])),
+      '[' + A[0].join(' ') + '; ' + A[1].join(' ') + '] [x; y] = [' + b.join('; ') + ']');
+  tex($('mDet'), '\\det A = ' + pf(A[0][0]) + pf(A[1][1]) + ' - ' + pf(A[0][1]) + pf(A[1][0]) + ' = \\mathbf{' + f(d) + '}',
+      'det A = (' + A[0][0] + ')(' + A[1][1] + ') − (' + A[0][1] + ')(' + A[1][0] + ') = ' + uni(f(d)));
+  const st = $('status');
+  st.className = 'status ' + S.kind;
+  if (S.kind === 'one') {
+    const I = inv2(A);
+    tex($('mInv'), 'A^{-1} = \\frac{1}{' + f(d) + '}' + bm([[f(A[1][1]), f(-A[0][1])], [f(-A[1][0]), f(A[0][0])]]) + ' = ' + bm(I.map(r => r.map(v => fmt(v, 3)))),
+        'A⁻¹ = [' + I[0].map(v => fmt(v, 3)).join(' ') + '; ' + I[1].map(v => fmt(v, 3)).join(' ') + ']');
+    tex($('mSol'), bm([['x'], ['y']]) + ' = A^{-1}\\mathbf{b} = \\textcolor{#2a7a3a}{' + bm([[fmt(S.x, 3)], [fmt(S.y, 3)]]) + '}', 'x = ' + fmt(S.x, 3) + ', y = ' + fmt(S.y, 3));
+    st.textContent = 'One solution. The determinant is not zero, so the lines cross at exactly one point: x = ' + uni(fmt(S.x, 3)) + ', y = ' + uni(fmt(S.y, 3)) + '.';
+  } else {
+    $('mInv').textContent = 'A has no inverse: dividing by a determinant of 0 is not possible.';
+    $('mSol').textContent = S.kind === 'none' ? 'No point satisfies both equations.' : 'Every point on the line satisfies both equations.';
+    st.textContent = S.kind === 'none'
+      ? 'No solution. The determinant is zero and the equations disagree: the lines are parallel and never meet.'
+      : 'Infinitely many solutions. The determinant is zero and the two equations describe the same line, so the second adds no new information.';
+  }
+
+  $('rDet').textContent = uni(fmt(d));
+  $('rowDet').className = S.kind === 'one' ? '' : 'warn';
+  $('rCount').textContent = S.kind === 'one' ? 'exactly one' : S.kind === 'none' ? 'none' : 'infinitely many';
+  $('rSol').textContent = S.kind === 'one' ? '(' + uni(fmt(S.x, 3)) + ', ' + uni(fmt(S.y, 3)) + ')' : S.kind === 'none' ? 'does not exist' : 'not unique';
+  $('rS1').textContent = slopeText(A[0]); $('rS2').textContent = slopeText(A[1]);
+  if (S.kind === 'one') {
+    const c1 = A[0][0] * S.x + A[0][1] * S.y, c2 = A[1][0] * S.x + A[1][1] * S.y;
+    $('rC1').textContent = uni(fmt(c1, 6)) + ' (should be ' + uni(fmt(b[0])) + ')';
+    $('rC2').textContent = uni(fmt(c2, 6)) + ' (should be ' + uni(fmt(b[1])) + ')';
+  } else { $('rC1').textContent = 'no single point to check'; $('rC2').textContent = 'no single point to check'; }
+
+  $('plotDesc').textContent = 'Line 1: ' + eqText(A[0], b[0]) + '. Line 2: ' + eqText(A[1], b[1]) + '. ' + st.textContent;
+  draw(S);
+}
+
+// ---- Sliders ----
+(function build() {
+  const host = $('sliders');
+  [[1, 'Equation 1 (line 1)'], [2, 'Equation 2 (line 2)']].forEach(([i, title]) => {
+    const h = document.createElement('div');
+    h.className = 'eq-title e' + i; h.textContent = title;
+    host.appendChild(h);
+    const tri = document.createElement('div');
+    tri.className = 'tri';
+    [['a' + i + '1', 'x coefficient a<sub>' + i + '1</sub>', 5], ['a' + i + '2', 'y coefficient a<sub>' + i + '2</sub>', 5], ['b' + i, 'right side b<sub>' + i + '</sub>', 10]].forEach(([id, lab, lim]) => {
+      const row = document.createElement('div');
+      row.className = 'slider-row';
+      row.innerHTML = '<label for="s_' + id + '"><span>' + lab + '</span> <span class="val" id="v_' + id + '"></span></label>' +
+        '<input type="range" class="e' + i + '" id="s_' + id + '" min="-' + lim + '" max="' + lim + '" step="0.5">';
+      tri.appendChild(row);
+      row.querySelector('input').addEventListener('input', ev => {
+        const v = parseFloat(ev.target.value);
+        if (id[0] === 'b') b[i - 1] = v; else A[i - 1][+id[2] - 1] = v;
+        $('presetNote').textContent = '';
+        update();
+      });
+    });
+    host.appendChild(tri);
+  });
+})();
+
+const PRESETS = {
+  one:  { A: [[2, 1], [1, -2]], b: [7, -4], note: 'Different slopes, so the lines cross once, at (2, 3). The determinant is −5.' },
+  par:  { A: [[2, 1], [4, 2]], b: [7, 4], note: 'The second row of A is twice the first, so the slopes match and the determinant is 0. The right sides do not follow the same pattern (4 is not twice 7), so the lines are parallel.' },
+  same: { A: [[2, 1], [4, 2]], b: [7, 14], note: 'Every number in equation 2 is twice equation 1, right side included. It is the same line written twice, so any point on it is a solution.' },
+  near: { A: [[2, 1], [2.5, 1.5]], b: [7, 9.5], note: 'The lines cross at (2, 3), but at a shallow angle, and the determinant is only 0.5. Nudge b₂ from 9.5 to 10 and the solution jumps to (1, 5).' },
+  flow: { A: [[1, 1], [1, -2]], b: [6, 0], note: 'Two pipes feed a junction. Together they carry 6 m³/s (x + y = 6), and pipe 1 carries twice what pipe 2 does (x − 2y = 0). Solution: x = 4, y = 2 m³/s.' },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => {
+  const p = PRESETS[bn.dataset.p];
+  A = p.A.map(r => r.slice()); b = p.b.slice();
+  $('presetNote').textContent = p.note;
+  update();
+}));
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

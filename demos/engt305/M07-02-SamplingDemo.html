@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sampling and Estimation: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.ptitle.m { color: #b05a10; }
+.stage svg { display: block; width: 100%; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 4px 12px 12px; font-size: 0.86em; color: #444;
+}
+.headline b { color: #1a3f5c; }
+.headline .m b { color: #b05a10; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label {
+  flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em;
+  border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.slider-row { margin-bottom: 4px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.btn-row button {
+  flex: 1; min-width: 64px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover { background: #1a3f5c; }
+.ctl-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-bottom: 10px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.m td:last-child { color: #b05a10; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.result-table tr.bad td:last-child { color: #b03030; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.eqn { margin-top: 12px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Sampling and Estimation</h1>
+    <p>ENGT 305 · Module 7 &nbsp;|&nbsp; You can never test every cylinder of concrete, so you test a few and estimate. Draw samples again and again to see how far a sample mean tends to land from the truth, and how sample size changes that.</p>
+  </div>
+
+  <div class="stage">
+    <div class="ptitle">The population, and the latest sample drawn from it</div>
+    <svg id="pop" role="img" aria-labelledby="popDesc"><desc id="popDesc"></desc><g id="gPop"></g></svg>
+    <div class="ptitle m">Where the sample means have landed so far</div>
+    <svg id="means" role="img" aria-labelledby="meansDesc"><desc id="meansDesc"></desc><g id="gMeans"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span>Samples drawn: <b id="hN"></b></span>
+      <span class="m">Spread of the sample means: <b id="hSd"></b></span>
+      <span>Predicted σ/√n: <b id="hSe"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> The <em>population</em> is every value that could be measured, here the compressive strength of all the concrete in a pour, with true mean μ and standard deviation σ that you normally never know. A <em>sample</em> is the n cylinders you actually test. Its mean x̄ is your estimate of μ, and it changes from sample to sample. The <em>standard error</em>, σ/√n, is the standard deviation of that sample-to-sample scatter: quadruple the sample size and it halves. The <em>central limit theorem</em> says the sample means pile up in a bell shape around μ even when the population itself is not bell shaped. A <em>95% confidence interval</em>, x̄ ± t·s/√n, is a range built from one sample by a method that captures μ in about 95 of every 100 samples.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <fieldset>
+        <legend>Shape of the population (all have μ = 30 MPa, σ = 4 MPa)</legend>
+        <div class="seg" id="popSeg">
+          <label><input type="radio" name="pop" value="normal" checked>Bell shaped</label>
+          <label><input type="radio" name="pop" value="uniform">Flat</label>
+          <label><input type="radio" name="pop" value="skew">Skewed</label>
+        </div>
+      </fieldset>
+      <div class="slider-row">
+        <label for="sN"><span>Sample size n (cylinders per sample)</span> <span class="val" id="vN"></span></label>
+        <input type="range" id="sN" min="2" max="64" step="1" value="4">
+      </div>
+      <div class="btn-row">
+        <button type="button" data-n="4">n = 4</button>
+        <button type="button" data-n="16">n = 16</button>
+        <button type="button" data-n="64">n = 64</button>
+      </div>
+      <p class="ctl-note">Changing the sample size or the population clears the collected means, because they belong to the old setting.</p>
+      <span class="flabel">Draw samples</span>
+      <div class="btn-row">
+        <button type="button" class="primary" data-draw="1">Draw 1 sample</button>
+        <button type="button" data-draw="10">Draw 10</button>
+        <button type="button" data-draw="1000">Draw 1,000</button>
+        <button type="button" id="bReset">Clear</button>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Latest sample mean x̄</td><td id="rXbar"></td></tr>
+        <tr><td>Latest sample standard deviation s</td><td id="rS"></td></tr>
+        <tr id="rowCI"><td>Latest 95% confidence interval</td><td id="rCI"></td></tr>
+        <tr class="sep"><td>Samples drawn</td><td id="rCount"></td></tr>
+        <tr class="m"><td>Mean of all the sample means</td><td id="rMM"></td></tr>
+        <tr class="m"><td>Standard deviation of the sample means</td><td id="rSM"></td></tr>
+        <tr><td>Predicted standard error, σ/√n</td><td id="rSE"></td></tr>
+        <tr><td>Intervals that captured μ</td><td id="rCov"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i$$
+        $$s = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}}$$
+        $$\text{standard error} = \frac{\sigma}{\sqrt{n}}$$
+        $$\text{95\% interval: } \bar{x} \pm t\,\frac{s}{\sqrt{n}}$$
+      </div>
+      <p style="font-size:0.74em;color:#5a6b80;margin-top:6px;line-height:1.5">The multiplier t comes from Student's t distribution with n − 1 degrees of freedom. It is <span id="tNow"></span> for this sample size and approaches 1.96 as n grows. It is larger for small samples because s is itself an uncertain estimate of σ. The 95% figure is exact for a bell-shaped population. For the flat and skewed populations with a small n, expect the capture rate to run a little under 95%.</p>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> With test results in a vector <code>x</code>, the estimate and its uncertainty are <code>mean(x)</code>, <code>std(x)</code> (which divides by n − 1), and <code>std(x)/sqrt(numel(x))</code>. You can run this same experiment in MATLAB: <code>x = 30 + 4*randn(n, 1000);</code> makes 1,000 samples of size n as columns, <code>mean(x)</code> gives their 1,000 means, and <code>histogram(mean(x))</code> shows the pile. The practical lesson is the square root: to cut the uncertainty of an estimate in half you need four times as many tests, which is why testing plans settle on a modest sample size instead of chasing precision.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+const MU = 30, SIGMA = 4;
+// Small seedable random number generator (mulberry32), so a run can be reproduced when testing.
+function makeRng(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+// Three populations with the same mean (30) and standard deviation (4).
+const POPS = {
+  normal:  { draw: r => MU + SIGMA * Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r()),
+             pdf: x => Math.exp(-0.5 * ((x - MU) / SIGMA) ** 2) / (SIGMA * Math.sqrt(2 * Math.PI)) },
+  // uniform on [mu - sqrt(3) sigma, mu + sqrt(3) sigma]
+  uniform: { draw: r => MU + SIGMA * Math.sqrt(3) * (2 * r() - 1),
+             pdf: x => Math.abs(x - MU) <= SIGMA * Math.sqrt(3) ? 1 / (2 * SIGMA * Math.sqrt(3)) : 0 },
+  // shifted gamma with shape 4 and scale 2: mean 22 + 8 = 30, standard deviation sqrt(4) * 2 = 4
+  skew:    { draw: r => 22 - 2 * Math.log((1 - r()) * (1 - r()) * (1 - r()) * (1 - r())),
+             pdf: x => { const y = x - 22; return y <= 0 ? 0 : y * y * y * Math.exp(-y / 2) / (6 * 16); } },
+};
+function mean(a) { let s = 0; for (const v of a) s += v; return s / a.length; }
+// Sample standard deviation (divides by n - 1).
+function sstd(a) { const m = mean(a); let s = 0; for (const v of a) s += (v - m) * (v - m); return Math.sqrt(s / (a.length - 1)); }
+// Two-sided 95% critical value of Student's t for the given degrees of freedom.
+const T975 = [0, 12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201, 2.179, 2.160, 2.145, 2.131,
+  2.120, 2.110, 2.101, 2.093, 2.086, 2.080, 2.074, 2.069, 2.064, 2.060, 2.056, 2.052, 2.048, 2.045, 2.042];
+function tCrit(df) {
+  if (df <= 30) return T975[df];
+  // beyond the table: series in 1/df around the normal value 1.95996
+  const z = 1.959964, g1 = (z ** 3 + z) / 4, g2 = (5 * z ** 5 + 16 * z ** 3 + 3 * z) / 96, g3 = (3 * z ** 7 + 19 * z ** 5 + 17 * z ** 3 - 15 * z) / 384;
+  return z + g1 / df + g2 / (df * df) + g3 / (df * df * df);
+}
+function interval(sample) {
+  const n = sample.length, m = mean(sample), s = sstd(sample), hw = tCrit(n - 1) * s / Math.sqrt(n);
+  return { m, s, lo: m - hw, hi: m + hw, hit: m - hw <= MU && MU <= m + hw };
+}
+/*MATH-END*/
+
+const X0 = 14, X1 = 46, MAXKEEP = 50000;
+let rng = makeRng((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+let popId = 'normal', n = 4, means = [], hits = 0, last = null, lastCI = null;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 2 : d));
+  return String(r === 0 ? 0 : r).replace('-', '−');
+}
+
+function frame(svg, g, Hpx, small, xName) {
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Hpx);
+  svg.setAttribute('height', Hpx);
+  g.textContent = '';
+  const mL = small ? 12 : 22, mR = small ? 12 : 22, mT = 22, mB = xName ? (small ? 38 : 42) : 24, fs = small ? 10 : 11.5;
+  const X = x => mL + (x - X0) / (X1 - X0) * (W - mL - mR);
+  const base = Hpx - mB;
+  el(g, 'line', { x1: mL, x2: W - mR, y1: base, y2: base, stroke: '#5a6b80', 'stroke-width': 1.2 });
+  for (let x = 14; x <= 46; x += (small ? 8 : 4)) {
+    el(g, 'line', { x1: X(x), x2: X(x), y1: base, y2: base + 5, stroke: '#5a6b80', 'stroke-width': 1 });
+    el(g, 'text', { x: X(x), y: base + 16, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, String(x));
+  }
+  if (xName) el(g, 'text', { x: (mL + W - mR) / 2, y: Hpx - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, xName);
+  const defs = el(g, 'defs', {}), id = 'clip' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: 0, width: W - mL - mR, height: Hpx });
+  return { W, Hpx, mL, mR, mT, mB, X, base, fs, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }) };
+}
+function muLine(G, top) {
+  el(G.inner, 'line', { x1: G.X(MU), x2: G.X(MU), y1: top, y2: G.base, stroke: '#1a3f5c', 'stroke-width': 1.5, 'stroke-dasharray': '5 3' });
+  el(G.inner, 'text', { x: G.X(MU) + 5, y: top + 10, 'font-size': G.fs, 'font-weight': 700, fill: '#1a3f5c' }, 'μ = 30');
+}
+
+function draw() {
+  const small = $('pop').getBoundingClientRect().width < 520;
+  const P = POPS[popId];
+  // population and latest sample
+  let G = frame($('pop'), $('gPop'), small ? 190 : 220, small, '');
+  let peak = 0;
+  for (let i = 0; i <= 320; i++) peak = Math.max(peak, P.pdf(X0 + (X1 - X0) * i / 320));
+  const Yp = y => G.base - y / (peak * 1.15) * (G.base - G.mT);
+  let d = 'M' + G.X(X0) + ' ' + G.base;
+  for (let i = 0; i <= 640; i++) { const x = X0 + (X1 - X0) * i / 640; d += 'L' + G.X(x).toFixed(2) + ' ' + Yp(P.pdf(x)).toFixed(2); }
+  d += 'L' + G.X(X1) + ' ' + G.base + 'Z';
+  el(G.inner, 'path', { d, fill: 'rgba(44,95,138,0.14)', stroke: '#2c5f8a', 'stroke-width': 2 });
+  muLine(G, G.mT - 12);
+  if (last) {
+    const show = last.length > 40 ? 5 : 6;
+    last.forEach((v, i) => el(G.inner, 'circle', { cx: G.X(v), cy: G.base - 9 - (i % 3) * 7, r: show - 2, fill: '#1a3f5c', opacity: 0.6 }));
+    const y = G.base - 44;
+    el(G.inner, 'line', { x1: G.X(lastCI.lo), x2: G.X(lastCI.hi), y1: y, y2: y, stroke: lastCI.hit ? '#2a7a3a' : '#b03030', 'stroke-width': 4, 'stroke-linecap': 'round' });
+    [lastCI.lo, lastCI.hi].forEach(v => el(G.inner, 'line', { x1: G.X(v), x2: G.X(v), y1: y - 6, y2: y + 6, stroke: lastCI.hit ? '#2a7a3a' : '#b03030', 'stroke-width': 2 }));
+    el(G.inner, 'circle', { cx: G.X(lastCI.m), cy: y, r: 6, fill: '#b05a10', stroke: '#fff', 'stroke-width': 2 });
+    el(G.inner, 'text', { x: G.X(lastCI.m), y: y - 11, 'text-anchor': 'middle', 'font-size': G.fs, 'font-weight': 700, fill: '#b05a10', 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'x̄ = ' + fmt(lastCI.m));
+  } else {
+    el(G.inner, 'text', { x: G.X(38), y: G.mT + 20, 'text-anchor': 'middle', 'font-size': G.fs + 0.5, fill: '#5a6b80' }, 'Draw a sample to begin');
+  }
+  $('popDesc').textContent = 'Population distribution with mean 30 and standard deviation 4.' + (last ? ' Latest sample of ' + n + ' has mean ' + fmt(lastCI.m) + '.' : '');
+
+  // histogram of sample means, on the same horizontal axis
+  G = frame($('means'), $('gMeans'), small ? 200 : 240, small, 'compressive strength (MPa)');
+  const se = SIGMA / Math.sqrt(n), bw = se * 0.4;
+  const thPeak = 1 / (se * Math.sqrt(2 * Math.PI));
+  const counts = new Map();
+  for (const m of means) { const k = Math.floor((m - MU) / bw + 0.5); counts.set(k, (counts.get(k) || 0) + 1); }
+  let hmax = 0;
+  counts.forEach(c => { hmax = Math.max(hmax, c / (means.length * bw)); });
+  const top = Math.max(thPeak, hmax) * 1.12;
+  const Yh = y => G.base - y / top * (G.base - G.mT);
+  counts.forEach((c, k) => {
+    const x0 = MU + (k - 0.5) * bw, dens = c / (means.length * bw);
+    el(G.inner, 'rect', { x: G.X(x0), y: Yh(dens), width: Math.max(0.8, G.X(x0 + bw) - G.X(x0) - 0.6), height: G.base - Yh(dens), fill: 'rgba(176,90,16,0.55)' });
+  });
+  let c = '';
+  for (let i = 0; i <= 640; i++) { const x = X0 + (X1 - X0) * i / 640; c += (i ? 'L' : 'M') + G.X(x).toFixed(2) + ' ' + Yh(Math.exp(-0.5 * ((x - MU) / se) ** 2) * thPeak).toFixed(2); }
+  el(G.inner, 'path', { d: c, fill: 'none', stroke: '#1a3f5c', 'stroke-width': 1.8, 'stroke-dasharray': '6 4' });
+  muLine(G, G.mT - 12);
+  if (lastCI) el(G.inner, 'polygon', { points: G.X(lastCI.m) + ',' + (G.base - 2) + ' ' + (G.X(lastCI.m) - 6) + ',' + (G.base + 9) + ' ' + (G.X(lastCI.m) + 6) + ',' + (G.base + 9), fill: '#b05a10', stroke: '#fff', 'stroke-width': 1 });
+  const lx = G.mL + 8, ly = G.mT + 4;
+  el(G.inner, 'rect', { x: lx, y: ly - 6, width: 20, height: 10, fill: 'rgba(176,90,16,0.55)' });
+  el(G.inner, 'text', { x: lx + 26, y: ly + 3, 'font-size': G.fs, fill: '#333' }, 'sample means');
+  el(G.inner, 'line', { x1: lx, x2: lx + 20, y1: ly + 15, y2: ly + 15, stroke: '#1a3f5c', 'stroke-width': 1.8, 'stroke-dasharray': '6 4' });
+  el(G.inner, 'text', { x: lx + 26, y: ly + 19, 'font-size': G.fs, fill: '#333' }, small ? 'bell curve, σ/√n wide' : 'bell curve with spread σ/√n (the prediction)');
+  $('meansDesc').textContent = means.length ? 'Histogram of ' + means.length + ' sample means, with standard deviation ' + (means.length > 1 ? fmt(sstd(means), 3) : 'not yet defined') +
+    ' against a predicted ' + fmt(se, 3) + '.' : 'No sample means collected yet.';
+}
+
+function update() {
+  const se = SIGMA / Math.sqrt(n), N = means.length;
+  $('vN').textContent = n; $('sN').value = n;
+  $('tNow').textContent = fmt(tCrit(n - 1), 3);
+  $('rXbar').textContent = lastCI ? fmt(lastCI.m) + ' MPa' : 'none yet';
+  $('rS').textContent = lastCI ? fmt(lastCI.s) + ' MPa' : 'none yet';
+  $('rCI').textContent = lastCI ? fmt(lastCI.lo) + ' to ' + fmt(lastCI.hi) + (lastCI.hit ? ' (captures μ)' : ' (misses μ)') : 'none yet';
+  $('rowCI').className = lastCI ? (lastCI.hit ? 'ok' : 'bad') : '';
+  $('rCount').textContent = N.toLocaleString('en-US');
+  $('rMM').textContent = N ? fmt(mean(means), 3) + ' MPa' : 'none yet';
+  const sm = N > 1 ? fmt(sstd(means), 3) + ' MPa' : 'needs 2 or more';
+  $('rSM').textContent = sm;
+  $('rSE').textContent = '4/√' + n + ' = ' + fmt(se, 3) + ' MPa';
+  $('rCov').textContent = N ? hits.toLocaleString('en-US') + ' of ' + N.toLocaleString('en-US') + ' (' + (100 * hits / N).toFixed(1) + '%)' : 'none yet';
+  $('hN').textContent = N.toLocaleString('en-US'); $('hSd').textContent = sm; $('hSe').textContent = fmt(se, 3) + ' MPa';
+  document.querySelectorAll('button[data-draw]').forEach(b => { b.disabled = N >= MAXKEEP; });
+  draw();
+}
+function drawSamples(k) {
+  const P = POPS[popId];
+  for (let j = 0; j < k && means.length < MAXKEEP; j++) {
+    const s = [];
+    for (let i = 0; i < n; i++) s.push(P.draw(rng));
+    const ci = interval(s);
+    means.push(ci.m); if (ci.hit) hits++;
+    last = s; lastCI = ci;
+  }
+  update();
+}
+function clearAll() { means = []; hits = 0; last = null; lastCI = null; update(); }
+
+// ---- Wiring ----
+function syncSeg() { document.querySelectorAll('#popSeg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+document.querySelectorAll('input[name=pop]').forEach(r => r.addEventListener('change', () => { popId = r.value; syncSeg(); clearAll(); }));
+$('sN').addEventListener('input', () => { n = +$('sN').value; clearAll(); });
+document.querySelectorAll('button[data-n]').forEach(b => b.addEventListener('click', () => { n = +b.dataset.n; clearAll(); }));
+document.querySelectorAll('button[data-draw]').forEach(b => b.addEventListener('click', () => drawSamples(+b.dataset.draw)));
+$('bReset').addEventListener('click', clearAll);
+window.addEventListener('resize', draw);
+// testing hook: reseed the generator for a reproducible run
+window.__reseed = s => { rng = makeRng(s); clearAll(); };
+
+syncSeg(); update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

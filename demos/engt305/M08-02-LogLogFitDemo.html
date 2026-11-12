@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log-Log Power-Law Fit: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Log-Log Power-Law Fit</h1>
+    <p>ENGT 305 · Module 8 &nbsp;|&nbsp; Many engineering relationships are power laws, and on ordinary axes they are curves. Plot the same data on log-log axes and they straighten out, which turns a hard fitting problem into a straight-line fit.</p>
+  </div>
+
+  <div class="stage pad">
+    <div class="views">
+      <div class="view">
+        <h2>Ordinary axes</h2>
+        <p class="cap">The data follow a curve. Hard to read an exponent from this.</p>
+        <svg id="lin" role="img" aria-labelledby="linDesc"><desc id="linDesc"></desc><g id="gLin"></g><g class="handle" id="ha0" tabindex="0" role="button" aria-label="Data point 1 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha1" tabindex="0" role="button" aria-label="Data point 2 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha2" tabindex="0" role="button" aria-label="Data point 3 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha3" tabindex="0" role="button" aria-label="Data point 4 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha4" tabindex="0" role="button" aria-label="Data point 5 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha5" tabindex="0" role="button" aria-label="Data point 6 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha6" tabindex="0" role="button" aria-label="Data point 7 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="ha7" tabindex="0" role="button" aria-label="Data point 8 on the ordinary plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g></svg>
+      </div>
+      <div class="view">
+        <h2>Log-log axes</h2>
+        <p class="cap">The same data fall on a straight line. Its slope is the exponent.</p>
+        <svg id="log" role="img" aria-label="The same data on logarithmic axes with the fitted straight line"><g id="gLog"></g><g class="handle" id="hb0" tabindex="0" role="button" aria-label="Data point 1 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb1" tabindex="0" role="button" aria-label="Data point 2 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb2" tabindex="0" role="button" aria-label="Data point 3 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb3" tabindex="0" role="button" aria-label="Data point 4 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb4" tabindex="0" role="button" aria-label="Data point 5 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb5" tabindex="0" role="button" aria-label="Data point 6 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb6" tabindex="0" role="button" aria-label="Data point 7 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g><g class="handle" id="hb7" tabindex="0" role="button" aria-label="Data point 8 on the log-log plot. Arrow keys move it."><circle class="ring" r="15"/><circle r="6" fill="#1a3f5c" stroke="#fff" stroke-width="2"/></g></svg>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite" style="padding-top:10px">
+      <span>Fitted exponent b (the slope): <b id="hB" style="color:#b05a10"></b></span>
+      <span>Fitted multiplier a: <b id="hA" style="color:#b05a10"></b></span>
+      <span>R² in log space: <b id="hR"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A <em>power law</em> is a relationship of the form Q = a h<sup>b</sup>. Taking the logarithm of both sides gives log Q = log a + b log h, which is the equation of a straight line: log Q plays the part of y, log h the part of x, the exponent b is the <em>slope</em>, and log a is the intercept. So to fit a power law, take logs of both columns of data and fit a straight line by least squares. On <em>log-log axes</em>, where each gridline is a factor of 10, the slope reads directly: if Q rises b decades for every one decade of h, the exponent is b.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <p class="note" style="margin:0 0 10px">Drag any data point on either plot, or generate a fresh set below.</p>
+      <span class="flabel" style="margin-top:0">Generate data from a known outlet type</span>
+      <div class="btn-row">
+        <button type="button" data-p="orifice">Orifice, b = 0.5</button>
+        <button type="button" data-p="weir">Weir, b = 1.5</button>
+        <button type="button" data-p="vnotch">V-notch, b = 2.5</button>
+      </div>
+      <p class="note preset-note" id="presetNote"></p>
+      <div class="slider-row">
+        <label for="sB"><span>Generating exponent b</span> <span class="val" id="vB"></span></label>
+        <input type="range" id="sB" min="0.3" max="3" step="0.1" value="1.5">
+      </div>
+      <div class="slider-row">
+        <label for="sA"><span>Generating multiplier a</span> <span class="val" id="vA"></span></label>
+        <input type="range" id="sA" min="0.5" max="4" step="0.1" value="1.8">
+      </div>
+      <div class="slider-row">
+        <label for="sS"><span>Measurement scatter</span> <span class="val" id="vS"></span></label>
+        <input type="range" id="sS" min="0" max="20" step="1" value="6">
+      </div>
+      <div class="slider-row">
+        <label for="sP"><span>Predict the outflow at depth h</span> <span class="val" id="vP"></span></label>
+        <input type="range" id="sP" min="0.1" max="6" step="0.05" value="1.2" style="accent-color:#7a3fa0">
+      </div>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr class="a"><td>Slope of the line in log space (exponent b)</td><td id="rB"></td></tr>
+        <tr class="a"><td>Intercept of the line, log₁₀ a</td><td id="rI"></td></tr>
+        <tr class="a"><td>Multiplier a = 10^(intercept)</td><td id="rA"></td></tr>
+        <tr><td>Fitted power law</td><td id="rEq"></td></tr>
+        <tr><td>R² of the straight-line fit (in log space)</td><td id="rR"></td></tr>
+        <tr><td>Values the data were generated from</td><td id="rGen"></td></tr>
+        <tr class="p"><td id="lPred">Predicted outflow</td><td id="rPred"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$Q = a\,h^{b} \;\;\Longrightarrow\;\; \log Q = \log a + b\,\log h$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB: <code>p = polyfit(log(h), log(Q), 1);</code> then <code>b = p(1)</code> and <code>a = exp(p(2))</code>. (MATLAB's <code>log</code> is the natural log, so undo it with <code>exp</code>. Using <code>log10</code> with <code>10^p(2)</code> gives the same a and b.) Plot with <code>loglog(h, Q, 'o')</code> to see the line. In the capstone (Part H), this is how the outlet rating, outflow against water depth, gets its equation. The exponent also says something physical: an <em>orifice</em> (a submerged opening) gives an exponent near 0.5, a <em>weir</em> (a crest the water spills over) near 1.5, and a V-notch weir near 2.5, so a fitted exponent far from what the outlet type predicts is worth questioning. For the limitations discussion (Part J): the fit is only supported between the smallest and largest depths that were measured, and a real outlet can switch from weir flow to orifice flow as it submerges, which changes the exponent.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// A plot frame with base-10 log axes on both sides. o.x0, o.x1, o.y0, o.y1 are exponents (whole numbers).
+function logFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 46 : 58, mR = small ? 10 : 20, mT = 10, mB = small ? 38 : 42, fs = small ? 10 : 11.5;
+  const LX = e => mL + (e - o.x0) / (o.x1 - o.x0) * (W - mL - mR);       // from exponent
+  const LY = e => H - mB - (e - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  const X = v => LX(Math.log10(v)), Y = v => LY(Math.log10(v));
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const lab = e => e >= -3 && e <= 3 ? String(parseFloat(Math.pow(10, e).toPrecision(1))) : '1e' + uni(e);
+  const xEvery = o.xEvery || 1, yEvery = o.yEvery || 1;
+  for (let e = o.x0; e <= o.x1; e++) {
+    if (o.minor && e < o.x1) for (let k = 2; k <= 9; k++) el(g, 'line', { x1: X(k * Math.pow(10, e)), x2: X(k * Math.pow(10, e)), y1: mT, y2: H - mB, stroke: '#f0f3f7', 'stroke-width': 1 });
+    el(g, 'line', { x1: LX(e), x2: LX(e), y1: mT, y2: H - mB, stroke: '#dbe3ec', 'stroke-width': 1 });
+    if ((e - o.x0) % xEvery === 0) el(g, 'text', { x: LX(e), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, lab(e));
+  }
+  for (let e = o.y0; e <= o.y1; e++) {
+    if (o.minor && e < o.y1) for (let k = 2; k <= 9; k++) el(g, 'line', { x1: mL, x2: W - mR, y1: Y(k * Math.pow(10, e)), y2: Y(k * Math.pow(10, e)), stroke: '#f0f3f7', 'stroke-width': 1 });
+    el(g, 'line', { x1: mL, x2: W - mR, y1: LY(e), y2: LY(e), stroke: '#dbe3ec', 'stroke-width': 1 });
+    if ((e - o.y0) % yEvery === 0) el(g, 'text', { x: mL - 6, y: LY(e) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, lab(e));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444', transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, LX, LY, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => Math.pow(10, o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0)), toY: py => Math.pow(10, o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0)) };
+}
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// Least-squares straight line through (log10 h, log10 Q): returns the power law Q = a h^b and R-squared in log space.
+function fitPowerLaw(hs, Qs) {
+  const n = hs.length, x = hs.map(Math.log10), y = Qs.map(Math.log10);
+  const mx = x.reduce((s, v) => s + v, 0) / n, my = y.reduce((s, v) => s + v, 0) / n;
+  let sxx = 0, sxy = 0, syy = 0;
+  for (let i = 0; i < n; i++) { sxx += (x[i] - mx) * (x[i] - mx); sxy += (x[i] - mx) * (y[i] - my); syy += (y[i] - my) * (y[i] - my); }
+  const b = sxy / sxx, c = my - b * mx;
+  let sse = 0;
+  for (let i = 0; i < n; i++) sse += Math.pow(y[i] - (c + b * x[i]), 2);
+  return { b, logA: c, a: Math.pow(10, c), r2: syy < 1e-14 ? null : 1 - sse / syy };
+}
+// Illustrative depths (m) and a fixed scatter pattern, so a data set can be regenerated exactly.
+const H0 = [0.2, 0.3, 0.45, 0.7, 1.0, 1.4, 2.0, 2.8];
+const PATTERN = [0.6, -0.8, 0.5, -0.4, 0.9, -0.7, 0.3, -0.5];
+function generate(a, b, scatterPct) { return H0.map((h, i) => a * Math.pow(h, b) * (1 + scatterPct / 100 * PATTERN[i])); }
+/*MATH-END*/
+
+let genA = 1.8, genB = 1.5, scat = 6, hp = 1.2;
+let hs = H0.slice(), Qs = generate(genA, genB, scat);
+let GL = null, GG = null;
+const sig = (v, n) => String(parseFloat(v.toPrecision(n || 3)));
+
+function draw(F) {
+  const qMax = Math.max(...Qs, F.a * Math.pow(hp, F.b) * (hp <= 3.2 ? 1 : 0)), yst = niceStep(qMax * 1.2, 5);
+  GL = plotFrame($('lin'), $('gLin'), { H: [300, 270], x0: 0, x1: 3.2, y0: 0, y1: Math.ceil(qMax * 1.15 / yst) * yst, yStep: yst, xStep: 0.5, xName: 'water depth h (m)', yName: 'outflow Q (m³/s)' });
+  const lo = Math.min(...hs), hi = Math.max(...hs);
+  let g = GL.inner;
+  el(g, 'path', { d: fnPath(h => F.a * Math.pow(Math.max(h, 1e-6), F.b), 0.001, 3.2, GL.X, GL.Y, 300), fill: 'none', stroke: '#b05a10', 'stroke-width': 2.5 });
+  if (hp <= 3.2) { el(g, 'line', { x1: GL.X(hp), x2: GL.X(hp), y1: GL.Y(0), y2: GL.Y(F.a * Math.pow(hp, F.b)), stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' });
+    el(g, 'circle', { cx: GL.X(hp), cy: GL.Y(F.a * Math.pow(hp, F.b)), r: 5, fill: '#7a3fa0', stroke: '#fff', 'stroke-width': 2 }); }
+
+  const ys = Qs.concat([F.a * Math.pow(hp, F.b)]);
+  const y0 = Math.floor(Math.log10(Math.min(...ys)) - 0.15), y1 = Math.max(y0 + 2, Math.ceil(Math.log10(Math.max(...ys)) + 0.15));
+  GG = logFrame($('log'), $('gLog'), { H: [300, 270], x0: -1, x1: 1, y0, y1, minor: true, xName: 'water depth h (m), log scale', yName: 'outflow Q (m³/s), log scale' });
+  g = GG.inner;
+  // shade the region the data do not cover
+  el(g, 'rect', { x: GG.X(0.1), y: GG.mT, width: GG.X(lo) - GG.X(0.1), height: GG.H, fill: 'rgba(230,115,0,0.08)' });
+  el(g, 'rect', { x: GG.X(hi), y: GG.mT, width: GG.X(10) - GG.X(hi), height: GG.H, fill: 'rgba(230,115,0,0.08)' });
+  el(g, 'line', { x1: GG.X(0.1), y1: GG.Y(F.a * Math.pow(0.1, F.b)), x2: GG.X(10), y2: GG.Y(F.a * Math.pow(10, F.b)), stroke: '#b05a10', 'stroke-width': 2.5 });
+  // slope triangle over one decade of h (from 0.3 to 3)
+  const q1 = F.a * Math.pow(0.3, F.b), q2 = F.a * Math.pow(3, F.b);
+  el(g, 'path', { d: 'M' + GG.X(0.3) + ' ' + GG.Y(q1) + 'L' + GG.X(3) + ' ' + GG.Y(q1) + 'L' + GG.X(3) + ' ' + GG.Y(q2), fill: 'none', stroke: '#2a7a3a', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' });
+  halo(g, (GG.X(0.3) + GG.X(3)) / 2, GG.Y(q1) + (F.b >= 0 ? 14 : -6), '1 decade', '#2a7a3a', GG.fs);
+  halo(g, GG.X(3) + 6, (GG.Y(q1) + GG.Y(q2)) / 2 + 4, fmt(F.b, 2) + ' decades', '#2a7a3a', GG.fs, 'start');
+  el(g, 'line', { x1: GG.X(hp), x2: GG.X(hp), y1: GG.H - GG.mB, y2: GG.Y(F.a * Math.pow(hp, F.b)), stroke: '#7a3fa0', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' });
+  el(g, 'circle', { cx: GG.X(hp), cy: GG.Y(F.a * Math.pow(hp, F.b)), r: 5, fill: '#7a3fa0', stroke: '#fff', 'stroke-width': 2 });
+  hs.forEach((h, i) => {
+    $('ha' + i).setAttribute('transform', 'translate(' + GL.X(h).toFixed(2) + ',' + GL.Y(Qs[i]).toFixed(2) + ')');
+    $('hb' + i).setAttribute('transform', 'translate(' + GG.X(h).toFixed(2) + ',' + GG.Y(Qs[i]).toFixed(2) + ')');
+  });
+}
+
+function update() {
+  const F = fitPowerLaw(hs, Qs), lo = Math.min(...hs), hi = Math.max(...hs);
+  $('sB').value = genB; $('sA').value = genA; $('sS').value = scat; $('sP').value = hp;
+  $('vB').textContent = fmt(genB, 1); $('vA').textContent = fmt(genA, 1); $('vS').textContent = '±' + scat + '%'; $('vP').textContent = fmt(hp, 2) + ' m';
+  $('rB').textContent = uni(fmt(F.b, 3)); $('rI').textContent = uni(fmt(F.logA, 3)); $('rA').textContent = sig(F.a, 4);
+  $('rEq').textContent = 'Q = ' + sig(F.a, 3) + ' h^' + uni(fmt(F.b, 2));
+  $('rR').textContent = F.r2 === null ? 'not defined' : F.r2.toFixed(4);
+  $('rGen').textContent = 'a = ' + fmt(genA, 1) + ', b = ' + fmt(genB, 1);
+  const out = hp < lo || hp > hi;
+  $('lPred').textContent = 'Predicted outflow at h = ' + fmt(hp, 2) + ' m' + (out ? ' (outside the measured depths)' : '');
+  $('rPred').textContent = sig(F.a * Math.pow(hp, F.b), 3) + ' m³/s' + (out ? ', extrapolated' : '');
+  $('hB').textContent = uni(fmt(F.b, 3)); $('hA').textContent = sig(F.a, 3); $('hR').textContent = F.r2 === null ? 'not defined' : F.r2.toFixed(4);
+  $('linDesc').textContent = 'Eight measured points of outflow against water depth with the fitted power law Q = ' + sig(F.a, 3) + ' times h to the power ' + fmt(F.b, 2) + '.';
+  draw(F);
+}
+function regen() { hs = H0.slice(); Qs = generate(genA, genB, scat); update(); }
+
+const NOTES = {
+  orifice: 'An orifice is a submerged opening. Flow through it rises with the square root of depth, so doubling the depth raises the flow by only about 41%.',
+  weir: 'A weir is a crest the water spills over. Flow rises as depth to the power 1.5, so doubling the depth nearly triples the flow.',
+  vnotch: 'A V-notch weir is a triangular notch. Flow rises as depth to the power 2.5, so it responds very strongly to depth.',
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => {
+  genB = { orifice: 0.5, weir: 1.5, vnotch: 2.5 }[bn.dataset.p]; genA = { orifice: 2.0, weir: 1.8, vnotch: 1.4 }[bn.dataset.p];
+  $('presetNote').textContent = NOTES[bn.dataset.p]; regen();
+}));
+$('sB').addEventListener('input', () => { genB = +$('sB').value; $('presetNote').textContent = ''; regen(); });
+$('sA').addEventListener('input', () => { genA = +$('sA').value; $('presetNote').textContent = ''; regen(); });
+$('sS').addEventListener('input', () => { scat = +$('sS').value; regen(); });
+$('sP').addEventListener('input', () => { hp = +$('sP').value; update(); });
+const clampH = h => Math.max(0.12, Math.min(3.1, h)), clampQ = q => Math.max(0.002, Math.min(500, q));
+for (let i = 0; i < 8; i++) {
+  makeDraggable($('ha' + i), $('lin'), q => { hs[i] = clampH(GL.toX(q.x)); Qs[i] = clampQ(GL.toY(q.y)); update(); },
+    (dx, dy, big) => { hs[i] = clampH(hs[i] + dx * (big ? 0.2 : 0.02)); Qs[i] = clampQ(Qs[i] * (1 + dy * (big ? 0.2 : 0.03))); update(); });
+  makeDraggable($('hb' + i), $('log'), q => { hs[i] = clampH(GG.toX(q.x)); Qs[i] = clampQ(GG.toY(q.y)); update(); },
+    (dx, dy, big) => { hs[i] = clampH(hs[i] * (1 + dx * (big ? 0.2 : 0.03))); Qs[i] = clampQ(Qs[i] * (1 + dy * (big ? 0.2 : 0.03))); update(); });
+}
+window.addEventListener('resize', update);
+update(); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>

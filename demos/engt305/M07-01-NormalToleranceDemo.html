@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Normal Distribution and Tolerance: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; padding-top: 8px; }
+.stage svg { display: block; width: 100%; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 4px 12px 12px; font-size: 0.86em; color: #444;
+}
+.headline .ok b { color: #2a7a3a; } .headline .bad b { color: #b03030; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.flabel { font-size: 0.82em; color: #555; margin: 10px 0 5px; display: block; }
+.slider-row { margin-bottom: 11px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].lim { accent-color: #b03030; }
+input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.preset-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; min-height: 3em; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.82em; color: #555; margin-top: 4px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.ok td:last-child { color: #2a7a3a; }
+.result-table tr.bad td:last-child { color: #b03030; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Normal Distribution and Tolerance</h1>
+    <p>ENGT 305 · Module 7 &nbsp;|&nbsp; No process makes every part the same. Set where a process is centered and how much it varies, then see what fraction of its output lands inside the tolerance.</p>
+  </div>
+
+  <div class="stage">
+    <svg id="plot" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc><g id="bg"></g></svg>
+    <div class="headline" aria-live="polite">
+      <span class="ok">Inside tolerance (yield): <b id="hIn"></b></span>
+      <span class="bad">Too thin: <b id="hLo"></b></span>
+      <span class="bad">Too thick: <b id="hHi"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> The <em>normal distribution</em> is the bell curve that many measured quantities follow. The <em>mean</em> μ is its center and the <em>standard deviation</em> σ is its spread: about 68% of values fall within 1σ of the mean, 95% within 2σ, and 99.7% within 3σ. The area under the curve between two values is the probability of landing between them. A <em>tolerance</em> is the range a dimension is allowed to fall in, from the <em>lower specification limit</em> (LSL) to the <em>upper specification limit</em> (USL). The area between those limits is the <em>yield</em>, and the area in the tails is the <em>defect rate</em>. Here the example is the thickness of a precast concrete panel with a 150 mm target and a tolerance of plus or minus 6 mm.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sMu"><span>Process mean μ</span> <span class="val" id="vMu"></span></label>
+        <input type="range" id="sMu" min="142" max="158" step="0.1" value="151">
+      </div>
+      <div class="slider-row">
+        <label for="sSig"><span>Standard deviation σ</span> <span class="val" id="vSig"></span></label>
+        <input type="range" id="sSig" min="0.8" max="6" step="0.1" value="2.5">
+      </div>
+      <div class="slider-row">
+        <label for="sL"><span>Lower specification limit, LSL</span> <span class="val" id="vL"></span></label>
+        <input type="range" class="lim" id="sL" min="136" max="149.5" step="0.5" value="144">
+      </div>
+      <div class="slider-row">
+        <label for="sU"><span>Upper specification limit, USL</span> <span class="val" id="vU"></span></label>
+        <input type="range" class="lim" id="sU" min="150.5" max="164" step="0.5" value="156">
+      </div>
+      <label class="check"><input type="checkbox" id="cSig" checked> Mark 1σ, 2σ and 3σ from the mean</label>
+
+      <span class="flabel">Try these</span>
+      <div class="btn-row">
+        <button type="button" data-p="center">Centered process</button>
+        <button type="button" data-p="shift">Mean drifted high</button>
+        <button type="button" data-p="wide">Too much spread</button>
+        <button type="button" data-p="reset">Reset</button>
+      </div>
+      <p class="preset-note" id="presetNote"></p>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr class="ok"><td>Inside tolerance (yield)</td><td id="rIn"></td></tr>
+        <tr class="bad"><td>Below LSL (too thin)</td><td id="rLo"></td></tr>
+        <tr class="bad"><td>Above USL (too thick)</td><td id="rHi"></td></tr>
+        <tr class="bad"><td>Expected rejects per 1,000 panels</td><td id="rRej"></td></tr>
+        <tr><td>z-score of LSL, (LSL − μ)/σ</td><td id="rZL"></td></tr>
+        <tr><td>z-score of USL, (USL − μ)/σ</td><td id="rZU"></td></tr>
+        <tr><td>Mean offset from the 150 mm target</td><td id="rOff"></td></tr>
+      </table>
+      <div class="live" id="live"></div>
+      <div class="eqn" id="eqn">
+        $$f(x) = \frac{1}{\sigma\sqrt{2\pi}}\, e^{-\frac{(x-\mu)^2}{2\sigma^2}} \qquad z = \frac{x - \mu}{\sigma}$$
+        $$P(\text{LSL} \le X \le \text{USL}) = \Phi(z_U) - \Phi(z_L)$$
+      </div>
+      <p style="font-size:0.74em;color:#5a6b80;margin-top:6px;line-height:1.5">Φ(z) is the standard normal cumulative distribution: the area under the bell curve to the left of z. A <em>z-score</em> counts how many standard deviations a value sits from the mean.</p>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> From a set of measurements <code>x</code>, estimate the two parameters with <code>mean(x)</code> and <code>std(x)</code>. The fraction inside the limits is then <code>normcdf(USL, mu, sigma) - normcdf(LSL, mu, sigma)</code> (Statistics and Machine Learning Toolbox), or without the toolbox, Φ(z) = <code>0.5*erfc(-z/sqrt(2))</code>. The same calculation answers one-sided questions, such as the fraction of concrete cylinders that fall below a required strength. The two ways a process fails look different and call for different fixes: a mean that has drifted is an adjustment problem, while too much spread is a consistency problem that no adjustment will cure.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function pdf(x, mu, sigma) {
+  const z = (x - mu) / sigma;
+  return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
+}
+// Upper tail of the standard normal, Q(z) = P(Z > z), accurate in the far tails.
+function upperTail(z) {
+  if (z < 0) return 1 - upperTail(-z);
+  const phi = Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+  if (z < 3) {
+    // series for the area from 0 to z: phi(z) * sum of z^(2k+1) / (1*3*5*...*(2k+1))
+    let term = z, sum = z;
+    for (let k = 1; k < 200; k++) { term *= z * z / (2 * k + 1); sum += term; if (term < 1e-17 * sum) break; }
+    return 0.5 - phi * sum;
+  }
+  // continued fraction for large z: Q(z) = phi(z) / (z + 1/(z + 2/(z + 3/(z + ...))))
+  let f = z;
+  for (let k = 60; k >= 1; k--) f = z + k / f;
+  return phi / f;
+}
+function cdf(z) { return upperTail(-z); }
+// Fractions below LSL, inside, and above USL.
+function fractions(mu, sigma, lsl, usl) {
+  const zl = (lsl - mu) / sigma, zu = (usl - mu) / sigma;
+  const below = upperTail(-zl), above = upperTail(zu);
+  return { zl, zu, below, above, inside: 1 - below - above };
+}
+/*MATH-END*/
+
+const X0 = 132, X1 = 168, TARGET = 150;
+let mu = 151, sigma = 2.5, lsl = 144, usl = 156, showSig = true;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r).replace('-', '−');
+}
+function pct(p) {
+  const v = p * 100;
+  if (v < 5e-7) return 'under 0.000001%';
+  return (v >= 0.01 ? v.toFixed(2) : v.toPrecision(2)) + '%';
+}
+
+function draw() {
+  const svg = $('plot'), g = $('bg');
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? 280 : 360;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 12 : 22, mR = small ? 12 : 22, mT = 34, mB = small ? 40 : 44, fs = small ? 10 : 11.5;
+  const peak = pdf(mu, mu, sigma);
+  const X = x => mL + (x - X0) / (X1 - X0) * (W - mL - mR);
+  const Y = y => H - mB - y / (peak * 1.08) * (H - mT - mB);
+  const defs = el(g, 'defs', {}), cp = el(defs, 'clipPath', { id: 'clip' });
+  el(cp, 'rect', { x: mL, y: 0, width: W - mL - mR, height: H - mB });
+  const inner = el(g, 'g', { 'clip-path': 'url(#clip)' });
+
+  const area = (a, b, fill) => {
+    a = Math.max(a, X0); b = Math.min(b, X1);
+    if (b <= a) return;
+    let d = 'M' + X(a).toFixed(2) + ' ' + Y(0).toFixed(2);
+    const N = Math.max(8, Math.round((b - a) / (X1 - X0) * 300));
+    for (let i = 0; i <= N; i++) { const x = a + (b - a) * i / N; d += 'L' + X(x).toFixed(2) + ' ' + Y(pdf(x, mu, sigma)).toFixed(2); }
+    d += 'L' + X(b).toFixed(2) + ' ' + Y(0).toFixed(2) + 'Z';
+    el(inner, 'path', { d, fill });
+  };
+  area(X0, lsl, 'rgba(176,48,48,0.45)');
+  area(lsl, usl, 'rgba(42,122,58,0.30)');
+  area(usl, X1, 'rgba(176,48,48,0.45)');
+
+  // sigma markers
+  if (showSig) for (let k = -3; k <= 3; k++) {
+    if (!k) continue;
+    const x = mu + k * sigma;
+    if (x < X0 || x > X1) continue;
+    el(inner, 'line', { x1: X(x), x2: X(x), y1: Y(pdf(x, mu, sigma)), y2: Y(0), stroke: '#1a3f5c', 'stroke-width': 1, 'stroke-dasharray': '2 3' });
+    el(g, 'text', { x: X(x), y: H - mB + 28, 'text-anchor': 'middle', 'font-size': fs - 0.5, fill: '#1a3f5c' }, (k > 0 ? '+' : '−') + Math.abs(k) + 'σ');
+  }
+  // curve
+  let d = '';
+  for (let i = 0; i <= 400; i++) { const x = X0 + (X1 - X0) * i / 400; d += (i ? 'L' : 'M') + X(x).toFixed(2) + ' ' + Y(pdf(x, mu, sigma)).toFixed(2); }
+  el(inner, 'path', { d, fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.5 });
+  // mean and target
+  el(inner, 'line', { x1: X(mu), x2: X(mu), y1: Y(peak), y2: Y(0), stroke: '#1a3f5c', 'stroke-width': 1.5 });
+  el(g, 'text', { x: X(mu), y: Y(peak) - 6, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 700, fill: '#1a3f5c' }, 'μ = ' + fmt(mu, 1));
+  // limits
+  [[lsl, 'LSL'], [usl, 'USL']].forEach(([x, nm]) => {
+    el(g, 'line', { x1: X(x), x2: X(x), y1: 16, y2: Y(0), stroke: '#b03030', 'stroke-width': 2 });
+    el(g, 'text', { x: X(x), y: 12, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 700, fill: '#b03030' }, nm + ' ' + fmt(x, 1));
+  });
+  // axis
+  el(g, 'line', { x1: mL, x2: W - mR, y1: Y(0), y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 });
+  for (let x = Math.ceil(X0 / 4) * 4; x <= X1; x += (small ? 8 : 4)) {
+    el(g, 'line', { x1: X(x), x2: X(x), y1: Y(0), y2: Y(0) + 5, stroke: '#5a6b80', 'stroke-width': 1 });
+    el(g, 'text', { x: X(x), y: Y(0) + 16, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, String(x));
+  }
+  el(g, 'text', { x: W - mR, y: H - 4, 'text-anchor': 'end', 'font-size': fs + 0.5, fill: '#444' }, 'panel thickness (mm)');
+  // target tick
+  el(g, 'polygon', { points: X(TARGET) + ',' + (Y(0) - 1) + ' ' + (X(TARGET) - 5) + ',' + (Y(0) - 9) + ' ' + (X(TARGET) + 5) + ',' + (Y(0) - 9), fill: '#e67300' });
+  el(g, 'text', { x: mL, y: H - 4, 'font-size': fs, fill: '#b05a10' }, '▼ target 150 mm');
+}
+
+function update() {
+  const F = fractions(mu, sigma, lsl, usl);
+  $('sMu').value = mu; $('sSig').value = sigma; $('sL').value = lsl; $('sU').value = usl;
+  $('vMu').textContent = fmt(mu, 1) + ' mm';
+  $('vSig').textContent = fmt(sigma, 1) + ' mm';
+  $('vL').textContent = fmt(lsl, 1) + ' mm';
+  $('vU').textContent = fmt(usl, 1) + ' mm';
+  $('rIn').textContent = pct(F.inside); $('rLo').textContent = pct(F.below); $('rHi').textContent = pct(F.above);
+  $('hIn').textContent = pct(F.inside); $('hLo').textContent = pct(F.below); $('hHi').textContent = pct(F.above);
+  const rej = (F.below + F.above) * 1000;
+  $('rRej').textContent = rej >= 0.95 ? fmt(rej, rej < 10 ? 1 : 0) : rej < 0.001 ? 'fewer than 0.001' : fmt(rej, 3);
+  $('rZL').textContent = fmt(F.zl, 2);
+  $('rZU').textContent = fmt(F.zu, 2);
+  const off = mu - TARGET;
+  $('rOff').textContent = Math.abs(off) < 1e-9 ? 'on target' : fmt(Math.abs(off), 1) + ' mm ' + (off > 0 ? 'high' : 'low');
+
+  const live = $('live'), n = v => fmt(v, 2).replace('−', '-');
+  const src = 'P = \\Phi(' + n(F.zu) + ') - \\Phi(' + n(F.zl) + ') = ' + cdf(F.zu).toFixed(4) + ' - ' + cdf(F.zl).toFixed(4) + ' = \\textcolor{#2a7a3a}{' + F.inside.toFixed(4) + '}';
+  const plain = 'P = Φ(' + fmt(F.zu, 2) + ') − Φ(' + fmt(F.zl, 2) + ') = ' + cdf(F.zu).toFixed(4) + ' − ' + cdf(F.zl).toFixed(4) + ' = ' + F.inside.toFixed(4);
+  if (hasKatex()) { try { katex.render(src, live, { throwOnError: false }); } catch (e) { live.textContent = plain; } }
+  else live.textContent = plain;
+
+  $('plotDesc').textContent = 'Bell curve with mean ' + fmt(mu, 1) + ' and standard deviation ' + fmt(sigma, 1) + ' millimeters. Tolerance from ' + fmt(lsl, 1) + ' to ' + fmt(usl, 1) +
+    '. ' + pct(F.inside) + ' inside, ' + pct(F.below) + ' below, ' + pct(F.above) + ' above.';
+  draw();
+}
+
+const clearNote = () => { $('presetNote').textContent = ''; };
+$('sMu').addEventListener('input', () => { mu = +$('sMu').value; clearNote(); update(); });
+$('sSig').addEventListener('input', () => { sigma = +$('sSig').value; clearNote(); update(); });
+$('sL').addEventListener('input', () => { lsl = +$('sL').value; clearNote(); update(); });
+$('sU').addEventListener('input', () => { usl = +$('sU').value; clearNote(); update(); });
+$('cSig').addEventListener('change', () => { showSig = $('cSig').checked; draw(); });
+const PRESETS = {
+  center: () => { mu = 150; sigma = 2; lsl = 144; usl = 156; return 'Centered with the limits 3σ away on each side: 99.73% yield, with the few rejects split evenly between the two tails.'; },
+  shift:  () => { mu = 153.5; sigma = 2; lsl = 144; usl = 156; return 'Same spread, but the mean has drifted 3.5 mm high. Nearly all the rejects are now on the thick side. Re-centering the process would fix it.'; },
+  wide:   () => { mu = 150; sigma = 4; lsl = 144; usl = 156; return 'Centered, but the spread has doubled, so the limits are only 1.5σ away. Rejects appear in both tails, and moving the mean cannot help.'; },
+  reset:  () => { mu = 151; sigma = 2.5; lsl = 144; usl = 156; return ''; },
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => { $('presetNote').textContent = PRESETS[bn.dataset.p](); update(); }));
+window.addEventListener('resize', draw);
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Vector Components and Direction Angles: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh; }
+.card { max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%); color: white; padding: 18px 26px 14px; }
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+.stage.pad { padding: 12px 12px 10px; }
+.stage > svg, .view > svg { display: block; width: 100%; }
+.hint { font-size: 0.74em; color: #5a6b80; padding: 8px 14px 0; line-height: 1.45; }
+.ptitle { font-size: 0.72em; font-weight: 700; color: #2c5f8a; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px 0; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p.cap { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; line-height: 1.4; }
+.view > svg { height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 6px 12px 12px; font-size: 0.86em; color: #444; }
+.headline b { color: #1a3f5c; }
+.state-note { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 0 14px 12px; line-height: 1.5; }
+.scenario-note { background: #fff8ec; border-left: 3px solid #e67300; padding: 9px 14px; font-size: 0.78em; color: #5a4a2a; margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5; }
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px; padding-bottom: 6px; border-bottom: 2px solid #dde8f2; }
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.flabel { margin-top: 10px; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label { flex: 1; min-width: 80px; text-align: center; padding: 6px 4px; font-size: 0.78em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, input[type=range]:focus-visible, .btn-row button:focus-visible, input[type=checkbox]:focus-visible, .ctl:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.ctl { font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px; background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px; }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82em; color: #555; margin-bottom: 3px; }
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 86px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer; }
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row button.primary { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.btn-row button.primary:hover:not(:disabled) { background: #1a3f5c; }
+.note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; }
+.preset-note { min-height: 3em; }
+.check { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82em; color: #555; margin-top: 7px; cursor: pointer; line-height: 1.35; }
+.check input { width: 16px; height: 16px; accent-color: #2c5f8a; flex: none; margin-top: 1px; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child { text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em; }
+.result-table tr.a td:last-child { color: #b05a10; }
+.result-table tr.g td:last-child { color: #2a7a3a; }
+.result-table tr.r td:last-child { color: #b03030; }
+.result-table tr.p td:last-child { color: #7a3fa0; }
+.result-table tr.sep td { border-top: 2px solid #dde8f2; }
+.live { margin-top: 12px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.eqn { margin-top: 10px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.84em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.cascade-bar { background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2; font-size: 0.78em; color: #4a5a6a; line-height: 1.65; }
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage.pad { padding: 8px; }
+  .views, .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+.views.w125 { grid-template-columns: 1.25fr 1fr; }
+@media (max-width: 640px) { .views.w125 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>3D Vector Components and Direction Angles</h1>
+    <p>ENGT 305 · Module 5 &nbsp;|&nbsp; Every vector in space is three numbers. Set them and see the length they produce, the direction they point, and the angle that direction makes with each axis.</p>
+  </div>
+
+  <div class="stage pad">
+    <div class="views w125">
+      <div class="view">
+        <h2>The vector in 3D</h2>
+        <p class="cap">The dashed box shows how the three components add up to the vector. Arcs mark the angle to each axis.</p>
+        <svg id="v3" viewBox="0 0 460 400" role="img" aria-labelledby="v3Desc"><desc id="v3Desc"></desc><g id="g3"></g></svg>
+      </div>
+      <div class="view">
+        <h2>The numbers</h2>
+        <div style="padding:6px 12px 10px">
+          <div class="live" id="lMag" style="margin-top:4px"></div>
+          <div class="live" id="lUnit"></div>
+          <table class="result-table" style="margin-top:8px">
+            <tr><td>Angle to the x axis, α</td><td id="rAl" style="color:#b03030"></td></tr>
+            <tr><td>Angle to the y axis, β</td><td id="rBe" style="color:#2a7a3a"></td></tr>
+            <tr><td>Angle to the z axis, γ</td><td id="rGa" style="color:#2c5f8a"></td></tr>
+            <tr><td>Direction cosines</td><td id="rCos"></td></tr>
+            <tr><td>Check: cos²α + cos²β + cos²γ</td><td id="rChk"></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite" style="padding-top:10px">
+      <span>Magnitude: <b id="hMag"></b></span>
+      <span>Unit vector: <b id="hUnit"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> A vector in space has three <em>components</em>, one along each axis, written v = [v<sub>x</sub>, v<sub>y</sub>, v<sub>z</sub>]. Its <em>magnitude</em> (length) comes from the Pythagorean theorem applied twice: |v| = √(v<sub>x</sub>² + v<sub>y</sub>² + v<sub>z</sub>²). Dividing a vector by its magnitude gives the <em>unit vector</em>, which has length 1 and carries only the direction. The three <em>direction angles</em> α, β and γ are the angles the vector makes with the positive x, y and z axes. Their cosines, the <em>direction cosines</em>, are exactly the components of the unit vector, so the squares of the three cosines always add to 1.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+      <div class="slider-row">
+        <label for="sx"><span>x component, v<sub>x</sub></span> <span class="val" id="vx"></span></label>
+        <input type="range" id="sx" min="-6" max="6" step="0.5" style="accent-color:#b03030">
+      </div>
+      <div class="slider-row">
+        <label for="sy"><span>y component, v<sub>y</sub></span> <span class="val" id="vy"></span></label>
+        <input type="range" id="sy" min="-6" max="6" step="0.5" style="accent-color:#2a7a3a">
+      </div>
+      <div class="slider-row">
+        <label for="sz"><span>z component, v<sub>z</sub></span> <span class="val" id="vz"></span></label>
+        <input type="range" id="sz" min="-6" max="6" step="0.5">
+      </div>
+      <div class="slider-row" style="margin-top:14px">
+        <label for="sView"><span>Rotate the view</span> <span class="val" id="vView"></span></label>
+        <input type="range" id="sView" min="0" max="360" step="5" value="35">
+      </div>
+      <span class="flabel">Load an example</span>
+      <div class="btn-row">
+        <button type="button" data-p="cable">Guy cable (2, 3, 6)</button>
+        <button type="button" data-p="axis">Along one axis</button>
+        <button type="button" data-p="plane">Flat in the xy plane</button>
+        <button type="button" data-p="diag">Equal components</button>
+      </div>
+      <p class="note preset-note" id="presetNote"></p>
+    </div>
+    <div class="outputs">
+      <div class="panel-title">Building a force from its direction</div>
+      <p class="note" style="margin-top:0">Often you know how big a force is and which way it points, and need its components. Multiply the magnitude by the unit vector.</p>
+      <div class="slider-row" style="margin-top:10px">
+        <label for="sF"><span>Force magnitude along this direction</span> <span class="val" id="vF"></span></label>
+        <input type="range" id="sF" min="0" max="2000" step="50" value="700" style="accent-color:#7a3fa0">
+      </div>
+      <table class="result-table">
+        <tr class="p"><td>Force components, F × unit vector</td><td id="rF"></td></tr>
+        <tr><td>Check: magnitude of those components</td><td id="rFm"></td></tr>
+      </table>
+      <div class="eqn" id="eqn">
+        $$|\mathbf{v}| = \sqrt{v_x^2 + v_y^2 + v_z^2} \qquad \hat{\mathbf{u}} = \frac{\mathbf{v}}{|\mathbf{v}|}$$
+        $$\cos\alpha = \frac{v_x}{|\mathbf{v}|} \quad \cos\beta = \frac{v_y}{|\mathbf{v}|} \quad \cos\gamma = \frac{v_z}{|\mathbf{v}|}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB: <code>v = [2 3 6];</code> then <code>norm(v)</code> is the magnitude, <code>u = v/norm(v)</code> the unit vector, and <code>acosd(u)</code> all three direction angles in degrees at once. The usual engineering use runs in the other direction. A cable, strut or pipe runs from point A to point B, so its direction is the position vector <code>r = B - A</code>. If the member carries a force of known size F along its length, the force vector is <code>F*r/norm(r)</code>. The guy cable example does exactly this: the cable rises from an anchor to a point 2 m over, 3 m across and 6 m up, a length of 7 m, so a 700 N tension has components of 200, 300 and 600 N.
+  </div>
+
+</div>
+
+<script>
+
+// ---- Shared helpers ----
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+// Number to text with up to d decimals, no trailing zeros, no negative zero.
+function fmt(v, d) {
+  const r = parseFloat(v.toFixed(d === undefined ? 3 : d));
+  return String(r === 0 ? 0 : r);
+}
+const uni = s => String(s).replace(/-/g, '−');
+function tex(elm, src, plain) {
+  if (hasKatex()) { try { katex.render(src, elm, { throwOnError: false }); return; } catch (e) {} }
+  elm.textContent = plain;
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) { return uni(v.toFixed(Math.max(0, -Math.floor(Math.log10(step) + 1e-9)))); }
+// Pointer position in the SVG's own coordinates.
+function svgPoint(svg, ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+// A plot frame with linear axes, redrawn at the container's real pixel width so text stays readable on a phone.
+function plotFrame(svg, g, o) {
+  const W = Math.max(260, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520, H = small ? o.H[1] : o.H[0];
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  g.textContent = '';
+  const mL = small ? 42 : 56, mR = small ? 10 : 20, mT = o.mT || 10, mB = o.xName ? (small ? 38 : 42) : 22, fs = small ? 10 : 11.5;
+  const X = v => mL + (v - o.x0) / (o.x1 - o.x0) * (W - mL - mR);
+  const Y = v => H - mB - (v - o.y0) / (o.y1 - o.y0) * (H - mT - mB);
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: '#fff' });
+  const xs = o.xStep || niceStep(o.x1 - o.x0, small ? 5 : 8), ys = o.yStep || niceStep(o.y1 - o.y0, H < 200 ? 4 : 6);
+  for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) {
+    el(g, 'line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: Math.abs(v) < 1e-9 && o.x0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: X(v), y: H - mB + 15, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, xs));
+  }
+  for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) {
+    el(g, 'line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: Math.abs(v) < 1e-9 && o.y0 < 0 ? '#8a97a6' : '#e8edf3', 'stroke-width': 1 });
+    el(g, 'text', { x: mL - 6, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(v, ys));
+  }
+  el(g, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB, fill: 'none', stroke: '#8a97a6', 'stroke-width': 1 });
+  if (o.xName) el(g, 'text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, o.xName);
+  if (o.yName) el(g, 'text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, o.yName);
+  const defs = el(g, 'defs', {}), id = 'clip_' + svg.id, cp = el(defs, 'clipPath', { id });
+  el(cp, 'rect', { x: mL, y: mT, width: W - mL - mR, height: H - mT - mB });
+  return { W, H, mL, mR, mT, mB, X, Y, fs, small, inner: el(g, 'g', { 'clip-path': 'url(#' + id + ')' }),
+    toX: px => o.x0 + (px - mL) / (W - mL - mR) * (o.x1 - o.x0), toY: py => o.y0 + (H - mB - py) / (H - mT - mB) * (o.y1 - o.y0) };
+}
+function fnPath(f, a, b, X, Y, n) {
+  let d = '';
+  n = n || 400;
+  for (let i = 0; i <= n; i++) { const v = a + (b - a) * i / n; d += (i ? 'L' : 'M') + X(v).toFixed(2) + ' ' + Y(f(v)).toFixed(2); }
+  return d;
+}
+// Small legend box: items are [color, dash, label].
+function legend(g, x, y, items, fs, w) {
+  el(g, 'rect', { x: x - 5, y: y - 10, width: w, height: items.length * 15 + 6, fill: '#fff', opacity: 0.88 });
+  items.forEach((it, i) => {
+    const a = { x1: x, x2: x + 20, y1: y + i * 15, y2: y + i * 15, stroke: it[0], 'stroke-width': 2.4 };
+    if (it[1]) a['stroke-dasharray'] = it[1];
+    el(g, 'line', a);
+    el(g, 'text', { x: x + 26, y: y + i * 15 + 4, 'font-size': fs, fill: '#333' }, it[2]);
+  });
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42, bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const a = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) a['stroke-dasharray'] = dash;
+  el(g, 'line', a);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function halo(g, x, y, text, color, size, anchor) {
+  return el(g, 'text', { x, y, 'text-anchor': anchor || 'middle', 'font-size': size || 12, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Make an SVG handle draggable and keyboard movable. onMove gets the pointer position in SVG units; onKey gets (dx, dy) steps.
+function makeDraggable(hd, svg, onMove, onKey) {
+  let on = false;
+  hd.addEventListener('pointerdown', ev => { on = true; hd.setPointerCapture(ev.pointerId); hd.focus(); ev.preventDefault(); });
+  hd.addEventListener('pointermove', ev => { if (on) onMove(svgPoint(svg, ev)); });
+  const end = () => { on = false; };
+  hd.addEventListener('pointerup', end); hd.addEventListener('pointercancel', end);
+  hd.addEventListener('keydown', ev => {
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[ev.key];
+    if (!m) return;
+    ev.preventDefault(); onKey(m[0], m[1], ev.shiftKey);
+  });
+}
+function syncSeg() { document.querySelectorAll('.seg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+function renderStatic(ids) {
+  if (typeof renderMathInElement !== 'function') return;
+  ids.forEach(id => renderMathInElement($(id), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+
+
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function norm(v) { return Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]); }
+// Unit vector, or null for the zero vector.
+function unit(v) { const n = norm(v); return n < 1e-12 ? null : [v[0] / n, v[1] / n, v[2] / n]; }
+// Direction angles in degrees with the positive x, y and z axes, or null for the zero vector.
+function dirAngles(v) { const u = unit(v); return u ? u.map(c => Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI) : null; }
+/*MATH-END*/
+
+let v = [2, 3, 6], az = 35, Fmag = 700;
+const AX = ['#b03030', '#2a7a3a', '#2c5f8a'], AN = ['x', 'y', 'z'];
+const vec = a => '[' + a.map(c => uni(fmt(c, 3))).join(', ') + ']';
+
+function draw() {
+  const g = $('g3');
+  g.textContent = '';
+  const n = norm(v), R = Math.max(3, Math.abs(v[0]), Math.abs(v[1]), Math.abs(v[2]), n * 0.8) * 1.18;
+  const k = 175 / R, a = az * Math.PI / 180, elv = 22 * Math.PI / 180;
+  const P = p => [230 + k * (-p[0] * Math.sin(a) + p[1] * Math.cos(a)), 215 - k * (p[2] * Math.cos(elv) - (p[0] * Math.cos(a) + p[1] * Math.sin(a)) * Math.sin(elv))];
+  const O = P([0, 0, 0]);
+  const seg = (p, q, color, w, dash, op) => { const A = P(p), B = P(q), o = { x1: A[0], y1: A[1], x2: B[0], y2: B[1], stroke: color, 'stroke-width': w }; if (dash) o['stroke-dasharray'] = dash; if (op) o.opacity = op; el(g, 'line', o); };
+  // axes with unit ticks
+  AN.forEach((nm, i) => {
+    const e = [0, 0, 0]; e[i] = 1;
+    seg(e.map(c => -c * R * 0.6), [0, 0, 0], '#c3ccd6', 1, '3 3');
+    arrow(g, O, P(e.map(c => c * R)), '#8a97a6', 1.3);
+    for (let t = 1; t < R * 0.97; t++) { const q = P(e.map(c => c * t)); el(g, 'circle', { cx: q[0], cy: q[1], r: 1.7, fill: '#8a97a6' }); }
+    const end = P(e.map(c => c * R * 1.07));
+    halo(g, end[0], end[1] + 4, nm, AX[i], 13);
+  });
+  if (n > 1e-9) {
+    const [x, y, z] = v;
+    // the component box: floor rectangle, then up
+    const box = [[[x, 0, 0], [x, y, 0]], [[0, y, 0], [x, y, 0]], [[x, y, 0], [x, y, z]], [[0, 0, 0], [x, y, 0]], [[x, 0, z], [x, y, z]], [[0, y, z], [x, y, z]], [[x, 0, 0], [x, 0, z]], [[0, y, 0], [0, y, z]], [[0, 0, z], [x, 0, z]], [[0, 0, z], [0, y, z]]];
+    box.forEach(b => seg(b[0], b[1], '#8a97a6', 1, '4 3', 0.8));
+    // components along the axes, drawn thick in the axis colors
+    [[x, 0, 0], [0, y, 0], [0, 0, z]].forEach((c, i) => { if (Math.abs(v[i]) > 1e-9) seg([0, 0, 0], c, AX[i], 4.5, '', 0.85); });
+    // direction angle arcs, each in the plane of the vector and that axis
+    const u = unit(v), r = Math.min(n * 0.42, R * 0.3);
+    AN.forEach((nm, i) => {
+      const e = [0, 0, 0]; e[i] = 1;
+      const th = Math.acos(Math.max(-1, Math.min(1, u[i])));
+      const w = [u[0] - u[i] * e[0], u[1] - u[i] * e[1], u[2] - u[i] * e[2]], wn = norm(w);
+      if (wn < 1e-9 || th < 0.03) return;
+      const rr = r * (0.75 + 0.18 * i);
+      let d = '';
+      for (let j = 0; j <= 30; j++) { const t = th * j / 30, q = P([0, 1, 2].map(c => rr * (Math.cos(t) * e[c] + Math.sin(t) * w[c] / wn))); d += (j ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }
+      el(g, 'path', { d, fill: 'none', stroke: AX[i], 'stroke-width': 1.6 });
+      const m = P([0, 1, 2].map(c => rr * 1.22 * (Math.cos(th / 2) * e[c] + Math.sin(th / 2) * w[c] / wn)));
+      halo(g, m[0], m[1] + 4, ['α', 'β', 'γ'][i], AX[i], 12.5);
+    });
+    arrow(g, O, P(v), '#1a3f5c', 3.4);
+    const tip = P(v);
+    halo(g, tip[0] + (tip[0] >= O[0] ? 14 : -14), tip[1] - 8, 'v', '#1a3f5c', 15);
+  } else halo(g, 230, 120, 'The zero vector has no direction', '#b03030', 12.5);
+  el(g, 'text', { x: 8, y: 392, 'font-size': 10.5, fill: '#8a97a6' }, 'Axis dots are 1 unit apart. Thick colored bars are the components.');
+}
+
+function update() {
+  const n = norm(v), u = unit(v), ang = dirAngles(v);
+  ['x', 'y', 'z'].forEach((c, i) => { $('s' + c).value = v[i]; $('v' + c).textContent = uni(fmt(v[i], 1)); });
+  $('vView').textContent = az + '°'; $('vF').textContent = Fmag + ' N';
+  const s = c => fmt(c, 1), sq = c => (c < 0 ? '(' + s(c) + ')' : s(c)) + '^2';
+  tex($('lMag'), '|\\mathbf{v}| = \\sqrt{' + v.map(sq).join(' + ') + '} = \\sqrt{' + fmt(n * n, 2) + '} = \\mathbf{' + fmt(n, 4) + '}', '|v| = √(' + fmt(n * n, 2) + ') = ' + fmt(n, 4));
+  if (u) {
+    tex($('lUnit'), '\\hat{\\mathbf{u}} = \\frac{1}{' + fmt(n, 4) + '}\\,[' + v.map(s).join(',\\; ') + '] = [' + u.map(c => fmt(c, 4)).join(',\\; ') + ']', 'u = ' + vec(u));
+    $('rAl').textContent = fmt(ang[0], 2) + '°'; $('rBe').textContent = fmt(ang[1], 2) + '°'; $('rGa').textContent = fmt(ang[2], 2) + '°';
+    $('rCos').textContent = u.map(c => uni(fmt(c, 4))).join(', ');
+    $('rChk').textContent = fmt(u[0] * u[0] + u[1] * u[1] + u[2] * u[2], 6);
+    const Fv = u.map(c => c * Fmag);
+    $('rF').textContent = '[' + Fv.map(c => uni(fmt(c, 1))).join(', ') + '] N';
+    $('rFm').textContent = fmt(norm(Fv), 1) + ' N';
+    $('hUnit').textContent = vec(u);
+  } else {
+    $('lUnit').textContent = 'No unit vector: you cannot divide by a length of zero.';
+    ['rAl', 'rBe', 'rGa', 'rCos', 'rChk', 'rF', 'rFm', 'hUnit'].forEach(id => { $(id).textContent = 'not defined'; });
+  }
+  $('hMag').textContent = fmt(n, 4);
+  $('v3Desc').textContent = 'Vector ' + vec(v) + ' with magnitude ' + fmt(n, 3) + (ang ? ' and direction angles ' + ang.map(q => fmt(q, 1)).join(', ') + ' degrees.' : '.');
+  draw();
+}
+['x', 'y', 'z'].forEach((c, i) => $('s' + c).addEventListener('input', () => { v[i] = +$('s' + c).value; $('presetNote').textContent = ''; update(); }));
+$('sView').addEventListener('input', () => { az = +$('sView').value; $('vView').textContent = az + '°'; draw(); });
+$('sF').addEventListener('input', () => { Fmag = +$('sF').value; update(); });
+const PRESETS = {
+  cable: [[2, 3, 6], 'A cable from an anchor to a point 2 m over, 3 m across and 6 m up. Its length is exactly 7 m, so the unit vector is [2/7, 3/7, 6/7] and a 700 N tension splits into 200, 300 and 600 N.'],
+  axis:  [[0, 0, 5], 'Pointing straight up the z axis: the angle to z is 0° and the angles to x and y are both 90°. The direction cosines are 0, 0 and 1.'],
+  plane: [[4, 3, 0], 'No z component, so the vector lies flat in the xy plane and its angle to the z axis is 90°. The magnitude is 5, the familiar 3-4-5 triangle.'],
+  diag:  [[3, 3, 3], 'Equal components make equal angles with all three axes: about 54.74° each, not 45°. Each direction cosine is 1/√3.'],
+};
+document.querySelectorAll('button[data-p]').forEach(bn => bn.addEventListener('click', () => { v = PRESETS[bn.dataset.p][0].slice(); $('presetNote').textContent = PRESETS[bn.dataset.p][1]; update(); }));
+update(); renderStatic(['eqn']);
+
+</script>
+</body>
+</html>
