@@ -400,6 +400,84 @@ const EXAMPLE_COURSES = [
           },
         ],
       },
+      {
+        number: 2,
+        title: 'Matrices, Functions & Plotting',
+        examples: [
+          {
+            file: 'M02-WE21A-matrix-product.html',
+            name: 'Worked Example 2.1-A: Checking a Matrix Product by Hand and in MATLAB',
+            description: 'Multiplies two matrices with the row-by-column rule by hand, then confirms the product and checks that the operation does not commute.',
+          },
+          {
+            file: 'M02-WE22A-solve-system.html',
+            name: 'Worked Example 2.2-A: Solving a 3x3 Engineering System',
+            description: 'Solves a 3x3 linear system with the backslash operator and verifies it against the determinant and the inverse.',
+          },
+          {
+            file: 'M02-WE23A-stress-strain-import.html',
+            name: 'Worked Example 2.3-A: Importing a Stress-Strain Test and Overlaying the Modulus',
+            description: 'Imports a stress-strain test with readtable, plots the data, and overlays the fitted elastic modulus.',
+          },
+          {
+            file: 'M02-WE24A-families-and-roots.html',
+            name: 'Worked Example 2.4-A: Identifying the Family and Finding Roots',
+            description: 'Identifies a data set\'s function family and locates its roots with roots and a sign check.',
+          },
+        ],
+      },
+      {
+        number: 3,
+        title: 'Differential Calculus',
+        examples: [
+          {
+            file: 'M03-WE31A-sinusoid.html',
+            name: 'Worked Example 3.1-A: Reading a Sinusoid\'s Parameters',
+            description: 'Reads amplitude, angular and ordinary frequency, period, and phase from a sinusoid and plots it over two periods.',
+          },
+          {
+            file: 'M03-WE32A-chain-rule.html',
+            name: 'Worked Example 3.2-A: The Chain Rule on a Vibration',
+            description: 'Differentiates a vibration signal by hand with the chain rule and verifies the result with symbolic diff.',
+          },
+          {
+            file: 'M03-WE33A-optimization.html',
+            name: 'Worked Example 3.3-A: The Angle That Maximizes Range',
+            description: 'Finds the launch angle that maximizes projectile range by setting the derivative to zero, confirmed with fminbnd.',
+          },
+          {
+            file: 'M03-WE34A-numeric-vs-symbolic.html',
+            name: 'Worked Example 3.4-A: Numerical Derivative Versus the Exact Formula',
+            description: 'Estimates a derivative with shrinking finite-difference steps and compares it to the exact symbolic value.',
+          },
+        ],
+      },
+      {
+        number: 4,
+        title: 'Integral Calculus',
+        examples: [
+          {
+            file: 'M04-WE41A-antiderivative.html',
+            name: 'Worked Example 4.1-A: From Antiderivative to Accumulated Area',
+            description: 'Antidifferentiates a velocity to a displacement, then uses the definite integral for the distance travelled.',
+          },
+          {
+            file: 'M04-WE42A-riemann-trapezoid.html',
+            name: 'Worked Example 4.2-A: Riemann Sums and the Trapezoid Rule',
+            description: 'Estimates an area with left and right Riemann sums and the trapezoid rule, then refines the grid toward the exact value.',
+          },
+          {
+            file: 'M04-WE43A-integral-table.html',
+            name: 'Worked Example 4.3-A: A Definite Integral from the Table',
+            description: 'Evaluates a definite integral by hand from the x times e to the a x table entry, then confirms it numerically.',
+          },
+          {
+            file: 'M04-WE44A-numeric-vs-symbolic.html',
+            name: 'Worked Example 4.4-A: Numerical Area Versus the Exact Integral',
+            description: 'Integrates exactly with int, approximates with trapz on refining grids, and builds velocity with cumtrapz.',
+          },
+        ],
+      },
     ],
   },
 ];
