@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 4.1-A: From Antiderivative to Accumulated Area | ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  pre.code { background:#1e2a38; color:#e8eef5; border-radius:6px; padding:10px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.86rem; line-height:1.45; margin:8px 0; }
+  pre.code .c { color:#8fb3d9; }
+  pre.out { background:#f5f8fc; border:1px dashed #9cb8d6; color:#1F3A5F; border-radius:6px; padding:8px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.84rem; margin:6px 0; }
+  .wf { display:inline-block; font-size:.72rem; font-weight:bold; letter-spacing:.03em; color:#fff; background:#D85A30; border-radius:3px; padding:1px 6px; margin-right:6px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 4.1-A: From Antiderivative to Accumulated Area", "statement": "A cart's velocity is <code>v(t) = 3t&sup2; + 2</code> m/s. Find the displacement function by antidifferentiation, then use the definite integral to get the distance travelled from <code>t = 0</code> to <code>t = 2</code> s."};
+var STEPS = [{"label": "Formulate", "title": "Displacement is the integral of velocity", "html": "<p>Velocity is the derivative of position, so position is an <strong>antiderivative</strong> of velocity. The distance travelled between two times is the <strong>definite integral</strong>:</p><div class='calc'>$s = \\displaystyle\\int_{0}^{2} v(t)\\,dt = \\int_{0}^{2} (3t^2 + 2)\\,dt$</div><p>We find the antiderivative first, then substitute the limits.</p>"}, {"label": "Solve", "title": "Antiderivative from the table", "html": "<p>Integrate term by term with the power rule $\\int t^n dt = t^{n+1}/(n+1)$:</p><div class='calc'>$\\int (3t^2 + 2)\\,dt = 3\\cdot\\dfrac{t^3}{3} + 2t + C = t^3 + 2t + C$</div><p>The $+C$ is the family of all curves with this slope; the definite integral will remove it.</p>"}, {"label": "Compute", "title": "Substitute the limits", "html": "<p>Evaluate $F(t) = t^3 + 2t$ at the upper and lower limits and subtract:</p><div class='calc'>$s = F(2) - F(0) = (8 + 4) - (0 + 0) = 12 \\text{ m}$</div><table class='results'><tr><th>t (s)</th><th>F(t) = t&sup3; + 2t</th></tr><tr><td>0</td><td>0</td></tr><tr><td>2</td><td>12</td></tr></table>"}, {"label": "Verify", "title": "Check in MATLAB", "html": "<pre class='code'>syms t\nint(3*t^2 + 2)        <span class='c'>% t^3 + 2*t  (no + C shown)</span>\nint(3*t^2 + 2, 0, 2)  <span class='c'>% 12</span></pre><p>The symbolic antiderivative matches the hand result, and the definite integral returns <code>12</code> &#10003;. The constant $C$ cancels in any definite integral, which is why MATLAB does not display it.</p>"}, {"label": "Interpret", "title": "What the number means", "html": "<p>The cart travels 12 m in the first two seconds. The indefinite integral $t^3 + 2t + C$ is a whole family of position curves, one for each starting position; fixing an initial condition (for example $s(0) = 0$) picks one out. The definite integral is a single number, the accumulated displacement, and it is also the area under the velocity curve between $t = 0$ and $t = 2$.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

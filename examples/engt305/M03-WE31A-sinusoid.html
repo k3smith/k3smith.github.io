@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Worked Example 3.1-A: Reading a Sinusoid's Parameters | ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<style>
+  :root { --navy:#1F3A5F; --light:#E7EDF4; --accent:#D85A30; --ink:#222; --muted:#5a6b80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+  .we { max-width:860px; margin:0 auto; padding:16px; }
+  h1 { color:var(--navy); font-size:1.3rem; margin:0 0 6px; }
+  .statement { margin:0 0 16px; color:#333; line-height:1.6; background:#f5f8fc; border-left:4px solid var(--navy); padding:10px 14px; border-radius:0 4px 4px 0; }
+  .stepper { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .chip { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--navy); background:#eef3f9; border:1px solid #cfe0f2; border-radius:16px; padding:4px 10px; cursor:pointer; transition:background .15s,color .15s; }
+  .chip .num { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:#cfe0f2; color:var(--navy); border-radius:50%; font-size:.72rem; font-weight:bold; }
+  .chip.done { color:#33628f; }
+  .chip.active { background:var(--navy); color:#fff; }
+  .chip.active .num { background:#fff; color:var(--navy); }
+  .card { border:1px solid var(--navy); border-radius:8px; overflow:hidden; min-height:280px; }
+  .card-head { background:var(--navy); color:#fff; padding:10px 16px; font-size:1.05rem; font-weight:bold; }
+  .card-body { padding:16px; font-size:.97rem; line-height:1.6; }
+  .card-body p { margin:0 0 10px; }
+  .kv { list-style:none; margin:0 0 10px; padding:0; }
+  .kv li { padding:3px 0; }
+  .calc { background:#f5f8fc; border:1px solid #dbe6f2; border-radius:6px; padding:8px 12px; margin:8px 0; }
+  .eq-label { margin:12px 0 0; font-size:.92rem; color:var(--navy); font-weight:bold; }
+  .katex-display { overflow-x:auto; overflow-y:hidden; margin:.3em 0; }
+  table.results { width:100%; border-collapse:collapse; margin-top:6px; font-size:.92rem; }
+  table.results th, table.results td { border:1px solid #cfe0f2; padding:6px 8px; text-align:left; }
+  table.results th { background:var(--navy); color:#fff; font-weight:bold; }
+  table.results tr:nth-child(even) td { background:#f5f8fc; }
+  .note { font-size:.86rem; color:var(--muted); margin-top:8px; }
+  .cite { font-size:.82rem; color:var(--muted); }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:14px; }
+  button { background:var(--navy); color:#fff; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-size:.9rem; }
+  button:hover { background:#16283f; }
+  button.ghost { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.4; cursor:default; }
+  .stepcount { font-size:.85rem; color:var(--muted); margin-left:auto; }
+  svg { max-width:100%; height:auto; }
+  pre.code { background:#1e2a38; color:#e8eef5; border-radius:6px; padding:10px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.86rem; line-height:1.45; margin:8px 0; }
+  pre.code .c { color:#8fb3d9; }
+  pre.out { background:#f5f8fc; border:1px dashed #9cb8d6; color:#1F3A5F; border-radius:6px; padding:8px 12px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:.84rem; margin:6px 0; }
+  .wf { display:inline-block; font-size:.72rem; font-weight:bold; letter-spacing:.03em; color:#fff; background:#D85A30; border-radius:3px; padding:1px 6px; margin-right:6px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<div class="we">
+  <h1 id="we-title"></h1>
+  <div class="statement" id="we-statement"></div>
+  <div class="stepper" id="stepper"></div>
+  <div class="card">
+    <div class="card-head"><span id="s-num"></span>. <span id="s-title"></span></div>
+    <div class="card-body" id="s-body"></div>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="prev" type="button">Prev</button>
+    <button id="play" type="button">Play</button>
+    <button class="ghost" id="next" type="button">Next</button>
+    <span class="stepcount" id="count"></span>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+var PROBLEM = {"title": "Worked Example 3.1-A: Reading a Sinusoid's Parameters", "statement": "A vibration is measured as <code>y(t) = 0.3 sin(4&pi;t + &pi;/4)</code> millimeters. Read off its amplitude, angular frequency, frequency, period, and phase, then plot it in MATLAB."};
+var STEPS = [{"label": "Formulate", "title": "Match to the standard form", "html": "<p>Every sinusoid can be written</p><div class='calc'>$y(t) = A\\sin(\\omega t + \\phi)$</div><p>so identifying the signal is just matching coefficients. Line up <code>0.3 sin(4&pi;t + &pi;/4)</code> against that form.</p>"}, {"label": "Solve", "title": "Read each parameter", "html": "<table class='results'><tr><th>Parameter</th><th>Value</th><th>From</th></tr><tr><td>Amplitude $A$</td><td>0.3 mm</td><td>coefficient in front</td></tr><tr><td>Angular freq. $\\omega$</td><td>$4\\pi$ rad/s</td><td>coefficient of $t$</td></tr><tr><td>Frequency $f$</td><td>2 Hz</td><td>$f = \\omega/2\\pi = 4\\pi/2\\pi$</td></tr><tr><td>Period $T$</td><td>0.5 s</td><td>$T = 1/f$</td></tr><tr><td>Phase $\\phi$</td><td>$\\pi/4 = 45^\\circ$</td><td>constant added inside</td></tr></table>"}, {"label": "Compute", "title": "Plot it in MATLAB", "html": "<pre class='code'>A = 0.3; omega = 4*pi; phi = pi/4;\nf = omega/(2*pi);            <span class='c'>% 2 Hz</span>\nt = linspace(0, 2/f, 1000);  <span class='c'>% two periods</span>\ny = A*sin(omega*t + phi);\nplot(t, y); grid on\nxlabel('Time (s)'); ylabel('y(t) (mm)')\ntitle('y(t) = 0.3 sin(4\\pi t + \\pi/4)')</pre><p>Two full cycles appear in <code>2/f = 1</code> second, confirming <code>T = 0.5 s</code>.</p>"}, {"label": "Verify", "title": "Check the peak timing", "html": "<p>The first positive peak is where the sine argument equals $\\pi/2$:</p><div class='calc'>$4\\pi t + \\dfrac{\\pi}{4} = \\dfrac{\\pi}{2} \\;\\Rightarrow\\; t = \\dfrac{1}{16} = 0.0625\\ \\text{s}$</div><p>At that instant <code>y = 0.3 mm</code>, the amplitude, which matches the plot &#10003;.</p>"}, {"label": "Interpret", "title": "What it means", "html": "<p>This vibration swings 0.3 mm either side of rest, 2 times a second. For a machine mount, the amplitude drives the stress range and the frequency drives how many cycles accumulate per hour, so both feed a fatigue check. Keeping angular frequency (4&pi; rad/s) separate from ordinary frequency (2 Hz) is the detail students most often slip on.</p>"}];
+
+(function(){
+  function typeset(el){
+    if(window.renderMathInElement){
+      try{ renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false}); }catch(e){}
+    }
+  }
+  var titleEl=document.getElementById('we-title'), stmtEl=document.getElementById('we-statement');
+  titleEl.textContent=PROBLEM.title; stmtEl.innerHTML=PROBLEM.statement; typeset(stmtEl);
+  var stepper=document.getElementById('stepper');
+  var sNum=document.getElementById('s-num'), sTitle=document.getElementById('s-title'), sBody=document.getElementById('s-body'), count=document.getElementById('count');
+  var prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
+  var i=0, timer=null;
+  STEPS.forEach(function(s,idx){
+    var c=document.createElement('div'); c.className='chip'; c.setAttribute('data-i',idx);
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+s.label;
+    c.addEventListener('click',function(){ stop(); go(idx); });
+    stepper.appendChild(c);
+  });
+  var chips=Array.prototype.slice.call(stepper.querySelectorAll('.chip'));
+  function render(){
+    var s=STEPS[i]; sNum.textContent=(i+1); sTitle.textContent=s.title; sBody.innerHTML=s.html; typeset(sBody);
+    count.textContent='Step '+(i+1)+' of '+STEPS.length;
+    chips.forEach(function(c,idx){ c.classList.toggle('active',idx===i); c.classList.toggle('done',idx<i); });
+    prev.disabled=(i===0); next.disabled=(i===STEPS.length-1);
+  }
+  function go(n){ i=Math.max(0,Math.min(STEPS.length-1,n)); render(); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; play.textContent='Play'; } }
+  prev.addEventListener('click',function(){ stop(); go(i-1); });
+  next.addEventListener('click',function(){ stop(); go(i+1); });
+  play.addEventListener('click',function(){
+    if(timer){ stop(); return; }
+    play.textContent='Pause';
+    timer=setInterval(function(){ if(i>=STEPS.length-1){ stop(); return; } go(i+1); }, 7000);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
