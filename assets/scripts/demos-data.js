@@ -113,6 +113,70 @@ const DEMO_COURSES = [
     ],
   },
   {
+    id: 'engt305',
+    name: 'ENGT 305: Advanced Technical Analysis',
+    term: 'ODU',
+    index: '/demos/engt305/index.html',
+    // Planned demos are added here as each file is built, so no card points at a missing file.
+    modules: [
+      {
+        number: 2,
+        title: 'Matrices, Functions & Plotting',
+        demos: [
+          {
+            file: 'M02-01-MatrixMultiplyDemo.html',
+            name: 'Matrix Multiplication Visualizer',
+            description: 'Build A x B one entry at a time; see the dimension rule and why order matters.',
+          },
+        ],
+      },
+      {
+        number: 4,
+        title: 'Integral Calculus',
+        demos: [
+          {
+            file: 'M04-01-RiemannSumDemo.html',
+            name: 'Riemann Sum and Trapezoid Area',
+            description: 'Add strips and watch the area approximation converge; left, right, mid, trapezoid.',
+          },
+        ],
+      },
+      {
+        number: 5,
+        title: 'Vector Analysis',
+        demos: [
+          {
+            file: 'M05-01-DotCrossProductDemo.html',
+            name: 'Dot and Cross Product',
+            description: 'Drag two vectors; see the dot product, projection, and the cross product area.',
+          },
+        ],
+      },
+      {
+        number: 6,
+        title: 'Differential Equations & System Response',
+        demos: [
+          {
+            file: 'M06-01-DampingDemo.html',
+            name: 'Second-Order Damping Explorer',
+            description: 'Vary the damping ratio and natural frequency; see under, critical, and overdamped response and the poles.',
+          },
+        ],
+      },
+      {
+        number: 8,
+        title: 'Curve Fitting',
+        demos: [
+          {
+            file: 'M08-01-RegressionDemo.html',
+            name: 'Least Squares and Overfitting',
+            description: 'Fit a line to draggable data, see residuals and R-squared, then overfit with degree.',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'met475',
     name: 'MET 475 — Marine Engineering I',
     term: 'ODU',

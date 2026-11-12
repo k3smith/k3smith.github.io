@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dot and Cross Product Explorer: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; padding: 12px 12px 10px; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.view { background: #fff; border: 1px solid #dde4ec; border-radius: 8px; overflow: hidden; min-width: 0; }
+.view h2 { font-size: 0.74em; font-weight: 700; color: #2c5f8a; padding: 7px 10px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.view p { font-size: 0.72em; color: #5a6b80; padding: 1px 10px 0; }
+.view svg { display: block; width: 100%; height: auto; }
+.handle { cursor: grab; touch-action: none; outline: none; }
+.handle:active { cursor: grabbing; }
+.handle .ring { fill: transparent; stroke: transparent; stroke-width: 2.5; }
+.handle:focus-visible .ring { stroke: #e67300; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 10px 6px 2px; font-size: 0.86em; color: #444;
+}
+.headline b.d { color: #7a3fa0; } .headline b.t { color: #1a3f5c; } .headline b.c { color: #2a7a3a; }
+.rhr { text-align: center; font-size: 0.78em; color: #4a5a6a; padding: 4px 8px 2px; line-height: 1.5; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+.vec-title { font-size: 0.82em; font-weight: 700; margin: 4px 0 6px; }
+.vec-title.a { color: #2c5f8a; } .vec-title.b { color: #b05a10; }
+.slider-row { margin-bottom: 9px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+input[type=range].b { accent-color: #b05a10; }
+input[type=range]:focus-visible, .btn-row button:focus-visible { outline: 2px solid #e67300; outline-offset: 1px; }
+.flabel { font-size: 0.82em; color: #555; margin: 12px 0 5px; display: block; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 100px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover { background: #e2ecf6; }
+.preset-note { font-size: 0.74em; color: #5a6b80; line-height: 1.5; margin-top: 8px; min-height: 1.5em; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.dot td:last-child { color: #7a3fa0; }
+.result-table tr.cross td:last-child { color: #2a7a3a; }
+.result-table tr.sub td { font-size: 0.76em; }
+.result-table tr.sub td:last-child { font-weight: 600; }
+.eqn { margin-top: 12px; padding: 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.82em; }
+.eqn .katex-display { margin: 0.45em 0; }
+.live { margin-top: 10px; font-size: 0.86em; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 2px 0; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .stage { padding: 8px; }
+  .views { grid-template-columns: 1fr; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Dot and Cross Product Explorer</h1>
+    <p>ENGT 305 · Module 5 &nbsp;|&nbsp; The dot product measures how much two vectors point the same way. The cross product builds a third vector perpendicular to both. Drag the vector tips and watch both respond.</p>
+  </div>
+
+  <div class="stage">
+    <div class="views">
+      <div class="view">
+        <h2>Top view (looking down the z axis)</h2>
+        <p>Drag a tip, or focus it and use the arrow keys.</p>
+        <svg id="v2" viewBox="0 0 400 400" role="img" aria-labelledby="v2d"><desc id="v2d"></desc>
+          <g id="g2"></g>
+          <g class="handle" id="hA" tabindex="0" role="button" aria-label="Tip of vector a. Arrow keys move it in the x y plane."><circle class="ring" r="15"/><circle r="7" fill="#2c5f8a" stroke="#fff" stroke-width="2"/></g>
+          <g class="handle" id="hB" tabindex="0" role="button" aria-label="Tip of vector b. Arrow keys move it in the x y plane."><circle class="ring" r="15"/><circle r="7" fill="#b05a10" stroke="#fff" stroke-width="2"/></g>
+        </svg>
+      </div>
+      <div class="view">
+        <h2>3D view</h2>
+        <p id="v3cap">Shows a × b standing perpendicular to both vectors.</p>
+        <svg id="v3" viewBox="0 0 400 400" role="img" aria-label="Three dimensional view of vectors a, b, and their cross product"><g id="g3"></g></svg>
+      </div>
+    </div>
+    <div class="headline" aria-live="polite">
+      <span>a · b = <b class="d" id="hDot"></b></span>
+      <span>angle θ = <b class="t" id="hAng"></b></span>
+      <span>|a × b| = area = <b class="c" id="hArea"></b></span>
+    </div>
+    <div class="rhr" id="rhr"></div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> The <em>dot product</em> a · b is a number. It is positive when the angle between the vectors is under 90°, zero when they are perpendicular, and negative past 90°. Divided by |a|, it is the <em>scalar projection</em>: the signed length of b's shadow along a (the purple segment). The <em>cross product</em> a × b is a vector perpendicular to both a and b. Its length equals the area of the parallelogram with sides a and b (shaded green), and its direction follows the <em>right-hand rule</em>: curl the fingers of your right hand from a toward b and your thumb points along a × b.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Vector Components</div>
+      <div id="sliders"></div>
+
+      <div class="slider-row" style="margin-top:14px">
+        <label for="sView">Rotate the 3D view <span class="val" id="vView">50°</span></label>
+        <input type="range" id="sView" min="0" max="360" step="5" value="50">
+      </div>
+
+      <span class="flabel">Load an example</span>
+      <div class="btn-row">
+        <button type="button" data-p="unit">Unit vectors along x and y</button>
+        <button type="button" data-p="par">Parallel</button>
+        <button type="button" data-p="obt">Obtuse angle</button>
+        <button type="button" data-p="rack">Trash-rack panel (3D)</button>
+        <button type="button" data-p="reset">Reset</button>
+      </div>
+      <p class="preset-note" id="presetNote"></p>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Magnitudes |a|, |b|</td><td id="rMag"></td></tr>
+        <tr class="dot"><td>Dot product a · b</td><td id="rDot"></td></tr>
+        <tr class="sub"><td>Check: |a| |b| cos θ</td><td id="rDotChk"></td></tr>
+        <tr><td>Angle between, θ</td><td id="rAng"></td></tr>
+        <tr class="dot"><td>Scalar projection of b onto a, (a · b)/|a|</td><td id="rProj"></td></tr>
+        <tr class="cross"><td>Cross product a × b</td><td id="rCross"></td></tr>
+        <tr class="cross"><td>|a × b| = parallelogram area</td><td id="rArea"></td></tr>
+        <tr class="sub"><td>Check: |a| |b| sin θ</td><td id="rAreaChk"></td></tr>
+        <tr><td>Unit normal, (a × b)/|a × b|</td><td id="rUnit"></td></tr>
+      </table>
+      <div class="live" id="liveDot"></div>
+      <div class="eqn" id="eqn">
+        $$\mathbf{a}\cdot\mathbf{b} = a_x b_x + a_y b_y + a_z b_z = |\mathbf{a}|\,|\mathbf{b}|\cos\theta$$
+        $$\mathbf{a}\times\mathbf{b} = \big[\,a_y b_z - a_z b_y,\;\; a_z b_x - a_x b_z,\;\; a_x b_y - a_y b_x\,\big]$$
+        $$|\mathbf{a}\times\mathbf{b}| = |\mathbf{a}|\,|\mathbf{b}|\sin\theta = \text{parallelogram area}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> In MATLAB these are <code>dot(a,b)</code>, <code>cross(a,b)</code>, and <code>norm(v)</code> for a magnitude. The capstone (Part E) uses both products on the outlet trash rack, the grate that keeps debris out of the detention basin outlet. Crossing two edge vectors of a rack panel gives a vector normal (perpendicular) to the panel, and its magnitude is the panel area, which is what a water pressure acts on. Dotting a force with a unit vector gives the component of the force in that direction. The moment of a force F applied at position r from the hinge is the cross product r × F, and dotting that with a unit vector along the hinge axis gives the moment the hinge must resist.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function norm(a) { return Math.sqrt(dot(a, a)); }
+function scale(a, s) { return [a[0] * s, a[1] * s, a[2] * s]; }
+function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+// Angle between a and b in radians, or null if either vector has zero length.
+function angle(a, b) {
+  const na = norm(a), nb = norm(b);
+  if (na < 1e-12 || nb < 1e-12) return null;
+  return Math.acos(Math.max(-1, Math.min(1, dot(a, b) / (na * nb))));
+}
+// Vector projection of b onto a: ((a . b) / |a|^2) a, or null if a has zero length.
+function projOnto(b, a) {
+  const d = dot(a, a);
+  return d < 1e-24 ? null : scale(a, dot(a, b) / d);
+}
+/*MATH-END*/
+
+// ---- State ----
+const LIM = 3;                        // component range is -3 to 3
+const DEFAULT = { a: [3, 1, 0], b: [1, 2.5, 0] };
+let a = DEFAULT.a.slice(), b = DEFAULT.b.slice();
+let viewAz = 50;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+const COL = { a: '#2c5f8a', b: '#b05a10', c: '#2a7a3a', p: '#7a3fa0' };
+
+function fmt(x, d) {
+  const v = parseFloat(x.toFixed(d === undefined ? 3 : d));
+  return String(v === 0 ? 0 : v).replace('-', '−');
+}
+function vecStr(v) { return '[' + v.map(x => fmt(x)).join(', ') + ']'; }
+const snap = x => Math.max(-LIM, Math.min(LIM, Math.round(x * 10) / 10));
+
+// ---- Drawing helpers ----
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function arrow(g, p0, p1, color, w, dash) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy);
+  if (L < 1.5) return;
+  const ux = dx / L, uy = dy / L, hl = Math.min(11, L * 0.6), hw = hl * 0.42;
+  const bx = p1[0] - ux * hl, by = p1[1] - uy * hl;
+  const attrs = { x1: p0[0], y1: p0[1], x2: bx, y2: by, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' };
+  if (dash) attrs['stroke-dasharray'] = dash;
+  el(g, 'line', attrs);
+  el(g, 'polygon', { points: p1[0] + ',' + p1[1] + ' ' + (bx - uy * hw) + ',' + (by + ux * hw) + ' ' + (bx + uy * hw) + ',' + (by - ux * hw), fill: color });
+}
+function label(g, p0, p1, text, color, off) {
+  const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy) || 1;
+  el(g, 'text', { x: p1[0] + dx / L * (off || 14), y: p1[1] + dy / L * (off || 14) + 4, 'text-anchor': 'middle',
+    'font-size': 13, 'font-weight': 700, fill: color, 'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, text);
+}
+// Everything is computed in 3D, then drawn through a projection P: [x,y,z] -> [screenX, screenY].
+function scene(g, P, opt) {
+  const O = P([0, 0, 0]);
+  const c = cross(a, b), th = angle(a, b), pr = projOnto(b, a);
+  const pts = v => P(v).map(n => n.toFixed(2)).join(',');
+
+  // parallelogram with sides a and b
+  el(g, 'polygon', { points: [pts([0, 0, 0]), pts(a), pts(add(a, b)), pts(b)].join(' '),
+    fill: 'rgba(42,122,58,0.14)', stroke: '#2a7a3a', 'stroke-width': 1, 'stroke-dasharray': '4 3' });
+
+  // projection of b onto a: the shadow, and the perpendicular dropped from the tip of b
+  if (pr) {
+    el(g, 'line', { x1: P(b)[0], y1: P(b)[1], x2: P(pr)[0], y2: P(pr)[1], stroke: COL.p, 'stroke-width': 1.2, 'stroke-dasharray': '3 3' });
+    el(g, 'line', { x1: O[0], y1: O[1], x2: P(pr)[0], y2: P(pr)[1], stroke: COL.p, 'stroke-width': 6, 'stroke-linecap': 'round', opacity: 0.45 });
+  }
+
+  // angle arc from a toward b, drawn in the plane of the two vectors
+  if (th !== null && th > 1e-6) {
+    const ah = scale(a, 1 / norm(a));
+    const e = add(b, scale(ah, -dot(b, ah))), ne = norm(e);
+    if (ne > 1e-9) {
+      const eh = scale(e, 1 / ne), r = opt.arcR;
+      let d = '', last, prev;
+      const N = 40;
+      for (let i = 0; i <= N; i++) {
+        const t = th * i / N;
+        prev = last; last = P(add(scale(ah, r * Math.cos(t)), scale(eh, r * Math.sin(t))));
+        d += (i ? 'L' : 'M') + last[0].toFixed(2) + ' ' + last[1].toFixed(2);
+      }
+      el(g, 'path', { d, fill: 'none', stroke: '#1a3f5c', 'stroke-width': 1.4 });
+      arrow(g, prev, last, '#1a3f5c', 1.4);
+      const mid = P(add(scale(ah, r * 1.45 * Math.cos(th / 2)), scale(eh, r * 1.45 * Math.sin(th / 2))));
+      el(g, 'text', { x: mid[0], y: mid[1] + 4, 'text-anchor': 'middle', 'font-size': 12, 'font-style': 'italic', fill: '#1a3f5c',
+        'paint-order': 'stroke', stroke: '#fff', 'stroke-width': 3 }, 'θ');
+    }
+  }
+
+  arrow(g, O, P(a), COL.a, 3);
+  arrow(g, O, P(b), COL.b, 3);
+  label(g, O, P(a), 'a', COL.a, opt.handles ? 20 : 14);
+  label(g, O, P(b), 'b', COL.b, opt.handles ? 20 : 14);
+
+  if (opt.showCross && norm(c) > 1e-9) {
+    arrow(g, O, P(c), COL.c, 3);
+    label(g, O, P(c), 'a × b', COL.c, 16);
+  }
+  // Top view: mark whether a x b comes out of the page or goes into it
+  if (opt.pageMark && Math.abs(c[2]) > 1e-9) {
+    const m = P(scale(add(a, b), 0.5));
+    el(g, 'circle', { cx: m[0], cy: m[1], r: 9, fill: '#fff', stroke: COL.c, 'stroke-width': 2 });
+    if (c[2] > 0) el(g, 'circle', { cx: m[0], cy: m[1], r: 2.6, fill: COL.c });
+    else {
+      el(g, 'line', { x1: m[0] - 5, y1: m[1] - 5, x2: m[0] + 5, y2: m[1] + 5, stroke: COL.c, 'stroke-width': 2 });
+      el(g, 'line', { x1: m[0] - 5, y1: m[1] + 5, x2: m[0] + 5, y2: m[1] - 5, stroke: COL.c, 'stroke-width': 2 });
+    }
+  }
+}
+
+// ---- Top view ----
+const S2 = 400 / 12.8;                                  // pixels per unit, view spans -6.4 to 6.4
+const P2 = v => [200 + v[0] * S2, 200 - v[1] * S2];
+function drawTop() {
+  const g = $('g2');
+  g.textContent = '';
+  for (let k = -6; k <= 6; k++) {
+    el(g, 'line', { x1: P2([k, 0])[0], x2: P2([k, 0])[0], y1: 0, y2: 400, stroke: k ? '#e8edf3' : '#8a97a6', 'stroke-width': k ? 1 : 1.3 });
+    el(g, 'line', { y1: P2([0, k])[1], y2: P2([0, k])[1], x1: 0, x2: 400, stroke: k ? '#e8edf3' : '#8a97a6', 'stroke-width': k ? 1 : 1.3 });
+    if (k && k % 2 === 0) {
+      el(g, 'text', { x: P2([k, 0])[0], y: 214, 'text-anchor': 'middle', 'font-size': 10, fill: '#8a97a6' }, String(k).replace('-', '−'));
+      el(g, 'text', { x: 194, y: P2([0, k])[1] + 3.5, 'text-anchor': 'end', 'font-size': 10, fill: '#8a97a6' }, String(k).replace('-', '−'));
+    }
+  }
+  el(g, 'text', { x: 392, y: 194, 'text-anchor': 'end', 'font-size': 12, 'font-style': 'italic', fill: '#5a6b80' }, 'x');
+  el(g, 'text', { x: 208, y: 13, 'font-size': 12, 'font-style': 'italic', fill: '#5a6b80' }, 'y');
+  const m = Math.min(norm([a[0], a[1], 0]), norm([b[0], b[1], 0]));
+  scene(g, P2, { arcR: Math.max(0.35, Math.min(0.9, 0.5 * m)), pageMark: true, handles: true });
+  $('hA').setAttribute('transform', 'translate(' + P2(a).join(',') + ')');
+  $('hB').setAttribute('transform', 'translate(' + P2(b).join(',') + ')');
+}
+
+// ---- 3D view (fixed elevation, adjustable rotation about the z axis) ----
+function draw3D() {
+  const g = $('g3');
+  g.textContent = '';
+  const c = cross(a, b);
+  const R = Math.max(1.2, norm(a), norm(b), norm(c), norm(add(a, b))) * 1.12;
+  const k = 165 / R, az = viewAz * Math.PI / 180, elv = 24 * Math.PI / 180;
+  const P = v => [
+    200 + k * (-v[0] * Math.sin(az) + v[1] * Math.cos(az)),
+    212 - k * (v[2] * Math.cos(elv) - (v[0] * Math.cos(az) + v[1] * Math.sin(az)) * Math.sin(elv))];
+  const raw = R / 4, p10 = Math.pow(10, Math.floor(Math.log10(raw))), mm = raw / p10;
+  const step = (mm < 1.5 ? 1 : mm < 3.5 ? 2 : mm < 7.5 ? 5 : 10) * p10;
+  const O = P([0, 0, 0]);
+  ['x', 'y', 'z'].forEach((nm, i) => {
+    const e = [0, 0, 0]; e[i] = 1;
+    const neg = P(scale(e, -R * 0.55)), pos = P(scale(e, R));
+    el(g, 'line', { x1: neg[0], y1: neg[1], x2: O[0], y2: O[1], stroke: '#c3ccd6', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+    arrow(g, O, pos, '#8a97a6', 1.3);
+    for (let t = step; t < R * 0.97; t += step) {
+      const q = P(scale(e, t));
+      el(g, 'circle', { cx: q[0], cy: q[1], r: 1.8, fill: '#8a97a6' });
+    }
+    label(g, O, pos, nm, '#5a6b80', 10);
+  });
+  scene(g, P, { arcR: 0.22 * R, showCross: true });
+  el(g, 'text', { x: 8, y: 392, 'font-size': 10.5, fill: '#8a97a6' }, 'Axis dots are ' + fmt(step) + ' unit' + (step === 1 ? '' : 's') + ' apart. View rescales to fit.');
+}
+
+// ---- Readouts ----
+function update() {
+  const na = norm(a), nb = norm(b), d = dot(a, b), c = cross(a, b), nc = norm(c), th = angle(a, b);
+  const deg = th === null ? null : th * 180 / Math.PI;
+  const zeroVec = th === null;
+  const dz = Math.abs(d) < 1e-9;
+
+  ['a', 'b'].forEach(nm => ['x', 'y', 'z'].forEach((ax, i) => {
+    const v = (nm === 'a' ? a : b)[i];
+    $('s' + nm + ax).value = v;
+    $('v' + nm + ax).textContent = fmt(v, 1);
+  }));
+
+  $('rMag').textContent = fmt(na) + ', ' + fmt(nb);
+  const sign = dz ? 'zero: perpendicular' : d > 0 ? 'positive: under 90°' : 'negative: over 90°';
+  $('rDot').textContent = fmt(d) + (zeroVec ? '' : ' (' + sign + ')');
+  $('rDotChk').textContent = zeroVec ? 'not defined' : fmt(na * nb * Math.cos(th));
+  $('rAng').textContent = zeroVec ? 'not defined (zero-length vector)' : fmt(deg, 1) + '°';
+  $('rProj').textContent = na < 1e-12 ? 'not defined (a has zero length)' : fmt(d / na);
+  $('rCross').textContent = vecStr(c);
+  $('rArea').textContent = fmt(nc);
+  $('rAreaChk').textContent = zeroVec ? 'not defined' : fmt(na * nb * Math.sin(th));
+  $('rUnit').textContent = nc < 1e-9 ? 'not defined (a × b = 0)' : vecStr(scale(c, 1 / nc));
+  $('hDot').textContent = fmt(d);
+  $('hAng').textContent = zeroVec ? 'not defined' : fmt(deg, 1) + '°';
+  $('hArea').textContent = fmt(nc);
+
+  let r;
+  if (zeroVec) r = 'One vector has zero length, so there is no angle and no direction for a × b.';
+  else if (nc < 1e-9) r = 'a and b are parallel: the parallelogram is flat, its area is zero, and a × b = 0.';
+  else {
+    r = 'Right-hand rule: curl your fingers from a toward b and your thumb points along a × b.';
+    if (Math.abs(c[0]) < 1e-9 && Math.abs(c[1]) < 1e-9)
+      r += c[2] > 0 ? ' In the top view a to b is counterclockwise, so a × b comes out of the page (+z, the dot symbol).'
+                    : ' In the top view a to b is clockwise, so a × b goes into the page (−z, the cross symbol).';
+  }
+  $('rhr').textContent = r;
+
+  const live = $('liveDot');
+  const t = (x, col) => '(\\textcolor{' + col + '}{' + fmt(x).replace('−', '-') + '})';
+  const src = '\\mathbf{a}\\cdot\\mathbf{b} = ' + [0, 1, 2].map(i => t(a[i], COL.a) + t(b[i], COL.b)).join(' + ') + ' = ' + fmt(d).replace('−', '-');
+  const plain = 'a · b = ' + [0, 1, 2].map(i => '(' + fmt(a[i]) + ')(' + fmt(b[i]) + ')').join(' + ') + ' = ' + fmt(d);
+  if (hasKatex()) { try { katex.render(src, live, { throwOnError: false }); } catch (e) { live.textContent = plain; } }
+  else live.textContent = plain;
+
+  $('v2d').textContent = 'Top view of vector a ' + vecStr(a) + ' and vector b ' + vecStr(b) + '. Dot product ' + fmt(d) +
+    ', angle ' + (zeroVec ? 'not defined' : fmt(deg, 1) + ' degrees') + ', cross product ' + vecStr(c) + '.';
+  drawTop(); draw3D();
+}
+
+// ---- Sliders ----
+(function buildSliders() {
+  const host = $('sliders');
+  [['a', 'Vector a'], ['b', 'Vector b']].forEach(([nm, title]) => {
+    const h = document.createElement('div');
+    h.className = 'vec-title ' + nm; h.textContent = title;
+    host.appendChild(h);
+    ['x', 'y', 'z'].forEach((ax, i) => {
+      const row = document.createElement('div');
+      row.className = 'slider-row';
+      row.innerHTML = '<label for="s' + nm + ax + '">' + nm + '<sub>' + ax + '</sub>' + (ax === 'z' ? ' (out of the page)' : '') +
+        ' <span class="val" id="v' + nm + ax + '"></span></label>' +
+        '<input type="range" class="' + nm + '" id="s' + nm + ax + '" min="-' + LIM + '" max="' + LIM + '" step="0.1">';
+      host.appendChild(row);
+      row.querySelector('input').addEventListener('input', ev => {
+        (nm === 'a' ? a : b)[i] = parseFloat(ev.target.value);
+        $('presetNote').textContent = '';
+        update();
+      });
+    });
+  });
+})();
+$('sView').addEventListener('input', () => { viewAz = +$('sView').value; $('vView').textContent = viewAz + '°'; draw3D(); });
+
+// ---- Dragging and keyboard on the tips ----
+(function drag() {
+  const svg = $('v2');
+  let which = null;
+  const toWorld = ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return [snap((q.x - 200) / S2), snap((200 - q.y) / S2)];
+  };
+  [['hA', 'a'], ['hB', 'b']].forEach(([id, nm]) => {
+    const h = $(id);
+    h.addEventListener('pointerdown', ev => { which = nm; h.setPointerCapture(ev.pointerId); ev.preventDefault(); h.focus(); });
+    h.addEventListener('pointermove', ev => {
+      if (which !== nm) return;
+      const w = toWorld(ev), v = nm === 'a' ? a : b;
+      v[0] = w[0]; v[1] = w[1];
+      $('presetNote').textContent = '';
+      update();
+    });
+    const end = () => { which = null; };
+    h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
+    h.addEventListener('keydown', ev => {
+      const v = nm === 'a' ? a : b, s = ev.shiftKey ? 0.5 : 0.1;
+      const mv = { ArrowLeft: [-s, 0], ArrowRight: [s, 0], ArrowUp: [0, s], ArrowDown: [0, -s] }[ev.key];
+      if (!mv) return;
+      ev.preventDefault();
+      v[0] = snap(v[0] + mv[0]); v[1] = snap(v[1] + mv[1]);
+      $('presetNote').textContent = '';
+      update();
+    });
+  });
+})();
+
+// ---- Presets ----
+const PRESETS = {
+  unit:  { a: [1, 0, 0], b: [0, 1, 0], note: 'Perpendicular unit vectors: a · b = 0, the angle is 90°, and a × b = [0, 0, 1] with area 1.' },
+  par:   { a: [2, 1, 0], b: [3, 1.5, 0], note: 'b = 1.5 a, so the angle is 0°, the dot product is as large as it can be (|a| |b|), and the cross product is zero.' },
+  obt:   { a: [3, 0.5, 0], b: [-2, 2, 0], note: 'The angle is past 90°, so the dot product is negative and the shadow of b falls behind the tail of a.' },
+  rack:  { a: [2, 0, 0], b: [0, 1.5, 2], note: 'Illustrative panel, in meters: a runs 2 m along the bottom edge, b runs up the sloped side. The normal is a × b = [0, −4, 3] and the panel area is 5 m².' },
+  reset: { a: DEFAULT.a, b: DEFAULT.b, note: '' },
+};
+document.querySelectorAll('button[data-p]').forEach(btn => btn.addEventListener('click', () => {
+  const p = PRESETS[btn.dataset.p];
+  a = p.a.slice(); b = p.b.slice();
+  $('presetNote').textContent = p.note;
+  update();
+}));
+
+update();
+if (typeof renderMathInElement === 'function') {
+  renderMathInElement($('eqn'), { delimiters: [{ left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+</script>
+</body>
+</html>

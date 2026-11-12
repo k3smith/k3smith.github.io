@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riemann Sum and Trapezoid Area Explorer: ENGT 305</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ecf1f6; padding: 16px; color: #333; min-height: 100vh;
+}
+.card {
+  max-width: 940px; margin: 0 auto; background: #fff; border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.14); overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #1a3f5c 0%, #2c5f8a 100%);
+  color: white; padding: 18px 26px 14px;
+}
+.card-header h1 { font-size: 1.15em; font-weight: 600; margin-bottom: 4px; }
+.card-header p  { font-size: 0.8em; opacity: 0.88; }
+
+.stage { background: #f7f9fc; border-bottom: 1px solid #dde4ec; }
+#plot { display: block; width: 100%; }
+.headline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 2px 12px 12px; font-size: 0.86em; color: #444;
+}
+.headline b { color: #2c5f8a; }
+.headline .err b { color: #b05a10; }
+
+.scenario-note {
+  background: #fff8ec; border-left: 3px solid #e67300;
+  padding: 9px 14px; font-size: 0.78em; color: #5a4a2a;
+  margin: 12px 22px 0; border-radius: 0 5px 5px 0; line-height: 1.5;
+}
+.bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
+.controls { padding: 18px 22px; border-right: 1px solid #e8ecf1; min-width: 0; }
+.outputs  { padding: 18px 22px; min-width: 0; }
+.panel-title {
+  font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #2c5f8a; margin-bottom: 13px;
+  padding-bottom: 6px; border-bottom: 2px solid #dde8f2;
+}
+fieldset { border: none; margin-bottom: 12px; }
+legend, .flabel { font-size: 0.82em; color: #555; margin-bottom: 5px; display: block; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg label {
+  flex: 1; min-width: 70px; text-align: center; padding: 6px 4px; font-size: 0.78em;
+  border: 1px solid #c0cad4; border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label.on { background: #2c5f8a; color: #fff; border-color: #2c5f8a; font-weight: 700; }
+.seg label:focus-within, .ctl:focus-visible, .btn-row button:focus-visible, input[type=range]:focus-visible {
+  outline: 2px solid #e67300; outline-offset: 1px;
+}
+.ctl {
+  font: inherit; font-size: 0.86em; padding: 5px 6px; border: 1px solid #c0cad4; border-radius: 5px;
+  background: #fff; color: #1a3f5c; font-weight: 700; width: 100%; margin-bottom: 4px;
+}
+.fn-note { font-size: 0.76em; color: #5a6b80; line-height: 1.5; margin-bottom: 12px; min-height: 3em; }
+.btn-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-row button {
+  flex: 1; min-width: 64px; padding: 7px 4px; font: inherit; font-size: 0.76em; border: 1px solid #c0cad4;
+  border-radius: 5px; background: #f4f7fb; color: #2c5f8a; cursor: pointer;
+}
+.btn-row button:hover:not(:disabled) { background: #e2ecf6; }
+.btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.slider-row { margin-top: 4px; }
+.slider-row label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82em; color: #555; margin-bottom: 3px;
+}
+.slider-row .val { font-weight: 700; color: #2c5f8a; font-size: 0.9em; }
+input[type=range] { width: 100%; accent-color: #2c5f8a; cursor: pointer; }
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table tr { border-bottom: 1px solid #f0f3f7; }
+.result-table tr:last-child { border-bottom: none; }
+.result-table td, .result-table th { padding: 6px 3px; font-size: 0.82em; vertical-align: middle; }
+.result-table td:first-child { color: #666; }
+.result-table td:last-child {
+  text-align: right; font-weight: 700; color: #2c5f8a; font-size: 0.88em;
+}
+.result-table tr.hl td:last-child { color: #b05a10; }
+.cmp { margin-top: 14px; }
+.cmp caption { text-align: left; font-size: 0.78em; color: #5a6b80; padding-bottom: 4px; }
+.cmp th { text-align: right; color: #5a6b80; font-weight: 600; font-size: 0.74em; border-bottom: 2px solid #dde8f2; }
+.cmp th:first-child { text-align: left; }
+.cmp td { text-align: right; font-variant-numeric: tabular-nums; }
+.cmp td:first-child { text-align: left; }
+.cmp td:nth-child(2) { color: #333; font-weight: 600; }
+.cmp tr.cur { background: #eef4fa; }
+.cmp tr.cur td:first-child { color: #1a3f5c; font-weight: 700; }
+.cmp tr.best td:last-child::after { content: ' ★'; color: #2a7a3a; }
+.cmp-key { font-size: 0.72em; color: #5a6b80; margin-top: 4px; }
+.eqn { margin-top: 14px; padding: 8px 6px; background: #f7f9fc; border-radius: 6px; overflow-x: auto; overflow-y: hidden; font-size: 0.9em; text-align: center; }
+.eqn-note { font-size: 0.74em; color: #5a6b80; margin-top: 6px; line-height: 1.5; }
+.cascade-bar {
+  background: #eef4fa; padding: 11px 22px; border-top: 1px solid #dde8f2;
+  font-size: 0.78em; color: #4a5a6a; line-height: 1.65;
+}
+.cascade-bar strong { color: #2c5f8a; }
+.cascade-bar code { background: #dde8f2; padding: 0 4px; border-radius: 3px; color: #1a3f5c; }
+
+@media (max-width: 640px) {
+  body { padding: 8px; }
+  .card-header { padding: 14px 16px 12px; }
+  .bottom-panel { grid-template-columns: 1fr; }
+  .controls { border-right: none; border-bottom: 1px solid #e8ecf1; padding: 16px; }
+  .outputs { padding: 16px; }
+  .scenario-note { margin: 12px 12px 0; }
+  .cascade-bar { padding: 11px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>Riemann Sum and Trapezoid Area Explorer</h1>
+    <p>ENGT 305 · Module 4 &nbsp;|&nbsp; A definite integral is the area under a curve. Slice that area into n strips, add them up, and watch the total close in on the exact value as n grows.</p>
+  </div>
+
+  <div class="stage">
+    <svg id="plot" role="img" aria-labelledby="plotDesc"><desc id="plotDesc"></desc></svg>
+    <div class="headline" aria-live="polite">
+      <span>Approximation: <b id="hApprox"></b></span>
+      <span>Exact: <b id="hExact"></b></span>
+      <span class="err">Error: <b id="hErr"></b></span>
+    </div>
+  </div>
+
+  <div class="scenario-note">
+    <strong>Key idea:</strong> Split the interval from a to b into n equal <em>subintervals</em> (strips) of width Δx. A <em>Riemann sum</em> replaces the curve on each strip with a rectangle whose height is the function value at the strip's left end, right end, or midpoint. The <em>trapezoid rule</em> instead joins the two end values with a straight line. The definite integral is the value all of these sums approach as n goes to infinity.
+  </div>
+
+  <div class="bottom-panel">
+    <div class="controls">
+      <div class="panel-title">Controls</div>
+
+      <label class="flabel" for="selFn">Function and interval</label>
+      <select class="ctl" id="selFn"></select>
+      <p class="fn-note" id="fnNote"></p>
+
+      <fieldset>
+        <legend>Rule</legend>
+        <div class="seg" id="ruleSeg">
+          <label><input type="radio" name="rule" value="left">Left</label>
+          <label><input type="radio" name="rule" value="right">Right</label>
+          <label><input type="radio" name="rule" value="mid">Midpoint</label>
+          <label><input type="radio" name="rule" value="trap" checked>Trapezoid</label>
+        </div>
+      </fieldset>
+
+      <div class="slider-row">
+        <label for="sN">Number of subintervals n <span class="val" id="vN">8</span></label>
+        <input type="range" id="sN" min="1" max="200" step="1" value="8">
+      </div>
+      <div class="btn-row">
+        <button id="bOne" type="button">n = 1</button>
+        <button id="bHalf" type="button">Halve n</button>
+        <button id="bDouble" type="button">Double n</button>
+        <button id="bMax" type="button">n = 200</button>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="panel-title">Live Readouts</div>
+      <table class="result-table">
+        <tr><td>Strip width Δx = (b − a)/n</td><td id="rDx"></td></tr>
+        <tr><td>Approximation (<span id="rRuleName"></span>)</td><td id="rApprox"></td></tr>
+        <tr><td>Exact integral</td><td id="rExact"></td></tr>
+        <tr class="hl"><td>Error = approximation − exact</td><td id="rErr"></td></tr>
+        <tr class="hl"><td>Percent error</td><td id="rPct"></td></tr>
+        <tr id="rowVol" hidden><td>Approximate runoff volume (area × 3600 s/h)</td><td id="rVol"></td></tr>
+      </table>
+
+      <table class="result-table cmp">
+        <caption>All four rules at the same n</caption>
+        <thead><tr><th scope="col">Rule</th><th scope="col">Approximation</th><th scope="col">Error</th></tr></thead>
+        <tbody id="cmpBody"></tbody>
+      </table>
+      <p class="cmp-key">★ marks the smallest error at this n.</p>
+
+      <div class="eqn" id="eqn"></div>
+      <p class="eqn-note">Here \(x_i = a + i\,\Delta x\) are the strip edges, with \(\Delta x = (b-a)/n\). The definite integral is the limit: \(\int_a^b f(x)\,dx = \lim_{n\to\infty}\) of any of these sums.</p>
+    </div>
+  </div>
+
+  <div class="cascade-bar">
+    <strong>In practice:</strong> Field data rarely comes with a formula. A flow record is a list of times and flow rates, so the only way to get the area under it is a sum like this one. MATLAB's <code>trapz(x, y)</code> is the trapezoid rule applied to your sampled points, and <code>cumtrapz(x, y)</code> returns the running total after each strip. In the capstone (Part D), the runoff volume entering the detention basin is the area under the inflow hydrograph, the curve of flow rate versus time, so <code>trapz(t, Q)</code> gives the volume the basin has to handle. Watch the units: flow in m³/s integrated over time in hours gives (m³/s)·h, which must be multiplied by 3600 s/h to get m³.
+  </div>
+</div>
+
+<script>
+// ---- Pure math (kept free of the DOM so it can be checked independently) ----
+/*MATH-START*/
+// Inflow hydrograph model: a smooth single-peak curve, Q(t) = Qp (t/tp) exp(1 - t/tp).
+// It rises from zero to the peak flow Qp at the time to peak tp, then recedes.
+const HYD = { Qp: 12, tp: 2, T: 12 };   // m^3/s, hours, hours
+const FUNCS = [
+  { id: 'cubic', label: 'f(x) = 4x³ on [0, 2]', a: 0, b: 2,
+    f: x => 4 * x * x * x, exact: 16,            // antiderivative x^4, so 2^4 - 0 = 16
+    xName: 'x', yName: 'f(x)', tex: '\\int_0^2 4x^3\\,dx = 16' },
+  { id: 'line', label: 'f(x) = 2x + 1 on [0, 3]', a: 0, b: 3,
+    f: x => 2 * x + 1, exact: 12,                // antiderivative x^2 + x, so 9 + 3 = 12
+    xName: 'x', yName: 'f(x)', tex: '\\int_0^3 (2x+1)\\,dx = 12' },
+  { id: 'cos', label: 'f(x) = cos(x) on [0, π/2]', a: 0, b: Math.PI / 2,
+    f: x => Math.cos(x), exact: 1,               // antiderivative sin(x), so 1 - 0 = 1
+    xName: 'x (rad)', yName: 'f(x)', tex: '\\int_0^{\\pi/2} \\cos x\\,dx = 1' },
+  { id: 'hyd', label: 'Inflow hydrograph Q(t), 0 to 12 h', a: 0, b: HYD.T,
+    f: t => HYD.Qp * (t / HYD.tp) * Math.exp(1 - t / HYD.tp),
+    // antiderivative: -Qp e tp (1 + t/tp) exp(-t/tp)
+    exact: HYD.Qp * Math.E * HYD.tp * (1 - Math.exp(-HYD.T / HYD.tp) * (1 + HYD.T / HYD.tp)),
+    xName: 'time t (h)', yName: 'flow Q (m³/s)', unit: '(m³/s)·h', toVolume: 3600,
+    tex: '\\int_0^{12} Q(t)\\,dt' },
+];
+// Riemann sums and the trapezoid rule on n equal subintervals of [a, b].
+function approx(f, a, b, n, rule) {
+  const dx = (b - a) / n;
+  let s = 0;
+  for (let i = 0; i < n; i++) {
+    const x0 = a + i * dx, x1 = a + (i + 1) * dx;
+    if (rule === 'left') s += f(x0);
+    else if (rule === 'right') s += f(x1);
+    else if (rule === 'mid') s += f((x0 + x1) / 2);
+    else s += (f(x0) + f(x1)) / 2;               // trapezoid: average of the two end values
+  }
+  return s * dx;
+}
+/*MATH-END*/
+
+const RULES = [
+  { id: 'left', name: 'Left rectangles',
+    tex: '\\int_a^b f(x)\\,dx \\;\\approx\\; \\Delta x \\sum_{i=0}^{n-1} f(x_i)',
+    plain: 'Integral ≈ Δx × sum of f(x_i), i = 0 to n − 1' },
+  { id: 'right', name: 'Right rectangles',
+    tex: '\\int_a^b f(x)\\,dx \\;\\approx\\; \\Delta x \\sum_{i=1}^{n} f(x_i)',
+    plain: 'Integral ≈ Δx × sum of f(x_i), i = 1 to n' },
+  { id: 'mid', name: 'Midpoint rectangles',
+    tex: '\\int_a^b f(x)\\,dx \\;\\approx\\; \\Delta x \\sum_{i=1}^{n} f\\!\\left(\\tfrac{x_{i-1}+x_i}{2}\\right)',
+    plain: 'Integral ≈ Δx × sum of f at each strip midpoint, i = 1 to n' },
+  { id: 'trap', name: 'Trapezoids',
+    tex: '\\int_a^b f(x)\\,dx \\;\\approx\\; \\frac{\\Delta x}{2} \\sum_{i=1}^{n} \\big[f(x_{i-1}) + f(x_i)\\big]',
+    plain: 'Integral ≈ (Δx / 2) × sum of [f(x_(i−1)) + f(x_i)], i = 1 to n' },
+];
+const FN_NOTES = {
+  cubic: 'Increasing and curving upward. Left rectangles fall short, right rectangles overshoot, and trapezoids overshoot by much less.',
+  line: 'A straight line. Midpoint and trapezoid are exact for any n, because a trapezoid is exactly the shape under a straight line.',
+  cos: 'Decreasing and curving downward, the reverse of the cubic. Left rectangles overshoot, right rectangles fall short, and trapezoids fall short by much less.',
+  hyd: 'A hydrograph is flow rate plotted against time. This one models storm inflow to a basin: peak flow 12 m³/s at 2 h. It starts at zero and ends near zero, so left, right, and trapezoid nearly agree.',
+};
+
+// ---- State ----
+let fn = FUNCS[0], rule = 'trap', n = 8;
+const $ = id => document.getElementById(id);
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hasKatex = () => typeof window.katex !== 'undefined';
+
+// ---- Formatting ----
+function fmtVal(v) { return v.toFixed(4); }
+function fmtErr(e) {
+  if (Math.abs(e) < 1e-10) return '0';
+  const m = Math.abs(e);
+  return (e > 0 ? '+' : '−') + (m < 0.001 ? m.toExponential(2) : m.toFixed(4));
+}
+function fmtPct(p) {
+  if (Math.abs(p) < 1e-9) return '0%';
+  const m = Math.abs(p);
+  return (p > 0 ? '+' : '−') + (m >= 0.01 ? m.toFixed(2) : m.toExponential(1)) + '%';
+}
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+function tickLabel(v, step) {
+  const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+  return v.toFixed(Math.min(d, 3));
+}
+
+// ---- Plot ----
+function el(tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function draw() {
+  const svg = $('plot');
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+  const small = W < 520;
+  const H = small ? 270 : 350;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('height', H);
+  while (svg.lastChild && svg.lastChild.tagName !== 'desc') svg.removeChild(svg.lastChild);
+
+  const mL = small ? 42 : 58, mR = small ? 12 : 24, mT = 18, mB = small ? 40 : 44;
+  const { a, b, f } = fn;
+  let ymax = 0;
+  for (let i = 0; i <= 400; i++) ymax = Math.max(ymax, f(a + (b - a) * i / 400));
+  const yStep = niceStep(ymax, small ? 4 : 6);
+  const yTop = Math.ceil(ymax * 1.02 / yStep) * yStep;
+  const X = x => mL + (x - a) / (b - a) * (W - mL - mR);
+  const Y = y => H - mB - y / yTop * (H - mT - mB);
+  const fs = small ? 10 : 11.5;
+
+  // grid and axes
+  for (let y = 0; y <= yTop + 1e-9; y += yStep) {
+    svg.appendChild(el('line', { x1: mL, x2: W - mR, y1: Y(y), y2: Y(y), stroke: '#e3e9f0', 'stroke-width': 1 }));
+    svg.appendChild(el('text', { x: mL - 6, y: Y(y) + 4, 'text-anchor': 'end', 'font-size': fs, fill: '#5a6b80' }, tickLabel(y, yStep)));
+  }
+  const xStep = niceStep(b - a, small ? 4 : 8);
+  for (let x = Math.ceil(a / xStep) * xStep; x <= b + 1e-9; x += xStep) {
+    svg.appendChild(el('line', { x1: X(x), x2: X(x), y1: Y(0), y2: Y(0) + 5, stroke: '#5a6b80', 'stroke-width': 1 }));
+    svg.appendChild(el('text', { x: X(x), y: Y(0) + 17, 'text-anchor': 'middle', 'font-size': fs, fill: '#5a6b80' }, tickLabel(x, xStep)));
+  }
+  svg.appendChild(el('text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444' }, fn.xName));
+  svg.appendChild(el('text', { x: 12, y: (mT + H - mB) / 2, 'text-anchor': 'middle', 'font-size': fs + 0.5, fill: '#444',
+    transform: 'rotate(-90 12 ' + (mT + H - mB) / 2 + ')' }, fn.yName));
+
+  // strips
+  const dx = (b - a) / n;
+  const sw = n > 120 ? 0.4 : n > 50 ? 0.7 : 1.2;
+  let d = '';
+  const dots = [];
+  for (let i = 0; i < n; i++) {
+    const x0 = a + i * dx, x1 = a + (i + 1) * dx;
+    let h0, h1;
+    if (rule === 'left') { h0 = h1 = f(x0); dots.push([x0, h0]); }
+    else if (rule === 'right') { h0 = h1 = f(x1); dots.push([x1, h1]); }
+    else if (rule === 'mid') { h0 = h1 = f((x0 + x1) / 2); dots.push([(x0 + x1) / 2, h0]); }
+    else { h0 = f(x0); h1 = f(x1); dots.push([x0, h0]); if (i === n - 1) dots.push([x1, h1]); }
+    d += 'M' + X(x0).toFixed(2) + ' ' + Y(0).toFixed(2) + 'L' + X(x0).toFixed(2) + ' ' + Y(h0).toFixed(2) +
+         'L' + X(x1).toFixed(2) + ' ' + Y(h1).toFixed(2) + 'L' + X(x1).toFixed(2) + ' ' + Y(0).toFixed(2) + 'Z';
+  }
+  svg.appendChild(el('path', { d, fill: 'rgba(230,115,0,0.22)', stroke: '#b05a10', 'stroke-width': sw, 'stroke-linejoin': 'round' }));
+
+  // x axis line, then the curve on top
+  svg.appendChild(el('line', { x1: mL, x2: W - mR, y1: Y(0), y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 }));
+  svg.appendChild(el('line', { x1: mL, x2: mL, y1: mT, y2: Y(0), stroke: '#5a6b80', 'stroke-width': 1.2 }));
+  let c = '';
+  for (let i = 0; i <= 300; i++) {
+    const x = a + (b - a) * i / 300;
+    c += (i ? 'L' : 'M') + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2);
+  }
+  svg.appendChild(el('path', { d: c, fill: 'none', stroke: '#1a3f5c', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }));
+
+  // sample points (where the function is evaluated), shown while they are still distinguishable
+  if (n <= 40) dots.forEach(p => svg.appendChild(el('circle', { cx: X(p[0]), cy: Y(p[1]), r: n > 20 ? 2.2 : 3.2, fill: '#fff', stroke: '#b05a10', 'stroke-width': 1.5 })));
+
+  // legend
+  const lx = (fn.id === 'cos' || fn.id === 'hyd') ? W - mR - (small ? 158 : 180) : mL + 12, ly = mT + 8;
+  svg.appendChild(el('line', { x1: lx, x2: lx + 22, y1: ly, y2: ly, stroke: '#1a3f5c', 'stroke-width': 2.5 }));
+  svg.appendChild(el('text', { x: lx + 28, y: ly + 4, 'font-size': fs, fill: '#333' }, 'exact curve'));
+  svg.appendChild(el('rect', { x: lx, y: ly + 10, width: 22, height: 10, fill: 'rgba(230,115,0,0.22)', stroke: '#b05a10', 'stroke-width': 1 }));
+  svg.appendChild(el('text', { x: lx + 28, y: ly + 19, 'font-size': fs, fill: '#333' }, 'area counted by the rule'));
+}
+
+// ---- Readouts ----
+function update() {
+  const { a, b, f, exact } = fn;
+  const unit = fn.unit ? ' ' + fn.unit : '';
+  const r = RULES.find(q => q.id === rule);
+  const val = approx(f, a, b, n, rule);
+  const err = val - exact;
+
+  $('vN').textContent = n;
+  $('sN').value = n;
+  $('rDx').textContent = ((b - a) / n).toPrecision(4).replace(/\.?0+$/, '') + (fn.id === 'hyd' ? ' h' : '');
+  $('rRuleName').textContent = r.name.toLowerCase();
+  $('rApprox').textContent = fmtVal(val) + unit;
+  $('rExact').textContent = fmtVal(exact) + unit;
+  $('rErr').textContent = fmtErr(err) + (Math.abs(err) < 1e-10 ? '' : err > 0 ? ' (over)' : ' (under)');
+  $('rPct').textContent = Math.abs(err) < 1e-10 ? '0%' : fmtPct(err / exact * 100);
+  $('hApprox').textContent = fmtVal(val) + unit;
+  $('hExact').textContent = fmtVal(exact) + unit;
+  $('hErr').textContent = fmtErr(err);
+
+  $('rowVol').hidden = !fn.toVolume;
+  if (fn.toVolume) $('rVol').textContent = Math.round(val * fn.toVolume).toLocaleString('en-US') + ' m³';
+
+  // comparison of all four rules
+  const rows = RULES.map(q => { const v = approx(f, a, b, n, q.id); return { q, v, e: v - exact }; });
+  const best = Math.min(...rows.map(x => Math.abs(x.e)));
+  const body = $('cmpBody');
+  body.innerHTML = '';
+  rows.forEach(x => {
+    const tr = document.createElement('tr');
+    if (x.q.id === rule) tr.classList.add('cur');
+    if (Math.abs(x.e) - best < 1e-12) tr.classList.add('best');
+    [x.q.name, fmtVal(x.v), fmtErr(x.e)].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+    body.appendChild(tr);
+  });
+
+  $('fnNote').textContent = FN_NOTES[fn.id];
+  const eq = $('eqn');
+  if (hasKatex()) { try { katex.render(r.tex, eq, { displayMode: true, throwOnError: false }); } catch (e) { eq.textContent = r.plain; } }
+  else eq.textContent = r.plain;
+
+  $('bHalf').disabled = n <= 1; $('bOne').disabled = n === 1;
+  $('bDouble').disabled = n >= 200; $('bMax').disabled = n === 200;
+  $('plotDesc').textContent = fn.label + ' with ' + n + ' ' + r.name.toLowerCase() + '. Approximate area ' + fmtVal(val) +
+    ', exact area ' + fmtVal(exact) + ', error ' + fmtErr(err) + '.';
+  draw();
+}
+
+// ---- Wiring ----
+FUNCS.forEach(q => $('selFn').add(new Option(q.label, q.id)));
+$('selFn').addEventListener('change', () => { fn = FUNCS.find(q => q.id === $('selFn').value); update(); });
+function syncSeg() {
+  document.querySelectorAll('#ruleSeg label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+}
+document.querySelectorAll('input[name=rule]').forEach(r => r.addEventListener('change', () => { rule = r.value; syncSeg(); update(); }));
+$('sN').addEventListener('input', () => { n = +$('sN').value; update(); });
+$('bOne').addEventListener('click', () => { n = 1; update(); });
+$('bMax').addEventListener('click', () => { n = 200; update(); });
+$('bHalf').addEventListener('click', () => { n = Math.max(1, Math.round(n / 2)); update(); });
+$('bDouble').addEventListener('click', () => { n = Math.min(200, n * 2); update(); });
+window.addEventListener('resize', draw);
+
+syncSeg(); update();
+if (typeof renderMathInElement === 'function') {
+  document.querySelectorAll('.eqn-note').forEach(e => renderMathInElement(e, {
+    delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false }));
+}
+</script>
+</body>
+</html>
